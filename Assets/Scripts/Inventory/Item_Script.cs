@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Item_Script : MonoBehaviour
 {
-    public Item obj;
+    public Item itemObject;
     public Item heldProperties;
 
     public TMP_Text itemName;
@@ -15,14 +15,14 @@ public class Item_Script : MonoBehaviour
     {
         if (heldProperties == null)
         {
-            SetHeldItemProperties(item);
+            SetHeldProperties(item);
         }
 
         itemName.text = heldProperties.name;
         itemTexture.texture = heldProperties.itemTexture;
     }
 
-    public void SetHeldItemProperties(Item item)
+    public void SetHeldProperties(Item item)
     {
         heldProperties = ScriptableObject.CreateInstance<Item>();
         heldProperties.itemName = item.itemName;
