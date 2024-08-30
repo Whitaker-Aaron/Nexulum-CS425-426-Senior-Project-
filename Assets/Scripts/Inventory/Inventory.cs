@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting.ReorderableList;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Inventory : MonoBehaviour
 {
@@ -16,6 +17,23 @@ public class Inventory : MonoBehaviour
     private void Awake()
     {
         instance = this;
+    }
+
+    //This function recieves the number of a certain item in the players inventory
+    public int GetItemCount(Item item)
+    {
+        int total = 0;
+        for (int i = 0; i < inventoryItems.Length; i++)
+        {
+            if (inventoryItems[i] != null)
+            {
+                if (inventoryItems[i].GetComponent<Item_Script>().heldProperties.itemName == item.itemName)
+                {
+                    total += inventoryItems[i].GetComponent<Item_Script>().heldProperties.currentAmount;
+                }
+            }
+        }
+        return total;
     }
 
     public void AddItem(GameObject item, int amount)
@@ -38,7 +56,7 @@ public class Inventory : MonoBehaviour
                             if (remainingStack >= amount)
                             {
                                 inventoryItem.currentAmount += amount;
-                                //InventoryManager.SetList();
+                                inventoryMan.SetList();
                                 return;
                             }
                             else
@@ -61,7 +79,7 @@ public class Inventory : MonoBehaviour
                     itemObjects.GetComponent<Item_Script>().heldProperties.currentAmount = amount;
                     itemObjects.GetComponent<Item_Script>().SetHeldProperties(item.GetComponent<Item_Script>().itemObject);
                     inventoryItems[i] = itemObjects;
-                    //inventoryMan.SetList();
+                    inventoryMan.SetList();
                     return;
                 }
             }
@@ -88,7 +106,7 @@ public class Inventory : MonoBehaviour
                         {
                             inventoryItems[i] = null;
                         }
-                        //inventoryMan.SetList();
+                        inventoryMan.SetList();
                         return;
                     }
                     else
@@ -109,7 +127,7 @@ public class Inventory : MonoBehaviour
                                         {
                                             inventoryItems[j] = null;
                                         }
-                                        //inventoryMan.SetList();
+                                        inventoryMan.SetList();
                                         return;
                                     }
                                     else if (amount > currentItemCount)
@@ -121,7 +139,7 @@ public class Inventory : MonoBehaviour
                                             return;
                                         }
                                     }
-                                    //inventoryMan.SetList();
+                                    inventoryMan.SetList();
                                 }
                             }
                         }
@@ -129,22 +147,5 @@ public class Inventory : MonoBehaviour
                 }
             }
         }
-    }
-
-    //This function recieves the number of a certain item in the players inventory
-    public int GetItemCount()
-    {
-        int total = 0;
-        for (int i = 0; i < inventoryItems.Length; i++)
-        {
-            if (inventoryItems[i] != null)
-            {
-                if (inventoryItems[i].GetComponent<Item_Script>().heldProperties.itemName == item.itemName)
-                {
-                    total += inventoryItems[i].GetComponent<Item_Script>().heldProperties.currentAmount;
-                }
-            }
-        }
-        return total;
     }
 }

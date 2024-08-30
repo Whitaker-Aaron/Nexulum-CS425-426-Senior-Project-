@@ -4,15 +4,36 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject currentInHand;
+    public Vector3 offset;
+    bool open = false;
+    public GameObject Menu;
+
+    public Item itemToRemove;
+    public int amountToRemove;
+    public GameObject itemToAdd;
+
+    private void Start()
     {
-        
+        //Loading all the items
+        //SetList();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        OpenClose();
+    }
+
+    public void SetList()
+    {
+        //This is where we can manage the sorting of weapons based off of class and everything else
+    }
+    void OpenClose()
+    {
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            open = !open;
+            Menu.SetActive(open);
+        }
     }
 }
