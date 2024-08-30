@@ -73,7 +73,7 @@ public class playertypeGunner : MonoBehaviour
             //muzzleFlash.Play();
             var bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
             //bullet.GetComponent<bullet>().setPower(true);
-            bullet.GetComponent<Rigidbody>().velocity = -bulletSpawn.right * bulletSpeed;
+            bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * bulletSpeed;
             yield return new WaitForSeconds(fireRateTime);
         }
         canShoot = true;

@@ -1,0 +1,367 @@
+fileFormatVersion: 2
+guid: a7a880c38b5312140b933ff9e51194af
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: "\nClip 'mixamo.com' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'chest' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n"
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: engineer@Walk Backward Left(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Rig
+      parentName: engineer@Walk Backward Left(Clone)
+      position: {x: 0.061761845, y: -0.056723263, z: 0.062917925}
+      rotation: {x: -0.07293877, y: 0.4155687, z: 0.033340026, w: 0.90601933}
+      scale: {x: 1, y: 1, z: 1}
+    - name: root
+      parentName: Rig
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.07293876, y: -0.41556883, z: -0.033340033, w: 0.9060193}
+      scale: {x: 1, y: 1, z: 1}
+    - name: hips
+      parentName: root
+      position: {x: -0.061761834, y: 0.45119628, z: 0.000000011175871}
+      rotation: {x: -0, y: 0.00000011920929, z: -0.000000007450581, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: spine
+      parentName: hips
+      position: {x: 2.35e-43, y: 0.1919775, z: 0}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1.0000007}
+    - name: chest
+      parentName: spine
+      position: {x: 3.69611e-29, y: 0.37498796, z: 1.7763568e-15}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1.0000001, y: 1, z: 0.99999934}
+    - name: Engineer_Backpack
+      parentName: chest
+      position: {x: 0.000030517578, y: 0.24324483, z: -0.0000001829212}
+      rotation: {x: 0.000000021855692, y: 7.1054274e-15, z: -1.5529402e-22, w: 1}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: upperarm.l
+      parentName: chest
+      position: {x: -0.21200736, y: 0.13413227, z: 0.00000008487841}
+      rotation: {x: -0.5141244, y: 0.48546487, z: 0.4854648, w: 0.5141245}
+      scale: {x: 1.0000007, y: 1.000001, z: 1.0000004}
+    - name: lowerarm.l
+      parentName: upperarm.l
+      position: {x: 3.169376e-10, y: 0.24189739, z: -0.00000011563963}
+      rotation: {x: -0.00000020861626, y: 0.00000008940697, z: 0.05529648, w: 0.99847007}
+      scale: {x: 1.0000019, y: 1.0000017, z: 1.0000023}
+    - name: wrist.l
+      parentName: lowerarm.l
+      position: {x: -0.0000000016788704, y: 0.26004383, z: 0.0000000018543524}
+      rotation: {x: 0.00000014975068, y: -0.000000032539692, z: -0.026658148, w: 0.99964464}
+      scale: {x: 0.99999946, y: 0.9999996, z: 1}
+    - name: hand.l
+      parentName: wrist.l
+      position: {x: -1.2647661e-12, y: 0.073825896, z: 0.0000001193573}
+      rotation: {x: -1.4210853e-14, y: -0, z: 4.8728408e-15, w: 1}
+      scale: {x: 1.0000001, y: 1.0000001, z: 1.0000018}
+    - name: handslot.l
+      parentName: hand.l
+      position: {x: -5.209344e-10, y: 0.096125245, z: -0.057499886}
+      rotation: {x: -0.00000006027915, y: -0.000000034136328, z: 0.707107, w: 0.70710665}
+      scale: {x: 1.0000013, y: 0.9999998, z: 1.0000008}
+    - name: upperarm.r
+      parentName: chest
+      position: {x: 0.21200736, y: 0.13413227, z: 0.00000008487841}
+      rotation: {x: -0.5141243, y: -0.4854648, z: -0.48546484, w: 0.5141245}
+      scale: {x: 1.0000011, y: 1.0000007, z: 1}
+    - name: lowerarm.r
+      parentName: upperarm.r
+      position: {x: -2.1567625e-10, y: 0.24189739, z: -0.00000011685303}
+      rotation: {x: 0.00000017881395, y: 0.00000016391279, z: 0.05529635, w: -0.99847}
+      scale: {x: 0.9999992, y: 0.99999934, z: 1.0000002}
+    - name: wrist.r
+      parentName: lowerarm.r
+      position: {x: 0.0000000017586785, y: 0.26004383, z: 0.0000000018543502}
+      rotation: {x: -0.00000006243176, y: -0.000000028473067, z: -0.026658034, w: -0.99964464}
+      scale: {x: 1.0000013, y: 1.0000015, z: 1.0000014}
+    - name: hand.r
+      parentName: wrist.r
+      position: {x: 1.6058266e-12, y: 0.073825896, z: 0.00000011935722}
+      rotation: {x: -0, y: -0, z: -1.7776238e-15, w: 1}
+      scale: {x: 1.0000005, y: 1.000001, z: 1.0000001}
+    - name: handslot.r
+      parentName: hand.r
+      position: {x: 5.2087756e-10, y: 0.096125245, z: -0.057499886}
+      rotation: {x: -0.000000007665189, y: -0.00000008864552, z: 0.70710695, w: -0.7071066}
+      scale: {x: 1, y: 0.99999934, z: 0.99999875}
+    - name: head
+      parentName: chest
+      position: {x: 1.17175564e-29, y: 0.26879656, z: -5.51e-43}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1.0000007, y: 0.99999994, z: 1.0000008}
+    - name: Engineer_Goggles
+      parentName: head
+      position: {x: -2.5994668e-21, y: -0.025551677, z: -0.00000018292121}
+      rotation: {x: 0.000000021855692, y: 7.1054274e-15, z: -1.5529402e-22, w: 1}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: upperleg.l
+      parentName: hips
+      position: {x: -0.17094506, y: 0.11358726, z: 0.000000013923272}
+      rotation: {x: 0.99984914, y: 0.0000000705709, z: 0.00000006297574, w: 0.017373953}
+      scale: {x: 1, y: 1.0000013, z: 1.0000035}
+    - name: lowerleg.l
+      parentName: upperleg.l
+      position: {x: -0.000000017618307, y: 0.22707745, z: -0.0000000026764555}
+      rotation: {x: 0.10622719, y: -0.000000087677535, z: 0.0000000722271, w: 0.99434197}
+      scale: {x: 1.000001, y: 1.0000055, z: 1.0000026}
+    - name: foot.l
+      parentName: lowerleg.l
+      position: {x: 0.0000000031713974, y: 0.14943705, z: 0.000000002732179}
+      rotation: {x: -0.45524007, y: 0.000000032237136, z: 0.000000014665692, w: 0.89036876}
+      scale: {x: 0.9999992, y: 1.0000035, z: 0.9999984}
+    - name: toes.l
+      parentName: foot.l
+      position: {x: -1.05471076e-10, y: 0.16565004, z: 0.000000038133116}
+      rotation: {x: 0.000000030732195, y: 0.9203549, z: -0.39108425, w: -0.00000007671693}
+      scale: {x: 1.0000018, y: 1.0000007, z: 1.0000006}
+    - name: upperleg.r
+      parentName: hips
+      position: {x: 0.17094506, y: 0.11358726, z: 0.000000013923272}
+      rotation: {x: 0.9998491, y: -0.000000056088968, z: -0.000000050412794, w: 0.017373946}
+      scale: {x: 0.99999994, y: 1, z: 1.000002}
+    - name: lowerleg.r
+      parentName: upperleg.r
+      position: {x: 0.00000001703675, y: 0.22707745, z: -0.0000000017018316}
+      rotation: {x: 0.10622718, y: 0.000000013997124, z: -0.00000006401513, w: 0.99434197}
+      scale: {x: 1, y: 1.0000033, z: 1.0000005}
+    - name: foot.r
+      parentName: lowerleg.r
+      position: {x: -0.0000000054324456, y: 0.14943695, z: 8.4266816e-10}
+      rotation: {x: -0.45524007, y: 0.000000032237146, z: 0.000000014665695, w: 0.8903688}
+      scale: {x: 0.99999976, y: 1.0000056, z: 1.0000008}
+    - name: toes.r
+      parentName: foot.r
+      position: {x: 0.000000019147043, y: 0.16565004, z: -0.000000010191608}
+      rotation: {x: 0.000000017284929, y: 0.92035484, z: -0.39108437, w: 0.000000049227097}
+      scale: {x: 1.000002, y: 1.0000017, z: 1.0000015}
+    - name: kneeIK.l
+      parentName: root
+      position: {x: -0.1709449, y: 0.29231027, z: 0.57581246}
+      rotation: {x: 0.70710677, y: 0.0000002533197, z: 0.000000014901159, w: 0.7071068}
+      scale: {x: 1, y: 1.0000006, z: 1.0000006}
+    - name: control-toe-roll.l
+      parentName: root
+      position: {x: -0.17094497, y: 0.025990263, z: 0.24578938}
+      rotation: {x: -0.70710677, y: 0.00000011920929, z: 0.000000113621354, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: control-heel-roll.l
+      parentName: control-toe-roll.l
+      position: {x: -0.00000001945811, y: 0.36283267, z: -0.000000019596568}
+      rotation: {x: 0.000000009219626, y: 1.0658141e-14, z: 1, w: 0.00000002502469}
+      scale: {x: 1, y: 1, z: 1}
+    - name: control-foot-roll.l
+      parentName: control-heel-roll.l
+      position: {x: -0.0000000037529446, y: 0.21343614, z: 0.000000003538337}
+      rotation: {x: -0.00000012335657, y: -0.39108434, z: -0.92035484, w: -0.00000006670629}
+      scale: {x: 1.0000002, y: 1.0000006, z: 1.0000006}
+    - name: heelIK.l
+      parentName: control-foot-roll.l
+      position: {x: 0.00000002121244, y: 0.16565005, z: -4.3475623e-10}
+      rotation: {x: -0.3910843, y: 0.00000009632439, z: 0.00000008391727, w: 0.92035484}
+      scale: {x: 1.0000001, y: 0.9999994, z: 0.99999917}
+    - name: IK-foot.l
+      parentName: control-foot-roll.l
+      position: {x: 0.00000002121244, y: 0.16565005, z: -4.3475623e-10}
+      rotation: {x: 1, y: 0.00000000884437, z: -0.00000017620175, w: 0}
+      scale: {x: 1, y: 0.99999994, z: 0.99999994}
+    - name: IK-toe.l
+      parentName: control-heel-roll.l
+      position: {x: 0.000000004556949, y: -0.0000000027572362, z: -0.000000019596566}
+      rotation: {x: 0.000000119209275, y: 0.000000042146837, z: 0.000000042146823, w: 1}
+      scale: {x: 1.0000017, y: 1.000001, z: 1.0000012}
+    - name: kneeIK.r
+      parentName: root
+      position: {x: 0.17094517, y: 0.29231027, z: 0.57581234}
+      rotation: {x: 0.70710677, y: 0.0000000745058, z: -0.00000015273689, w: 0.7071068}
+      scale: {x: 1, y: 1.0000006, z: 1.0000006}
+    - name: control-toe-roll.r
+      parentName: root
+      position: {x: 0.1709451, y: 0.025990263, z: 0.2457893}
+      rotation: {x: -0.70710677, y: 0.00000011920929, z: 0.000000113621354, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: control-heel-roll.r
+      parentName: control-toe-roll.r
+      position: {x: -0.00000001945811, y: 0.36283267, z: -0.000000019596564}
+      rotation: {x: 0.000000009219626, y: 1.0658141e-14, z: 1, w: 0.00000002502469}
+      scale: {x: 1, y: 1, z: 1}
+    - name: control-foot-roll.r
+      parentName: control-heel-roll.r
+      position: {x: -0.000000003752945, y: 0.21343614, z: 0.0000000035383365}
+      rotation: {x: -0.00000012335657, y: -0.39108434, z: -0.92035484, w: -0.00000006670629}
+      scale: {x: 1.0000002, y: 1.0000006, z: 1.0000006}
+    - name: heelIK.r
+      parentName: control-foot-roll.r
+      position: {x: -0.00000000858988, y: 0.16565005, z: 0.0000000013660788}
+      rotation: {x: -0.3910843, y: 0.00000009632439, z: 0.00000008391727, w: 0.92035484}
+      scale: {x: 1.0000001, y: 0.9999994, z: 0.99999917}
+    - name: IK-foot.r
+      parentName: control-foot-roll.r
+      position: {x: -0.00000000858988, y: 0.16565005, z: 0.0000000013660788}
+      rotation: {x: 1, y: 0.00000000884437, z: -0.00000017620175, w: 0}
+      scale: {x: 1, y: 0.99999994, z: 0.99999994}
+    - name: IK-toe.r
+      parentName: control-heel-roll.r
+      position: {x: 0.000000004556948, y: -0.000000001167181, z: -0.000000019596566}
+      rotation: {x: 0.000000119209275, y: 0.000000042146837, z: 0.000000042146823, w: 1}
+      scale: {x: 1.0000017, y: 1.000001, z: 1.0000012}
+    - name: elbowIK.l
+      parentName: root
+      position: {x: -0.45350748, y: 1.1067611, z: -0.58885944}
+      rotation: {x: -0.7071067, y: 0.00000008940697, z: 0.00000010244548, w: 0.7071069}
+      scale: {x: 1, y: 0.9999999, z: 0.9999999}
+    - name: handIK.l
+      parentName: root
+      position: {x: -0.71318156, y: 1.1067611, z: 0.00000025491414}
+      rotation: {x: -0.49999997, y: 0.50000006, z: 0.50000006, w: 0.4999999}
+      scale: {x: 0.9999999, y: 0.99999976, z: 0.99999994}
+    - name: elbowIK.r
+      parentName: root
+      position: {x: 0.45350718, y: 1.1067611, z: -0.5888596}
+      rotation: {x: -0.7071067, y: 0.00000008940697, z: 0.00000010244548, w: 0.7071069}
+      scale: {x: 1, y: 0.9999999, z: 0.9999999}
+    - name: handIK.r
+      parentName: root
+      position: {x: 0.71318156, y: 1.1067611, z: -0.00000008515731}
+      rotation: {x: -0.5000001, y: -0.49999997, z: -0.4999999, w: 0.50000006}
+      scale: {x: 1, y: 1.0000005, z: 1}
+    - name: Engineer_LegLeft
+      parentName: engineer@Walk Backward Left(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Engineer_LegRight
+      parentName: engineer@Walk Backward Left(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Engineer_ArmLeft
+      parentName: engineer@Walk Backward Left(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Engineer_ArmRight
+      parentName: engineer@Walk Backward Left(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Engineer_Body
+      parentName: engineer@Walk Backward Left(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Engineer_Head
+      parentName: engineer@Walk Backward Left(Clone)
+      position: {x: -0, y: 1.2158737, z: -0.00000018292303}
+      rotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

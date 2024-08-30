@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     Vector3 lookPos, camForward, movement, moveInput;
     float forwardAmount, turnAmount;
 
-    Transform camera;
+    new Transform camera;
 
     void Awake()
     {
