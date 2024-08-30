@@ -11,21 +11,13 @@ public class bullet : MonoBehaviour
     public LayerMask enemy, boss;
     public float explosiveRange;
 
-    public Material iceMat;
-
-    bool powerup = false;
-
-    bool isIce = false;
-    bool isFire = false;
-
-    bool isRifleRound = false;
 
     //effects
-    public ParticleSystem explosion, bulletHit, fireExpld;
-    private ParticleSystem expld, bullhit, fireexpld;
+    //public ParticleSystem explosion, bulletHit, fireExpld;
+    //private ParticleSystem expld, bullhit, fireexpld;
 
-    public GameObject fireTrail;
-    private GameObject firetrail;
+    //public GameObject fireTrail;
+    //private GameObject firetrail;
 
     private void Awake()
     {
