@@ -18,7 +18,6 @@ public class OverworldMaterial : MonoBehaviour
 
 
     bool descending = false;
-    public BoxCollider2D body;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,8 +30,8 @@ public class OverworldMaterial : MonoBehaviour
         if(!descending)
         {
             
-            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, verticalFloatRange, transform.position.z),  floatSpeed * Time.deltaTime);
-            if(transform.position.y >= verticalFloatRange - offset)
+            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, originalPos + verticalFloatRange, transform.position.z),  floatSpeed * Time.deltaTime);
+            if(transform.position.y >= (originalPos + verticalFloatRange) - offset)
             {
                 descending = true;
             }
