@@ -9,6 +9,10 @@ public class OverworldMaterial : MonoBehaviour
 {
     [SerializeField] float verticalFloatRange;
     [SerializeField] float floatSpeed;
+
+    //Needs to have a reference to an existing CraftMaterial so when we add to inventory, we can pass this object over. 
+    [SerializeField] CraftMaterial material; 
+    //[SerializeField] newCraft
     float originalPos;
     float offset = 0.5f;
 
@@ -50,6 +54,7 @@ public class OverworldMaterial : MonoBehaviour
         Debug.Log(collision.gameObject.tag);
         if(collision.gameObject.tag == "Player")
         {
+            //TODO: Add logic that passes the material reference object into materials inventory on pickup. 
             Destroy(this.gameObject);
         }
         

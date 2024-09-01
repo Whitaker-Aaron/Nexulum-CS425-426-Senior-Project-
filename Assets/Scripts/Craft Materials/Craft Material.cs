@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Craft Material", fileName = "newCraftMaterial")]
-public class Material : ScriptableObject
+public class CraftMaterial : ScriptableObject
 {
     public string materialName;
     public int currentAmount;
