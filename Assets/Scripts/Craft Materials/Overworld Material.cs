@@ -11,7 +11,7 @@ public class OverworldMaterial : MonoBehaviour
     [SerializeField] float floatSpeed;
 
     //Needs to have a reference to an existing CraftMaterial so when we add to inventory, we can pass this object over. 
-    [SerializeField] CraftMaterial material; 
+    [SerializeField]  public CraftMaterial material; 
     //[SerializeField] newCraft
     float originalPos;
     float offset = 0.5f;
