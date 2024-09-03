@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     Vector2 move;
     public bool isMoving;
     public PlayerInputActions playerControl;
+    public bool isAttacking = false;
 
     public Animator animator;
 
@@ -32,6 +33,8 @@ public class PlayerController : MonoBehaviour
 
     public void onMove(InputAction.CallbackContext context)
     {
+        if (isAttacking)
+            return;
         move = context.ReadValue<Vector2>();
     }
 
@@ -83,7 +86,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        if (isAttacking)
+            return;
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -122,8 +126,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
+        if (isAttacking)
+            return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
@@ -139,6 +143,7 @@ public class PlayerController : MonoBehaviour
         transform.LookAt(transform.position + lookDir, Vector3.up);
 
 
+
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
@@ -147,12 +152,6 @@ public class PlayerController : MonoBehaviour
 
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        //movePlayer();
-
-        
-
-        animator.SetFloat("inputX", horizontal);
-        animator.SetFloat("inputY", vertical);
 
 
 
@@ -162,6 +161,8 @@ public class PlayerController : MonoBehaviour
 
     public void movePlayer()
     {
+        if (isAttacking)
+            return;
         Vector3 movement = new Vector3(move.x, 0, move.y);
 
         transform.Translate(movement * speed * Time.deltaTime, Space.World);
