@@ -368,10 +368,10 @@ PrefabInstance:
       addedObject: {fileID: 4509128490247129004}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0efd18f83ade7b14ab2fdff3c8c233a1, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2991166959690507715}
+      addedObject: {fileID: 2571311124399499622}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0efd18f83ade7b14ab2fdff3c8c233a1, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2571311124399499622}
+      addedObject: {fileID: 2456601312628522439}
   m_SourcePrefab: {fileID: 100100000, guid: 0efd18f83ade7b14ab2fdff3c8c233a1, type: 3}
 --- !u!1 &2275794262032187857 stripped
 GameObject:
@@ -426,7 +426,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2991166959690507715}
+      - m_Target: {fileID: 2456601312628522439}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: onMove
         m_Mode: 0
@@ -445,19 +445,7 @@ MonoBehaviour:
     m_ActionId: 16398076-98b5-4769-a96c-a0c11b9e57b6
     m_ActionName: player/mouseLook[/Mouse/position]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2571311124399499622}
-        m_TargetAssemblyTypeName: playertypeKnight, Assembly-CSharp
-        m_MethodName: onClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: b0dad13e-55c4-4957-975a-4658e39e4eb4
     m_ActionName: player/Attack[/Mouse/leftButton]
   - m_PersistentCalls:
@@ -523,23 +511,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2991166959690507715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2275794262032187857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3118b881d92f124a84adb8e6b400187, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  body: {fileID: 4509128490247129004}
-  speed: 3
-  isMoving: 0
-  isAttacking: 0
-  animator: {fileID: 5450587432278549362}
 --- !u!114 &2571311124399499622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,6 +533,23 @@ MonoBehaviour:
   differenceTime: 0.02
   animDiff: 4.59
   playerCon: {fileID: 0}
+--- !u!114 &2456601312628522439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2275794262032187857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a862199b63fd524ea3be6c6281aa8e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  body: {fileID: 4509128490247129004}
+  speed: 3
+  isMoving: 0
+  isAttacking: 0
+  animator: {fileID: 5450587432278549362}
 --- !u!4 &2423611885509911684 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5551195440747407356, guid: 0efd18f83ade7b14ab2fdff3c8c233a1, type: 3}

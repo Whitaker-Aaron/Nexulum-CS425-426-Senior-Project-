@@ -40,7 +40,7 @@ public class playertypeKnight : MonoBehaviour
         {
             if(Input.GetMouseButtonDown(0))
             {
-                print("click: " + noOfClicks);
+                //print("click: " + noOfClicks);
                 lastClickedTime = Time.time;
                 noOfClicks++;
                 if (noOfClicks >= 1)
