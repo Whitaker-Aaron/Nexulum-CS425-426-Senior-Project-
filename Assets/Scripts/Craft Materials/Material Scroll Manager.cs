@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,14 +10,16 @@ public class MaterialScrollManager : MonoBehaviour
 {
     [SerializeField] ScrollView scrollView;
     [SerializeField] GameObject content;
-    [SerializeField] GameObject testContent;
-    [SerializeField] Texture testTexture;
+    [SerializeField] GameObject scrollContent;
+
+    private IEnumerator coroutine;
 
     List<GameObject> currentMaterials = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
-        UpdateScroll();
+        DontDestroyOnLoad(this.gameObject);
+        //UpdateScroll();
     }
 
     // Update is called once per frame
@@ -25,29 +28,46 @@ public class MaterialScrollManager : MonoBehaviour
         
     }
 
-    void UpdateScroll()
+    public void UpdateScroll(Texture materialTexture, string materialName)
     {
-        //Test code
-        var scrollObject = testContent.GetComponent<MaterialScrollObject>();
-        //scrollObject.description.text = "Sapphire Bar";
-        //scrollObject.description.color = new Color(56, 56, 56, 20.0f);
-        //scrollObject.quantity.text = "x" + "3";
-        //scrollObject.imageRef.texture = testTexture;
-        //scrollObject.quantity.color = new Color(56, 56, 56, 20.0f);
-        //Instantiate(testContent).transform.SetParent(content.transform);
+        CheckForNull();
+        var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
+        int existingIndex = -1; 
+        bool exists = false; 
 
-        scrollObject = testContent.GetComponent<MaterialScrollObject>();
-        scrollObject.description.text = "Sapphire";
-        scrollObject.imageRef.texture = testTexture;
-        //scrollObject.description.color = new Color(56, 56, 56, 20.0f);
-        scrollObject.quantity.text = "x" + "2";
-        //scrollObject.quantity.color = new Color(56, 56, 56, 20.0f);
-        GameObject newScrollMaterial = Instantiate(testContent);
+        scrollObject.description.text = materialName;
+        scrollObject.imageRef.texture = materialTexture;
+        scrollObject.quantityInt = 1;
+        scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
+        GameObject newScrollMaterial = Instantiate(scrollContent);
         newScrollMaterial.transform.SetParent(content.transform);
-        //.transform.SetParent(content.transform);
+
+        var existingScroll = newScrollMaterial.GetComponent<MaterialScrollObject>();
+
+        var desc = existingScroll.description;
+        for (int i = 0; i < currentMaterials.Count; i++) {
+            if (currentMaterials[i].GetComponent<MaterialScrollObject>().description.text == desc.text)
+            {
+                exists = true;
+                existingIndex = i;
+            }
+        }
+        if (exists)
+        {
+            Debug.Log("Current material found");
+            
+            existingScroll.quantityInt += currentMaterials[existingIndex].GetComponent<MaterialScrollObject>().quantityInt;
+            existingScroll.quantity.text = "x" + existingScroll.quantityInt.ToString();
+            Destroy(currentMaterials[existingIndex].gameObject);
+            currentMaterials.RemoveAt(existingIndex);
+        }
 
         currentMaterials.Add(newScrollMaterial);
-        currentMaterials[0].GetComponent<MaterialScrollObject>().quantity.text = "x" + "4";
+        Debug.Log("Amount of materials: ");
+        Debug.Log(currentMaterials.Count);
+        StartCoroutine(StartCooldown(newScrollMaterial));
+        Debug.Log("Starting Coroutine");
+        //currentMaterials[0].GetComponent<MaterialScrollObject>().quantity.text = "x" + "4";
 
         //color = 0.5f;
         //testContent.transform.parent = content.transform;
@@ -55,8 +75,54 @@ public class MaterialScrollManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        var scrollObject = testContent.GetComponent<MaterialScrollObject>();
+        var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
         scrollObject.description.text = "empty";
         scrollObject.quantity.text = "x0";
+    }
+
+    private void CheckForNull()
+    {
+        for (int i = 0; i < currentMaterials.Count; i++)
+        {
+            if (currentMaterials[i] == null)
+            {
+                currentMaterials.RemoveAt(i);
+                i = i - 1;
+            }
+        }
+
+    }
+
+     private IEnumerator StartCooldown(GameObject scrollObj)
+    {
+      StartCoroutine("ReduceOpacity", scrollObj);
+      yield return new WaitForSeconds(5);
+      Debug.Log("Finished coroutine");
+      Destroy(scrollObj);
+      CheckForNull();
+      StopCoroutine("ReduceOpacity");
+            
+    }
+
+    private IEnumerator ReduceOpacity(GameObject scrollObj)
+    {
+        var reference = scrollObj.GetComponent<MaterialScrollObject>();
+        while (true && reference != null)
+        {
+            Color imgColor = reference.imageRef.color;
+            imgColor.a -= 0.20f * Time.deltaTime;
+            reference.imageRef.color = imgColor;
+
+            Color desColor = reference.description.color;
+            desColor.a -= 0.20f * Time.deltaTime;
+            reference.description.color = desColor;
+
+            Color quanColor = reference.quantity.color;
+            quanColor.a -= 0.20f * Time.deltaTime;
+            reference.quantity.color = quanColor;
+
+            yield return null;
+        }
+        yield break;
     }
 }

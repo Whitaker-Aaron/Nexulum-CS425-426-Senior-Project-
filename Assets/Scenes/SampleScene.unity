@@ -569,7 +569,7 @@ GameObject:
   - component: {fileID: 650686068}
   - component: {fileID: 650686069}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Vertical Layout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -701,6 +701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalFloatRange: 4
   floatSpeed: 0.5
+  scrollManager: {fileID: 0}
   material: {fileID: 0}
 --- !u!4 &652732204
 Transform:
@@ -1379,7 +1380,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 796.42114, y: 298.93445}
+  m_AnchoredPosition: {x: 715, y: 220}
   m_SizeDelta: {x: 327.1577, y: 482.1311}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1257673474
@@ -2017,6 +2018,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalFloatRange: 4
   floatSpeed: 0.5
+  scrollManager: {fileID: 0}
   material: {fileID: 0}
 --- !u!4 &1464456099
 Transform:
@@ -2168,7 +2170,7 @@ GameObject:
   - component: {fileID: 1628880077}
   m_Layer: 0
   m_Name: ScrollManager
-  m_TagString: Untagged
+  m_TagString: ScrollManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2201,8 +2203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: {fileID: 650686067}
-  testContent: {fileID: 7685760492805647242, guid: 9848dfb507b11a84e80b9770ce5d049a, type: 3}
-  testTexture: {fileID: 2800000, guid: 99a12faed76659946a0c3cf3ba05e290, type: 3}
+  scrollContent: {fileID: 7685760492805647242, guid: 9848dfb507b11a84e80b9770ce5d049a, type: 3}
 --- !u!1 &1665475668
 GameObject:
   m_ObjectHideFlags: 0

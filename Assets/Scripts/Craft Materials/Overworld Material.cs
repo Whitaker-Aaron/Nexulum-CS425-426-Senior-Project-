@@ -9,6 +9,7 @@ public class OverworldMaterial : MonoBehaviour
 {
     [SerializeField] float verticalFloatRange;
     [SerializeField] float floatSpeed;
+    [SerializeField] GameObject scrollManager;
 
     //Needs to have a reference to an existing CraftMaterial so when we add to inventory, we can pass this object over. 
     [SerializeField]  public CraftMaterial material; 
@@ -21,7 +22,8 @@ public class OverworldMaterial : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-         originalPos = transform.position.y;
+        scrollManager = GameObject.Find("ScrollManager");
+        originalPos = transform.position.y;
     }
 
     // Update is called once per frame
@@ -52,8 +54,10 @@ public class OverworldMaterial : MonoBehaviour
         Debug.Log("Colliding with: ");
         Debug.Log(collision.gameObject.tag);
         if(collision.gameObject.tag == "Player")
+
         {
             //TODO: Add logic that passes the material reference object into materials inventory on pickup. 
+            scrollManager.GetComponent<MaterialScrollManager>().UpdateScroll(this.material.materialTexture, this.material.materialName);
             Destroy(this.gameObject);
         }
         
