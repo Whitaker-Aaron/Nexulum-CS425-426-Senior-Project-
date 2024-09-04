@@ -95,12 +95,14 @@ public class MaterialScrollManager : MonoBehaviour
 
      private IEnumerator StartCooldown(GameObject scrollObj)
     {
-      StartCoroutine("ReduceOpacity", scrollObj);
+      IEnumerator coroutine = ReduceOpacity(scrollObj);
+        //StartCoroutine("ReduceOpacity", scrollObj);
+      StartCoroutine(coroutine);
       yield return new WaitForSeconds(5);
       Debug.Log("Finished coroutine");
       Destroy(scrollObj);
       CheckForNull();
-      StopCoroutine("ReduceOpacity");
+      StopCoroutine(coroutine);
             
     }
 
