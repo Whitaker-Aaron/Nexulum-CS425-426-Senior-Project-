@@ -13,8 +13,18 @@ public class EnemyBehavior : MonoBehaviour
     Vector3 playerPosition;
     float distanceToPlayer;
 
+    //animation function for getting direction, sends to animation interface
+    private EnemyAnimation enemyAnim;
+    private Vector3 CalculateMovementDirecton()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        return (player.transform.position - transform.position).normalized;
+    }
+
+
     void Start()
     {
+        enemyAnim = GetComponent<EnemyAnimation>();
         target = GameObject.FindWithTag("Player");
     }
 
@@ -32,5 +42,12 @@ public class EnemyBehavior : MonoBehaviour
         {
             agent.SetDestination(selfPosition);
         }
+
+        //animation handling
+        Vector3 movementDirection = CalculateMovementDirecton();
+        enemyAnim.updateAnimation(movementDirection);
+
+
+
     }
 }
