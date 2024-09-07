@@ -11,26 +11,18 @@ public interface EnemyAnimation
 
 public class enemyAnimInterface : MonoBehaviour
 {
-
-    private Animator anim;
+    private Animator animator;
     private readonly int forwardHash = Animator.StringToHash("Forward");
     private readonly int turnHash = Animator.StringToHash("Turn");
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        anim = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
     public void SetMovement(float forward, float turn)
     {
-        anim.SetFloat(forwardHash, forward);
-        anim.SetFloat(turnHash, turn);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        animator.SetFloat(forwardHash, forward);
+        animator.SetFloat(turnHash, turn);
     }
 }
