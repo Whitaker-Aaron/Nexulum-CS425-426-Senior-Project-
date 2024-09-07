@@ -10,8 +10,12 @@ public class CharacterBase : MonoBehaviour
     //managers.
 
     [SerializeField] Rune[] equippedRunes;
-    [SerializeField] WeaponClass weaponClass; 
-    
+    [SerializeField] WeaponClass weaponClass;
+    //[SerializeField] MaterialsInventory materialInventory;
+    //[SerializeField] RunesInventory runesInventory;
+    //[SerializeField] WeaponsInventory weaponsInventory;
+    //[SerializeField] ItemsInventory itemsInventory;
+
 
 
     // Start is called before the first frame update
@@ -29,4 +33,6 @@ public class CharacterBase : MonoBehaviour
     {
            
     }
+
+    
 }

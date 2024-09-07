@@ -1,14 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class WeaponBase : MonoBehaviour
+public class ItemManager : MonoBehaviour
 {
-    [SerializeField] string weaponName;
-    [SerializeField] string weaponClass;
-    [SerializeField] GameObject weaponMesh;
-
     // Start is called before the first frame update
     void Start()
     {
