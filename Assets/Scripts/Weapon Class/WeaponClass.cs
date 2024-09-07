@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class WeaponClass : ScriptableObject
 {
-    public string className;
-
+    
+    public WeaponBase currentWeapon;
+    public WeaponBase.weaponClassTypes classType;
 
 
 }

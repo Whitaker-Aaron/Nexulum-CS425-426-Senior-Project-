@@ -9,12 +9,13 @@ public class CharacterBase : MonoBehaviour
     //Will remove serialize field later. Here for testing purposes. Will have to be handled by lifetime 
     //managers.
 
-    [SerializeField] Rune[] equippedRunes;
-    [SerializeField] WeaponClass weaponClass;
-    //[SerializeField] MaterialsInventory materialInventory;
-    //[SerializeField] RunesInventory runesInventory;
-    //[SerializeField] WeaponsInventory weaponsInventory;
-    //[SerializeField] ItemsInventory itemsInventory;
+    [SerializeField] public Rune[] equippedRunes;
+     WeaponClass weaponClass;
+     MaterialsInventory materialInventory;
+     RuneInventory runesInventory;
+     WeaponsInventory weaponsInventory;
+     ItemsInventory itemsInventory;
+     GameObject masterInput;
 
 
 
@@ -32,6 +33,31 @@ public class CharacterBase : MonoBehaviour
     void Update()
     {
            
+    }
+
+    public WeaponClass GetWeaponClass()
+    {
+        return weaponClass;
+    }
+
+    
+
+    public void ApplyRuneLogicToWeapon()
+    {
+        for(int i = 0;  i < equippedRunes.Length; i++)
+        {
+            if (equippedRunes[i].runeType == Rune.RuneType.Weapon)
+            {
+                //Implement logic to apply rune logic to currently equipped weapon.
+            }
+
+        }
+
+    }
+
+    public GameObject GetMasterInput()
+    {
+        return masterInput;
     }
 
     

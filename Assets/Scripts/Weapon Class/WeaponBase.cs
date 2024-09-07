@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class WeaponBase : MonoBehaviour
 {
     [SerializeField] string weaponName;
-    [SerializeField] string weaponClassType;
+    [SerializeField] weaponClassTypes weaponClassType;
     [SerializeField] GameObject weaponMesh;
     
 
@@ -21,5 +21,12 @@ public class WeaponBase : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public enum weaponClassTypes
+    {
+        Knight,
+        Gunner,
+        Engineer
     }
 }
