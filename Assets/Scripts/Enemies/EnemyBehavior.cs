@@ -15,7 +15,7 @@ public class EnemyBehavior : MonoBehaviour
 
     void Start()
     {
-        
+        target = GameObject.FindWithTag("Player");
     }
 
     void Update()
