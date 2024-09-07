@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class enemyAnimController : MonoBehaviour
 {
@@ -10,34 +11,47 @@ public class enemyAnimController : MonoBehaviour
     private enemyAnimInterface animInt;
     private Vector3 previousPosition;
     private float previousRotationY;
+    private Animator animator;
 
-    // Start is called before the first frame update
-    void Start()
+    // Smoothing variables
+    private float forwardVelocity = 0.0f;  // SmoothDamp velocity for forward value
+    private float turnVelocity = 0.0f;     // SmoothDamp velocity for turn value
+    public float smoothingTime = 0.1f;     // Time taken to smooth forward and turn values
+
+
+    private void Start()
     {
         // Get the animation controller attached to this object
         animInt = GetComponent<enemyAnimInterface>();
+        animator = GetComponent<Animator>();
 
         // Initialize previous position and rotation
         previousPosition = transform.position;
         previousRotationY = transform.eulerAngles.y;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        // Calculate forward velocity based on movement direction
         Vector3 currentPosition = transform.position;
         Vector3 movementDirection = (currentPosition - previousPosition).normalized;
         previousPosition = currentPosition;
 
         // Calculate forward amount (relative to object's forward direction)
-        float forward = Vector3.Dot(movementDirection, transform.forward);
+        float targetForward = Vector3.Dot(movementDirection, transform.forward);
 
         // Calculate turning amount (how much the enemy is turning)
         float currentRotationY = transform.eulerAngles.y;
-        float turn = Mathf.DeltaAngle(previousRotationY, currentRotationY) / Time.deltaTime;
+        float targetTurn = Mathf.DeltaAngle(previousRotationY, currentRotationY) / Time.deltaTime;
         previousRotationY = currentRotationY;
 
-        // Pass the calculated values to the animation controller
+        // Smoothly update the forward and turn values
+        float forward = Mathf.SmoothDamp(animator.GetFloat("Forward"), targetForward, ref forwardVelocity, smoothingTime);
+        float turn = Mathf.SmoothDamp(animator.GetFloat("Turn"), targetTurn, ref turnVelocity, smoothingTime);
+
+        // Pass the smoothed values to the animation controller
         animInt.SetMovement(forward, turn);
     }
+
+
 }
