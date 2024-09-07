@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class enemyAnimController : MonoBehaviour
+public class enemyAnimController : MonoBehaviour, EnemyAnimation
 {
-
+    /*
     public Transform target; // The target (e.g., player or destination) the enemy is moving towards
 
     private enemyAnimInterface animInt;
@@ -17,10 +17,33 @@ public class enemyAnimController : MonoBehaviour
     private float forwardVelocity = 0.0f;  // SmoothDamp velocity for forward value
     private float turnVelocity = 0.0f;     // SmoothDamp velocity for turn value
     public float smoothingTime = 0.1f;     // Time taken to smooth forward and turn values
+    */
+    private Animator animator;
+    private Transform enemyTransform;
 
+    private int forwardHash = Animator.StringToHash("Forward");
+    private int turnHash = Animator.StringToHash("Turn");
+
+    public void updateAnimation(Vector3 movementDirection)
+    {
+        if(movementDirection.magnitude > 1)
+        {
+            movementDirection.Normalize();
+        }
+        //converts from world space to local space
+        Vector3 localDir = enemyTransform.InverseTransformDirection(movementDirection);
+        float forwardAmount = localDir.x;
+        float turnAmount = localDir.z;
+
+        animator.SetFloat(forwardHash, forwardAmount);
+        animator.SetFloat(turnHash, turnAmount);
+    }
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
+        enemyTransform = GetComponent<Transform>();
+        /*
         // Get the animation controller attached to this object
         animInt = GetComponent<enemyAnimInterface>();
         animator = GetComponent<Animator>();
@@ -28,10 +51,12 @@ public class enemyAnimController : MonoBehaviour
         // Initialize previous position and rotation
         previousPosition = transform.position;
         previousRotationY = transform.eulerAngles.y;
+        */
     }
 
     private void Update()
     {
+        /*
         // Calculate forward velocity based on movement direction
         Vector3 currentPosition = transform.position;
         Vector3 movementDirection = (currentPosition - previousPosition).normalized;
@@ -51,6 +76,7 @@ public class enemyAnimController : MonoBehaviour
 
         // Pass the smoothed values to the animation controller
         animInt.SetMovement(forward, turn);
+        */
     }
 
 

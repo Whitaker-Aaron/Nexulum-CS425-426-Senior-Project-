@@ -5,24 +5,25 @@ using UnityEngine;
 
 public interface EnemyAnimation
 {
-    void setMovement(float forward, float turn);
+    void updateAnimation(Vector3 movementDirection);
+    //void setMovement(float forward, float turn);
 
 }
 
 public class enemyAnimInterface : MonoBehaviour
 {
-    private Animator animator;
-    private readonly int forwardHash = Animator.StringToHash("Forward");
-    private readonly int turnHash = Animator.StringToHash("Turn");
+    //private Animator animator;
+    //private readonly int forwardHash = Animator.StringToHash("Forward");
+    //private readonly int turnHash = Animator.StringToHash("Turn");
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
     }
 
-    public void SetMovement(float forward, float turn)
-    {
-        animator.SetFloat(forwardHash, forward);
-        animator.SetFloat(turnHash, turn);
-    }
+    //public void SetMovement(float forward, float turn)
+    //{
+        //animator.SetFloat(forwardHash, forward);
+       // animator.SetFloat(turnHash, turn);
+    //}
 }
