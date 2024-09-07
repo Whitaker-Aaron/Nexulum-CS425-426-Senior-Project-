@@ -27,6 +27,7 @@ public class masterInput : MonoBehaviour
 
     //temporary player object - CHANGE TO CharacterBase ONCE IMPLEMENTED
     private GameObject player;
+    [SerializeField] public WeaponBase.weaponClassTypes currentClass;
 
     private void Awake()
     {

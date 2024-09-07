@@ -20,6 +20,6 @@ public class WeaponClassManager : MonoBehaviour
 
     public void ChangeWeaponClass(WeaponClass classToChangeTo)
     {
-        //characterReference.GetMasterInput().GetComponent<masterInput>().currentClass = classToChangeTo.classType;
+        characterReference.GetMasterInput().GetComponent<masterInput>().currentClass = classToChangeTo.classType;
     }
 }
