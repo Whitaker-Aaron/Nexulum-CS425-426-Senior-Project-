@@ -19,6 +19,10 @@ public class playertypeKnight : MonoBehaviour
     public float differenceTime = .02f;
     public float animDiff = 1.2f;
 
+    //Sword instantiations
+    public GameObject[] swords;
+    public Transform hand;
+
 
     public PlayerController playerCon; 
 
@@ -27,6 +31,8 @@ public class playertypeKnight : MonoBehaviour
     {
         anim = gameObject.GetComponent<Animator>();
         playerCon = gameObject.GetComponent<PlayerController>();
+        GameObject currentSword = swords[0];
+        Instantiate(currentSword, hand);
     }
 
     // Update is called once per frame

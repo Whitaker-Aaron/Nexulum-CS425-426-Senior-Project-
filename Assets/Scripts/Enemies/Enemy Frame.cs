@@ -30,11 +30,24 @@ public class EnemyFrame : MonoBehaviour
     //take damage function with given damage paramater - Spencer
     public void takeDamage(int damage)
     {
+        print("Health is: " + health + " Dmg taken is: " + damage);
         if (health - damage <= 0)
             death();
         else
             health -= damage;
         
+    }
+
+    //dmg over time function - Spencer
+    public IEnumerator dmgOverTime(int dmg, float statusTime, float dmgTime)
+    {
+        float currentTime = Time.time;
+        while(currentTime + statusTime > Time.time)
+        {
+            takeDamage(dmg);
+            yield return new WaitForSeconds(dmgTime);
+        }
+        yield break;
     }
 
     //death function and roll loot - Spencer
