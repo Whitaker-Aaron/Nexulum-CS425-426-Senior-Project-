@@ -94,10 +94,10 @@ public class masterInput : MonoBehaviour
             lookPos = hit.point;
         }
 
-        Vector3 lookDir = lookPos - transform.position;
+        Vector3 lookDir = lookPos - player.transform.position;
         lookDir.y = 0;
 
-        player.transform.LookAt(transform.position + lookDir, Vector3.up);
+        player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
     }
     private void FixedUpdate()
     {

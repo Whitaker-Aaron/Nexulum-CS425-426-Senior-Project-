@@ -14,18 +14,20 @@ public class MaterialScrollManager : MonoBehaviour
 
     private IEnumerator coroutine;
 
+    MaterialsInventory materialInventory;
+
     List<GameObject> currentMaterials = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
+        
         //UpdateScroll();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        materialInventory = GameObject.Find("MaterialsInventory").GetComponent<MaterialsInventory>();
     }
 
     public void UpdateScroll(Texture materialTexture, string materialName)
@@ -71,6 +73,13 @@ public class MaterialScrollManager : MonoBehaviour
 
         //color = 0.5f;
         //testContent.transform.parent = content.transform;
+    }
+
+    public void AddToMaterialsInventory(CraftMaterial material)
+    {
+        Debug.Log("Material getting added to inventory: " + material.materialName);
+        materialInventory.AddToInventory(material);
+
     }
 
     private void OnDestroy()
