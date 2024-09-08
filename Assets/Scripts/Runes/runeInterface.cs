@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RuneInventory : MonoBehaviour
+public interface RuneInt
+{
+    //string runeName { get; }
+    void apply();
+    void remove();
+}
+
+public class runeInterface : MonoBehaviour
 {
     // Start is called before the first frame update
-    Rune[] inventory;
-    //public Rune equippedRune;
     void Start()
     {
         
@@ -17,5 +22,4 @@ public class RuneInventory : MonoBehaviour
     {
         
     }
-
 }

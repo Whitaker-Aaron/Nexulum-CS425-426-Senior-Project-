@@ -5,8 +5,14 @@ using UnityEngine;
 public class WeaponsInventory : MonoBehaviour
 {
     WeaponBase[] inventory;
+    //public WeaponBase equippedWeapon;
     // Start is called before the first frame update
     void Start()
+    {
+        
+    }
+
+    private void Awake()
     {
         
     }
