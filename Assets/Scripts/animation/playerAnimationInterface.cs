@@ -6,6 +6,11 @@ using UnityEngine;
 public interface PlayerAnimation
 {
     void updatePlayerAnimation(Vector3 movementDirection);
+    AnimatorStateInfo getAnimationInfo();
+    void knightAttackOne();
+    void knightAttackTwo();
+    void knightAttackThree();
+    void resetKnight();
 }
 public class playerAnimationInterface : MonoBehaviour
 {
