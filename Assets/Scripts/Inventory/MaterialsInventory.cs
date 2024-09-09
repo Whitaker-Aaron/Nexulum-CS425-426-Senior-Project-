@@ -31,6 +31,12 @@ public class MaterialsInventory : MonoBehaviour
                 if (inventory[i].materialName == materialToAdd.materialName)
                 {
                     Debug.Log(materialToAdd.materialName + " is already in inventory!");
+                    if (inventory[i].currentAmount != inventory[i].maxMaterialAmount)
+                    {
+                        inventory[i].currentAmount++;
+                        Debug.Log("Amount of " + materialToAdd.materialName + " inside inventory: " + inventory[i].currentAmount);
+                    }
+                    
                     itemFound = true;
                 }
 
@@ -40,9 +46,16 @@ public class MaterialsInventory : MonoBehaviour
         if (!itemFound)
         {
             inventory[nextFreeIndex] = materialToAdd;
+            inventory[nextFreeIndex].currentAmount = 1;
             Debug.Log(inventory[nextFreeIndex].materialName + " has been added to inventory!");
             nextFreeIndex++;
 
         }
     }
+
+    public CraftMaterial[] GetInventory() {
+        return inventory;
+    }
+
+
 }

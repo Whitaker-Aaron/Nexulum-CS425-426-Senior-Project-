@@ -89,6 +89,11 @@ public class MaterialScrollManager : MonoBehaviour
         scrollObject.quantity.text = "x0";
     }
 
+    public CraftMaterial[] GetMaterialInventory()
+    {
+        return materialInventory.GetInventory();
+    }
+
     private void CheckForNull()
     {
         for (int i = 0; i < currentMaterials.Count; i++)

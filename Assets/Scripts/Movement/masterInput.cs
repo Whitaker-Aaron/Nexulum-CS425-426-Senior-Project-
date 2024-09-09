@@ -60,6 +60,8 @@ public class masterInput : MonoBehaviour
         move = context.ReadValue<Vector2>();
     }
 
+    
+
     //actual player translation for FixedUpdate
     public void movePlayer()
     {
