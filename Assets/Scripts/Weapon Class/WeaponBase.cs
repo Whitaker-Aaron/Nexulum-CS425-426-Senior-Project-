@@ -3,25 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponBase : MonoBehaviour
+[CreateAssetMenu(menuName = "WeaponBase", fileName = "newWeapon")]
+public class WeaponBase : ScriptableObject
 {
     [SerializeField] string weaponName;
     [SerializeField] weaponClassTypes weaponClassType;
-    [SerializeField] GameObject weaponMesh;
+    [SerializeField] public GameObject weaponMesh;
     
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public enum weaponClassTypes
     {

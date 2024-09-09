@@ -15,13 +15,18 @@ public class swordCombat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isFire = true;
+        //isFire = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void activateFire(bool activate)
+    {
+        isFire = activate;
     }
 
     private void OnTriggerStay(Collider other)

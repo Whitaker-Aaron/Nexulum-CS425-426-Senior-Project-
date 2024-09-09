@@ -10,14 +10,29 @@ public class CharacterBase : MonoBehaviour
     //managers.
 
     [SerializeField] public Rune[] equippedRunes;
+    [SerializeField] public WeaponBase equippedWeapon;
+    //[SerializeField] public RuneInt runeInt;
      WeaponClass weaponClass;
      MaterialsInventory materialInventory;
      RuneInventory runesInventory;
      WeaponsInventory weaponsInventory;
      ItemsInventory itemsInventory;
-    [SerializeField] GameObject masterInput;
+
+     [SerializeField] GameObject masterInput;
 
 
+    private RuneInt runeInt;
+
+    //weapon spawn
+    public Transform hand;
+
+
+    private void Awake()
+    {
+        runeInt = GetComponent<RuneInt>();
+
+        runeInt.apply();
+    }
 
     // Start is called before the first frame update
     void Start()
