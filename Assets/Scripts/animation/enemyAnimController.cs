@@ -24,8 +24,12 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
     private int forwardHash = Animator.StringToHash("Forward");
     private int turnHash = Animator.StringToHash("Turn");
 
+    bool isAttacking = false;
+
     public void updateAnimation(Vector3 movementDirection)
     {
+        if (isAttacking)
+            return;
         if(movementDirection.magnitude > 1)
         {
             movementDirection.Normalize();
@@ -37,6 +41,30 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
 
         animator.SetFloat(forwardHash, forwardAmount);
         animator.SetFloat(turnHash, turnAmount);
+    }
+
+
+    public void minionAttack()
+    {
+        isAttacking = true;
+        animator.SetBool("Attack", true);
+        animator.Play("Attack");
+        animator.SetBool("Attack", false);
+        StartCoroutine(wait(animator.GetCurrentAnimatorStateInfo(0).normalizedTime));
+    }
+
+    public float getAnimationTime()
+    {
+        float time = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        return time;
+
+    }
+
+    IEnumerator wait(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isAttacking = false;
+        yield break;
     }
 
     private void Start()

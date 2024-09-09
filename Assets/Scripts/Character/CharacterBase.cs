@@ -24,6 +24,8 @@ public class CharacterBase : MonoBehaviour
     //weapon spawn
     public Transform hand;
 
+    //Player Health System
+    public int playerHealth = 100;
 
     private void Awake()
     {
@@ -71,6 +73,12 @@ public class CharacterBase : MonoBehaviour
     public GameObject GetMasterInput()
     {
         return masterInput;
+    }
+
+    public void takeDamage(int damage)
+    {
+        playerHealth -= damage;
+        print("Player health: " + playerHealth);
     }
 
     

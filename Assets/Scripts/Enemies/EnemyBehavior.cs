@@ -13,8 +13,22 @@ public class EnemyBehavior : MonoBehaviour
     Vector3 playerPosition;
     float distanceToPlayer;
 
-    //animation function for getting direction, sends to animation interface
+    //animation function for getting direction, sends to animation interface - Spencer
     private EnemyAnimation enemyAnim;
+
+    //stop movement implementation for combat, simple bool control - Spencer
+    bool isMoving = true;
+
+    public IEnumerator pauseMovement(float time)
+    {
+        isMoving = false;
+        yield return new WaitForSeconds(time);
+        isMoving = true;
+        yield break;
+    }
+
+
+
     private Vector3 CalculateMovementDirecton()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -30,6 +44,9 @@ public class EnemyBehavior : MonoBehaviour
 
     void Update()
     {
+        if (!isMoving)
+            return;
+
         selfPosition = transform.position;
         playerPosition = target.transform.position;
         distanceToPlayer = (playerPosition - selfPosition).magnitude;
