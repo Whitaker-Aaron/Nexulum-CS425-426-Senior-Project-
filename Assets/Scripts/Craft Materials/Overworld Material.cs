@@ -56,10 +56,13 @@ public class OverworldMaterial : MonoBehaviour
         if(collision.gameObject.tag == "Player")
 
         {
-            //TODO: Add logic that passes the material reference object into materials inventory on pickup. 
             var scrollRef = scrollManager.GetComponent<MaterialScrollManager>();
             scrollRef.AddToMaterialsInventory(this.material);
             scrollRef.UpdateScroll(this.material.materialTexture, this.material.materialName);
+            if(GameObject.FindGameObjectWithTag("MainMenu") != null)
+            {
+                GameObject.Find("MenuManager").GetComponent<MenuManager>().AddToCurrentInventory(this.material);
+            }
             
             Destroy(this.gameObject);
         }

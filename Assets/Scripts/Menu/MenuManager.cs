@@ -47,7 +47,7 @@ public class MenuManager : MonoBehaviour
 
     }
 
-    public void addToCurrentInventory(CraftMaterial materialToAdd)
+    public void AddToCurrentInventory(CraftMaterial materialToAdd)
     {
         var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
         int existingIndex = -1;

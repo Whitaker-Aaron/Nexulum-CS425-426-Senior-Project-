@@ -64,8 +64,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""OpenMenu"",
-                    ""type"": ""Value"",
+                    ""name"": ""PauseInput"",
+                    ""type"": ""Button"",
                     ""id"": ""150df895-49e0-4601-8ad2-720004a61313"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -169,7 +169,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": ""Press(behavior=1)"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""OpenMenu"",
+                    ""action"": ""PauseInput"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -232,7 +232,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_player_mouseLook = m_player.FindAction("mouseLook", throwIfNotFound: true);
         m_player_Attack = m_player.FindAction("Attack", throwIfNotFound: true);
         m_player_Run = m_player.FindAction("Run", throwIfNotFound: true);
-        m_player_OpenMenu = m_player.FindAction("OpenMenu", throwIfNotFound: true);
+        m_player_PauseInput = m_player.FindAction("PauseInput", throwIfNotFound: true);
         // MenuControl
         m_MenuControl = asset.FindActionMap("MenuControl", throwIfNotFound: true);
         m_MenuControl_Pause = m_MenuControl.FindAction("Pause", throwIfNotFound: true);
@@ -302,7 +302,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_mouseLook;
     private readonly InputAction m_player_Attack;
     private readonly InputAction m_player_Run;
-    private readonly InputAction m_player_OpenMenu;
+    private readonly InputAction m_player_PauseInput;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -311,7 +311,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @mouseLook => m_Wrapper.m_player_mouseLook;
         public InputAction @Attack => m_Wrapper.m_player_Attack;
         public InputAction @Run => m_Wrapper.m_player_Run;
-        public InputAction @OpenMenu => m_Wrapper.m_player_OpenMenu;
+        public InputAction @PauseInput => m_Wrapper.m_player_PauseInput;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -333,9 +333,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
-            @OpenMenu.started += instance.OnOpenMenu;
-            @OpenMenu.performed += instance.OnOpenMenu;
-            @OpenMenu.canceled += instance.OnOpenMenu;
+            @PauseInput.started += instance.OnPauseInput;
+            @PauseInput.performed += instance.OnPauseInput;
+            @PauseInput.canceled += instance.OnPauseInput;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -352,9 +352,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
-            @OpenMenu.started -= instance.OnOpenMenu;
-            @OpenMenu.performed -= instance.OnOpenMenu;
-            @OpenMenu.canceled -= instance.OnOpenMenu;
+            @PauseInput.started -= instance.OnPauseInput;
+            @PauseInput.performed -= instance.OnPauseInput;
+            @PauseInput.canceled -= instance.OnPauseInput;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -432,7 +432,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMouseLook(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
-        void OnOpenMenu(InputAction.CallbackContext context);
+        void OnPauseInput(InputAction.CallbackContext context);
     }
     public interface IMenuControlActions
     {
