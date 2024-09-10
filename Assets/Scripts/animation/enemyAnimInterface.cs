@@ -6,6 +6,9 @@ using UnityEngine;
 public interface EnemyAnimation
 {
     void updateAnimation(Vector3 movementDirection);
+    void minionAttack();
+
+    float getAnimationTime();
     //void setMovement(float forward, float turn);
 
 }
