@@ -9,6 +9,7 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] GameObject materialsMenuReference;
     [SerializeField] GameObject scrollContent;
+    List<GameObject> currentMaterials = new List<GameObject>();
 
     GameObject currentMenuObject;
     GameObject canvas;
@@ -46,6 +47,48 @@ public class MenuManager : MonoBehaviour
 
     }
 
+    public void addToCurrentInventory(CraftMaterial materialToAdd)
+    {
+        var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
+        int existingIndex = -1;
+        bool exists = false;
+
+        scrollObject.description.text = materialToAdd.materialName;
+        scrollObject.imageRef.texture = materialToAdd.materialTexture;
+        scrollObject.quantityInt = 1;
+        scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
+
+        for (int i = 0; i < currentMaterials.Count; i++)
+        {
+            if (currentMaterials[i].GetComponent<MaterialScrollObject>().description.text == materialToAdd.materialName)
+            {
+                exists = true;
+                existingIndex = i;
+            }
+        }
+
+        if (exists)
+        {
+            Debug.Log("Current material found");
+            var updateMat = currentMaterials[existingIndex].GetComponent<MaterialScrollObject>();
+            updateMat.quantityInt += 1;
+            updateMat.quantity.text = "x" + updateMat.quantityInt.ToString();
+        }
+        else
+        {
+            var matManager = materialManager.GetComponent<MaterialScrollManager>();
+            if (matManager.GetMaterialInventorySize() < matManager.GetMaterialInventoryMaxSize())
+            {
+                var container = currentMenuObject.GetComponentInChildren<GridLayoutGroup>();
+                GameObject newScrollMaterial = Instantiate(scrollContent);
+                newScrollMaterial.transform.SetParent(container.transform);
+                currentMaterials.Add(newScrollMaterial);
+            }
+            
+        }
+
+    }
+
     public void populateInventoryMaterials()
     {
         CraftMaterial[] matInventory = materialManager.GetComponent<MaterialScrollManager>().GetMaterialInventory();
@@ -65,6 +108,7 @@ public class MenuManager : MonoBehaviour
                 scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
                 GameObject newScrollMaterial = Instantiate(scrollContent);
                 newScrollMaterial.transform.SetParent(container.transform);
+                currentMaterials.Add(newScrollMaterial);
             }
         }
 
