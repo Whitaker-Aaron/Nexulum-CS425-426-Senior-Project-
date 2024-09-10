@@ -57,5 +57,15 @@ public class MaterialsInventory : MonoBehaviour
         return inventory;
     }
 
+    public int GetCurrentInventorySize()
+    {
+        return nextFreeIndex;
+    }
+
+    public int GetMaxInventorySize()
+    {
+        return inventory.Length;
+    }
+
 
 }

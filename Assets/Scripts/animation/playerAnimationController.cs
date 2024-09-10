@@ -75,6 +75,13 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     }
 
+    public void stop()
+    {
+        animator.StopPlayback();
+        //resetKnight();
+        //animator.enabled = !animator.enabled;
+    }
+
     public void resetKnight()
     {
         if(animator.GetBool("attack3") == true)
