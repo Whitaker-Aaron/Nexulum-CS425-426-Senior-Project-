@@ -89,6 +89,8 @@ public class masterInput : MonoBehaviour
         move = context.ReadValue<Vector2>();
     }
 
+    
+
     //actual player translation for FixedUpdate
     public void movePlayer()
     {
@@ -186,6 +188,7 @@ public class masterInput : MonoBehaviour
         lookDir.y = 0;
 
         player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
+
 
 
 

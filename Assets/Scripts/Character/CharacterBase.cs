@@ -17,7 +17,9 @@ public class CharacterBase : MonoBehaviour
      RuneInventory runesInventory;
      WeaponsInventory weaponsInventory;
      ItemsInventory itemsInventory;
+
      [SerializeField] GameObject masterInput;
+
 
     private RuneInt runeInt;
 
