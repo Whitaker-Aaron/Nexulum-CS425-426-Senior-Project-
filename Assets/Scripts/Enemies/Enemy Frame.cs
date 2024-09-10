@@ -74,7 +74,7 @@ public class EnemyFrame : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Enemy collided with: ");
+        
         if (collision.gameObject.tag == "Bullet")
         { for (int i = 0; i < materialList.Length; i++)
             {
