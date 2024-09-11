@@ -101,7 +101,7 @@ public class masterInput : MonoBehaviour
     //onMove is implemented through InputSystem in unity, context is the input
     public void onMove(InputAction.CallbackContext context)
     {
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+        if(inputPaused)//(isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
             return;
         move = context.ReadValue<Vector2>();
     }
