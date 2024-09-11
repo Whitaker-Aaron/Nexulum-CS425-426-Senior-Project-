@@ -8,6 +8,9 @@ public class MenuManager : MonoBehaviour
     
 {
     [SerializeField] GameObject materialsMenuReference;
+    [SerializeField] GameObject craftMenuReference;
+    [SerializeField] GameObject itemsMenuReference;
+    [SerializeField] GameObject runeMenuReference;
     [SerializeField] GameObject scrollContent;
     List<GameObject> currentMaterials = new List<GameObject>();
 
@@ -46,6 +49,41 @@ public class MenuManager : MonoBehaviour
         }
 
     }
+
+    public void navigateToCraftMenu()
+    {
+        if (menuActive)
+        {
+            currentMenuObject.SetActive(false);
+            currentMenuObject = Instantiate(craftMenuReference);
+            currentMenuObject.transform.SetParent(canvas.transform);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        }
+    }
+
+    public void navigateToItemsMenu()
+    {
+        if (menuActive)
+        {
+            currentMenuObject.SetActive(false);
+            currentMenuObject = Instantiate(itemsMenuReference);
+            currentMenuObject.transform.SetParent(canvas.transform);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        }
+    }
+
+    public void navigateToRuneMenu()
+    {
+        if (menuActive)
+        {
+            currentMenuObject.SetActive(false);
+            currentMenuObject = Instantiate(runeMenuReference);
+            currentMenuObject.transform.SetParent(canvas.transform);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        }
+    }
+
+
 
     public void AddToCurrentInventory(CraftMaterial materialToAdd)
     {
