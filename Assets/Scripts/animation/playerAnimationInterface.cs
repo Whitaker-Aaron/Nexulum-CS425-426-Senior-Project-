@@ -7,8 +7,8 @@ public interface PlayerAnimation
 {
     void updatePlayerAnimation(Vector3 movementDirection);
     AnimatorStateInfo getAnimationInfo();
-    void knightAttackOne();
-    void knightAttackTwo();
+    void knightAttackOne(float time);
+    void knightAttackTwo(float time);
     void knightAttackThree();
     void resetKnight();
 
