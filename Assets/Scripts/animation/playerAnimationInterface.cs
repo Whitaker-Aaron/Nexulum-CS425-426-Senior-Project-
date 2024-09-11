@@ -11,6 +11,8 @@ public interface PlayerAnimation
     void knightAttackTwo(float time);
     void knightAttackThree();
     void resetKnight();
+
+    void stop();
 }
 public class playerAnimationInterface : MonoBehaviour
 {

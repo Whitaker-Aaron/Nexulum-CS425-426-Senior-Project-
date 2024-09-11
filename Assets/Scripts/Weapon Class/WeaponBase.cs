@@ -9,7 +9,7 @@ public class WeaponBase : ScriptableObject
     [SerializeField] string weaponName;
     [SerializeField] weaponClassTypes weaponClassType;
     [SerializeField] public GameObject weaponMesh;
-    
+    [SerializeField] public CraftRecipe weaponRecipe;
 
 
 

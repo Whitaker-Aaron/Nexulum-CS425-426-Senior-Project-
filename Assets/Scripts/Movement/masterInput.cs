@@ -57,6 +57,8 @@ public class masterInput : MonoBehaviour
     //Knight Combat Variables
     bool isAttacking = false;
     float cooldown = 1f;
+    bool inputPaused = false;
+    bool returningFromMenu = true;
     public float cooldownTime = 2f;
     public float nextAttackTime = .3f;
     private static int noOfClicks = 0;
@@ -99,8 +101,8 @@ public class masterInput : MonoBehaviour
     //onMove is implemented through InputSystem in unity, context is the input
     public void onMove(InputAction.CallbackContext context)
     {
-        //if (isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight)
-          //  return;
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+            return;
         move = context.ReadValue<Vector2>();
     }
 
@@ -109,11 +111,21 @@ public class masterInput : MonoBehaviour
     //actual player translation for FixedUpdate
     public void movePlayer()
     {
-        if (isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight)
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
             return;
         Vector3 movement = new Vector3(move.x, 0, move.y);
 
         player.transform.Translate(movement * speed * Time.deltaTime, Space.World);
+    }
+
+    public void pauseInput(InputAction.CallbackContext context)
+    {
+        inputPaused = !inputPaused;
+        returningFromMenu = !returningFromMenu;
+        animationControl.stop();
+        Input.ResetInputAxes();
+        noOfClicks = 0;
+
     }
 
     //Knight Functions
@@ -202,7 +214,7 @@ public class masterInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight)
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
             return;
 
         //player look at cursor position
@@ -222,7 +234,7 @@ public class masterInput : MonoBehaviour
 
 
 
-
+        if (inputPaused) return;
 
         //KNIGHT LOGIC
         if(currentClass == WeaponBase.weaponClassTypes.Knight)
@@ -236,6 +248,7 @@ public class masterInput : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     //print("click: " + noOfClicks);
+                    
                     lastClickedTime = Time.time;
                     
                     noOfClicks++;
@@ -322,10 +335,12 @@ public class masterInput : MonoBehaviour
                 StartCoroutine(shoot());
             }
         }
+
+        returningFromMenu = false;
     }
     private void FixedUpdate()
     {
-        if (isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight)
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
             return;
 
         float horizontal = Input.GetAxis("Horizontal");
