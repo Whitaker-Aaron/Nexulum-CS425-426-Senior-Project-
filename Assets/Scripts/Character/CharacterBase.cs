@@ -29,6 +29,9 @@ public class CharacterBase : MonoBehaviour
     //Player Health System
     public int playerHealth = 100;
 
+    //Knight attackpoint transform - NEEDED FOR MASTERINPUT - Spencer
+    public Transform swordAttackPoint;
+
     private void Awake()
     {
         runeInt = GetComponent<RuneInt>();

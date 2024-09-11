@@ -26,6 +26,8 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
 
     bool isAttacking = false;
 
+    public float takeHitTime = .8f;
+
     public void updateAnimation(Vector3 movementDirection)
     {
         if (isAttacking)
@@ -43,6 +45,11 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
         animator.SetFloat(turnHash, turnAmount);
     }
 
+    public AnimatorStateInfo getAnimationInfo()
+    {
+        return animator.GetCurrentAnimatorStateInfo(0);
+    }
+
 
     public void minionAttack()
     {
@@ -58,6 +65,15 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
         float time = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
         return time;
 
+    }
+
+    public void takeHit()
+    {
+        if (getAnimationInfo().IsName("takeHit") && getAnimationInfo().normalizedTime < takeHitTime)
+            return;
+        animator.SetBool("takeHit", true);
+        animator.Play("takeHit");
+        animator.SetBool("takeHit", false);
     }
 
     IEnumerator wait(float time)

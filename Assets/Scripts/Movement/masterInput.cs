@@ -18,6 +18,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
@@ -33,7 +34,13 @@ public class masterInput : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        character = player.GetComponent<CharacterBase>();
+        sword = character.equippedWeapon.weaponMesh;
+        swordAttackPoint = character.swordAttackPoint;
     }
+
+    //player
+    CharacterBase character;
 
     //basic general player movement
     public PlayerInputActions playerControl;
@@ -46,12 +53,13 @@ public class masterInput : MonoBehaviour
     Vector3 movement, camForward;
     new Transform camera;
 
-
+    [Header("Knight Variables")]
     //Knight Combat Variables
     bool isAttacking = false;
+    float cooldown = 1f;
     bool inputPaused = false;
     bool returningFromMenu = true;
-    public float cooldown = 1f;
+    public float cooldownTime = 2f;
     public float nextAttackTime = .3f;
     private static int noOfClicks = 0;
     private float lastClickedTime = 0;
@@ -61,6 +69,13 @@ public class masterInput : MonoBehaviour
     public float animTimeThree = 0.99f;
     public float differenceTime = .02f;
     public float animDiff = 1.2f;
+    GameObject sword;
+    public Transform swordAttackPoint;
+    public float swordAttackRadius;
+    public LayerMask layer;
+    public float dashSpeed = 3f;
+    public float dashTime = .2f;
+
 
 
     //Gunner Variables
@@ -116,19 +131,34 @@ public class masterInput : MonoBehaviour
     //Knight Functions
     IEnumerator wait(float animationTime)
     {
+        //isAttacking = true;
+        yield return new WaitForSeconds(animationTime);
+        animationControl.resetKnight();
+        //isAttacking = false;
+        yield break;
+    }
+
+    IEnumerator waitAttack(float animationTime)
+    {
         isAttacking = true;
         yield return new WaitForSeconds(animationTime);
+        //animationControl.resetKnight();
         isAttacking = false;
         yield break;
     }
 
-    IEnumerator waitThree(float animationTime)
+    IEnumerator dash(float time)
     {
-        isAttacking = true;
-        yield return new WaitForSeconds(animationTime);
-        animationControl.resetKnight();
-        isAttacking = false;
+        //player.GetComponent<Rigidbody>().velocity = new Vector3(player.transform.forward.x * dashSpeed, 0, player.transform.forward.z * dashSpeed);
+        //player.transform.Translate(player.transform.forward * dashSpeed * Time.deltaTime, Space.Self);
+        yield return new WaitForSeconds(time);
+        //player.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
         yield break;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(swordAttackPoint.position, swordAttackRadius);
     }
 
 
@@ -172,6 +202,7 @@ public class masterInput : MonoBehaviour
 
 
 
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -212,17 +243,18 @@ public class masterInput : MonoBehaviour
             {
                 noOfClicks = 0;
             }
-            if (Time.time > lastClickedTime + nextAttackTime && isAttacking == false)
+            if (Time.time > lastClickedTime + nextAttackTime && Time.time > cooldownTime)//&& isAttacking == false)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
                     //print("click: " + noOfClicks);
                     
                     lastClickedTime = Time.time;
+                    
                     noOfClicks++;
-                    if (noOfClicks >= 1)
+                    if (noOfClicks == 1)
                     {
-                        if (animationControl.getAnimationInfo().IsName("attackTwo") && animationControl.getAnimationInfo().normalizedTime > .99f)
+                        if (animationControl.getAnimationInfo().IsName("waitTwo") && animationControl.getAnimationInfo().normalizedTime > .99f)
                         {
                             noOfClicks = 0;
                             return;
@@ -234,37 +266,47 @@ public class masterInput : MonoBehaviour
                         }
                         //anim.SetTrigger("Attack");
                         //anim.SetBool("attack1", true);
-                        animationControl.knightAttackOne();
+                        StartCoroutine(dash(dashTime));
+                        StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(animTime, swordAttackPoint, swordAttackRadius, layer));
+                        animationControl.knightAttackOne(animTime);
+                        StartCoroutine(waitAttack(animTime * 2));
                         StartCoroutine(wait(animTime));
                         //anim.Play("attackOne");
                         //nextAttackTime = anim.GetCurrentAnimatorStateInfo(0).length - differenceTime;
                         //print("Anim: " + anim.GetBool("attack1"));
                     }
-                    noOfClicks = Mathf.Clamp(noOfClicks, 1, 3);
+                    noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
 
-                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().normalizedTime > animTime && animationControl.getAnimationInfo().IsName("attackOne"))
+                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("waitOne"))
                     {
                         //anim.SetBool("attack2", true);
                         //anim.SetBool("attack1", false);
                         //anim.Play("attackTwo");
-                        animationControl.knightAttackTwo();
+                        nextAttackTime = animTimeTwo;
+                        StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(animTimeTwo, swordAttackPoint, swordAttackRadius, layer));
+                        animationControl.knightAttackTwo(animTimeTwo);
                         StartCoroutine(wait(animTimeTwo));
+                        StartCoroutine(waitAttack(animTimeTwo * 2));
                     }
 
-                    if (noOfClicks >= 3 && animationControl.getAnimationInfo().normalizedTime > animTimeTwo && animationControl.getAnimationInfo().IsName("attackTwo"))
+                    if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("waitTwo"))
                     {
+                        nextAttackTime = animTimeThree;
                         nextAttackTime += differenceTime;
                         noOfClicks = 0;
+                        cooldownTime = Time.time + cooldown;
+                        StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(animTimeThree, swordAttackPoint, swordAttackRadius, layer));
                         animationControl.knightAttackThree();
-                        StartCoroutine(waitThree(animTimeThree + animDiff));
-                        animationControl.resetKnight();
+                        StartCoroutine(wait(animTimeThree));
+                        StartCoroutine(waitAttack(animTimeThree * 2));
                         nextAttackTime -= differenceTime;
+                        nextAttackTime = animTime;
 
                     }
                     else
                     {
-
-                        animationControl.resetKnight();
+                        if(Time.time - lastClickedTime > maxComboDelay)
+                            animationControl.resetKnight();
                     }
                 }
             }
