@@ -13,12 +13,15 @@ public class EnemyFrame : MonoBehaviour
     //PLAYER HEALTH - Spencer
     private int health = 100;
 
+    //Enemy animation for taking hits
+    EnemyAnimation anim;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        anim = GetComponent<EnemyAnimation>();
     }
 
     // Update is called once per frame
@@ -30,6 +33,7 @@ public class EnemyFrame : MonoBehaviour
     //take damage function with given damage paramater - Spencer
     public void takeDamage(int damage)
     {
+        anim.takeHit();
         print("Health is: " + health + " Dmg taken is: " + damage);
         if (health - damage <= 0)
             death();

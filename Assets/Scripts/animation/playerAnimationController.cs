@@ -42,6 +42,10 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     }
     void updateAnimator()
     {
+        if (forwardAmount != 0 && (getAnimationInfo().IsName("waitOne") || getAnimationInfo().IsName("waitTwo")) )
+        {
+            //animator.SetTrigger("return");
+        }
         animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
         animator.SetFloat("Turn", turnAmount, 0.1f, Time.deltaTime);
     }
@@ -54,23 +58,40 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         return animator.GetCurrentAnimatorStateInfo(0);
     }
 
-    public void knightAttackOne()
+    IEnumerator attackWait(float time, string animName)
     {
+        yield return new WaitForSeconds(time);
+        if (getAnimationInfo().IsName("attack2") || getAnimationInfo().IsName("Attack3"))
+            yield break;
+        //print("animation: " + animName);
+        animator.Play(animName);
+        yield break;
+    }
+
+
+    public void knightAttackOne(float time)
+    {
+        
+        if (getAnimationInfo().IsName("Attack2") || getAnimationInfo().IsName("Attack3"))
+            return;
         animator.SetBool("attack1", true);
         animator.Play("attackOne");
+        StartCoroutine(attackWait(time, "waitOne"));
     }
-    public void knightAttackTwo()
+    public void knightAttackTwo(float time)
     {
-        animator.SetBool("attack2", true);
         animator.SetBool("attack1", false);
+        animator.SetBool("attack2", true);
         animator.Play("attackTwo");
+        StartCoroutine(attackWait(time, "waitTwo"));
     }
 
     public void knightAttackThree()
     {
-        animator.SetBool("attack3", true);
-        animator.SetBool("attack2", false);
+
         animator.SetBool("attack1", false);
+        animator.SetBool("attack2", false);
+        animator.SetBool("attack3", true);
         animator.Play("attackThree");
 
     }
@@ -79,14 +100,14 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     {
         if(animator.GetBool("attack3") == true)
         {
-            animator.SetBool("attack3", false);
-            animator.SetBool("attack2", false);
             animator.SetBool("attack1", false);
+            animator.SetBool("attack2", false);
+            animator.SetBool("attack3", false);
         }
         else if (animator.GetBool("attack2") == true)
         {
-            animator.SetBool("attack2", false);
             animator.SetBool("attack1", false);
+            animator.SetBool("attack2", false);
         }
         else
         {
