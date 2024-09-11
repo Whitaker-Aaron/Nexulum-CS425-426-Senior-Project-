@@ -50,10 +50,23 @@ public class MenuManager : MonoBehaviour
 
     }
 
+    public void navigateToMaterialMenu()
+    {
+        if(menuActive) {
+            currentMenuObject.SetActive(false);
+            currentMenuObject = Instantiate(materialsMenuReference);
+            currentMenuObject.transform.SetParent(canvas.transform);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            populateInventoryMaterials();
+        }
+    }
+
     public void navigateToCraftMenu()
     {
+        
         if (menuActive)
         {
+            Debug.Log("Navigating to Craft Menu");
             currentMenuObject.SetActive(false);
             currentMenuObject = Instantiate(craftMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform);
@@ -71,6 +84,7 @@ public class MenuManager : MonoBehaviour
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
         }
     }
+
 
     public void navigateToRuneMenu()
     {
