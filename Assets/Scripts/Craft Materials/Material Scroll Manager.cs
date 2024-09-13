@@ -99,6 +99,11 @@ public class MaterialScrollManager : MonoBehaviour
         return materialInventory.GetCurrentInventorySize();
     }
 
+    public int GetMaterialAmount(CraftMaterial material)
+    {
+       return materialInventory.GetMaterialAmount(material);
+    }
+
     public int GetMaterialInventoryMaxSize()
     {
         return materialInventory.GetMaxInventorySize();

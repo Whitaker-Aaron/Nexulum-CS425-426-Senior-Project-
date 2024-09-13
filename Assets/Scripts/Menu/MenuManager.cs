@@ -51,16 +51,11 @@ public class MenuManager : MonoBehaviour
             {
                 Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
             }
-            if (GameObject.Find("MaterialsMenu(Clone)") != null || GameObject.Find("MaterialsMenu") != null)
+            if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
-                Destroy(GameObject.Find("MaterialsMenu"));
-                Destroy(GameObject.Find("MaterialsMenu(Clone)"));
+                Destroy(GameObject.FindGameObjectWithTag("MainMenu")); 
             }
-            if (GameObject.Find("CraftMenu(Clone)") != null || GameObject.Find("CraftMenu") != null)
-            {
-                Destroy(GameObject.Find("CraftMenu"));
-                Destroy(GameObject.Find("CraftMenu(Clone)"));
-            }
+
             menuActive = false;
         }
 
@@ -85,7 +80,7 @@ public class MenuManager : MonoBehaviour
     public void navigateToMaterialMenu()
     {
         if(menuActive) {
-            currentMenuObject.SetActive(false);
+            Destroy(currentMenuObject);
             currentMenuObject = Instantiate(materialsMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
@@ -100,7 +95,7 @@ public class MenuManager : MonoBehaviour
         {
             Debug.Log("Navigating to Craft Menu");
             Instantiate(craftListsReference);
-            currentMenuObject.SetActive(false);
+            Destroy(currentMenuObject);
             currentMenuObject = Instantiate(craftMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
@@ -111,7 +106,7 @@ public class MenuManager : MonoBehaviour
     {
         if (menuActive)
         {
-            currentMenuObject.SetActive(false);
+            Destroy(currentMenuObject);
             currentMenuObject = Instantiate(itemsMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
@@ -129,6 +124,7 @@ public class MenuManager : MonoBehaviour
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
         }
     }
+
 
 
 
