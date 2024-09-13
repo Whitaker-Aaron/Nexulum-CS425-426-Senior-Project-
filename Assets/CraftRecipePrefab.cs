@@ -8,7 +8,7 @@ public class CraftRecipePrefab : MonoBehaviour
     // Start is called before the first frame update
 
     [SerializeField] GameObject materialRequirementObject;
-    [SerializeField] CraftRecipe craftRecipe;
+    [SerializeField] public CraftRecipe craftRecipe;
     [SerializeField] GameObject materialContainer;
     [SerializeField] GameObject craftRecipeName;
 

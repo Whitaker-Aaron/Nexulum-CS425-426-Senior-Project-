@@ -12,6 +12,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject itemsMenuReference;
     [SerializeField] GameObject runeMenuReference;
     [SerializeField] GameObject scrollContent;
+    [SerializeField] GameObject craftListsReference;
+
     List<GameObject> currentMaterials = new List<GameObject>();
 
     GameObject currentMenuObject;
@@ -44,10 +46,40 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
-            currentMenuObject.SetActive(false);
+            //currentMenuObject.SetActive(false);
+            if(GameObject.FindGameObjectWithTag("CraftLists") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+            }
+            if (GameObject.Find("MaterialsMenu(Clone)") != null || GameObject.Find("MaterialsMenu") != null)
+            {
+                Destroy(GameObject.Find("MaterialsMenu"));
+                Destroy(GameObject.Find("MaterialsMenu(Clone)"));
+            }
+            if (GameObject.Find("CraftMenu(Clone)") != null || GameObject.Find("CraftMenu") != null)
+            {
+                Destroy(GameObject.Find("CraftMenu"));
+                Destroy(GameObject.Find("CraftMenu(Clone)"));
+            }
             menuActive = false;
         }
 
+    }
+
+    public List<CraftRecipe> returnWeaponsCraftList()
+    {
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<WeaponCraftList>().allRecipes;
+        
+    }
+
+    public List<CraftRecipe> returnItemsCraftList()
+    {
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<ItemsCraftList>().allRecipes;
+    }
+
+    public List<CraftRecipe> returnRunesCraftList()
+    {
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().allRecipes;
     }
 
     public void navigateToMaterialMenu()
@@ -67,6 +99,7 @@ public class MenuManager : MonoBehaviour
         if (menuActive)
         {
             Debug.Log("Navigating to Craft Menu");
+            Instantiate(craftListsReference);
             currentMenuObject.SetActive(false);
             currentMenuObject = Instantiate(craftMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform);
