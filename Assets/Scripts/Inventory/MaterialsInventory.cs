@@ -67,5 +67,17 @@ public class MaterialsInventory : MonoBehaviour
         return inventory.Length;
     }
 
+    public int GetMaterialAmount(CraftMaterial specifiedMaterial)
+    {
+        for(int i = 0; i < nextFreeIndex; i++)
+        {
+            if(specifiedMaterial.materialName == inventory[i].materialName)
+            {
+                return inventory[i].currentAmount;
+            }
+        }
+        return 0;
+   
+    }
 
 }

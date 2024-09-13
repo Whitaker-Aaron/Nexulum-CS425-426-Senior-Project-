@@ -12,6 +12,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject itemsMenuReference;
     [SerializeField] GameObject runeMenuReference;
     [SerializeField] GameObject scrollContent;
+    [SerializeField] GameObject craftListsReference;
+
     List<GameObject> currentMaterials = new List<GameObject>();
 
     GameObject currentMenuObject;
@@ -44,16 +46,41 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
-            currentMenuObject.SetActive(false);
+            //currentMenuObject.SetActive(false);
+            if(GameObject.FindGameObjectWithTag("CraftLists") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+            }
+            if (GameObject.FindGameObjectWithTag("MainMenu") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("MainMenu")); 
+            }
+
             menuActive = false;
         }
 
     }
 
+    public List<CraftRecipe> returnWeaponsCraftList()
+    {
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<WeaponCraftList>().allRecipes;
+        
+    }
+
+    public List<CraftRecipe> returnItemsCraftList()
+    {
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<ItemsCraftList>().allRecipes;
+    }
+
+    public List<CraftRecipe> returnRunesCraftList()
+    {
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().allRecipes;
+    }
+
     public void navigateToMaterialMenu()
     {
         if(menuActive) {
-            currentMenuObject.SetActive(false);
+            Destroy(currentMenuObject);
             currentMenuObject = Instantiate(materialsMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
@@ -67,7 +94,8 @@ public class MenuManager : MonoBehaviour
         if (menuActive)
         {
             Debug.Log("Navigating to Craft Menu");
-            currentMenuObject.SetActive(false);
+            Instantiate(craftListsReference);
+            Destroy(currentMenuObject);
             currentMenuObject = Instantiate(craftMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
@@ -78,7 +106,7 @@ public class MenuManager : MonoBehaviour
     {
         if (menuActive)
         {
-            currentMenuObject.SetActive(false);
+            Destroy(currentMenuObject);
             currentMenuObject = Instantiate(itemsMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
@@ -96,6 +124,7 @@ public class MenuManager : MonoBehaviour
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
         }
     }
+
 
 
 
