@@ -6,11 +6,14 @@ public class CraftMenuTransition : MonoBehaviour
 {
     // Start is called before the first frame update
     GameObject mainButtons;
-    GameObject mainSelection; 
+    GameObject mainSelection;
+    GameObject weaponsScroll;
     void Start()
     {
         mainButtons = GameObject.Find("MainButtons");
         mainSelection = GameObject.Find("MainSelection");
+        weaponsScroll = GameObject.Find("WeaponsScroll");
+        weaponsScroll.SetActive(false);
     }
 
     // Update is called once per frame
@@ -30,6 +33,7 @@ public class CraftMenuTransition : MonoBehaviour
         Debug.Log("Weapon Button pressed");
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
+        weaponsScroll.SetActive(true);
     }
 
     public void NavigateToRunesCraftMenu()
