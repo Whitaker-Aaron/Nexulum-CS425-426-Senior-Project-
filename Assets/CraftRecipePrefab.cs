@@ -49,4 +49,35 @@ public class CraftRecipePrefab : MonoBehaviour
             }
         }
     }
+    public void AddToInventory()
+    {
+        switch (craftRecipe.type)
+        {
+            case CraftRecipe.CraftTypes.Weapon:
+                AddToWeaponsInventory();
+                break;
+            case CraftRecipe.CraftTypes.Rune:
+                AddToRunesInventory();
+                break;
+            case CraftRecipe.CraftTypes.Item:
+                AddToItemsInventory();
+                break;
+        }
+    }
+
+    public void AddToWeaponsInventory()
+    {
+        Debug.Log("Adding to weapons inventory");
+        GameObject.Find("WeaponsManager").GetComponent<WeaponsManager>().FindWeaponAndAdd(craftRecipeName.GetComponent<Text>().text);
+    }
+
+    public void AddToItemsInventory()
+    {
+        Debug.Log("Adding to items inventory");
+    }
+
+    public void AddToRunesInventory()
+    {
+        Debug.Log("Adding to runes inventory");
+    }
 }
