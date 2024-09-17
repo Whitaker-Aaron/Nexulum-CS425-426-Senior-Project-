@@ -72,7 +72,16 @@ public class MaterialsInventory : MonoBehaviour
                     {
                         for(int j = i;  j < inventory.Length; j++)
                         {
-                            inventory[j] = inventory[j + 1];
+                            if (inventory[j + 1] != null)
+                            {
+                                inventory[j] = inventory[j + 1];
+                            }
+                            else {
+                                inventory[j] = null;
+                                nextFreeIndex--;
+                                return;
+                            }
+                            
                         }
                         return;
                     }
