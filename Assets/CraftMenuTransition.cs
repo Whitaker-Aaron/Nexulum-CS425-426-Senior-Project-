@@ -37,6 +37,8 @@ public class CraftMenuTransition : MonoBehaviour
         }
     }
 
+    
+
     public void NavigateToMaterialMenu()
     {
         Debug.Log("Back Button pressed");
