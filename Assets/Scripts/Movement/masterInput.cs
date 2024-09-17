@@ -48,6 +48,8 @@ public class masterInput : MonoBehaviour
     Vector3 lookPos;
     public float speed = 3f;
 
+    bool stopVelocity = true;
+
     //animation variables
     private PlayerAnimation animationControl;
     Vector3 movement, camForward;
@@ -96,6 +98,11 @@ public class masterInput : MonoBehaviour
 
 
     //--------------FUNCTIONS--------------
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
 
 
     //onMove is implemented through InputSystem in unity, context is the input
@@ -214,8 +221,10 @@ public class masterInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
-            return;
+        print(player.GetComponent<Rigidbody>().velocity);
+
+        if (stopVelocity)
+            player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
 
         //player look at cursor position
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -231,7 +240,8 @@ public class masterInput : MonoBehaviour
         lookDir.y = 0;
         player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
 
-
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
+            return;
 
         if (inputPaused) return;
 
@@ -247,7 +257,7 @@ public class masterInput : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     //print("click: " + noOfClicks);
-                    
+
                     lastClickedTime = Time.time;
                     
                     noOfClicks++;
@@ -344,6 +354,7 @@ public class masterInput : MonoBehaviour
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+
         //universal player movement
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
