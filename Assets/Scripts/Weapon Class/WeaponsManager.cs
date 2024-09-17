@@ -38,16 +38,21 @@ public class WeaponsManager : MonoBehaviour
         characterReference.GetWeaponClass().currentWeapon = newWeapon;
     }
 
-    public void FindWeaponAndAdd(string weaponName)
+    public bool FindWeaponAndAdd(string weaponName)
     {
-        var weapons = GameObject.Find("WeaponEquipList").GetComponent<WeaponEquipList>().allWeapons;
-        foreach (var weapon in weapons)
+        var weapons = GameObject.Find("weaponEquipList").GetComponent<WeaponEquipList>().allWeapons;
+        if(weapons != null && weapons.Count > 0)
         {
-            if(weaponName == weapon.name)
+            foreach (var weapon in weapons)
             {
-                AddToInventory(weapon);
-                break;
+                if (weaponName == weapon.name)
+                {
+                    AddToInventory(weapon);
+                    return true;
+                }
             }
         }
+        return false;
+        
     }
 }

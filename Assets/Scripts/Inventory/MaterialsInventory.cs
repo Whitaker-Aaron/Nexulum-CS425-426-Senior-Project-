@@ -53,6 +53,37 @@ public class MaterialsInventory : MonoBehaviour
         }
     }
 
+    public void RemoveFromInventory(CraftMaterial materialToRemove, int amountToRemove)
+    {
+
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i] != null)
+            {
+                if (inventory[i].materialName == materialToRemove.materialName)
+                {
+                    Debug.Log(materialToRemove.materialName + " is already in inventory!");
+                    if (inventory[i].currentAmount - amountToRemove > 0)
+                    {
+                        inventory[i].currentAmount -= amountToRemove;
+                        return;
+                    }
+                    else
+                    {
+                        for(int j = i;  j < inventory.Length; j++)
+                        {
+                            inventory[j] = inventory[j + 1];
+                        }
+                        return;
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
     public CraftMaterial[] GetInventory() {
         return inventory;
     }

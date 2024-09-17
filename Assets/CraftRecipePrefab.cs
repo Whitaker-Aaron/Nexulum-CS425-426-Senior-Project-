@@ -12,9 +12,11 @@ public class CraftRecipePrefab : MonoBehaviour
     [SerializeField] GameObject materialContainer;
     [SerializeField] GameObject craftRecipeName;
     [SerializeField] GameObject craftButton;
+    
 
     void Start()
     {
+        craftButton.GetComponent<Button>().interactable = false;
         craftRecipeName.GetComponent<Text>().text = craftRecipe.recipeName;
         populateMaterialsList();
     }
@@ -27,6 +29,7 @@ public class CraftRecipePrefab : MonoBehaviour
 
     void populateMaterialsList()
     {
+        bool isCraftable = true;
         foreach (var item in craftRecipe.requiredMaterials)
         {
             var matManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
@@ -38,15 +41,21 @@ public class CraftRecipePrefab : MonoBehaviour
             wrapComponent.amountHas.GetComponent<Text>().text = "Has: x" + curAmount;
             wrapComponent.materialTexture.GetComponent<RawImage>().texture = item.Key.materialTexture;
 
+            if (curAmount < item.Value)
+            {
+                isCraftable = false;
+            }
+
 
             var matRef = Instantiate(materialRequirementObject);
             matRef.transform.SetParent(materialContainer.transform);
             matRef.transform.localScale = Vector3.one;
 
-            if (curAmount < item.Value)
-            {
-                craftButton.GetComponent<Button>().interactable = false;
-            }
+            
+        }
+        if (isCraftable)
+        {
+            craftButton.GetComponent<Button>().interactable = true;
         }
     }
     public void AddToInventory()
@@ -68,7 +77,7 @@ public class CraftRecipePrefab : MonoBehaviour
     public void AddToWeaponsInventory()
     {
         Debug.Log("Adding to weapons inventory");
-        GameObject.Find("WeaponsManager").GetComponent<WeaponsManager>().FindWeaponAndAdd(craftRecipeName.GetComponent<Text>().text);
+        GameObject.Find("WeaponManager").GetComponent<WeaponsManager>().FindWeaponAndAdd(craftRecipeName.GetComponent<Text>().text);
     }
 
     public void AddToItemsInventory()
