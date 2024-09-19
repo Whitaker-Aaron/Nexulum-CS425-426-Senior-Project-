@@ -192,7 +192,7 @@ public class masterInput : MonoBehaviour
 
     IEnumerator reload()
     {
-        animationControl.gunnerReload();
+        //animationControl.gunnerReload();
         print("reloading");
         if (bulletCount == magSize)
             yield break;
@@ -326,18 +326,18 @@ public class masterInput : MonoBehaviour
         //GUNNER LOGIC
         if(currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-            if (bulletCount <= 0)
+            if (bulletCount <= 0 && !isReloading && bulletCount < magSize)
             {
                 bulletCount = 0;
                 canShoot = false;
                 StartCoroutine(reload());
-                
+                animationControl.gunnerReload();
             }
 
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) && bulletCount < magSize)
             {
                 StartCoroutine(reload());
-                
+                animationControl.gunnerReload();
             }
 
             bool shooting = false;
