@@ -123,6 +123,18 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     }
     //-------------------------------------------------------
 
+    //GUNNER ANIMATIONS--------------------------------------
+
+    public void gunnerReload()
+    {
+        animator.SetBool("reload", true);
+        animator.Play("Reload Blend Tree");
+        animator.SetBool("reload", false);
+    }
+
+
+    //-------------------------------------------------------
+
     // Start is called before the first frame update
     void Start()
     {

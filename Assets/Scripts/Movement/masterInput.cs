@@ -192,6 +192,7 @@ public class masterInput : MonoBehaviour
 
     IEnumerator reload()
     {
+        //animationControl.gunnerReload();
         print("reloading");
         if (bulletCount == magSize)
             yield break;
@@ -221,7 +222,7 @@ public class masterInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(player.GetComponent<Rigidbody>().velocity);
+        //print(player.GetComponent<Rigidbody>().velocity);
 
         if (stopVelocity)
             player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
@@ -308,7 +309,7 @@ public class masterInput : MonoBehaviour
                         animationControl.knightAttackThree();
                         StartCoroutine(wait(animTimeThree));
                         StartCoroutine(waitAttack(animTimeThree * 2));
-                        nextAttackTime -= differenceTime;
+                        //nextAttackTime -= differenceTime;
                         nextAttackTime = animTime;
 
                     }
@@ -321,28 +322,38 @@ public class masterInput : MonoBehaviour
             }
         }
 
+        //GUNNER LOGIC
         if(currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-            if (bulletCount <= 0)
+            if (bulletCount <= 0 && !isReloading && bulletCount < magSize)
             {
                 bulletCount = 0;
                 canShoot = false;
                 StartCoroutine(reload());
+                animationControl.gunnerReload();
             }
 
-
-            //muzzleFlash.transform.position = flashSpawn.transform.position;
-
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) && bulletCount < magSize)
             {
                 StartCoroutine(reload());
+                animationControl.gunnerReload();
             }
 
-
-            if (Input.GetButtonDown("Fire1") && isReloading == false && bulletCount > 0 && canShoot)
+            bool shooting = false;
+            if (Input.GetMouseButtonDown(0))
             {
+                shooting = true;
+            }
+            if (Input.GetMouseButtonUp(0))   
+                shooting = false;
+
+            if (shooting && isReloading == false && bulletCount > 0 && canShoot)
+            {
+                    
                 StartCoroutine(shoot());
             }
+            
+                
         }
 
         returningFromMenu = false;
