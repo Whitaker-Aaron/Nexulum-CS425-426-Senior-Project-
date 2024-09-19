@@ -341,7 +341,7 @@ public class masterInput : MonoBehaviour
             }
 
             bool shooting = false;
-            while (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 shooting = true;
             }
