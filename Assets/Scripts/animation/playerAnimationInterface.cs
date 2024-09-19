@@ -12,6 +12,7 @@ public interface PlayerAnimation
     void knightAttackThree();
     void resetKnight();
 
+    void gunnerReload();
     void stop();
 }
 public class playerAnimationInterface : MonoBehaviour
