@@ -1328,7 +1328,6 @@ GameObject:
   - component: {fileID: 365692939}
   - component: {fileID: 365692942}
   - component: {fileID: 365692941}
-  - component: {fileID: 365692940}
   m_Layer: 0
   m_Name: RuneManager
   m_TagString: Untagged
@@ -1361,18 +1360,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2cc1e4e317ebabe4598b57aff26a890f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &365692940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 365692937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3168cc68cc372a748bac05a1816cf020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &365692941
@@ -6150,6 +6137,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.00059227744
       objectReference: {fileID: 0}
+    - target: {fileID: 686230916852972398, guid: 69666af943a1e16488c2da014a0208d1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1176519469383150632, guid: 69666af943a1e16488c2da014a0208d1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -18.250998
@@ -6358,6 +6349,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -6.502084
       objectReference: {fileID: 0}
+    - target: {fileID: 4426634692453462193, guid: 69666af943a1e16488c2da014a0208d1, type: 3}
+      propertyPath: character
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4509128490247129004, guid: 69666af943a1e16488c2da014a0208d1, type: 3}
       propertyPath: m_CollisionDetection
       value: 1
@@ -6522,7 +6517,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 61.039963
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 686230916852972398, guid: 69666af943a1e16488c2da014a0208d1, type: 3}
+    - {fileID: 8138147521883645302, guid: 69666af943a1e16488c2da014a0208d1, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1503901551611960171, guid: 69666af943a1e16488c2da014a0208d1, type: 3}
@@ -6621,7 +6618,7 @@ MonoBehaviour:
   equippedRunes:
   - {fileID: 11400000, guid: 7839d9b2a2956d24fb636a4946c17b9c, type: 2}
   equippedWeapon: {fileID: 11400000, guid: c6b8b453c9eb0e44bb6daf33497239ca, type: 2}
-  masterInput: {fileID: 0}
+  masterInput: {fileID: 1793233890}
   hand: {fileID: 2122617262}
   playerHealth: 100
   swordAttackPoint: {fileID: 1431662271}

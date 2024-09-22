@@ -9,15 +9,27 @@ public class CraftMenuTransition : MonoBehaviour
     GameObject mainButtons;
     GameObject mainSelection;
     GameObject weaponsScroll;
+    GameObject runesScroll;
+    GameObject itemsScroll;
     GameObject weaponsScrollContent;
+    GameObject itemsScrollContent;
+    GameObject runesScrollContent;
     
     void Start()
     {
         mainButtons = GameObject.Find("MainButtons");
         mainSelection = GameObject.Find("MainSelection");
         weaponsScroll = GameObject.Find("WeaponsScroll");
+        runesScroll = GameObject.Find("RunesScroll");
+        itemsScroll = GameObject.Find("ItemsScroll");
+
         weaponsScrollContent = GameObject.Find("WeaponsScrollContent");
+        itemsScrollContent = GameObject.Find("ItemsScrollContent");
+        runesScrollContent = GameObject.Find("RunesScrollContent");
+
         weaponsScroll.SetActive(false);
+        runesScroll.SetActive(false);
+        itemsScroll.SetActive(false);
     }
 
     // Update is called once per frame
@@ -37,7 +49,29 @@ public class CraftMenuTransition : MonoBehaviour
         }
     }
 
-    
+    public void populateRunesScroll()
+    {
+        var runesCraftRecipes = GameObject.Find("MenuManager").GetComponent<MenuManager>().returnRunesCraftList();
+        foreach(var item in runesCraftRecipes)
+        {
+            craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
+            var craftRec = Instantiate(craftRecipePrefab);
+            craftRec.transform.SetParent(runesScrollContent.transform);
+        }
+    }
+
+    public void populateItemsScroll()
+    {
+        var itemsCraftRecipes = GameObject.Find("MenuManager").GetComponent<MenuManager>().returnItemsCraftList();
+        foreach (var item in itemsCraftRecipes)
+        {
+            craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
+            var craftRec = Instantiate(craftRecipePrefab);
+            craftRec.transform.SetParent(itemsScrollContent.transform);
+        }
+    }
+
+
 
     public void NavigateToMaterialMenu()
     {
@@ -59,6 +93,8 @@ public class CraftMenuTransition : MonoBehaviour
         Debug.Log("Rune Button pressed");
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
+        runesScroll.SetActive(true);
+        populateRunesScroll();
     }
 
     public void NavigateToItemsCraftMenu()
@@ -66,6 +102,8 @@ public class CraftMenuTransition : MonoBehaviour
         Debug.Log("Items Button pressed");
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
+        itemsScroll.SetActive(true);
+        populateItemsScroll();
     }
 
 

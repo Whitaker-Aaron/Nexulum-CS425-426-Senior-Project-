@@ -127,10 +127,12 @@ public class CraftRecipePrefab : MonoBehaviour
     public void AddToItemsInventory()
     {
         Debug.Log("Adding to items inventory");
+        GameObject.Find("WeaponManager").GetComponent<ItemManager>().FindItemAndAdd(craftRecipeName.GetComponent<Text>().text);
     }
 
     public void AddToRunesInventory()
     {
         Debug.Log("Adding to runes inventory");
+        GameObject.Find("WeaponManager").GetComponent<RuneManager>().FindRuneAndAdd(craftRecipeName.GetComponent<Text>().text);
     }
 }

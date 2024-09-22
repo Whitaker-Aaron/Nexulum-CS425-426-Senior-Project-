@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [CreateAssetMenu(menuName = "PlayerItem", fileName = "newItem")]
 public class PlayerItem : ScriptableObject
 {
-    [SerializeField] string itemName;
+    [SerializeField] public string itemName;
     [SerializeField] ItemType itemType;
     [SerializeField] Texture itemTexture;
     [SerializeField] public CraftRecipe itemRecipe;
@@ -17,5 +17,6 @@ public class PlayerItem : ScriptableObject
     {
         Projectile,
         Stat,
+        Health
     }
 }
