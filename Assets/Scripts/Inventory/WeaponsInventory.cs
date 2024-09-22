@@ -27,9 +27,17 @@ public class WeaponsInventory : MonoBehaviour
     public void AddToInventory(WeaponBase weaponToAdd)
     {
         if(nextFreeIndex != inventory.Length) {
+            Debug.Log(weaponToAdd.weaponName + " added to inventory!");
             inventory[nextFreeIndex] = weaponToAdd;
             nextFreeIndex++;
         }
+
+
+        for(int i = 0; i < nextFreeIndex; i++)
+        {
+            Debug.Log("Inventory slot " + i + ": " + inventory[i].weaponName);
+        }
+
         
     }
 

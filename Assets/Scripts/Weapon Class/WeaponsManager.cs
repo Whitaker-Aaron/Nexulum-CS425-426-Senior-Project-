@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WeaponsManager : MonoBehaviour
@@ -41,11 +42,13 @@ public class WeaponsManager : MonoBehaviour
     public bool FindWeaponAndAdd(string weaponName)
     {
         var weapons = GameObject.Find("weaponEquipList").GetComponent<WeaponEquipList>().allWeapons;
-        if(weapons != null && weapons.Count > 0)
+        Debug.Log("Inside Weapons Manager FindWeaponAndAdd");
+        if (weapons != null && weapons.Count > 0)
         {
+            Debug.Log("Inside Weapons Manager if statement");
             foreach (var weapon in weapons)
             {
-                if (weaponName == weapon.name)
+                if (weaponName == weapon.weaponName)
                 {
                     AddToInventory(weapon);
                     return true;
