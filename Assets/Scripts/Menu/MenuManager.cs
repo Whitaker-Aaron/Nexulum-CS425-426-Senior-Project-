@@ -10,7 +10,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject materialsMenuReference;
     [SerializeField] GameObject craftMenuReference;
     [SerializeField] GameObject itemsMenuReference;
-    [SerializeField] GameObject runeMenuReference;
+    [SerializeField] GameObject equipMenuReference;
     [SerializeField] GameObject scrollContent;
     [SerializeField] GameObject craftListsReference;
 
@@ -114,12 +114,14 @@ public class MenuManager : MonoBehaviour
     }
 
 
-    public void navigateToRuneMenu()
+    public void navigateToEquipMenu()
     {
         if (menuActive)
         {
-            currentMenuObject.SetActive(false);
-            currentMenuObject = Instantiate(runeMenuReference);
+            Debug.Log("Navigating to Equip Menu");
+            Instantiate(craftListsReference);
+            Destroy(currentMenuObject);
+            currentMenuObject = Instantiate(equipMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
         }

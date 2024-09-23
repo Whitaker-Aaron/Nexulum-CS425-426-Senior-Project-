@@ -41,5 +41,10 @@ public class WeaponsInventory : MonoBehaviour
         
     }
 
+    public WeaponBase[] GetInventory()
+    {
+        return inventory;
+    }
+
 
 }

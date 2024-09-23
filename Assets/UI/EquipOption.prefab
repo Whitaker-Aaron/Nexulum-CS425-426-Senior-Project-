@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 7981361916526076606}
   - component: {fileID: 6675570729867750203}
   m_Layer: 5
-  m_Name: CraftText
+  m_Name: EquipText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -227,7 +227,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 650, y: -46.9}
+  m_AnchoredPosition: {x: 648.4, y: -46.9}
   m_SizeDelta: {x: 200, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7981361916526076606
@@ -271,7 +271,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Craft
+  m_Text: Equip
 --- !u!1 &2589557947239938306
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,8 +306,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 568.7953, y: 0}
-  m_SizeDelta: {x: 3.5906, y: -28.1914}
+  m_AnchoredPosition: {x: 569.18066, y: 0}
+  m_SizeDelta: {x: 4.3613, y: -28.1914}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6299710509469203474
 CanvasRenderer:
@@ -360,9 +360,9 @@ GameObject:
   - component: {fileID: 1709201507503199683}
   - component: {fileID: 2783746137854272819}
   - component: {fileID: 6785592048284984911}
-  - component: {fileID: 6834488285364462507}
+  - component: {fileID: 2789654805858704850}
   m_Layer: 5
-  m_Name: CraftRecipe
+  m_Name: EquipOption
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -468,7 +468,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
---- !u!114 &6834488285364462507
+--- !u!114 &2789654805858704850
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -477,14 +477,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4408834667872987749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 002eb178bb3ee0b438dea254efa0ba56, type: 3}
+  m_Script: {fileID: 11500000, guid: cd5044284b45d674386d17cfdfa930b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  materialRequirementObject: {fileID: 251070956553156952, guid: c1cb6121414da894eaf6b1899e44f23f, type: 3}
-  craftRecipe: {fileID: 0}
-  materialContainer: {fileID: 496368631250177710}
-  craftRecipeName: {fileID: 9211208725122891456}
-  craftButton: {fileID: 5446548644401276504}
+  type: 0
+  weapon: {fileID: 0}
+  weaponClass: {fileID: 0}
+  rune: {fileID: 0}
+  equipOptionName: {fileID: 9211208725122891456}
 --- !u!1 &5446548644401276504
 GameObject:
   m_ObjectHideFlags: 0
@@ -520,8 +520,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 618.0703, y: -36.629787}
-  m_SizeDelta: {x: 408.5425, y: 180.2743}
+  m_AnchoredPosition: {x: 616.1295, y: -36.629787}
+  m_SizeDelta: {x: 393.0161, y: 180.2743}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5866881692216044291
 CanvasRenderer:
@@ -605,9 +605,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6834488285364462507}
-        m_TargetAssemblyTypeName: CraftRecipePrefab, Assembly-CSharp
-        m_MethodName: AddToInventory
+      - m_Target: {fileID: 2789654805858704850}
+        m_TargetAssemblyTypeName: EquipOptionPrefab, Assembly-CSharp
+        m_MethodName: Equip
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -707,7 +707,7 @@ GameObject:
   - component: {fileID: 339419729750882714}
   - component: {fileID: 5066765292259586185}
   m_Layer: 5
-  m_Name: RecipeName
+  m_Name: EquipOptionName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

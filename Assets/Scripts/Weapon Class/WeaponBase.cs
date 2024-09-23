@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class WeaponBase : ScriptableObject
 {
     [SerializeField] public string weaponName;
-    [SerializeField] weaponClassTypes weaponClassType;
+    [SerializeField] public weaponClassTypes weaponClassType;
     [SerializeField] public GameObject weaponMesh;
     [SerializeField] public CraftRecipe weaponRecipe;
 

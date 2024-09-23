@@ -71,7 +71,7 @@ public class masterInput : MonoBehaviour
     public float animTimeThree = 0.99f;
     public float differenceTime = .02f;
     public float animDiff = 1.2f;
-    GameObject sword;
+    public GameObject sword;
     public Transform swordAttackPoint;
     public float swordAttackRadius;
     public LayerMask layer;

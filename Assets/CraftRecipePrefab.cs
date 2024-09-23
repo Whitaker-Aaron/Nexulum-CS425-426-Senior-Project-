@@ -44,7 +44,7 @@ public class CraftRecipePrefab : MonoBehaviour
             int curAmount = matManager.GetMaterialAmount(item.Key);
             wrapComponent.materialDescription.GetComponent<Text>().text = item.Key.materialName;
             wrapComponent.requiredAmount.GetComponent<Text>().text = "Need: x" + item.Value;
-            wrapComponent.amountHas.GetComponent<Text>().text = "Has: x" + curAmount;
+            wrapComponent.amountHas.GetComponent<Text>().text = "Have: x" + curAmount;
             wrapComponent.materialTexture.GetComponent<RawImage>().texture = item.Key.materialTexture;
 
             
@@ -114,7 +114,7 @@ public class CraftRecipePrefab : MonoBehaviour
         {
             hasEnough = false;
         }
-        currentMaterialObjects[index].GetComponent<materialRequirementsWrapper>().amountHas.GetComponent<Text>().text = "Has: x" + curAmount;
+        currentMaterialObjects[index].GetComponent<materialRequirementsWrapper>().amountHas.GetComponent<Text>().text = "Have: x" + curAmount;
         return hasEnough;
     }
 

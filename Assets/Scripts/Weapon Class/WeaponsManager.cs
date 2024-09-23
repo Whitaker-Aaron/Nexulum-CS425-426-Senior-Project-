@@ -9,6 +9,7 @@ public class WeaponsManager : MonoBehaviour
     [SerializeField] GameObject weaponsList;
     GameObject weaponInventory;
     GameObject weaponPrefab;
+    GameObject currentWeapon;
     CharacterBase characterReference;
     void Start()
     {
@@ -16,7 +17,7 @@ public class WeaponsManager : MonoBehaviour
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
-        Instantiate(weaponPrefab, characterReference.hand);
+        currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
     }
 
     private void Awake()
@@ -36,7 +37,17 @@ public class WeaponsManager : MonoBehaviour
 
     public void ChangeWeapon(WeaponBase newWeapon)
     {
-        characterReference.GetWeaponClass().currentWeapon = newWeapon;
+        //characterReference.GetWeaponClass().currentWeapon = newWeapon;
+        characterReference.UpdateWeapon(newWeapon);
+        GameObject.Destroy(currentWeapon);
+        weaponPrefab = characterReference.equippedWeapon.weaponMesh;
+        currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
+
+    }
+
+    public WeaponBase CurrentlyEquipped() 
+    {
+        return characterReference.GetWeaponClass().currentWeapon;
     }
 
     public bool FindWeaponAndAdd(string weaponName)
@@ -59,5 +70,9 @@ public class WeaponsManager : MonoBehaviour
         
     }
 
+    public WeaponBase[] GetWeaponsInventory()
+    {
+        return weaponInventory.GetComponent<WeaponsInventory>().GetInventory();
+    }
     
 }

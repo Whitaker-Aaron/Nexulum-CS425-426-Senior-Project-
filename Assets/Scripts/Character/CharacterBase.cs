@@ -60,6 +60,18 @@ public class CharacterBase : MonoBehaviour
         return weaponClass;
     }
 
+    public void UpdateWeapon(WeaponBase newWeapon)
+    {
+        Debug.Log("Inside Character Base");
+        if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
+        {
+            Debug.Log("Newly equipped weapon is of type knight");
+            masterInput.GetComponent<masterInput>().sword = newWeapon.weaponMesh;
+            equippedWeapon = newWeapon;
+        }
+        
+    }
+
     
 
     public void ApplyRuneLogicToWeapon()
