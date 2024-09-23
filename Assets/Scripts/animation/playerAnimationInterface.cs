@@ -14,6 +14,8 @@ public interface PlayerAnimation
 
     void gunnerReload();
     void stop();
+
+    void changeClassLayer(int layerOne, int layerTwo);
 }
 public class playerAnimationInterface : MonoBehaviour
 {

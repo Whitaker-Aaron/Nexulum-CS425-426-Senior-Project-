@@ -10,7 +10,7 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     Vector3 moveInput, camForward, movement;
     float forwardAmount, turnAmount;
     GameObject player;
-
+    
 
 
     //General movement functions---------------
@@ -134,6 +134,19 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
 
     //-------------------------------------------------------
+
+
+    //Change animation layer---------------------------------
+
+    public void changeClassLayer(int layerOne, int layerTwo)
+    {
+        animator.SetLayerWeight(layerOne, 0);
+        animator.SetLayerWeight(layerTwo, 1);
+    }
+
+
+    //-------------------------------------------------------
+
 
     // Start is called before the first frame update
     void Start()

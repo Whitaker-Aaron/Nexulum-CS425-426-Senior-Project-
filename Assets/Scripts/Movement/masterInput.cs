@@ -217,6 +217,24 @@ public class masterInput : MonoBehaviour
         playerControl = new PlayerInputActions();
         animationControl = GetComponent<PlayerAnimation>();
         camera = Camera.main.transform;
+
+        //animation layer changing
+        if(currentClass == WeaponBase.weaponClassTypes.Knight)
+        {
+            animationControl.changeClassLayer(1, 0);
+            animationControl.changeClassLayer(2, 0);
+        }
+        if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+        {
+            animationControl.changeClassLayer(0, 1);
+            animationControl.changeClassLayer(2, 1);
+        }
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            animationControl.changeClassLayer(0, 2);
+            animationControl.changeClassLayer(1, 2);
+        }
+
     }
 
     // Update is called once per frame
