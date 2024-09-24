@@ -69,8 +69,8 @@ public class masterInput : MonoBehaviour
     public float animTime = 0.5f;
     public float animTimeTwo = 0.5f;
     public float animTimeThree = 0.99f;
-    public float differenceTime = .02f;
-    public float animDiff = 1.2f;
+    float differenceTime = .02f;
+    float animDiff = 1.2f;
     GameObject sword;
     public Transform swordAttackPoint;
     public float swordAttackRadius;
@@ -87,14 +87,29 @@ public class masterInput : MonoBehaviour
     public GameObject bulletPrefab;
     public float bulletSpeed;
 
-    //rifle
+    //combat
     bool isReloading = false;
     public float reloadTime = 2f;
     public float fireRateTime = .1f;
     bool canShoot = true;
-    public int bulletCount;
-    public int magSize = 10;
+    int bulletCount;
+    public int magSize = 25;
 
+
+    //Engineer variables
+
+    //bullet
+    public Transform pistolBulletSpawn;
+    public GameObject pistolBulletObj;
+    public float pistolBulletSpeed;
+
+    //combat
+    bool pistolReloading = false;
+    public float pistolReloadTime = 2f;
+    public float pistolFireRateTime = .3f;
+    bool canPistolShoot = true;
+    int pistolBulletCount;
+    public int pistolMagSize = 10;
 
 
     //--------------FUNCTIONS--------------
@@ -174,7 +189,7 @@ public class masterInput : MonoBehaviour
     IEnumerator shoot()
     {
         canShoot = false;
-        print("Shooting");
+        //print("Shooting");
         while (Input.GetButton("Fire1") && bulletCount > 0 && isReloading == false)
         {
             bulletCount--;
@@ -193,7 +208,7 @@ public class masterInput : MonoBehaviour
     IEnumerator reload()
     {
         //animationControl.gunnerReload();
-        print("reloading");
+        //print("reloading");
         if (bulletCount == magSize)
             yield break;
 
@@ -208,6 +223,37 @@ public class masterInput : MonoBehaviour
         yield break;
     }
 
+
+    //Engineer Functions
+
+    IEnumerator pistolShoot()
+    {
+        canPistolShoot = false;
+        
+        pistolBulletCount--;
+        var bullet = Instantiate(pistolBulletObj, pistolBulletSpawn.position, pistolBulletSpawn.rotation);
+        bullet.GetComponent<Rigidbody>().velocity = pistolBulletSpawn.forward * pistolBulletSpeed;
+        yield return new WaitForSeconds(pistolFireRateTime);
+        
+        canPistolShoot = true;
+        yield break;
+    }
+
+    IEnumerator pistolReload()
+    {
+        if (pistolBulletCount == pistolMagSize)
+            yield break;
+        else
+        {
+            canPistolShoot = false;
+            pistolReloading = true;
+            yield return new WaitForSeconds(pistolReloadTime);
+            pistolBulletCount = pistolMagSize;
+            pistolReloading = false;
+            canPistolShoot = true;
+        }
+        yield break;
+    }
 
 
     
@@ -371,8 +417,28 @@ public class masterInput : MonoBehaviour
                     
                 StartCoroutine(shoot());
             }
-            
-                
+        }
+
+        //Engineer Logic
+        if(currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            if(Input.GetMouseButtonDown(0) && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize)
+            {
+                pistolBulletCount = 0;
+                canPistolShoot = false;
+                StartCoroutine(pistolReload());
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.R) && pistolBulletCount < pistolMagSize && !pistolReloading)
+            {
+                StartCoroutine(reload());
+            }
+
+            if(Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0)
+            {
+                StartCoroutine(pistolShoot());
+            }
         }
 
         returningFromMenu = false;
