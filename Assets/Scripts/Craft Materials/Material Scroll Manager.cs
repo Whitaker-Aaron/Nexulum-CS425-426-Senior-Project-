@@ -82,6 +82,12 @@ public class MaterialScrollManager : MonoBehaviour
 
     }
 
+    public void RemoveFromMaterialsInventory(CraftMaterial material, int amount)
+    {
+        Debug.Log("Material getting removed from inventory: " + material.materialName);
+        materialInventory.RemoveFromInventory(material, amount);
+    }
+
     private void OnDestroy()
     {
         var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
@@ -97,6 +103,11 @@ public class MaterialScrollManager : MonoBehaviour
     public int GetMaterialInventorySize()
     {
         return materialInventory.GetCurrentInventorySize();
+    }
+
+    public int GetMaterialAmount(CraftMaterial material)
+    {
+       return materialInventory.GetMaterialAmount(material);
     }
 
     public int GetMaterialInventoryMaxSize()

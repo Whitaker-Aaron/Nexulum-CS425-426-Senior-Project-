@@ -5,7 +5,8 @@ using UnityEngine;
 public class ItemsInventory : MonoBehaviour
 {
     // Start is called before the first frame update
-    Item[] inventory;
+    PlayerItem[] inventory = new PlayerItem[100];
+    int nextFreeIndex = 0;
     void Start()
     {
         
@@ -16,4 +17,24 @@ public class ItemsInventory : MonoBehaviour
     {
         
     }
+
+    public void AddToInventory(PlayerItem itemToAdd)
+    {
+        if (nextFreeIndex != inventory.Length)
+        {
+            Debug.Log(itemToAdd.itemName + " added to inventory!");
+            inventory[nextFreeIndex] = itemToAdd;
+            nextFreeIndex++;
+        }
+
+
+        for (int i = 0; i < nextFreeIndex; i++)
+        {
+            Debug.Log("Inventory slot " + i + ": " + inventory[i].itemName);
+        }
+
+
+    }
+
+
 }

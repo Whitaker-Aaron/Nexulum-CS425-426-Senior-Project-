@@ -6,8 +6,8 @@ using UnityEngine.UI;
 [CreateAssetMenu(menuName = "WeaponBase", fileName = "newWeapon")]
 public class WeaponBase : ScriptableObject
 {
-    [SerializeField] string weaponName;
-    [SerializeField] weaponClassTypes weaponClassType;
+    [SerializeField] public string weaponName;
+    [SerializeField] public weaponClassTypes weaponClassType;
     [SerializeField] public GameObject weaponMesh;
     [SerializeField] public CraftRecipe weaponRecipe;
 

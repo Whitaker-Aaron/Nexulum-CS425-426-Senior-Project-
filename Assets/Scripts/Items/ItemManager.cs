@@ -18,4 +18,28 @@ public class ItemManager : MonoBehaviour
     {
         
     }
+
+    public void AddToInventory(PlayerItem itemToAdd)
+    {
+        itemsInventory.GetComponent<ItemsInventory>().AddToInventory(itemToAdd);
+    }
+
+    public bool FindItemAndAdd(string itemName)
+    {
+        var items = GameObject.Find("itemsEquipList").GetComponent<ItemsEquipList>().allItems;
+        if (items != null && items.Count > 0)
+        {
+            Debug.Log("Inside Weapons Manager if statement");
+            foreach (var item in items)
+            {
+                if (itemName == item.name)
+                {
+                    AddToInventory(item);
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
 }

@@ -5,7 +5,8 @@ using UnityEngine;
 public class RuneInventory : MonoBehaviour
 {
     // Start is called before the first frame update
-    Rune[] inventory;
+    Rune[] inventory = new Rune[100];
+    int nextFreeIndex = 0;
     //public Rune equippedRune;
     void Start()
     {
@@ -16,6 +17,24 @@ public class RuneInventory : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void AddToInventory(Rune runeToAdd)
+    {
+        if (nextFreeIndex != inventory.Length)
+        {
+            Debug.Log(runeToAdd.runeName + " added to inventory!");
+            inventory[nextFreeIndex] = runeToAdd;
+            nextFreeIndex++;
+        }
+
+
+        for (int i = 0; i < nextFreeIndex; i++)
+        {
+            Debug.Log("Inventory slot " + i + ": " + inventory[i].runeName);
+        }
+
+
     }
 
 }

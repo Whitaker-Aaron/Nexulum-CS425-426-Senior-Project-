@@ -72,6 +72,7 @@ public class masterInput : MonoBehaviour
     float differenceTime = .02f;
     float animDiff = 1.2f;
     GameObject sword;
+
     public Transform swordAttackPoint;
     public float swordAttackRadius;
     public LayerMask layer;
@@ -303,7 +304,6 @@ public class masterInput : MonoBehaviour
 
         Vector3 lookDir = lookPos - player.transform.position;
         lookDir.y = 0;
-
         player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
 
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
