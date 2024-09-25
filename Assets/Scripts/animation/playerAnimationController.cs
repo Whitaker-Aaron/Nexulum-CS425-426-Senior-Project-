@@ -42,10 +42,6 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     }
     void updateAnimator()
     {
-        if (forwardAmount != 0 && (getAnimationInfo().IsName("waitOne") || getAnimationInfo().IsName("waitTwo")) )
-        {
-            //animator.SetTrigger("return");
-        }
         animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
         animator.SetFloat("Turn", turnAmount, 0.1f, Time.deltaTime);
     }
@@ -55,14 +51,21 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     public AnimatorStateInfo getAnimationInfo()
     {
-        return animator.GetCurrentAnimatorStateInfo(0);
+        if (gameObject.GetComponent<masterInput>().currentClass == WeaponBase.weaponClassTypes.Knight)
+            return animator.GetCurrentAnimatorStateInfo(0);
+        else if (gameObject.GetComponent<masterInput>().currentClass == WeaponBase.weaponClassTypes.Engineer)
+            return animator.GetCurrentAnimatorStateInfo(1);
+        else if (gameObject.GetComponent<masterInput>().currentClass == WeaponBase.weaponClassTypes.Engineer)
+            return animator.GetCurrentAnimatorStateInfo(2);
+        else
+               return animator.GetCurrentAnimatorStateInfo(0);
     }
 
     IEnumerator attackWait(float time, string animName)
     {
         yield return new WaitForSeconds(time);
-        if (getAnimationInfo().IsName("attack2") || getAnimationInfo().IsName("Attack3"))
-            yield break;
+        //if (getAnimationInfo().IsName("attack2") || getAnimationInfo().IsName("Attack3") || getAnimationInfo().IsName("engAttack3"))
+            //yield break;
         //print("animation: " + animName);
         animator.Play(animName);
         yield break;
@@ -72,8 +75,8 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     public void knightAttackOne(float time)
     {
         
-        if (getAnimationInfo().IsName("Attack2") || getAnimationInfo().IsName("Attack3"))
-            return;
+        //if (getAnimationInfo().IsName("Attack2") || getAnimationInfo().IsName("Attack3"))
+            //return;
         animator.SetBool("attack1", true);
         animator.Play("attackOne");
         StartCoroutine(attackWait(time, "waitOne"));
@@ -135,6 +138,53 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     //-------------------------------------------------------
 
+
+    //Engineer Animations------------------------------------
+
+    public void engAttackOne(float time)
+    {
+        if (getAnimationInfo().IsName("engAttackTwo") || getAnimationInfo().IsName("engAttackThree"))
+            return;
+        animator.SetBool("engAttack1", true);
+        animator.Play("engAttackOne");
+        StartCoroutine(attackWait(time, "engWaitOne"));
+    }
+
+    public void engAttackTwo(float time)
+    {
+        animator.SetBool("engAtack1", false);
+        animator.SetBool("engAttack2", true);
+        animator.Play("engAttackTwo");
+        StartCoroutine(attackWait(time, "engWaitTwo"));
+    }
+
+    public void engAttackThree()
+    {
+        animator.SetBool("engAttack1", false);
+        animator.SetBool("engAttack2", false);
+        animator.SetBool("engAttack3", true);
+        animator.Play("engAttackThree");
+    }
+    public void resetEngineer()
+    {
+        if (animator.GetBool("engAttack3") == true)
+        {
+            animator.SetBool("engAttack1", false);
+            animator.SetBool("engAttack2", false);
+            animator.SetBool("engAttack3", false);
+        }
+        else if (animator.GetBool("engAttack2") == true)
+        {
+            animator.SetBool("engAttack1", false);
+            animator.SetBool("engAttack2", false);
+        }
+        else
+        {
+            animator.SetBool("engAttack1", false);
+        }
+    }
+
+    //-------------------------------------------------------
 
     //Change animation layer---------------------------------
 

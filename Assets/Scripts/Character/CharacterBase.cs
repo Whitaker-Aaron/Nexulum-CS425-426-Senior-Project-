@@ -11,6 +11,7 @@ public class CharacterBase : MonoBehaviour
 
     [SerializeField] public Rune[] equippedRunes;
     [SerializeField] public WeaponBase equippedWeapon;
+    [SerializeField] public WeaponBase engineerTool;
     //[SerializeField] public RuneInt runeInt;
      WeaponClass weaponClass;
      MaterialsInventory materialInventory;
@@ -31,6 +32,7 @@ public class CharacterBase : MonoBehaviour
 
     //Knight attackpoint transform - NEEDED FOR MASTERINPUT - Spencer
     public Transform swordAttackPoint;
+    public Transform toolAttackPoint;
 
     private void Awake()
     {
@@ -66,7 +68,14 @@ public class CharacterBase : MonoBehaviour
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
             Debug.Log("Newly equipped weapon is of type knight");
-            masterInput.GetComponent<masterInput>().sword = newWeapon.weaponMesh;
+            masterInput.GetComponent<masterInput>().changeSword(newWeapon);
+            equippedWeapon = newWeapon;
+        }
+        //Need to update for both his weapon pistol and his tool
+        if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
+        {
+            Debug.Log("Newly equipped weapon is of type Engineer");
+            masterInput.GetComponent<masterInput>().changeTool(newWeapon);
             equippedWeapon = newWeapon;
         }
         
