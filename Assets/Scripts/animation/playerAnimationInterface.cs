@@ -16,7 +16,9 @@ public interface PlayerAnimation
 
     IEnumerator stopKnightBlock(float time);
 
-    public void blocking();
+    void blocking();
+
+    void engineerReload();
 
     void engAttackOne(float time);
 
