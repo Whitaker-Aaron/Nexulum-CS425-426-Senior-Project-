@@ -57,6 +57,7 @@ public class masterInput : MonoBehaviour
     Vector2 move;
     Vector3 lookPos;
     public float speed = 3f;
+    bool isMoving = false;
 
     bool stopVelocity = true;
 
@@ -81,7 +82,9 @@ public class masterInput : MonoBehaviour
     public float animTimeTwo = 0.5f;
     public float animTimeThree = 0.99f;
     GameObject sword;
-
+    public float blockTime;
+    public float blockSpeed;
+    bool isBlocking = false;
     public Transform swordAttackPoint;
     public float swordAttackRadius;
     public LayerMask layer;
@@ -160,8 +163,17 @@ public class masterInput : MonoBehaviour
             return;
         Vector3 movement = new Vector3(move.x, 0, move.y);
 
-        player.transform.Translate(movement * speed * Time.deltaTime, Space.World);
+        if (movement.magnitude == 0)
+            isMoving = false;
+        else
+            isMoving = true;
+
+        if(currentClass == WeaponBase.weaponClassTypes.Knight && isBlocking)
+            player.transform.Translate(movement * blockSpeed * Time.deltaTime, Space.World);
+        else
+            player.transform.Translate(movement * speed * Time.deltaTime, Space.World);
     }
+
 
     public void pauseInput(InputAction.CallbackContext context)
     {
@@ -422,6 +434,24 @@ public class masterInput : MonoBehaviour
                     }
                 }
             }
+
+            if(Input.GetMouseButtonDown(1))
+            {
+                isBlocking = true;
+                if(isMoving)
+                    animationControl.blocking();
+                else
+                    StartCoroutine(animationControl.startKnightBlock(blockTime));
+            }
+            if(Input.GetMouseButtonUp(1))
+            {
+                isBlocking = false;
+                if (isMoving)
+                    StartCoroutine(animationControl.stopKnightBlock(0));
+                else
+                    StartCoroutine(animationControl.stopKnightBlock(blockTime));
+            }
+
         }
 
         //GUNNER LOGIC
