@@ -53,12 +53,12 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     {
         if (gameObject.GetComponent<masterInput>().currentClass == WeaponBase.weaponClassTypes.Knight)
             return animator.GetCurrentAnimatorStateInfo(0);
-        else if (gameObject.GetComponent<masterInput>().currentClass == WeaponBase.weaponClassTypes.Engineer)
+        else if (gameObject.GetComponent<masterInput>().currentClass == WeaponBase.weaponClassTypes.Gunner)
             return animator.GetCurrentAnimatorStateInfo(1);
         else if (gameObject.GetComponent<masterInput>().currentClass == WeaponBase.weaponClassTypes.Engineer)
             return animator.GetCurrentAnimatorStateInfo(2);
         else
-               return animator.GetCurrentAnimatorStateInfo(0);
+            return animator.GetCurrentAnimatorStateInfo(0);
     }
 
     public IEnumerator startKnightBlock(float time)
@@ -91,8 +91,9 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     {
         yield return new WaitForSeconds(time);
         //if (getAnimationInfo().IsName("attack2") || getAnimationInfo().IsName("Attack3") || getAnimationInfo().IsName("engAttack3"))
-            //yield break;
+        //yield break;
         //print("animation: " + animName);
+        
         animator.Play(animName);
         yield break;
     }
@@ -167,6 +168,13 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     //Engineer Animations------------------------------------
 
+    public void engineerReload()
+    {
+        animator.SetBool("reload", true);
+        animator.Play("engReloadBlendTree");
+        animator.SetBool("reload", false);
+    }
+
     public void engAttackOne(float time)
     {
         if (getAnimationInfo().IsName("engAttackTwo") || getAnimationInfo().IsName("engAttackThree"))
@@ -178,18 +186,20 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     public void engAttackTwo(float time)
     {
-        animator.SetBool("engAtack1", false);
         animator.SetBool("engAttack2", true);
+        animator.SetBool("engAttack1", false);
         animator.Play("engAttackTwo");
+        
+        
         StartCoroutine(attackWait(time, "engWaitTwo"));
     }
 
     public void engAttackThree()
     {
-        animator.SetBool("engAttack1", false);
-        animator.SetBool("engAttack2", false);
         animator.SetBool("engAttack3", true);
         animator.Play("engAttackThree");
+        animator.SetBool("engAttack1", false);
+        animator.SetBool("engAttack2", false);
     }
     public void resetEngineer()
     {

@@ -10,7 +10,7 @@ public class engineerTool : MonoBehaviour
 
     public IEnumerator activateAttack(float time, Transform attackPoint, float radius, LayerMask layer)
     {
-        print("activating sword attack");
+        print("activating tool attack");
         Collider[] colliders = Physics.OverlapSphere(attackPoint.position, radius, layer);
         foreach (Collider collider in colliders)
         {

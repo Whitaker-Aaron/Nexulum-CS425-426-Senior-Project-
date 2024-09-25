@@ -159,7 +159,7 @@ public class masterInput : MonoBehaviour
     //actual player translation for FixedUpdate
     public void movePlayer()
     {
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused || (isAttacking && currentClass == WeaponBase.weaponClassTypes.Engineer))
             return;
         Vector3 movement = new Vector3(move.x, 0, move.y);
 
@@ -494,12 +494,13 @@ public class masterInput : MonoBehaviour
                 pistolBulletCount = 0;
                 canPistolShoot = false;
                 StartCoroutine(pistolReload());
-
+                animationControl.engineerReload();
             }
 
             if (Input.GetKeyDown(KeyCode.R) && pistolBulletCount < pistolMagSize && !pistolReloading)
             {
-                StartCoroutine(reload());
+                StartCoroutine(pistolReload());
+                animationControl.engineerReload();
             }
 
             if (Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0)
@@ -511,11 +512,11 @@ public class masterInput : MonoBehaviour
             {
                 noOfClicks = 0;
             }
-            if (Time.time > lastClickedTime + engNextAttackTime)// && Time.time > engCooldown)//&& isAttacking == false)
+            if (Time.time > lastClickedTime + engNextAttackTime && isAttacking == false)// && Time.time > engCooldown)//&& isAttacking == false)
             {
                 if (Input.GetMouseButtonDown(1))
                 {
-                    //print("click: " + noOfClicks);
+                    print("click: " + noOfClicks);
 
                     lastClickedTime = Time.time;
 
@@ -527,7 +528,7 @@ public class masterInput : MonoBehaviour
                             noOfClicks = 0;
                             return;
                         }
-                        if (animationControl.getAnimationInfo().IsName("engAttackThree") && animationControl.getAnimationInfo().normalizedTime < engAnimTimeThree)
+                        if (animationControl.getAnimationInfo().IsName("engAttackThree") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeThree)
                         {
                             noOfClicks = 0;
                             return;
@@ -571,7 +572,7 @@ public class masterInput : MonoBehaviour
                     else
                     {
                         if (Time.time - lastClickedTime > maxComboDelay)
-                            animationControl.resetKnight();
+                            animationControl.resetEngineer();
                     }
 
                 }
