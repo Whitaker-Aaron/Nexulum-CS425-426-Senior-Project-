@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.17462312, g: 0.21841584, b: 0.30067477, a: 1}
+  m_IndirectSpecularColor: {r: 0.1746235, g: 0.2184166, b: 0.30067572, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2249,127 +2249,6 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
---- !u!1 &946060257
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 946060260}
-  - component: {fileID: 946060259}
-  - component: {fileID: 946060258}
-  m_Layer: 0
-  m_Name: MenuManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &946060258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 946060257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: d0b13e015c59da248b7a9c58489185d2, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 839cf2d8-56d1-4ca6-8018-69db1328744c
-    m_ActionName: player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 16398076-98b5-4769-a96c-a0c11b9e57b6
-    m_ActionName: player/mouseLook[/Mouse/position]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: b0dad13e-55c4-4957-975a-4658e39e4eb4
-    m_ActionName: player/Attack[/Mouse/leftButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 67e7fb9a-ab8c-4bc6-88e4-1a07acc077af
-    m_ActionName: player/Run[/Keyboard/shift]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 150df895-49e0-4601-8ad2-720004a61313
-    m_ActionName: player/OpenMenu[/Keyboard/e]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 58d588f7-0526-4e3c-8ce0-87729690243d
-    m_ActionName: MenuControl/Pause[/Keyboard/escape]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 946060259}
-        m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: openMenu
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 3e9d04e1-80e3-4513-b9af-860cb5ab1772
-    m_ActionName: MenuControl/OpenMenu[/Keyboard/e]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: MenuControl
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 963194227}
---- !u!114 &946060259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 946060257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f6c3407afb54542b3ae8e3b00c14cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  materialsMenuReference: {fileID: 7173683770421921678, guid: 88d2d817cd8d9054480cde59ea10385e, type: 3}
-  craftMenuReference: {fileID: 0}
-  itemsMenuReference: {fileID: 0}
-  equipMenuReference: {fileID: 0}
-  scrollContent: {fileID: 7685760492805647242, guid: 9848dfb507b11a84e80b9770ce5d049a, type: 3}
-  craftListsReference: {fileID: 0}
---- !u!4 &946060260
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 946060257}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1269062595}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2979,7 +2858,6 @@ Transform:
   - {fileID: 344540476}
   - {fileID: 396011966}
   - {fileID: 1793233891}
-  - {fileID: 946060260}
   - {fileID: 1969081612}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8722,13 +8600,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0617892be226a48bf051109d121355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentClass: 2
+  currentClass: 0
   speed: 3
   cooldownTime: 2
   nextAttackTime: 0.19
-  maxComboDelay: 0.8
+  maxComboDelay: 0.55
   animTime: 0.18
-  animTimeTwo: 0.2
+  animTimeTwo: 0.18
   animTimeThree: 0.4
   swordAttackPoint: {fileID: 1060916827}
   swordAttackRadius: 1.09
@@ -8749,14 +8627,14 @@ MonoBehaviour:
   pistolReloadTime: 2
   pistolFireRateTime: 0.3
   pistolMagSize: 10
-  engCooldown: 2
-  engNextAttackTime: 0.19
-  engMaxComboDelay: 0.8
-  engAnimTime: 0.18
-  engAnimTimeTwo: 0.2
-  engAnimTimeThree: 0.4
-  toolAttackPoint: {fileID: 1487632460}
-  toolAttackRadius: 1.09
+  engCooldown: 0
+  engNextAttackTime: 0.3
+  engMaxComboDelay: 0.7
+  engAnimTime: 0.5
+  engAnimTimeTwo: 0.5
+  engAnimTimeThree: 0.99
+  toolAttackPoint: {fileID: 0}
+  toolAttackRadius: 0
 --- !u!114 &1793233895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9419,7 +9297,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2275794262032187857, guid: 69666af943a1e16488c2da014a0208d1, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2384071656026273524, guid: 69666af943a1e16488c2da014a0208d1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -11664,7 +11542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3971450521113614595, guid: f55f55014586f9f4593de738d07ad316, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4097015477163832570, guid: f55f55014586f9f4593de738d07ad316, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
