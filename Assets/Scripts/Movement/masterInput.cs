@@ -353,7 +353,7 @@ public class masterInput : MonoBehaviour
             {
                 noOfClicks = 0;
             }
-            if (Time.time > lastClickedTime + nextAttackTime && Time.time > cooldownTime)//&& isAttacking == false)
+            if (Time.time > lastClickedTime + nextAttackTime && isAttacking == false)//Time.time > cooldownTime && isAttacking == false)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -394,7 +394,7 @@ public class masterInput : MonoBehaviour
                         //anim.SetBool("attack1", false);
                         //anim.Play("attackTwo");
                         nextAttackTime = animTimeTwo;
-                        StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(animTimeTwo, swordAttackPoint, swordAttackRadius, layer));
+                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
                         animationControl.knightAttackTwo(animTimeTwo);
                         StartCoroutine(wait(animTimeTwo));
                         StartCoroutine(waitAttack(animTimeTwo * 2));
@@ -405,7 +405,7 @@ public class masterInput : MonoBehaviour
                         nextAttackTime = animTimeThree;
                         noOfClicks = 0;
                         cooldownTime = Time.time + cooldown;
-                        StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(animTimeThree, swordAttackPoint, swordAttackRadius, layer));
+                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
                         animationControl.knightAttackThree();
                         StartCoroutine(wait(animTimeThree));
                         StartCoroutine(waitAttack(animTimeThree * 2));
@@ -417,6 +417,8 @@ public class masterInput : MonoBehaviour
                     {
                         if(Time.time - lastClickedTime > maxComboDelay)
                             animationControl.resetKnight();
+                        //if(noOfClicks == 2)
+                            //noOfClicks = 0;
                     }
                 }
             }
