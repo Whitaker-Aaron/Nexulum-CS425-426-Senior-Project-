@@ -35,8 +35,18 @@ public class masterInput : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         character = player.GetComponent<CharacterBase>();
-        sword = character.equippedWeapon.weaponMesh;
-        swordAttackPoint = character.swordAttackPoint;
+        if (currentClass == WeaponBase.weaponClassTypes.Knight)
+        { 
+            sword = character.equippedWeapon.weaponMesh;
+            swordAttackPoint = character.swordAttackPoint;
+        }
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            pistol = character.equippedWeapon.weaponMesh;
+            tool = character.engineerTool.weaponMesh;
+            toolAttackPoint = character.toolAttackPoint;
+        }
+
     }
 
     //player
@@ -55,8 +65,9 @@ public class masterInput : MonoBehaviour
     Vector3 movement, camForward;
     new Transform camera;
 
-    [Header("Knight Variables")]
+
     //Knight Combat Variables
+    [Header("Knight Variables")]
     bool isAttacking = false;
     float cooldown = 1f;
     bool inputPaused = false;
@@ -69,8 +80,6 @@ public class masterInput : MonoBehaviour
     public float animTime = 0.5f;
     public float animTimeTwo = 0.5f;
     public float animTimeThree = 0.99f;
-    float differenceTime = .02f;
-    float animDiff = 1.2f;
     GameObject sword;
 
     public Transform swordAttackPoint;
@@ -104,13 +113,26 @@ public class masterInput : MonoBehaviour
     public GameObject pistolBulletObj;
     public float pistolBulletSpeed;
 
-    //combat
+    //pistol combat
     bool pistolReloading = false;
     public float pistolReloadTime = 2f;
     public float pistolFireRateTime = .3f;
     bool canPistolShoot = true;
     int pistolBulletCount;
     public int pistolMagSize = 10;
+
+    //melee combat
+    public float engCooldown;
+    public float engNextAttackTime = .3f;
+    public float engMaxComboDelay = .7f;
+    public float engAnimTime = 0.5f;
+    public float engAnimTimeTwo = 0.5f;
+    public float engAnimTimeThree = 0.99f;
+    GameObject tool;
+    GameObject pistol;
+
+    public Transform toolAttackPoint;
+    public float toolAttackRadius;
 
 
     //--------------FUNCTIONS--------------
@@ -152,11 +174,19 @@ public class masterInput : MonoBehaviour
     }
 
     //Knight Functions
+
+    public void changeSword(WeaponBase newSword)
+    {
+        sword = newSword.weaponMesh;
+    }
     IEnumerator wait(float animationTime)
     {
         //isAttacking = true;
         yield return new WaitForSeconds(animationTime);
-        animationControl.resetKnight();
+        if(currentClass == WeaponBase.weaponClassTypes.Knight)
+            animationControl.resetKnight();
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+            animationControl.resetEngineer();
         //isAttacking = false;
         yield break;
     }
@@ -226,6 +256,11 @@ public class masterInput : MonoBehaviour
 
 
     //Engineer Functions
+
+    public void changeTool(WeaponBase newTool)
+    {
+        tool = newTool.weaponMesh;
+    }
 
     IEnumerator pistolShoot()
     {
@@ -318,7 +353,7 @@ public class masterInput : MonoBehaviour
             {
                 noOfClicks = 0;
             }
-            if (Time.time > lastClickedTime + nextAttackTime && Time.time > cooldownTime)//&& isAttacking == false)
+            if (Time.time > lastClickedTime + nextAttackTime && isAttacking == false)//Time.time > cooldownTime && isAttacking == false)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -341,8 +376,9 @@ public class masterInput : MonoBehaviour
                         }
                         //anim.SetTrigger("Attack");
                         //anim.SetBool("attack1", true);
-                        StartCoroutine(dash(dashTime));
-                        StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(animTime, swordAttackPoint, swordAttackRadius, layer));
+                        //StartCoroutine(dash(dashTime));
+                        //StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer));
+                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
                         animationControl.knightAttackOne(animTime);
                         StartCoroutine(waitAttack(animTime * 2));
                         StartCoroutine(wait(animTime));
@@ -358,7 +394,7 @@ public class masterInput : MonoBehaviour
                         //anim.SetBool("attack1", false);
                         //anim.Play("attackTwo");
                         nextAttackTime = animTimeTwo;
-                        StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(animTimeTwo, swordAttackPoint, swordAttackRadius, layer));
+                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
                         animationControl.knightAttackTwo(animTimeTwo);
                         StartCoroutine(wait(animTimeTwo));
                         StartCoroutine(waitAttack(animTimeTwo * 2));
@@ -367,10 +403,9 @@ public class masterInput : MonoBehaviour
                     if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("waitTwo"))
                     {
                         nextAttackTime = animTimeThree;
-                        nextAttackTime += differenceTime;
                         noOfClicks = 0;
                         cooldownTime = Time.time + cooldown;
-                        StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(animTimeThree, swordAttackPoint, swordAttackRadius, layer));
+                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
                         animationControl.knightAttackThree();
                         StartCoroutine(wait(animTimeThree));
                         StartCoroutine(waitAttack(animTimeThree * 2));
@@ -382,6 +417,8 @@ public class masterInput : MonoBehaviour
                     {
                         if(Time.time - lastClickedTime > maxComboDelay)
                             animationControl.resetKnight();
+                        //if(noOfClicks == 2)
+                            //noOfClicks = 0;
                     }
                 }
             }
@@ -420,9 +457,9 @@ public class masterInput : MonoBehaviour
         }
 
         //Engineer Logic
-        if(currentClass == WeaponBase.weaponClassTypes.Engineer)
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
-            if(Input.GetMouseButtonDown(0) && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize)
+            if (Input.GetMouseButtonDown(0) && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize)
             {
                 pistolBulletCount = 0;
                 canPistolShoot = false;
@@ -435,10 +472,82 @@ public class masterInput : MonoBehaviour
                 StartCoroutine(reload());
             }
 
-            if(Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0)
+            if (Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0)
             {
                 StartCoroutine(pistolShoot());
             }
+
+            if (Time.time - lastClickedTime > engMaxComboDelay)
+            {
+                noOfClicks = 0;
+            }
+            if (Time.time > lastClickedTime + engNextAttackTime)// && Time.time > engCooldown)//&& isAttacking == false)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    //print("click: " + noOfClicks);
+
+                    lastClickedTime = Time.time;
+
+                    noOfClicks++;
+                    if (noOfClicks == 1)
+                    {
+                        if (animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > .99f)
+                        {
+                            noOfClicks = 0;
+                            return;
+                        }
+                        if (animationControl.getAnimationInfo().IsName("engAttackThree") && animationControl.getAnimationInfo().normalizedTime < engAnimTimeThree)
+                        {
+                            noOfClicks = 0;
+                            return;
+                        }
+
+                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTime, toolAttackPoint, toolAttackRadius, layer));
+                        animationControl.engAttackOne(animTime);
+                        StartCoroutine(waitAttack(animTime * 2));
+                        StartCoroutine(wait(animTime));
+                        //anim.Play("attackOne");
+                        //nextAttackTime = anim.GetCurrentAnimatorStateInfo(0).length - differenceTime;
+                        //print("Anim: " + anim.GetBool("attack1"));
+                    }
+                    noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
+
+                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne"))
+                    {
+                        //anim.SetBool("attack2", true);
+                        //anim.SetBool("attack1", false);
+                        //anim.Play("attackTwo");
+                        nextAttackTime = animTimeTwo;
+                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(animTimeTwo, swordAttackPoint, swordAttackRadius, layer));
+                        animationControl.engAttackTwo(animTimeTwo);
+                        StartCoroutine(wait(animTimeTwo));
+                        StartCoroutine(waitAttack(animTimeTwo * 2));
+                    }
+
+                    if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("engWaitTwo"))
+                    {
+                        nextAttackTime = animTimeThree;
+                        noOfClicks = 0;
+                        cooldownTime = Time.time + cooldown;
+                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(animTimeTwo, swordAttackPoint, swordAttackRadius, layer));
+                        animationControl.engAttackThree();
+                        StartCoroutine(wait(animTimeThree));
+                        StartCoroutine(waitAttack(animTimeThree * 2));
+                        //nextAttackTime -= differenceTime;
+                        nextAttackTime = animTime;
+
+                    }
+                    else
+                    {
+                        if (Time.time - lastClickedTime > maxComboDelay)
+                            animationControl.resetKnight();
+                    }
+
+                }
+
+            }
+
         }
 
         returningFromMenu = false;

@@ -32,7 +32,7 @@ public class swordCombat : MonoBehaviour
         
     }
 
-    public IEnumerator activateAttack(float time, Transform attackPoint, float radius, LayerMask layer)
+    public void activateAttack(Transform attackPoint, float radius, LayerMask layer)
     {
         print("activating sword attack");
         Collider[] colliders = Physics.OverlapSphere(attackPoint.position, radius, layer);
@@ -47,11 +47,11 @@ public class swordCombat : MonoBehaviour
                 collider.GetComponent<EnemyFrame>().takeDamage(damage);
             }
         }
-        isAttacking = true;
-        yield return new WaitForSeconds(time);
-        print("Deactivating");
-        isAttacking = false;
-        yield break;
+        //isAttacking = true;
+        //yield return new WaitForSeconds(time);
+        //print("Deactivating");
+        //isAttacking = false;
+        //yield break;
     }
 
     public void activateFire(bool activate)
@@ -59,23 +59,6 @@ public class swordCombat : MonoBehaviour
         isFire = activate;
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        if(isAttacking)
-        {
-            if (other.gameObject.tag == "Enemy")
-            {
-                if (isFire)
-                {
-                    other.GetComponent<EnemyFrame>().StartCoroutine(other.GetComponent<EnemyFrame>().dmgOverTime(fireDmg, fireTime, fireDmgInterval));
-                }
-                other.GetComponent<EnemyFrame>().takeDamage(damage);
-                return;
-            }
-        }
-        
-
-    }
 
     
 }

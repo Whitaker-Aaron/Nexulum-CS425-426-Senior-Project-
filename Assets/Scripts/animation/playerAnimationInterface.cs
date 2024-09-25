@@ -12,6 +12,13 @@ public interface PlayerAnimation
     void knightAttackThree();
     void resetKnight();
 
+    void engAttackOne(float time);
+
+    void engAttackTwo(float time);
+
+    void engAttackThree();
+    void resetEngineer();
+
     void gunnerReload();
     void stop();
 
