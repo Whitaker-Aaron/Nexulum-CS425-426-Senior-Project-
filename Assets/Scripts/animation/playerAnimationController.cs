@@ -61,6 +61,32 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
                return animator.GetCurrentAnimatorStateInfo(0);
     }
 
+    public IEnumerator startKnightBlock(float time)
+    {
+        animator.SetBool("blocking", true);
+        animator.Play("startBlock");
+        yield return new WaitForSeconds(time);
+        animator.Play("blocking");
+        yield break;
+    }
+
+    public IEnumerator stopKnightBlock(float time)
+    {
+        animator.SetBool("blocking", false);
+        animator.SetBool("isWalking", false);
+        animator.Play("stopBlock");
+        yield return new WaitForSeconds(time);
+        animator.Play("Locomotion");
+        yield break;
+    }
+
+    public void blocking()
+    {
+        animator.SetBool("blocking", true);
+        animator.SetBool("isWalking", true);
+        animator.Play("blocking");
+    }
+
     IEnumerator attackWait(float time, string animName)
     {
         yield return new WaitForSeconds(time);

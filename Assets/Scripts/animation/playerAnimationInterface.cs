@@ -12,6 +12,12 @@ public interface PlayerAnimation
     void knightAttackThree();
     void resetKnight();
 
+    IEnumerator startKnightBlock(float time);
+
+    IEnumerator stopKnightBlock(float time);
+
+    public void blocking();
+
     void engAttackOne(float time);
 
     void engAttackTwo(float time);
