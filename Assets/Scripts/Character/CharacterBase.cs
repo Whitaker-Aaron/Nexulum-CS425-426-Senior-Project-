@@ -21,8 +21,9 @@ public class CharacterBase : MonoBehaviour
      ItemsInventory itemsInventory;
 
     [SerializeField] GameObject masterInput;
+
     Slider healthBar;
-    Slider healthBorder;
+    Slider delayedHealthBar;
 
     public bool invul = false;
     
@@ -59,13 +60,13 @@ public class CharacterBase : MonoBehaviour
         }
 
         healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
-        //healthBorder = GameObject.Find("HealthBorder").GetComponent<Slider>();
+        delayedHealthBar = GameObject.Find("DelayedHealthBar").GetComponent<Slider>();
 
         healthBar.value = playerHealth;
-        //healthBorder.value = playerHealth;
+        delayedHealthBar.value = playerHealth;
 
         healthBar.maxValue = maxHealth;
-        //healthBorder.maxValue = maxHealth;
+        delayedHealthBar.maxValue = maxHealth;
 
 
 
@@ -127,12 +128,61 @@ public class CharacterBase : MonoBehaviour
         if (!invul)
         {
             playerHealth -= damage;
-            healthBar.value = playerHealth;
+            StartCoroutine(updateHealthBars());
         }
         
         
         print("Player health: " + playerHealth);
     }
 
+    public IEnumerator animateHealth()
+    {
+        
+        float reduceVal = 150f;
+        while (healthBar.value != playerHealth)
+        {
+            if(healthBar.value - playerHealth <= 1)
+            {
+                healthBar.value = playerHealth;
+            }
+            else
+            {
+                healthBar.value -= reduceVal * Time.deltaTime;
+            }
+            
+            yield return null;
+        }
+        yield break;
+    }
+
+    public IEnumerator animateDelayedHealth()
+    {
+        float reduceVal = 150f;
+        while (delayedHealthBar.value != playerHealth)
+        {
+            if (delayedHealthBar.value - playerHealth <= 1)
+            {
+                delayedHealthBar.value = playerHealth;
+            }
+            else
+            {
+                delayedHealthBar.value -= reduceVal * Time.deltaTime;
+            }
+
+            yield return null;
+        }
+        yield break;
+    }
+
+
+    public IEnumerator updateHealthBars()
+    {
+        yield return animateHealth();
+        yield return new WaitForSeconds(0.2f);
+        yield return animateDelayedHealth();
+    }
+
     
+
+
 }
