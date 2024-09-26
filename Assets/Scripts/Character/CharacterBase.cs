@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
@@ -19,7 +20,10 @@ public class CharacterBase : MonoBehaviour
      WeaponsInventory weaponsInventory;
      ItemsInventory itemsInventory;
 
-     [SerializeField] GameObject masterInput;
+    [SerializeField] GameObject masterInput;
+    Slider healthBar;
+    Slider healthBorder;
+    
 
 
     private RuneInt runeInt;
@@ -28,7 +32,8 @@ public class CharacterBase : MonoBehaviour
     public Transform hand;
 
     //Player Health System
-    public int playerHealth = 100;
+    public int maxHealth = 1000;
+    public int playerHealth;
 
     //Knight attackpoint transform - NEEDED FOR MASTERINPUT - Spencer
     public Transform swordAttackPoint;
@@ -44,11 +49,24 @@ public class CharacterBase : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerHealth = maxHealth; 
+
         for(int i = 0; i < equippedRunes.Length; i++)
         {
             Debug.Log("Currently equipped with " + equippedRunes[i].name + " rune.");
         }
-    
+
+        healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
+        //healthBorder = GameObject.Find("HealthBorder").GetComponent<Slider>();
+
+        healthBar.value = playerHealth;
+        //healthBorder.value = playerHealth;
+
+        healthBar.maxValue = maxHealth;
+        //healthBorder.maxValue = maxHealth;
+
+
+
     }
 
     // Update is called once per frame
@@ -103,7 +121,11 @@ public class CharacterBase : MonoBehaviour
 
     public void takeDamage(int damage)
     {
+        
+        
         playerHealth -= damage;
+        healthBar.value = playerHealth;
+        
         print("Player health: " + playerHealth);
     }
 
