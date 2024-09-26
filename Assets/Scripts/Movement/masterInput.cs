@@ -459,6 +459,7 @@ public class masterInput : MonoBehaviour
             if(Input.GetMouseButtonDown(1))
             {
                 isBlocking = true;
+                character.invul = true;
  
                 Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
                 staminaFill.GetComponent<Image>().color =  new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 1.0f);
@@ -475,6 +476,8 @@ public class masterInput : MonoBehaviour
             if(Input.GetMouseButtonUp(1))
             {
                 isBlocking = false;
+                character.invul = false;
+
                 if (isMoving)
                     StartCoroutine(animationControl.stopKnightBlock(0));
                 else
@@ -683,6 +686,8 @@ public class masterInput : MonoBehaviour
             StartCoroutine(animationControl.stopKnightBlock(blockTime));
 
         isBlocking = false;
+        character.invul = false;
+
         StartCoroutine(RechargeStaminaBar());
         yield break;
 

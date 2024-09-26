@@ -23,6 +23,8 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] GameObject masterInput;
     Slider healthBar;
     Slider healthBorder;
+
+    public bool invul = false;
     
 
 
@@ -32,7 +34,7 @@ public class CharacterBase : MonoBehaviour
     public Transform hand;
 
     //Player Health System
-    public int maxHealth = 1000;
+    public int maxHealth = 100;
     public int playerHealth;
 
     //Knight attackpoint transform - NEEDED FOR MASTERINPUT - Spencer
@@ -121,10 +123,13 @@ public class CharacterBase : MonoBehaviour
 
     public void takeDamage(int damage)
     {
+
+        if (!invul)
+        {
+            playerHealth -= damage;
+            healthBar.value = playerHealth;
+        }
         
-        
-        playerHealth -= damage;
-        healthBar.value = playerHealth;
         
         print("Player health: " + playerHealth);
     }
