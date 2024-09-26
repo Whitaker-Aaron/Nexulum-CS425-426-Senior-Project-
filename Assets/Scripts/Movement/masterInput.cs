@@ -490,7 +490,7 @@ public class masterInput : MonoBehaviour
         //Engineer Logic
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
-            if (Input.GetMouseButtonDown(0) && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize)
+            if (Input.GetMouseButtonDown(0) && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false)
             {
                 pistolBulletCount = 0;
                 canPistolShoot = false;
@@ -498,13 +498,13 @@ public class masterInput : MonoBehaviour
                 animationControl.engineerReload();
             }
 
-            if (Input.GetKeyDown(KeyCode.R) && pistolBulletCount < pistolMagSize && !pistolReloading)
+            if (Input.GetKeyDown(KeyCode.R) && pistolBulletCount < pistolMagSize && !pistolReloading && isAttacking == false)
             {
                 StartCoroutine(pistolReload());
                 animationControl.engineerReload();
             }
 
-            if (Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0)
+            if (Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0 && isAttacking == false)
             {
                 StartCoroutine(pistolShoot());
             }
@@ -522,9 +522,11 @@ public class masterInput : MonoBehaviour
                     lastClickedTime = Time.time;
 
                     noOfClicks++;
-                    if (noOfClicks == 1)
+                    
+
+                    if (noOfClicks == 1 && !animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > engAnimTime)
                     {
-                        if (animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > .7f)
+                        if (animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > .9f)
                         {
                             noOfClicks = 0;
                             return;
@@ -534,18 +536,18 @@ public class masterInput : MonoBehaviour
                             noOfClicks = 0;
                             return;
                         }
-
+                        engNextAttackTime = engAnimTime;
                         StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTime, toolAttackPoint, toolAttackRadius, layer));
                         animationControl.engAttackOne(engAnimTime);
                         StartCoroutine(waitAttack(engAnimTime * 2));
-                        StartCoroutine(wait(engAnimTime * 2));
+                        StartCoroutine(wait(engAnimTime));
                         //anim.Play("attackOne");
                         //nextAttackTime = anim.GetCurrentAnimatorStateInfo(0).length - differenceTime;
                         //print("Anim: " + anim.GetBool("attack1"));
                     }
                     noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
 
-                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne"))
+                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeTwo * 2)
                     {
                         print("animate two");
                         //anim.SetBool("attack2", true);
@@ -554,7 +556,7 @@ public class masterInput : MonoBehaviour
                         engNextAttackTime = engAnimTimeTwo;
                         StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
                         animationControl.engAttackTwo(engAnimTimeTwo);
-                        StartCoroutine(wait(engAnimTimeTwo * 2));
+                        StartCoroutine(wait(engAnimTimeTwo));
                         StartCoroutine(waitAttack(engAnimTimeTwo * 2));
                     }
 
@@ -566,7 +568,7 @@ public class masterInput : MonoBehaviour
                         engCooldown = Time.time + cooldown;
                         StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
                         animationControl.engAttackThree();
-                        StartCoroutine(wait(engAnimTimeThree * 2));
+                        StartCoroutine(wait(engAnimTimeThree));
                         StartCoroutine(waitAttack(engAnimTimeThree * 2));
                         //nextAttackTime -= differenceTime;
                         engNextAttackTime = engAnimTime;
