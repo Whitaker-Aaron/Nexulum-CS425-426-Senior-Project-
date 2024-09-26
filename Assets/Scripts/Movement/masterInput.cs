@@ -696,11 +696,12 @@ public class masterInput : MonoBehaviour
             if (maxStaminaValue - slider.value < 10)
             {
                 slider.value = maxStaminaValue;
-                Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
-                staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 0.0f);
+                //Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
+                //staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 0.0f);
 
-                Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
-                staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
+                //Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
+                //staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
+                StartCoroutine(ReduceStaminaOpacity());
             }
             else
             {
@@ -711,6 +712,25 @@ public class masterInput : MonoBehaviour
             
         }
 
+        yield break;
+    }
+
+    private IEnumerator ReduceStaminaOpacity()
+    {
+        Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
+        Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
+
+        //staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 0.0f);
+        float reduceVal = 1f;
+        while (staminaColor.w >= 0.0f && !isBlocking)
+        {
+            staminaColor = staminaFill.GetComponent<Image>().color;
+            staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, (staminaColor.w - (reduceVal * Time.deltaTime)));
+
+            staminaBorderFill = staminaBorder.GetComponent<Image>().color;
+            staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, (staminaBorderFill.w - (reduceVal * Time.deltaTime)));
+            yield return null;
+        }
         yield break;
     }
 }
