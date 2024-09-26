@@ -224,6 +224,7 @@ public class masterInput : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(swordAttackPoint.position, swordAttackRadius);
+        Gizmos.DrawWireSphere(toolAttackPoint.position, toolAttackRadius);
     }
 
 
@@ -369,7 +370,7 @@ public class masterInput : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    //print("click: " + noOfClicks);
+                    print("click: " + noOfClicks);
 
                     lastClickedTime = Time.time;
                     
@@ -523,7 +524,7 @@ public class masterInput : MonoBehaviour
                     noOfClicks++;
                     if (noOfClicks == 1)
                     {
-                        if (animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > .99f)
+                        if (animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > .7f)
                         {
                             noOfClicks = 0;
                             return;
@@ -535,9 +536,9 @@ public class masterInput : MonoBehaviour
                         }
 
                         StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTime, toolAttackPoint, toolAttackRadius, layer));
-                        animationControl.engAttackOne(animTime);
-                        StartCoroutine(waitAttack(animTime * 2));
-                        StartCoroutine(wait(animTime));
+                        animationControl.engAttackOne(engAnimTime);
+                        StartCoroutine(waitAttack(engAnimTime * 2));
+                        StartCoroutine(wait(engAnimTime * 2));
                         //anim.Play("attackOne");
                         //nextAttackTime = anim.GetCurrentAnimatorStateInfo(0).length - differenceTime;
                         //print("Anim: " + anim.GetBool("attack1"));
@@ -546,32 +547,34 @@ public class masterInput : MonoBehaviour
 
                     if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne"))
                     {
+                        print("animate two");
                         //anim.SetBool("attack2", true);
                         //anim.SetBool("attack1", false);
                         //anim.Play("attackTwo");
-                        nextAttackTime = animTimeTwo;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(animTimeTwo, swordAttackPoint, swordAttackRadius, layer));
-                        animationControl.engAttackTwo(animTimeTwo);
-                        StartCoroutine(wait(animTimeTwo));
-                        StartCoroutine(waitAttack(animTimeTwo * 2));
+                        engNextAttackTime = engAnimTimeTwo;
+                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
+                        animationControl.engAttackTwo(engAnimTimeTwo);
+                        StartCoroutine(wait(engAnimTimeTwo * 2));
+                        StartCoroutine(waitAttack(engAnimTimeTwo * 2));
                     }
 
                     if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("engWaitTwo"))
                     {
-                        nextAttackTime = animTimeThree;
+                        print("animate three");
+                        engNextAttackTime = engAnimTimeThree;
                         noOfClicks = 0;
-                        cooldownTime = Time.time + cooldown;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(animTimeTwo, swordAttackPoint, swordAttackRadius, layer));
+                        engCooldown = Time.time + cooldown;
+                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
                         animationControl.engAttackThree();
-                        StartCoroutine(wait(animTimeThree));
-                        StartCoroutine(waitAttack(animTimeThree * 2));
+                        StartCoroutine(wait(engAnimTimeThree * 2));
+                        StartCoroutine(waitAttack(engAnimTimeThree * 2));
                         //nextAttackTime -= differenceTime;
-                        nextAttackTime = animTime;
+                        engNextAttackTime = engAnimTime;
 
                     }
                     else
                     {
-                        if (Time.time - lastClickedTime > maxComboDelay)
+                        if (Time.time - lastClickedTime > engMaxComboDelay)
                             animationControl.resetEngineer();
                     }
 

@@ -180,24 +180,24 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         if (getAnimationInfo().IsName("engAttackTwo") || getAnimationInfo().IsName("engAttackThree"))
             return;
         animator.SetBool("engAttack1", true);
-        animator.Play("engAttackOne");
+        animator.Play("engAttackOne", 2);
         StartCoroutine(attackWait(time, "engWaitOne"));
     }
 
     public void engAttackTwo(float time)
     {
         animator.SetBool("engAttack2", true);
+        animator.Play("engAttackTwo", 2);
         animator.SetBool("engAttack1", false);
-        animator.Play("engAttackTwo");
-        
-        
+
+
         StartCoroutine(attackWait(time, "engWaitTwo"));
     }
 
     public void engAttackThree()
     {
         animator.SetBool("engAttack3", true);
-        animator.Play("engAttackThree");
+        animator.Play("engAttackThree", 2);
         animator.SetBool("engAttack1", false);
         animator.SetBool("engAttack2", false);
     }
