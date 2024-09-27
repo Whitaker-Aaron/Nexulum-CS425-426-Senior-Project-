@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bcb77bf164161145bf6cf5e334b8a8d, type: 3}
-  m_Name: newWeapon
+  m_Script: {fileID: 11500000, guid: 6c1a56c6f615ae943b22a9e534f4375a, type: 3}
+  m_Name: Regen
   m_EditorClassIdentifier: 
-  weaponName: Dagger
-  weaponClassType: 0
-  weaponMesh: {fileID: 961039877492513713, guid: 86507362d0d25f349909bba3d0b4de5e, type: 3}
-  weaponRecipe: {fileID: 0}
+  requiredMaterials:
+    _serializedList:
+    - Key: {fileID: 11400000, guid: 590e23377298d434fa942c3359db6e82, type: 2}
+      Value: 5
+  type: 2
+  recipeName: Regen
+  canCraft: 0

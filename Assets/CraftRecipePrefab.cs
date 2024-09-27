@@ -95,9 +95,14 @@ public class CraftRecipePrefab : MonoBehaviour
         {
             case CraftRecipe.CraftTypes.Weapon:
                 AddToWeaponsInventory();
+                craftRecipe.hasCrafted = true;
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().DestroyRecipe(craftRecipe, craftRecipe.type);
+
                 break;
             case CraftRecipe.CraftTypes.Rune:
                 AddToRunesInventory();
+                craftRecipe.hasCrafted = true;
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().DestroyRecipe(craftRecipe, craftRecipe.type);
                 break;
             case CraftRecipe.CraftTypes.Item:
                 AddToItemsInventory();
@@ -127,12 +132,12 @@ public class CraftRecipePrefab : MonoBehaviour
     public void AddToItemsInventory()
     {
         Debug.Log("Adding to items inventory");
-        GameObject.Find("WeaponManager").GetComponent<ItemManager>().FindItemAndAdd(craftRecipeName.GetComponent<Text>().text);
+        GameObject.Find("ItemManager").GetComponent<ItemManager>().FindItemAndAdd(craftRecipeName.GetComponent<Text>().text);
     }
 
     public void AddToRunesInventory()
     {
         Debug.Log("Adding to runes inventory");
-        GameObject.Find("WeaponManager").GetComponent<RuneManager>().FindRuneAndAdd(craftRecipeName.GetComponent<Text>().text);
+        GameObject.Find("RuneManager").GetComponent<RuneManager>().FindRuneAndAdd(craftRecipeName.GetComponent<Text>().text);
     }
 }

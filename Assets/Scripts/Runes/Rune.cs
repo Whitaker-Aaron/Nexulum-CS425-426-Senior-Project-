@@ -6,6 +6,8 @@ using UnityEngine;
 public class Rune : ScriptableObject
 {
     public string runeName;
+    public string runeDescription;
+    public string runeEffect;
     public Texture runeTexture;
     public RuneType runeType;
     public CraftRecipe runeRecipe; 

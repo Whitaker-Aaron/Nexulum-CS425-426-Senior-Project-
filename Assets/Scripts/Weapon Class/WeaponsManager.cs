@@ -18,6 +18,9 @@ public class WeaponsManager : MonoBehaviour
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
+
+        AddToInventory(characterReference.equippedWeapon);
+        
     }
 
     private void Awake()

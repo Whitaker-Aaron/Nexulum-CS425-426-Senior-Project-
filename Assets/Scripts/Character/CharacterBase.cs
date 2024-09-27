@@ -5,12 +5,13 @@ using UnityEngine.UI;
 
 
 
+
 public class CharacterBase : MonoBehaviour
 {
     //Will remove serialize field later. Here for testing purposes. Will have to be handled by lifetime 
     //managers.
 
-    [SerializeField] public Rune[] equippedRunes;
+    [SerializeField] public Rune[] equippedRunes = new Rune[3];
     [SerializeField] public WeaponBase equippedWeapon;
     [SerializeField] public WeaponBase engineerTool;
     //[SerializeField] public RuneInt runeInt;
@@ -46,8 +47,7 @@ public class CharacterBase : MonoBehaviour
     private void Awake()
     {
         runeInt = GetComponent<RuneInt>();
-
-        runeInt.apply();
+        runeInt.Apply();
     }
 
     // Start is called before the first frame update
@@ -55,10 +55,7 @@ public class CharacterBase : MonoBehaviour
     {
         playerHealth = maxHealth; 
 
-        for(int i = 0; i < equippedRunes.Length; i++)
-        {
-            Debug.Log("Currently equipped with " + equippedRunes[i].name + " rune.");
-        }
+        
 
         healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
         delayedHealthBar = GameObject.Find("DelayedHealthBar").GetComponent<Slider>();
@@ -89,7 +86,7 @@ public class CharacterBase : MonoBehaviour
         Debug.Log("Inside Character Base");
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
-            Debug.Log("Newly equipped weapon is of type knight");
+            Debug.Log("Newly equipped weapon is of type Knight");
             masterInput.GetComponent<masterInput>().changeSword(newWeapon);
             equippedWeapon = newWeapon;
         }
@@ -103,20 +100,14 @@ public class CharacterBase : MonoBehaviour
         
     }
 
-    
 
-    public void ApplyRuneLogicToWeapon()
+    public void UpdateRunes(Rune runeToEquip, int position)
     {
-        for(int i = 0;  i < equippedRunes.Length; i++)
-        {
-            if (equippedRunes[i].runeType == Rune.RuneType.Weapon)
-            {
-                //Implement logic to apply rune logic to currently equipped weapon.
-            }
-
-        }
-
+        runeInt.Remove();
+        equippedRunes[position] = runeToEquip;
+        runeInt.Apply();
     }
+    
 
     public GameObject GetMasterInput()
     {
@@ -129,11 +120,24 @@ public class CharacterBase : MonoBehaviour
         if (!invul)
         {
             playerHealth -= damage;
-            StartCoroutine(updateHealthBars());
+            StartCoroutine(updateHealthBarsNegative());
         }
         
         
         print("Player health: " + playerHealth);
+    }
+
+    public void restoreHealth(int amount)
+    {
+        if (playerHealth + amount >= maxHealth) {
+            playerHealth = maxHealth;
+        }
+        else
+        {
+            playerHealth += amount;
+        }
+        StartCoroutine(updateHealthBarsPositive());
+
     }
 
     public IEnumerator animateHealth()
@@ -142,15 +146,19 @@ public class CharacterBase : MonoBehaviour
         float reduceVal = 150f;
         while (healthBar.value != playerHealth)
         {
-            if(healthBar.value - playerHealth <= 1)
+            if (Mathf.Abs(healthBar.value - playerHealth) <= 1)
             {
                 healthBar.value = playerHealth;
             }
-            else
+            else if (playerHealth < delayedHealthBar.value)
             {
                 healthBar.value -= reduceVal * Time.deltaTime;
             }
-            
+            else
+            {
+                healthBar.value += reduceVal * Time.deltaTime;
+            }
+
             yield return null;
         }
         yield break;
@@ -161,13 +169,17 @@ public class CharacterBase : MonoBehaviour
         float reduceVal = 150f;
         while (delayedHealthBar.value != playerHealth)
         {
-            if (delayedHealthBar.value - playerHealth <= 1)
+            if (Mathf.Abs(delayedHealthBar.value - playerHealth) <= 1)
             {
                 delayedHealthBar.value = playerHealth;
             }
-            else
+            else if(playerHealth < delayedHealthBar.value)
             {
                 delayedHealthBar.value -= reduceVal * Time.deltaTime;
+            }
+            else
+            {
+                delayedHealthBar.value += reduceVal * Time.deltaTime;
             }
 
             yield return null;
@@ -176,14 +188,17 @@ public class CharacterBase : MonoBehaviour
     }
 
 
-    public IEnumerator updateHealthBars()
+    public IEnumerator updateHealthBarsNegative()
     {
         yield return animateHealth();
         yield return new WaitForSeconds(0.2f);
         yield return animateDelayedHealth();
     }
 
-    
-
-
+    public IEnumerator updateHealthBarsPositive()
+    {
+        yield return animateDelayedHealth();
+        yield return new WaitForSeconds(0.2f);
+        yield return animateHealth();
+    }
 }
