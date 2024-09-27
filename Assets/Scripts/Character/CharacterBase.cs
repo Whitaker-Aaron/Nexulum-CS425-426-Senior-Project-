@@ -5,12 +5,13 @@ using UnityEngine.UI;
 
 
 
+
 public class CharacterBase : MonoBehaviour
 {
     //Will remove serialize field later. Here for testing purposes. Will have to be handled by lifetime 
     //managers.
 
-    [SerializeField] public Rune[] equippedRunes;
+    [SerializeField] public Rune[] equippedRunes = new Rune[3];
     [SerializeField] public WeaponBase equippedWeapon;
     [SerializeField] public WeaponBase engineerTool;
     //[SerializeField] public RuneInt runeInt;
@@ -54,10 +55,7 @@ public class CharacterBase : MonoBehaviour
     {
         playerHealth = maxHealth; 
 
-        for(int i = 0; i < equippedRunes.Length; i++)
-        {
-            Debug.Log("Currently equipped with " + equippedRunes[i].runeName + " rune.");
-        }
+        
 
         healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
         delayedHealthBar = GameObject.Find("DelayedHealthBar").GetComponent<Slider>();
@@ -102,20 +100,14 @@ public class CharacterBase : MonoBehaviour
         
     }
 
-    
 
-    public void ApplyRuneLogicToWeapon()
+    public void UpdateRunes(Rune runeToEquip, int position)
     {
-        for(int i = 0;  i < equippedRunes.Length; i++)
-        {
-            if (equippedRunes[i].runeType == Rune.RuneType.Weapon)
-            {
-                //Implement logic to apply rune logic to currently equipped weapon.
-            }
-
-        }
-
+        runeInt.Remove();
+        equippedRunes[position] = runeToEquip;
+        runeInt.Apply();
     }
+    
 
     public GameObject GetMasterInput()
     {
@@ -128,7 +120,7 @@ public class CharacterBase : MonoBehaviour
         if (!invul)
         {
             playerHealth -= damage;
-            StartCoroutine(updateHealthBars());
+            StartCoroutine(updateHealthBarsNegative());
         }
         
         
@@ -144,7 +136,7 @@ public class CharacterBase : MonoBehaviour
         {
             playerHealth += amount;
         }
-        StartCoroutine(updateHealthBars());
+        StartCoroutine(updateHealthBarsPositive());
 
     }
 
@@ -196,10 +188,17 @@ public class CharacterBase : MonoBehaviour
     }
 
 
-    public IEnumerator updateHealthBars()
+    public IEnumerator updateHealthBarsNegative()
     {
         yield return animateHealth();
         yield return new WaitForSeconds(0.2f);
         yield return animateDelayedHealth();
+    }
+
+    public IEnumerator updateHealthBarsPositive()
+    {
+        yield return animateDelayedHealth();
+        yield return new WaitForSeconds(0.2f);
+        yield return animateHealth();
     }
 }

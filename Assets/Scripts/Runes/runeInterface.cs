@@ -7,6 +7,7 @@ public interface RuneInt
     //string runeName { get; }
     void Apply();
     void Remove();
+    void ResetRunes();
 }
 
 public class runeInterface : MonoBehaviour

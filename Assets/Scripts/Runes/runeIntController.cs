@@ -95,10 +95,15 @@ public class runeIntController : MonoBehaviour, RuneInt
     }
     public void applyHealthRunes(Rune rune)
     {
-
+        if (rune.runeName == "Regen")
+        {
+            Debug.Log("Applying Regen");
+            StartCoroutine(ApplyRegen());
+        }
     }
     public void applyBuffRunes(Rune rune)
     {
+        
 
     }
     public void applyDefenseRunes(Rune rune)
@@ -146,7 +151,10 @@ public class runeIntController : MonoBehaviour, RuneInt
 
     public void removeHealthRunes(Rune rune)
     {
-
+        if (rune.runeName == "Regen")
+        {
+            StopCoroutine(ApplyRegen());
+        }
     }
 
 
@@ -197,5 +205,15 @@ public class runeIntController : MonoBehaviour, RuneInt
     void Update()
     {
         //RUNE LOGIC FOR RUNES THAT APPLY PER FRAME OR ON TIMERS.
+    }
+
+    IEnumerator ApplyRegen()
+    {
+        while (true)
+        {
+            character.restoreHealth(5);
+            yield return new WaitForSeconds(5f);
+        }
+        
     }
 }

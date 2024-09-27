@@ -164,6 +164,20 @@ public class EquipMenuTransition : MonoBehaviour
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().weapon = weaponsInventory[i];
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Weapon;
                 var name = equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<Text>().text = weaponsInventory[i].weaponName;
+
+                var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+
+                if(characterRef.equippedWeapon.weaponName == weaponsInventory[i].weaponName)
+                {
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<Text>().text = "Equipped";
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = false;
+                }
+                else
+                {
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<Text>().text = "Equip";
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = true;
+                }
+
                 var equipRec = Instantiate(equipOptionPrefab);
                 equipRec.transform.SetParent(weaponsScrollContent.transform);
             }
@@ -184,6 +198,34 @@ public class EquipMenuTransition : MonoBehaviour
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().rune = runeInventory[i];
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Rune;
                 var name = equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<Text>().text = runeInventory[i].runeName;
+
+                var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+                bool runeEquipped = false;
+                for(int j = 0; j < characterRef.equippedRunes.Length; j++)
+                {
+                    if (characterRef.equippedRunes[j] != null)
+                    {
+                        if (runeInventory[i].runeName == characterRef.equippedRunes[j].runeName)
+                        {
+                            runeEquipped = true;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    
+                }
+                if (runeEquipped){
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<Text>().text = "Equipped";
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = false;
+                }
+                else
+                {
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<Text>().text = "Equip";
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = true;
+                }
+
                 var equipRec = Instantiate(equipOptionPrefab);
                 equipRec.transform.SetParent(runesScrollContent.transform);
             }

@@ -42,7 +42,7 @@ public class RuneManager : MonoBehaviour
 
     public bool FindRuneAndAdd(string runeName)
     {
-        var runes = GameObject.Find("itemsEquipList").GetComponent<RuneEquipList>().allRunes;
+        var runes = GameObject.Find("runeEquipList").GetComponent<RuneEquipList>().allRunes;
         if (runes != null && runes.Count > 0)
         {
             Debug.Log("Inside Weapons Manager if statement");
@@ -61,8 +61,8 @@ public class RuneManager : MonoBehaviour
 
     public void ChangeRunes(Rune runeToEquip, int position)
     {
-        characterReference.equippedRunes[position] = runeToEquip;
-        characterReference.ApplyRuneLogicToWeapon();
+        
+        characterReference.UpdateRunes(runeToEquip, position);
     }
 
     public Rune[] GetRuneInventory()
