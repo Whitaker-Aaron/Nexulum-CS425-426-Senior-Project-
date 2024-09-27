@@ -61,6 +61,11 @@ public class MenuManager : MonoBehaviour
    
                 Destroy(GameObject.FindGameObjectWithTag("EquipMenu"));
             }
+            if (GameObject.FindGameObjectWithTag("CraftMenu") != null)
+            {
+
+                Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
+            }
 
             menuActive = false;
         }

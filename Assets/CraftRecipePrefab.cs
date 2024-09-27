@@ -95,9 +95,14 @@ public class CraftRecipePrefab : MonoBehaviour
         {
             case CraftRecipe.CraftTypes.Weapon:
                 AddToWeaponsInventory();
+                craftRecipe.hasCrafted = true;
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().DestroyRecipe(craftRecipe, craftRecipe.type);
+
                 break;
             case CraftRecipe.CraftTypes.Rune:
                 AddToRunesInventory();
+                craftRecipe.hasCrafted = true;
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().DestroyRecipe(craftRecipe, craftRecipe.type);
                 break;
             case CraftRecipe.CraftTypes.Item:
                 AddToItemsInventory();
