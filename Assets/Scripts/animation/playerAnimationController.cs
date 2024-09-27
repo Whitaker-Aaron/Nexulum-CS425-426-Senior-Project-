@@ -87,14 +87,14 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         animator.Play("blocking");
     }
 
-    IEnumerator attackWait(float time, string animName)
+    IEnumerator attackWait(float time, string animName, int index)
     {
         yield return new WaitForSeconds(time);
-        //if (getAnimationInfo().IsName("attack2") || getAnimationInfo().IsName("Attack3") || getAnimationInfo().IsName("engAttack3"))
-        //yield break;
+        //if (getAnimationInfo().IsName("attack2") || getAnimationInfo().IsName("Attack3") || getAnimationInfo().IsName("engAttack3") || getAnimationInfo().IsName("engAttack2"))
+            //yield break;
         //print("animation: " + animName);
         
-        animator.Play(animName);
+        animator.Play(animName, index);
         yield break;
     }
 
@@ -106,14 +106,14 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
             //return;
         animator.SetBool("attack1", true);
         animator.Play("attackOne");
-        StartCoroutine(attackWait(time, "waitOne"));
+        StartCoroutine(attackWait(time, "waitOne", 0));
     }
     public void knightAttackTwo(float time)
     {
         animator.SetBool("attack1", false);
         animator.SetBool("attack2", true);
         animator.Play("attackTwo");
-        StartCoroutine(attackWait(time, "waitTwo"));
+        StartCoroutine(attackWait(time, "waitTwo", 0));
     }
 
     public void knightAttackThree()
@@ -180,24 +180,24 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         if (getAnimationInfo().IsName("engAttackTwo") || getAnimationInfo().IsName("engAttackThree"))
             return;
         animator.SetBool("engAttack1", true);
-        animator.Play("engAttackOne");
-        StartCoroutine(attackWait(time, "engWaitOne"));
+        animator.Play("engAttackOne", 2);
+        StartCoroutine(attackWait(time, "engWaitOne", 2));
     }
 
     public void engAttackTwo(float time)
     {
         animator.SetBool("engAttack2", true);
+        animator.Play("engAttackTwo", 2);
         animator.SetBool("engAttack1", false);
-        animator.Play("engAttackTwo");
-        
-        
-        StartCoroutine(attackWait(time, "engWaitTwo"));
+
+
+        StartCoroutine(attackWait(time * 1.5f, "engWaitTwo", 2));
     }
 
     public void engAttackThree()
     {
         animator.SetBool("engAttack3", true);
-        animator.Play("engAttackThree");
+        animator.Play("engAttackThree", 2);
         animator.SetBool("engAttack1", false);
         animator.SetBool("engAttack2", false);
     }

@@ -158,6 +158,9 @@ public class masterInput : MonoBehaviour
     public Transform toolAttackPoint;
     public float toolAttackRadius;
 
+    //abilities
+    public bool placing = false;
+
 
     //--------------FUNCTIONS--------------
 
@@ -245,6 +248,7 @@ public class masterInput : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(swordAttackPoint.position, swordAttackRadius);
+        Gizmos.DrawWireSphere(toolAttackPoint.position, toolAttackRadius);
     }
 
 
@@ -390,7 +394,7 @@ public class masterInput : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    //print("click: " + noOfClicks);
+                    print("click: " + noOfClicks);
 
                     lastClickedTime = Time.time;
                     
@@ -519,9 +523,9 @@ public class masterInput : MonoBehaviour
         }
 
         //Engineer Logic
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer && placing == false)
         {
-            if (Input.GetMouseButtonDown(0) && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize)
+            if (Input.GetMouseButtonDown(0) && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false)
             {
                 pistolBulletCount = 0;
                 canPistolShoot = false;
@@ -529,13 +533,13 @@ public class masterInput : MonoBehaviour
                 animationControl.engineerReload();
             }
 
-            if (Input.GetKeyDown(KeyCode.R) && pistolBulletCount < pistolMagSize && !pistolReloading)
+            if (Input.GetKeyDown(KeyCode.R) && pistolBulletCount < pistolMagSize && !pistolReloading && isAttacking == false)
             {
                 StartCoroutine(pistolReload());
                 animationControl.engineerReload();
             }
 
-            if (Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0)
+            if (Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0 && isAttacking == false)
             {
                 StartCoroutine(pistolShoot());
             }
@@ -553,9 +557,11 @@ public class masterInput : MonoBehaviour
                     lastClickedTime = Time.time;
 
                     noOfClicks++;
-                    if (noOfClicks == 1)
+                    
+
+                    if (noOfClicks == 1 && !animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > engAnimTime)
                     {
-                        if (animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > .99f)
+                        if (animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > .9f)
                         {
                             noOfClicks = 0;
                             return;
@@ -565,52 +571,73 @@ public class masterInput : MonoBehaviour
                             noOfClicks = 0;
                             return;
                         }
-
+                        engNextAttackTime = engAnimTime;
                         StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTime, toolAttackPoint, toolAttackRadius, layer));
-                        animationControl.engAttackOne(animTime);
-                        StartCoroutine(waitAttack(animTime * 2));
-                        StartCoroutine(wait(animTime));
+                        animationControl.engAttackOne(engAnimTime);
+                        StartCoroutine(waitAttack(engAnimTime * 2));
+                        StartCoroutine(wait(engAnimTime));
                         //anim.Play("attackOne");
                         //nextAttackTime = anim.GetCurrentAnimatorStateInfo(0).length - differenceTime;
                         //print("Anim: " + anim.GetBool("attack1"));
                     }
                     noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
 
-                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne"))
+                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeTwo * 2)
                     {
+                        print("animate two");
                         //anim.SetBool("attack2", true);
                         //anim.SetBool("attack1", false);
                         //anim.Play("attackTwo");
-                        nextAttackTime = animTimeTwo;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(animTimeTwo, swordAttackPoint, swordAttackRadius, layer));
-                        animationControl.engAttackTwo(animTimeTwo);
-                        StartCoroutine(wait(animTimeTwo));
-                        StartCoroutine(waitAttack(animTimeTwo * 2));
+                        engNextAttackTime = engAnimTimeTwo;
+                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
+                        animationControl.engAttackTwo(engAnimTimeTwo);
+                        StartCoroutine(wait(engAnimTimeTwo));
+                        StartCoroutine(waitAttack(engAnimTimeTwo * 2));
                     }
 
                     if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("engWaitTwo"))
                     {
-                        nextAttackTime = animTimeThree;
+                        print("animate three");
+                        engNextAttackTime = engAnimTimeThree;
                         noOfClicks = 0;
-                        cooldownTime = Time.time + cooldown;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(animTimeTwo, swordAttackPoint, swordAttackRadius, layer));
+                        engCooldown = Time.time + cooldown;
+                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
                         animationControl.engAttackThree();
-                        StartCoroutine(wait(animTimeThree));
-                        StartCoroutine(waitAttack(animTimeThree * 2));
+                        StartCoroutine(wait(engAnimTimeThree));
+                        StartCoroutine(waitAttack(engAnimTimeThree * 2));
                         //nextAttackTime -= differenceTime;
-                        nextAttackTime = animTime;
+                        engNextAttackTime = engAnimTime;
 
                     }
                     else
                     {
-                        if (Time.time - lastClickedTime > maxComboDelay)
+                        if (Time.time - lastClickedTime > engMaxComboDelay)
                             animationControl.resetEngineer();
+                        if (noOfClicks >= 3)
+                            noOfClicks = 0;
                     }
 
                 }
 
             }
 
+            
+
+        }
+
+        //Class ability Logic
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            gameObject.GetComponent<classAbilties>().activateAbilityTwo(currentClass);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
         }
 
         returningFromMenu = false;
