@@ -46,8 +46,7 @@ public class CharacterBase : MonoBehaviour
     private void Awake()
     {
         runeInt = GetComponent<RuneInt>();
-
-        runeInt.apply();
+        runeInt.Apply();
     }
 
     // Start is called before the first frame update
@@ -57,7 +56,7 @@ public class CharacterBase : MonoBehaviour
 
         for(int i = 0; i < equippedRunes.Length; i++)
         {
-            Debug.Log("Currently equipped with " + equippedRunes[i].name + " rune.");
+            Debug.Log("Currently equipped with " + equippedRunes[i].runeName + " rune.");
         }
 
         healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
@@ -89,7 +88,7 @@ public class CharacterBase : MonoBehaviour
         Debug.Log("Inside Character Base");
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
-            Debug.Log("Newly equipped weapon is of type knight");
+            Debug.Log("Newly equipped weapon is of type Knight");
             masterInput.GetComponent<masterInput>().changeSword(newWeapon);
             equippedWeapon = newWeapon;
         }
@@ -136,21 +135,38 @@ public class CharacterBase : MonoBehaviour
         print("Player health: " + playerHealth);
     }
 
+    public void restoreHealth(int amount)
+    {
+        if (playerHealth + amount >= maxHealth) {
+            playerHealth = maxHealth;
+        }
+        else
+        {
+            playerHealth += amount;
+        }
+        StartCoroutine(updateHealthBars());
+
+    }
+
     public IEnumerator animateHealth()
     {
         
         float reduceVal = 150f;
         while (healthBar.value != playerHealth)
         {
-            if(healthBar.value - playerHealth <= 1)
+            if (Mathf.Abs(healthBar.value - playerHealth) <= 1)
             {
                 healthBar.value = playerHealth;
             }
-            else
+            else if (playerHealth < delayedHealthBar.value)
             {
                 healthBar.value -= reduceVal * Time.deltaTime;
             }
-            
+            else
+            {
+                healthBar.value += reduceVal * Time.deltaTime;
+            }
+
             yield return null;
         }
         yield break;
@@ -161,13 +177,17 @@ public class CharacterBase : MonoBehaviour
         float reduceVal = 150f;
         while (delayedHealthBar.value != playerHealth)
         {
-            if (delayedHealthBar.value - playerHealth <= 1)
+            if (Mathf.Abs(delayedHealthBar.value - playerHealth) <= 1)
             {
                 delayedHealthBar.value = playerHealth;
             }
-            else
+            else if(playerHealth < delayedHealthBar.value)
             {
                 delayedHealthBar.value -= reduceVal * Time.deltaTime;
+            }
+            else
+            {
+                delayedHealthBar.value += reduceVal * Time.deltaTime;
             }
 
             yield return null;
@@ -182,8 +202,4 @@ public class CharacterBase : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         yield return animateDelayedHealth();
     }
-
-    
-
-
 }

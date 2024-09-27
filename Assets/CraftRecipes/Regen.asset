@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f80596499d67c34d915a3ee520715ed, type: 3}
-  m_Name: Fire Rune
+  m_Script: {fileID: 11500000, guid: 6c1a56c6f615ae943b22a9e534f4375a, type: 3}
+  m_Name: Regen
   m_EditorClassIdentifier: 
-  runeName: Fire
-  runeTexture: {fileID: 0}
-  runeType: 0
-  runeRecipe: {fileID: 0}
+  requiredMaterials:
+    _serializedList:
+    - Key: {fileID: 11400000, guid: 590e23377298d434fa942c3359db6e82, type: 2}
+      Value: 5
+  type: 2
+  recipeName: Regen
+  canCraft: 0

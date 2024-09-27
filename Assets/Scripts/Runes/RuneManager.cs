@@ -9,8 +9,24 @@ public class RuneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         DontDestroyOnLoad(this.gameObject);
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        runesInventory = GameObject.Find("RuneInventory").GetComponent<RuneInventory>();
+        //characterReference.equippedRunes
+        for (int i = 0; i < characterReference.equippedRunes.Length; i++)
+        {
+            if (characterReference.equippedRunes[i] != null)
+            {
+                Debug.Log(characterReference.equippedRunes[i].runeName);
+                AddToInventory(characterReference.equippedRunes[i]);
+            }
+            else
+            {
+                break;
+            }
+            
+        }
     }
 
     // Update is called once per frame
@@ -47,5 +63,10 @@ public class RuneManager : MonoBehaviour
     {
         characterReference.equippedRunes[position] = runeToEquip;
         characterReference.ApplyRuneLogicToWeapon();
+    }
+
+    public Rune[] GetRuneInventory()
+    {
+        return runesInventory.GetComponent<RuneInventory>().GetInventory();
     }
 }

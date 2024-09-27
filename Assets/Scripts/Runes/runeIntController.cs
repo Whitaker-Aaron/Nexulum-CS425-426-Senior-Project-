@@ -5,50 +5,85 @@ using UnityEngine;
 public class runeIntController : MonoBehaviour, RuneInt
 {
 
-    //private RuneInventory runeInventory;
-    Rune equippedRuneOne, equippedRuneTwo;
     WeaponBase weapon;
-    //private WeaponsInventory weaponsInventory;
     [SerializeField] public WeaponBase.weaponClassTypes currentClass;
-    //[SerializeField] public RuneManager runeManager;
-    //[SerializeField] public WeaponsManager weaponsManager;
     public CharacterBase character;
-    string runeName, runeNameTwo;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        ResetRunes();
     }
 
     void Awake()
     {
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         //runeInventory = runeManager.GetComponent<RuneInventory>();
-        if (character.equippedRunes.Length >= 1)
-        {
-            equippedRuneOne = character.equippedRunes[0];
-            runeName = equippedRuneOne.runeName;
-        }
-        if (character.equippedRunes.Length >= 2)
-        {
-            equippedRuneTwo = character.equippedRunes[1];
-            runeNameTwo = equippedRuneTwo.runeName;
-        }
+
         //weaponsInventory = weaponsManager.GetComponent<WeaponsInventory>();
         weapon = character.equippedWeapon;
 
     }
 
-    public void apply()
+    public void ResetRunes()
+    {
+        Remove();
+        Apply();
+    }
+
+    public void Apply()
     {
         //LOGIC FOR THE RUNES GOES HERE
-        if(runeName == "Fire Rune" || runeNameTwo == "Fire Rune")
+        for(int i = 0; i < character.equippedRunes.Length; i++)
         {
-            if(currentClass == WeaponBase.weaponClassTypes.Knight)
+            if (character.equippedRunes[i] != null)
+            {
+                switch (character.equippedRunes[i].runeType)
+                {
+                    case Rune.RuneType.Buff:
+
+                        applyBuffRunes(character.equippedRunes[i]);
+                        break;
+
+                    case Rune.RuneType.Defense:
+
+                        applyDefenseRunes(character.equippedRunes[i]);
+                        break;
+
+                    case Rune.RuneType.Health:
+
+                        applyHealthRunes(character.equippedRunes[i]);
+                        break;
+
+                    case Rune.RuneType.Projectile:
+
+                        applyProjectileRunes(character.equippedRunes[i]);
+                        break;
+
+                    case Rune.RuneType.Weapon:
+
+                        applyWeaponRunes(character.equippedRunes[i]);
+                        break;
+
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+    }
+
+    public void applyWeaponRunes(Rune rune)
+    {
+        if (rune.runeName == "Fire")
+        {
+            if (currentClass == WeaponBase.weaponClassTypes.Knight)
             {
                 weapon.weaponMesh.GetComponent<swordCombat>().activateFire(true);
             }
-            else if(currentClass == WeaponBase.weaponClassTypes.Gunner)
+            else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
             {
 
             }
@@ -58,10 +93,26 @@ public class runeIntController : MonoBehaviour, RuneInt
             }
         }
     }
-
-    public void remove()
+    public void applyHealthRunes(Rune rune)
     {
-        if (runeName == "Fire Rune")
+
+    }
+    public void applyBuffRunes(Rune rune)
+    {
+
+    }
+    public void applyDefenseRunes(Rune rune)
+    {
+
+    }
+    public void applyProjectileRunes(Rune rune)
+    {
+
+    }
+
+    public void removeWeaponRunes(Rune rune)
+    {
+        if (rune.runeName == "Fire")
         {
             if (currentClass == WeaponBase.weaponClassTypes.Knight)
             {
@@ -78,9 +129,73 @@ public class runeIntController : MonoBehaviour, RuneInt
         }
     }
 
+    public void removeBuffRunes(Rune rune)
+    {
+
+    }
+
+    public void removeDefenseRunes(Rune rune)
+    {
+
+    }
+
+    public void removeProjectileRunes(Rune rune)
+    {
+
+    }
+
+    public void removeHealthRunes(Rune rune)
+    {
+
+    }
+
+
+    public void Remove()
+    {
+        //LOGIC FOR THE RUNES GOES HERE
+        for (int i = 0; i < character.equippedRunes.Length; i++)
+        {
+            if (character.equippedRunes[i] != null)
+            {
+                switch (character.equippedRunes[i].runeType)
+                {
+                    case Rune.RuneType.Buff:
+
+                        removeBuffRunes(character.equippedRunes[i]);
+                        break;
+
+                    case Rune.RuneType.Defense:
+
+                        removeDefenseRunes(character.equippedRunes[i]);
+                        break;
+
+                    case Rune.RuneType.Health:
+
+                        removeHealthRunes(character.equippedRunes[i]);
+                        break;
+
+                    case Rune.RuneType.Projectile:
+
+                        removeProjectileRunes(character.equippedRunes[i]);
+                        break;
+
+                    case Rune.RuneType.Weapon:
+
+                        removeWeaponRunes(character.equippedRunes[i]);
+                        break;
+
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+        //RUNE LOGIC FOR RUNES THAT APPLY PER FRAME OR ON TIMERS.
     }
 }
