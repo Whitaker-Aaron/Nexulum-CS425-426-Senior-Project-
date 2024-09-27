@@ -137,6 +137,9 @@ public class masterInput : MonoBehaviour
     public Transform toolAttackPoint;
     public float toolAttackRadius;
 
+    //abilities
+    public bool placing = false;
+
 
     //--------------FUNCTIONS--------------
 
@@ -488,7 +491,7 @@ public class masterInput : MonoBehaviour
         }
 
         //Engineer Logic
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer && placing == false)
         {
             if (Input.GetMouseButtonDown(0) && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false)
             {
@@ -578,12 +581,31 @@ public class masterInput : MonoBehaviour
                     {
                         if (Time.time - lastClickedTime > engMaxComboDelay)
                             animationControl.resetEngineer();
+                        if (noOfClicks >= 3)
+                            noOfClicks = 0;
                     }
 
                 }
 
             }
 
+            
+
+        }
+
+        //Class ability Logic
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            gameObject.GetComponent<classAbilties>().activateAbilityTwo(currentClass);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
         }
 
         returningFromMenu = false;
