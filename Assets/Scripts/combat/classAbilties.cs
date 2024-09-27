@@ -120,7 +120,7 @@ public class classAbilties : MonoBehaviour
         if (instant)
         {
             instant = false;
-            currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position, Quaternion.LookRotation(mousePos));
+            currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position, Quaternion.LookRotation(player.transform.forward));
         }
 
         float distance = Vector3.Distance(player.transform.position, mousePos);
@@ -128,13 +128,13 @@ public class classAbilties : MonoBehaviour
         if(distance <= turretPlacementRadius)
         {
             currentTurret.gameObject.transform.position = mousePos;
-            currentTurret.transform.rotation = Quaternion.LookRotation(mousePos);
+            currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
         }
         else
         {
             Vector3 direction = (mousePos - player.transform.position).normalized;
             currentTurret.gameObject.transform.position = player.transform.position + direction * turretPlacementRadius;
-            currentTurret.transform.rotation = Quaternion.LookRotation(direction);
+            currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
         }
 
         if(Input.GetMouseButtonDown(0)) 
@@ -143,8 +143,9 @@ public class classAbilties : MonoBehaviour
             {
                 placing = false;
                 gameObject.GetComponent<masterInput>().placing = false;
+                Quaternion rot = currentTurret.transform.rotation;
                 Destroy(currentTurret);
-                currentTurret = Instantiate(turretPrefab, mousePos + new Vector3 (0,turretSpawnHeight,0), Quaternion.LookRotation(mousePos));
+                currentTurret = Instantiate(turretPrefab, mousePos + new Vector3 (0,turretSpawnHeight,0), rot);
             }
         }
     }
