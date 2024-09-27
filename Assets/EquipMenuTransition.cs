@@ -7,6 +7,8 @@ using static UnityEditor.Progress;
 public class EquipMenuTransition : MonoBehaviour
 {
     [SerializeField] GameObject equipOptionPrefab;
+    [SerializeField] GameObject equippedRunePrefab;
+
     GameObject mainButtons;
     GameObject mainSelection;
     GameObject weaponsScroll;
@@ -15,6 +17,14 @@ public class EquipMenuTransition : MonoBehaviour
     GameObject weaponsScrollContent;
     GameObject classScrollContent;
     GameObject runesScrollContent;
+
+    GameObject equippedContainer;
+    GameObject equippedPanel;
+
+    GameObject currentWeaponContent;
+    GameObject currentClassContent;
+    GameObject currentRuneContainer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,9 +38,71 @@ public class EquipMenuTransition : MonoBehaviour
         classScrollContent = GameObject.Find("ClassScrollContent");
         runesScrollContent = GameObject.Find("RunesScrollContent");
 
+        equippedContainer = GameObject.Find("EquippedScroll");
+        equippedPanel = GameObject.Find("EquippedPanel");
+
+        currentWeaponContent = GameObject.Find("CurrentWeaponPlaceholder");
+        currentClassContent = GameObject.Find("CurrentClassPlaceholder");
+        currentRuneContainer = GameObject.Find("CurrentRunesList");
+
+
+        var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        currentWeaponContent.GetComponent<Text>().text = characterRef.equippedWeapon.weaponName;
+        switch (characterRef.equippedWeapon.weaponClassType)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                currentClassContent.GetComponent<Text>().text = "Knight";
+                break;
+
+            case WeaponBase.weaponClassTypes.Engineer:
+                currentClassContent.GetComponent<Text>().text = "Engineer";
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                currentClassContent.GetComponent<Text>().text = "Gunner";
+                break;
+
+        }
+        
+        for(int i = 0; i < characterRef.equippedRunes.Length; i++)
+        {
+            if (characterRef.equippedRunes[i] != null)
+            {
+             
+                equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeName.GetComponent<Text>().text = characterRef.equippedRunes[i].runeName;
+                switch (characterRef.equippedRunes[i].runeType)
+                {
+                    case Rune.RuneType.Buff:
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "Buff";
+                        break;
+                    case Rune.RuneType.Defense:
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "Defense";
+                        break;
+                    case Rune.RuneType.Health:
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "Health";
+                        break;
+                    case Rune.RuneType.Projectile:
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "Projectile";
+                        break;
+                    case Rune.RuneType.Weapon:
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "Weapon";
+                        break;
+                }
+
+                var equipRuneRef = Instantiate(equippedRunePrefab);
+                equipRuneRef.transform.SetParent(currentRuneContainer.transform);
+                equipRuneRef.transform.localScale = Vector3.one;
+            }
+            else{
+                break;
+            }
+        }
+        
+
         weaponsScroll.SetActive(false);
         runesScroll.SetActive(false);
         classScroll.SetActive(false);
+
+
     }
 
     // Update is called once per frame
@@ -51,6 +123,10 @@ public class EquipMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         weaponsScroll.SetActive(true);
+
+        equippedPanel.SetActive(false);
+        equippedContainer.SetActive(false);
+
         populateWeaponsScroll();
         
     }
@@ -61,6 +137,9 @@ public class EquipMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         classScroll.SetActive(true);
+
+        equippedPanel.SetActive(false);
+        equippedContainer.SetActive(false);
     }
 
     public void NavigateToRuneEquipMenu()
@@ -69,6 +148,9 @@ public class EquipMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         runesScroll.SetActive(true);
+
+        equippedPanel.SetActive(false);
+        equippedContainer.SetActive(false);
     }
 
     public void populateWeaponsScroll()

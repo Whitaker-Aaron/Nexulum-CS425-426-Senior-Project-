@@ -469,7 +469,7 @@ public class masterInput : MonoBehaviour
                 staminaFill.GetComponent<Image>().color =  new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 1.0f);
 
                 Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
-                staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 1.0f);
+                staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.51f);
 
                 if (isMoving)
                     animationControl.blocking();
