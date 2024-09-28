@@ -12,6 +12,7 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] public Rune[] equippedRunes;
     [SerializeField] public WeaponBase equippedWeapon;
     [SerializeField] public WeaponBase engineerTool;
+    [SerializeField] public WeaponBase shield;
     //[SerializeField] public RuneInt runeInt;
      WeaponClass weaponClass;
      MaterialsInventory materialInventory;
@@ -21,11 +22,19 @@ public class CharacterBase : MonoBehaviour
 
      [SerializeField] GameObject masterInput;
 
+    //public GameObject playerModel;
+    //public GameObject knightModel;
 
     private RuneInt runeInt;
 
     //weapon spawn
     public Transform hand;
+    //for gunner
+    public Transform wrist;
+    //for engineer
+    public Transform leftHand;
+    //for knight
+    public Transform leftForearm;
 
     //Player Health System
     public int playerHealth = 100;
@@ -39,6 +48,8 @@ public class CharacterBase : MonoBehaviour
         runeInt = GetComponent<RuneInt>();
 
         runeInt.apply();
+
+        
     }
 
     // Start is called before the first frame update
@@ -107,5 +118,9 @@ public class CharacterBase : MonoBehaviour
         print("Player health: " + playerHealth);
     }
 
+    public Animator getAnimator()
+    {
+        return null;//playerModel.GetComponent<Animator>();
+    }
     
 }
