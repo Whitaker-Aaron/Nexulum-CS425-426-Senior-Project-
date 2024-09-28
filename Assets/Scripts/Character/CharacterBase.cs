@@ -14,6 +14,7 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] public Rune[] equippedRunes = new Rune[3];
     [SerializeField] public WeaponBase equippedWeapon;
     [SerializeField] public WeaponBase engineerTool;
+    [SerializeField] public WeaponBase shield;
     //[SerializeField] public RuneInt runeInt;
      WeaponClass weaponClass;
 
@@ -30,11 +31,19 @@ public class CharacterBase : MonoBehaviour
     public bool invul = false;
     
 
+    //public GameObject playerModel;
+    //public GameObject knightModel;
 
     private RuneInt runeInt;
 
     //weapon spawn
     public Transform hand;
+    //for gunner
+    public Transform wrist;
+    //for engineer
+    public Transform leftHand;
+    //for knight
+    public Transform leftForearm;
 
     //Player Health System
     public int maxHealth = 100;
@@ -47,6 +56,7 @@ public class CharacterBase : MonoBehaviour
     private void Awake()
     {
         runeInt = GetComponent<RuneInt>();
+
         runeInt.Apply();
     }
 
@@ -194,6 +204,7 @@ public class CharacterBase : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         yield return animateDelayedHealth();
     }
+
 
     public IEnumerator updateHealthBarsPositive()
     {

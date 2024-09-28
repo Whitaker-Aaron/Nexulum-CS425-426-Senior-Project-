@@ -238,7 +238,7 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        animator = player.GetComponent<Animator>();
+        animator = player.GetComponent<Animator>();//.getAnimator();
     }
 
     // Update is called once per frame

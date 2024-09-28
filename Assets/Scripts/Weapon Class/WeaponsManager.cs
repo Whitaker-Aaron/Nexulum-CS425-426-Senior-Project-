@@ -10,6 +10,9 @@ public class WeaponsManager : MonoBehaviour
     GameObject weaponInventory;
     GameObject weaponPrefab;
     GameObject currentWeapon;
+    GameObject currentTool;
+    GameObject toolPrefab;
+    GameObject currentShield, shieldPrefab;
     CharacterBase characterReference;
     void Start()
     {
@@ -17,10 +20,20 @@ public class WeaponsManager : MonoBehaviour
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
-        currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
-
-        AddToInventory(characterReference.equippedWeapon);
-        
+        if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
+            currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
+        if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
+        {
+            toolPrefab = characterReference.engineerTool.weaponMesh;
+            currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
+            currentTool = Instantiate(toolPrefab, characterReference.leftHand);
+        }
+        if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
+        {
+            currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
+            currentShield = Instantiate(shieldPrefab, characterReference.leftForearm);
+        }
+            
     }
 
     private void Awake()
@@ -44,7 +57,19 @@ public class WeaponsManager : MonoBehaviour
         characterReference.UpdateWeapon(newWeapon);
         GameObject.Destroy(currentWeapon);
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
-        currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
+        if (newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
+            currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
+        if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
+        {
+            currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
+            currentTool = Instantiate(toolPrefab, characterReference.leftHand);
+        }
+        if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
+        {
+            currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
+            currentShield = Instantiate(shieldPrefab, characterReference.leftForearm);
+        }
+            
 
     }
 
