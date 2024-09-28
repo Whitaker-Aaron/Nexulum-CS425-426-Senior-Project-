@@ -5,8 +5,9 @@ using UnityEngine;
 public interface RuneInt
 {
     //string runeName { get; }
-    void apply();
-    void remove();
+    void Apply();
+    void Remove();
+    void ResetRunes();
 }
 
 public class runeInterface : MonoBehaviour

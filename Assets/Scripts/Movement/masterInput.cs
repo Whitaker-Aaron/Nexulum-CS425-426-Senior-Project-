@@ -21,6 +21,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class masterInput : MonoBehaviour
@@ -34,6 +35,19 @@ public class masterInput : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+
+        staminaBar = GameObject.Find("StaminaBar");
+        staminaFill = GameObject.Find("StaminaFill");
+        staminaBorder = GameObject.Find("StaminaBorder");
+
+        maxStaminaValue = staminaBar.GetComponent<Slider>().value;
+
+        Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
+        staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 0.0f);
+
+        Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
+        staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
+
         character = player.GetComponent<CharacterBase>();
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         { 
@@ -91,6 +105,12 @@ public class masterInput : MonoBehaviour
     public float dashSpeed = 3f;
     public float dashTime = .2f;
 
+    GameObject staminaBar;
+    GameObject staminaFill;
+    GameObject staminaBorder; 
+
+    float maxStaminaValue;
+
 
 
     //Gunner Variables
@@ -115,6 +135,7 @@ public class masterInput : MonoBehaviour
     public Transform pistolBulletSpawn;
     public GameObject pistolBulletObj;
     public float pistolBulletSpeed;
+
 
     //pistol combat
     bool pistolReloading = false;
@@ -442,14 +463,25 @@ public class masterInput : MonoBehaviour
             if(Input.GetMouseButtonDown(1))
             {
                 isBlocking = true;
-                if(isMoving)
+                character.invul = true;
+ 
+                Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
+                staminaFill.GetComponent<Image>().color =  new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 1.0f);
+
+                Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
+                staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.51f);
+
+                if (isMoving)
                     animationControl.blocking();
                 else
                     StartCoroutine(animationControl.startKnightBlock(blockTime));
+                    StartCoroutine(StartStaminaCooldown());
             }
             if(Input.GetMouseButtonUp(1))
             {
                 isBlocking = false;
+                character.invul = false;
+
                 if (isMoving)
                     StartCoroutine(animationControl.stopKnightBlock(0));
                 else
@@ -646,4 +678,98 @@ public class masterInput : MonoBehaviour
 
         animationControl.updatePlayerAnimation(movement);
     }
+
+    private IEnumerator ReduceStaminaValue()
+    {
+        Slider slider = staminaBar.GetComponent<Slider>();
+        while (true && slider != null)
+        {
+            slider.value -= 300 * Time.deltaTime;
+            yield return null;
+
+        }
+        yield break;
+    }
+
+    private IEnumerator StartStaminaCooldown()
+    {
+        //IEnumerator coroutine = ReduceStaminaValue();
+        //StartCoroutine("ReduceOpacity", scrollObj);
+        //StartCoroutine(coroutine);
+        //yield return new WaitForSeconds(10);
+        //Debug.Log("Finished stamina coroutine");
+
+        Slider slider = staminaBar.GetComponent<Slider>();
+        while (slider.value > 0 && slider != null && isBlocking)
+        {
+            slider.value -= 300 * Time.deltaTime;
+            yield return null;
+
+        }
+
+        if (isMoving)
+            StartCoroutine(animationControl.stopKnightBlock(0));
+        else
+            StartCoroutine(animationControl.stopKnightBlock(blockTime));
+
+        isBlocking = false;
+        character.invul = false;
+
+        StartCoroutine(RechargeStaminaBar());
+        yield break;
+
+    }
+
+    private IEnumerator RechargeStaminaBar()
+    {
+        Slider slider = staminaBar.GetComponent<Slider>();
+        while (slider.value < maxStaminaValue && slider != null && !isBlocking)
+        {
+            if (maxStaminaValue - slider.value < 10)
+            {
+                slider.value = maxStaminaValue;
+                //Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
+                //staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 0.0f);
+
+                //Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
+                //staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
+                StartCoroutine(ReduceStaminaOpacity());
+            }
+            else
+            {
+                slider.value += 300 * Time.deltaTime;
+            }
+            
+            yield return null;
+            
+        }
+
+        yield break;
+    }
+
+    private IEnumerator ReduceStaminaOpacity()
+    {
+        Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
+        Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
+
+        //staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 0.0f);
+        float reduceVal = 1f;
+        while (staminaColor.w >= 0.0f && !isBlocking)
+        {
+            staminaColor = staminaFill.GetComponent<Image>().color;
+            staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, (staminaColor.w - (reduceVal * Time.deltaTime)));
+
+            staminaBorderFill = staminaBorder.GetComponent<Image>().color;
+            staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, (staminaBorderFill.w - (reduceVal * Time.deltaTime)));
+            yield return null;
+        }
+        yield break;
+    }
 }
+
+
+
+
+
+
+

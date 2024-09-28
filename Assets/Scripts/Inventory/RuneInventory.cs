@@ -37,4 +37,9 @@ public class RuneInventory : MonoBehaviour
 
     }
 
+    public Rune[] GetInventory()
+    {
+        return inventory;
+    }
+
 }

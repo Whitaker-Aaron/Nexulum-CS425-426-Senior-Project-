@@ -11,7 +11,7 @@ public class CraftRecipe : ScriptableObject
     public SerializedDictionary<CraftMaterial, int> requiredMaterials;
     public CraftTypes type;
     public string recipeName;
-    public bool canCraft;
+    public bool hasCrafted = false;
 
     public enum CraftTypes
     {

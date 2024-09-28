@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class CraftMenuTransition : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] GameObject craftRecipePrefab;
+    List<GameObject> currentWeaponScrollObjects = new List<GameObject>();
+    List<GameObject> currentRuneScrollObjects = new List<GameObject>();
+    List<GameObject> currentItemScrollObjects = new List<GameObject>();
+
     GameObject mainButtons;
     GameObject mainSelection;
     GameObject weaponsScroll;
@@ -43,9 +48,13 @@ public class CraftMenuTransition : MonoBehaviour
         var weaponCraftRecipes = GameObject.Find("MenuManager").GetComponent<MenuManager>().returnWeaponsCraftList();
         foreach (var item in weaponCraftRecipes)
         {
-            craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
-            var craftRec = Instantiate(craftRecipePrefab);
-            craftRec.transform.SetParent(weaponsScrollContent.transform);
+            if(item.hasCrafted != true)
+            {
+                craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
+                var craftRec = Instantiate(craftRecipePrefab);
+                craftRec.transform.SetParent(weaponsScrollContent.transform);
+                currentWeaponScrollObjects.Add(craftRec);
+            }
         }
     }
 
@@ -54,9 +63,14 @@ public class CraftMenuTransition : MonoBehaviour
         var runesCraftRecipes = GameObject.Find("MenuManager").GetComponent<MenuManager>().returnRunesCraftList();
         foreach(var item in runesCraftRecipes)
         {
-            craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
-            var craftRec = Instantiate(craftRecipePrefab);
-            craftRec.transform.SetParent(runesScrollContent.transform);
+            if(item.hasCrafted != true)
+            {
+                craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
+                var craftRec = Instantiate(craftRecipePrefab);
+                craftRec.transform.SetParent(runesScrollContent.transform);
+                currentRuneScrollObjects.Add(craftRec);
+            }
+            
         }
     }
 
@@ -68,6 +82,7 @@ public class CraftMenuTransition : MonoBehaviour
             craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
             var craftRec = Instantiate(craftRecipePrefab);
             craftRec.transform.SetParent(itemsScrollContent.transform);
+            currentItemScrollObjects.Add(craftRec);
         }
     }
 
@@ -105,6 +120,35 @@ public class CraftMenuTransition : MonoBehaviour
         itemsScroll.SetActive(true);
         populateItemsScroll();
     }
+
+    public void DestroyRecipe(CraftRecipe recipe, CraftRecipe.CraftTypes type)
+    {
+        if(type == CraftRecipe.CraftTypes.Weapon)
+        {
+            for(int i =0; i < currentWeaponScrollObjects.Count; i++)
+            {
+                if(recipe.recipeName == currentWeaponScrollObjects[i].GetComponent<CraftRecipePrefab>().craftRecipe.recipeName)
+                {
+                    Destroy(currentWeaponScrollObjects[i]);
+                    currentWeaponScrollObjects.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+        else if(type == CraftRecipe.CraftTypes.Rune)
+        {
+            for (int i = 0; i < currentRuneScrollObjects.Count; i++)
+            {
+                if (recipe.recipeName == currentRuneScrollObjects[i].GetComponent<CraftRecipePrefab>().craftRecipe.recipeName)
+                {
+                    Destroy(currentRuneScrollObjects[i]);
+                    currentRuneScrollObjects.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+    }
+
 
 
 

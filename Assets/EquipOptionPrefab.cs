@@ -10,6 +10,10 @@ public class EquipOptionPrefab : MonoBehaviour
     public Rune rune;
 
     [SerializeField] public GameObject equipOptionName;
+    [SerializeField] public GameObject equipOptionEquipText;
+    [SerializeField] public GameObject equipOptionDescription;
+    [SerializeField] public GameObject equipOptionButton;
+    [SerializeField] public GameObject equipOptionEffect;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +42,7 @@ public class EquipOptionPrefab : MonoBehaviour
                 break;
 
         }
+        GameObject.FindGameObjectWithTag("EquipMenu").GetComponent<EquipMenuTransition>().ResetMenu();
     }
 
     public void EquipWeapon()
@@ -53,7 +58,7 @@ public class EquipOptionPrefab : MonoBehaviour
 
     public void EquipRune()
     {
-
+        GameObject.Find("RuneManager").GetComponent<RuneManager>().ChangeRunes(rune, 1);
     }
 
     public enum EquipTypes
