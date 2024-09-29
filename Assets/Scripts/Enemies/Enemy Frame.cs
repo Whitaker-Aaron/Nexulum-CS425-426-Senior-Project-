@@ -11,7 +11,7 @@ public class EnemyFrame : MonoBehaviour
     [SerializeField] Enemy enemyReference;
 
     //PLAYER HEALTH - Spencer
-    private int health = 100;
+    public int health = 100;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
@@ -78,6 +78,7 @@ public class EnemyFrame : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        /*
         //Debug.Log("Enemy collided with: ");
         if (collision.gameObject.tag == "Bullet")
         { for (int i = 0; i < materialList.Length; i++)
@@ -100,6 +101,7 @@ public class EnemyFrame : MonoBehaviour
             //Instantiate(materialList[0], new Vector3(transform.position.x - 0.3f, transform.position.y + 2.5f, transform.position.z - 0.3f), Quaternion.identity);
 
         }
+        */
     }
 
 }
