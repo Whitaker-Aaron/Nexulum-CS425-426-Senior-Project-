@@ -26,6 +26,8 @@ public class classAbilties : MonoBehaviour
     //private WeaponBase.weaponClassTypes currentClass;
 
     //Knight
+    bool bubble = false;
+    public float bubbleTime = 5f;
 
     //Gunner
 
@@ -47,7 +49,7 @@ public class classAbilties : MonoBehaviour
     {
         if(currentClass == WeaponBase.weaponClassTypes.Knight)
         {
-
+            StartCoroutine(bubbleShield());
         }
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
@@ -96,6 +98,16 @@ public class classAbilties : MonoBehaviour
     }
 
     //Knight
+
+    IEnumerator bubbleShield()
+    {
+        bubble = true;
+        player.GetComponent<CharacterBase>().bubbleShield = true;
+        yield return new WaitForSeconds(bubbleTime);
+        bubble = false;
+        player.GetComponent<CharacterBase>().bubbleShield = false;
+        yield break;
+    }
 
     //Gunner
 

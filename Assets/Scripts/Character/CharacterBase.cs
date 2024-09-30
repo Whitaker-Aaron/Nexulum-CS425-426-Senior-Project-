@@ -28,6 +28,8 @@ public class CharacterBase : MonoBehaviour
     Slider delayedHealthBar;
 
     public bool invul = false;
+
+    public bool bubbleShield = false;
     
 
     private RuneInt runeInt;
@@ -115,7 +117,8 @@ public class CharacterBase : MonoBehaviour
 
     public void takeDamage(int damage)
     {
-
+        if (bubbleShield)
+            return;
         if (!invul)
         {
             playerHealth -= damage;

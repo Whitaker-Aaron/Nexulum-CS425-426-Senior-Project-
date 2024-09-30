@@ -78,6 +78,7 @@ public class EnemyFrame : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         /*
         //Debug.Log("Enemy collided with: ");
         if (collision.gameObject.tag == "Bullet")

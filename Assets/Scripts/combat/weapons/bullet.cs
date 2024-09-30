@@ -35,7 +35,7 @@ public class bullet : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            collision.gameObject.GetComponent<CharacterBase>().takeDamage(damage);
+            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
             collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             Destroy(gameObject);
             return;
