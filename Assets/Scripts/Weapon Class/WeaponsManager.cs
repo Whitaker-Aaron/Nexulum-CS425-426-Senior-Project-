@@ -20,6 +20,7 @@ public class WeaponsManager : MonoBehaviour
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
+        shieldPrefab = characterReference.knightShield.weaponMesh;
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
         if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)

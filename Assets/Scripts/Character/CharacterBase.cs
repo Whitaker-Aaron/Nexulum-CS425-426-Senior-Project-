@@ -14,6 +14,7 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] public Rune[] equippedRunes = new Rune[3];
     [SerializeField] public WeaponBase equippedWeapon;
     [SerializeField] public WeaponBase engineerTool;
+    [SerializeField] public WeaponBase knightShield;
     //[SerializeField] public RuneInt runeInt;
      WeaponClass weaponClass;
 
