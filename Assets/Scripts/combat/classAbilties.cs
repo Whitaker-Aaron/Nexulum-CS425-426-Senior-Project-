@@ -28,6 +28,8 @@ public class classAbilties : MonoBehaviour
     //Knight
     bool bubble = false;
     public float bubbleTime = 5f;
+    public GameObject knightBubblePrefab;
+    public float bubbleRadius;
 
     //Gunner
 
@@ -105,9 +107,18 @@ public class classAbilties : MonoBehaviour
     {
         bubble = true;
         player.GetComponent<CharacterBase>().bubbleShield = true;
+        print("Activating shield");
+
+        GameObject currentShield = Instantiate(knightBubblePrefab, player.transform.position, Quaternion.identity);
+        currentShield.transform.SetParent(player.transform, false);
+        currentShield.transform.position = player.transform.position;
+        currentShield.GetComponent<CapsuleCollider>().radius = bubbleRadius;
+        currentShield.GetComponent<CapsuleCollider>().center = new Vector3(0, 1, 0);
         yield return new WaitForSeconds(bubbleTime);
+        Destroy(currentShield);
         bubble = false;
         player.GetComponent<CharacterBase>().bubbleShield = false;
+        print("Deactivating shield");
         yield break;
     }
 
