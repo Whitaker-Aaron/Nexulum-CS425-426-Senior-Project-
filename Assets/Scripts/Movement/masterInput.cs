@@ -111,6 +111,8 @@ public class masterInput : MonoBehaviour
 
     float maxStaminaValue;
 
+    public bool shootingSwords = false;
+
 
 
     //Gunner Variables
@@ -390,7 +392,7 @@ public class masterInput : MonoBehaviour
             {
                 noOfClicks = 0;
             }
-            if (Time.time > lastClickedTime + nextAttackTime && isAttacking == false)//Time.time > cooldownTime && isAttacking == false)
+            if (Time.time > lastClickedTime + nextAttackTime && isAttacking == false && !shootingSwords)//Time.time > cooldownTime && isAttacking == false)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -637,6 +639,11 @@ public class masterInput : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
+            if (currentClass == WeaponBase.weaponClassTypes.Knight)
+            {
+                animationControl.knightShootSwords();
+                shootingSwords = true;
+            }
             gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
         }
 

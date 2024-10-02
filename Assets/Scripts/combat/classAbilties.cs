@@ -32,6 +32,14 @@ public class classAbilties : MonoBehaviour
     public float bubbleRadius;
     public GameObject knightBubbleEffect;
 
+    public GameObject swordShot;
+    public Transform swordSpawn;
+    public float swordSpeed;
+    public float swordTime, swordAbilityTime;
+    bool shootingSwords, shotSword = false;
+    public GameObject swordShotEffect;
+
+
     //Gunner
 
     //Engineer
@@ -90,7 +98,14 @@ public class classAbilties : MonoBehaviour
     {
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
+            shootingSwords = true;
+            
+            GameObject currentEffect = Instantiate(swordShotEffect, player.transform.position, Quaternion.identity);
+            currentEffect.transform.SetParent(player.transform);
+            currentEffect.transform.position = player.transform.position;
+            currentEffect.GetComponent<ParticleSystem>().Play();
 
+            StartCoroutine(stopSword(currentEffect));
         }
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
@@ -130,6 +145,26 @@ public class classAbilties : MonoBehaviour
             currentEffect.GetComponent<ParticleSystem>().Stop();
             Destroy(currentEffect);
         }
+        yield break;
+    }
+
+    IEnumerator swordShooting()
+    {
+        shotSword = true;
+        var sword = Instantiate(swordShot, swordSpawn.position, swordSpawn.rotation);
+        sword.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * swordSpeed;
+        yield return new WaitForSeconds(swordTime);
+        shotSword = false;
+        yield break;
+    }
+
+    IEnumerator stopSword(GameObject currentEffect)
+    {
+        yield return new WaitForSeconds(swordAbilityTime);
+        gameObject.GetComponent<playerAnimationController>().stopShootSword();
+        shootingSwords = false;
+        currentEffect.GetComponent<ParticleSystem>().Stop();
+        Destroy (currentEffect);
         yield break;
     }
 
@@ -237,6 +272,14 @@ public class classAbilties : MonoBehaviour
         if(placing)
         {
             activateTurret();
+        }
+
+        if(shootingSwords)
+        {
+            if(Input.GetMouseButton(0) && !shotSword)
+            {
+                StartCoroutine(swordShooting());
+            }
         }
     }
 }
