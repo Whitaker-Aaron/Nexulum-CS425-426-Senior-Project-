@@ -162,6 +162,7 @@ public class classAbilties : MonoBehaviour
     {
         yield return new WaitForSeconds(swordAbilityTime);
         gameObject.GetComponent<playerAnimationController>().stopShootSword();
+        gameObject.GetComponent<masterInput>().shootingSwords = false;
         shootingSwords = false;
         currentEffect.GetComponent<ParticleSystem>().Stop();
         Destroy (currentEffect);
