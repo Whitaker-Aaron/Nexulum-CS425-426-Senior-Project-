@@ -30,6 +30,15 @@ public class classAbilties : MonoBehaviour
     public float bubbleTime = 5f;
     public GameObject knightBubblePrefab;
     public float bubbleRadius;
+    public GameObject knightBubbleEffect;
+
+    public GameObject swordShot;
+    public Transform swordSpawn;
+    public float swordSpeed;
+    public float swordTime, swordAbilityTime;
+    bool shootingSwords, shotSword = false;
+    public GameObject swordShotEffect;
+
 
     //Gunner
 
@@ -38,10 +47,12 @@ public class classAbilties : MonoBehaviour
     public GameObject turretTransparentPrefab;
     GameObject currentTurret;
     public float turretPlacementRadius = 3f;
+    public float playerRad = .3f;
     bool placing = false;
     Vector3 mousePos = Vector3.zero;
     public float turretSpawnHeight;
     bool instant = false;
+    public LayerMask ground;
 
     //-------------------------------------------
 
@@ -87,7 +98,14 @@ public class classAbilties : MonoBehaviour
     {
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
+            shootingSwords = true;
+            
+            GameObject currentEffect = Instantiate(swordShotEffect, player.transform.position, Quaternion.identity);
+            currentEffect.transform.SetParent(player.transform);
+            currentEffect.transform.position = player.transform.position;
+            currentEffect.GetComponent<ParticleSystem>().Play();
 
+            StartCoroutine(stopSword(currentEffect));
         }
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
@@ -112,11 +130,41 @@ public class classAbilties : MonoBehaviour
         currentShield.transform.position = player.transform.position;
         currentShield.GetComponent<CapsuleCollider>().radius = bubbleRadius;
         currentShield.GetComponent<CapsuleCollider>().center = new Vector3(0, 1, 0);
+
+        GameObject currentEffect = Instantiate(knightBubbleEffect, player.transform.position, Quaternion.identity);
+        currentEffect.transform.SetParent(player.transform);
+        currentEffect.transform.position = player.transform.position;
+        currentEffect.GetComponent<ParticleSystem>().Play();
         yield return new WaitForSeconds(bubbleTime);
         Destroy(currentShield);
         bubble = false;
         player.GetComponent<CharacterBase>().bubbleShield = false;
         print("Deactivating shield");
+        if(currentEffect != null)
+        {
+            currentEffect.GetComponent<ParticleSystem>().Stop();
+            Destroy(currentEffect);
+        }
+        yield break;
+    }
+
+    IEnumerator swordShooting()
+    {
+        shotSword = true;
+        var sword = Instantiate(swordShot, swordSpawn.position, swordSpawn.rotation);
+        sword.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * swordSpeed;
+        yield return new WaitForSeconds(swordTime);
+        shotSword = false;
+        yield break;
+    }
+
+    IEnumerator stopSword(GameObject currentEffect)
+    {
+        yield return new WaitForSeconds(swordAbilityTime);
+        gameObject.GetComponent<playerAnimationController>().stopShootSword();
+        shootingSwords = false;
+        currentEffect.GetComponent<ParticleSystem>().Stop();
+        Destroy (currentEffect);
         yield break;
     }
 
@@ -135,9 +183,10 @@ public class classAbilties : MonoBehaviour
         RaycastHit hit;
 
         
-        if (Physics.Raycast(ray, out hit, 100))
+        if (Physics.Raycast(ray, out hit, 100, ground))
         {
             mousePos = hit.point;
+            
         }
 
         if (instant)
@@ -147,29 +196,56 @@ public class classAbilties : MonoBehaviour
         }
 
         float distance = Vector3.Distance(player.transform.position, mousePos);
-        
-        if(distance <= turretPlacementRadius)
+        Vector3 direction = (mousePos - player.transform.position).normalized;
+
+        if (distance <= turretPlacementRadius && distance > playerRad)
         {
             currentTurret.gameObject.transform.position = mousePos;
             currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
         }
+        else if(distance <= playerRad)
+        {
+            currentTurret.transform.position = player.transform.position + direction * (playerRad + 0.1f);  // Small buffer to avoid overlap
+
+            // Ensure the turret stays above the ground to avoid going under the player
+            currentTurret.transform.position = new Vector3(
+                currentTurret.transform.position.x,
+                Mathf.Max(currentTurret.transform.position.y, player.transform.position.y + 0.03f),  // Ensure turret stays slightly above player's Y position
+                currentTurret.transform.position.z
+            );
+            currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
+            //Vector3 Direction = (mousePos - player.transform.position).normalized;
+            //currentTurret.gameObject.transform.position = player.transform.position + Direction * playerRad;
+            //currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
+        }
         else
         {
-            Vector3 direction = (mousePos - player.transform.position).normalized;
+            //Vector3 direction = (mousePos - player.transform.position).normalized;
             currentTurret.gameObject.transform.position = player.transform.position + direction * turretPlacementRadius;
             currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
         }
 
         if(Input.GetMouseButtonDown(0)) 
         {
-            if (currentTurret != null)
+            if (currentTurret != null && distance <= turretPlacementRadius)
             {
                 placing = false;
                 gameObject.GetComponent<masterInput>().placing = false;
                 Quaternion rot = currentTurret.transform.rotation;
+                Vector3 pos = currentTurret.transform.position;
                 Destroy(currentTurret);
-                currentTurret = Instantiate(turretPrefab, mousePos + new Vector3 (0,turretSpawnHeight,0), rot);
+                currentTurret = Instantiate(turretPrefab, pos + new Vector3 (0,turretSpawnHeight,0), rot);
             }
+            if(currentTurret != null && (distance > turretPlacementRadius || distance < playerRad))
+            {
+                placing = false;
+                gameObject.GetComponent<masterInput>().placing = false;
+                Quaternion rot = currentTurret.transform.rotation;
+                Vector3 pos = currentTurret.transform.position;
+                Destroy(currentTurret);
+                currentTurret = Instantiate(turretPrefab, pos + new Vector3(0, turretSpawnHeight, 0), rot);
+            }
+
         }
     }
 
@@ -196,6 +272,14 @@ public class classAbilties : MonoBehaviour
         if(placing)
         {
             activateTurret();
+        }
+
+        if(shootingSwords)
+        {
+            if(Input.GetMouseButton(0) && !shotSword)
+            {
+                StartCoroutine(swordShooting());
+            }
         }
     }
 }

@@ -10,6 +10,8 @@ public interface PlayerAnimation
     void knightAttackOne(float time);
     void knightAttackTwo(float time);
     void knightAttackThree();
+
+    void knightShootSwords();
     void resetKnight();
 
     IEnumerator startKnightBlock(float time);

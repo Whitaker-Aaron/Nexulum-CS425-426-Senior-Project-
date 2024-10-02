@@ -133,6 +133,17 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         //animator.enabled = !animator.enabled;
     }
 
+    public void knightShootSwords()
+    {
+        animator.SetBool("shootSwords", true);
+        animator.Play("knightSwordShoot");
+    }
+
+    public void stopShootSword()
+    {
+        animator.SetBool("shootSwords", false);
+    }
+
     public void resetKnight()
     {
         if(animator.GetBool("attack3") == true)

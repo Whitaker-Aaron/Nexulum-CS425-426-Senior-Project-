@@ -47,7 +47,7 @@ public class turretCombat : MonoBehaviour
 
     IEnumerator turn(bool left, bool right)
     {
-        print("starting turn " + left + " " + right);
+        //print("starting turn " + left + " " + right);
         turnWait = true;
         //turretGun.transform.rotation = Quaternion.Slerp(turretGun.transform.rotation, Quaternion.Euler(angle.x, angle.y, angle.z), turnSpeed * Time.deltaTime);
         yield return new WaitForSeconds(turnWaitTime);
@@ -87,11 +87,19 @@ public class turretCombat : MonoBehaviour
             stopTurn = false;
         foreach (Collider enemy in enemiesInRange)
         {
+            //print("enemy in radius");
+            //print("forward: " + turretGun.transform.forward);
+            Vector3 directionToEnemy = (enemy.transform.position - turretGun.transform.position).normalized;//turretGun.transform.InverseTransformPoint(enemy.transform.position);
+            directionToEnemy.y = 0;
 
-            Vector3 directionToEnemy = enemy.transform.position - turretGun.transform.position;
-            float angleToEnemy = Vector3.Angle(turretGun.transform.forward, directionToEnemy);
+            //print("direction: " + directionToEnemy);
+            float angleToEnemy = Vector3.SignedAngle(Vector3.forward, directionToEnemy, Vector3.up);
+            if (angleToEnemy < 0)
+                angleToEnemy += 360;
+            //angleToEnemy = normalizeAngle(angleToEnemy);
+            print("angle to enemy: " + angleToEnemy);
 
-            if(isEnemyInRange(angleToEnemy))
+            if (isEnemyInRange(angleToEnemy))
             {
                 print("enemy in angle");
                 stopTurn = true;
@@ -107,15 +115,15 @@ public class turretCombat : MonoBehaviour
     {
         float leftAngle = normalizeAngle(leftRotation.y);
         float rightAngle = normalizeAngle(rightRotation.y);
-        float enemyAngle = normalizeAngle(angleToEnemy);
 
+        print("enemy: " + angleToEnemy + " left: " + leftAngle + " Right: " + rightAngle);
         if (leftAngle < rightAngle)
         {
-            return enemyAngle >= leftAngle && enemyAngle <= rightAngle;
+            return angleToEnemy >= leftAngle && angleToEnemy <= rightAngle;
         }
         else
         {
-            return enemyAngle >= leftAngle || enemyAngle <= rightAngle;
+            return angleToEnemy >= leftAngle || angleToEnemy <= rightAngle;
         }
     }
 
@@ -131,12 +139,15 @@ public class turretCombat : MonoBehaviour
 
         leftRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + leftRotation.y, 0);
         rightRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + rightRotation.y, 0);
+        print("Forward andgle:" + normalizeAngle(gameObject.transform.rotation.eulerAngles.y));
+        print("Left andgle:" + leftRotation.y);
+        print("Right andgle:" + rightRotation.y);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+       
     }
 
     void Update()
