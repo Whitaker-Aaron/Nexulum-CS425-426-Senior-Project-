@@ -15,6 +15,11 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] public WeaponBase equippedWeapon;
     [SerializeField] public WeaponBase engineerTool;
     [SerializeField] public WeaponBase knightShield;
+
+    [SerializeField] public WeaponClass knightObject;
+    [SerializeField] public WeaponClass gunnerObject;
+    [SerializeField] private WeaponClass engineerObject;
+
     //[SerializeField] public RuneInt runeInt;
      WeaponClass weaponClass;
 
@@ -68,7 +73,8 @@ public class CharacterBase : MonoBehaviour
         healthBar.maxValue = maxHealth;
         delayedHealthBar.maxValue = maxHealth;
 
-
+        EquipClass(equippedWeapon.weaponClassType);
+        weaponClass.currentWeapon = equippedWeapon;
 
     }
 
@@ -83,9 +89,26 @@ public class CharacterBase : MonoBehaviour
         return weaponClass;
     }
 
+    public void EquipClass(WeaponBase.weaponClassTypes type)
+    {
+        switch (type)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                weaponClass = knightObject;
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                weaponClass = gunnerObject;
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                weaponClass = engineerObject;
+                break;
+        }
+    }
+
     public void UpdateWeapon(WeaponBase newWeapon)
     {
         Debug.Log("Inside Character Base");
+        weaponClass.currentWeapon = newWeapon;
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
             Debug.Log("Newly equipped weapon is of type Knight");
@@ -99,7 +122,21 @@ public class CharacterBase : MonoBehaviour
             masterInput.GetComponent<masterInput>().changeTool(newWeapon);
             equippedWeapon = newWeapon;
         }
+        if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
+        {
+            equippedWeapon = newWeapon;
+        }
         
+    }
+
+    public void UpdateClass(WeaponBase.weaponClassTypes newClass)
+    {
+        EquipClass(newClass);
+        masterInput.GetComponent<masterInput>().currentClass = newClass;
+        //Debug.Log(weaponClass.currentWeapon);
+        GameObject.Find("WeaponManager").GetComponent<WeaponsManager>().ChangeWeapon(weaponClass.currentWeapon);
+        //UpdateWeapon(weaponClass.currentWeapon);
+        runeInt.ChangeClass(newClass);
     }
 
 

@@ -28,6 +28,8 @@ public class EquipMenuTransition : MonoBehaviour
     GameObject currentClassContent;
     GameObject currentRuneContainer;
 
+    GameObject classChangeContainer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +45,9 @@ public class EquipMenuTransition : MonoBehaviour
 
         equippedContainer = GameObject.Find("EquippedScroll");
         equippedPanel = GameObject.Find("EquippedPanel");
+
+        classChangeContainer = GameObject.Find("ClassScrollContent");
+        classChangeContainer.SetActive(false);
 
         currentWeaponContent = GameObject.Find("CurrentWeaponPlaceholder");
         currentClassContent = GameObject.Find("CurrentClassPlaceholder");
@@ -95,6 +100,8 @@ public class EquipMenuTransition : MonoBehaviour
 
         equippedPanel.SetActive(false);
         equippedContainer.SetActive(false);
+
+        populateClassScroll();
     }
 
     public void NavigateToRuneEquipMenu()
@@ -306,5 +313,35 @@ public class EquipMenuTransition : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void populateClassScroll()
+    {
+        classChangeContainer.SetActive(true);
+    }
+
+    public void changeClassKnight()
+    {
+        Debug.Log("Changing class to Knight");
+        var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        characterRef.UpdateClass(WeaponBase.weaponClassTypes.Knight);
+        ResetMenu();
+
+    }
+
+    public void changeClassGunner()
+    {
+        Debug.Log("Changing class to Gunner");
+        var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        characterRef.UpdateClass(WeaponBase.weaponClassTypes.Gunner);
+        ResetMenu();
+    }
+
+    public void changeClassEngineer()
+    {
+        Debug.Log("Changing class to Engineer");
+        var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        characterRef.UpdateClass(WeaponBase.weaponClassTypes.Engineer);
+        ResetMenu();
     }
 }

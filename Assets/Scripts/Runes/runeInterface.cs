@@ -4,10 +4,13 @@ using UnityEngine;
 
 public interface RuneInt
 {
+
     //string runeName { get; }
     void Apply();
     void Remove();
     void ResetRunes();
+
+    void ChangeClass(WeaponBase.weaponClassTypes newClass);
 }
 
 public class runeInterface : MonoBehaviour

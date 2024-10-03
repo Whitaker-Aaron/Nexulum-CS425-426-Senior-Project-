@@ -60,14 +60,30 @@ public class WeaponsManager : MonoBehaviour
 
     public void ChangeWeapon(WeaponBase newWeapon)
     {
+
+        switch (characterReference.equippedWeapon.weaponClassType)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                Destroy(currentShield);
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                Destroy(currentTool);
+                break;
+        }
+
         //characterReference.GetWeaponClass().currentWeapon = newWeapon;
         characterReference.UpdateWeapon(newWeapon);
-        GameObject.Destroy(currentWeapon);
+        Destroy(currentWeapon);
+
+
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         if (newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
         {
+            toolPrefab = characterReference.engineerTool.weaponMesh;
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
             currentTool = Instantiate(toolPrefab, characterReference.leftHand);
         }

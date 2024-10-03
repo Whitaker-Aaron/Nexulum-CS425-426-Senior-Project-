@@ -31,6 +31,12 @@ public class runeIntController : MonoBehaviour, RuneInt
         Apply();
     }
 
+    public void ChangeClass(WeaponBase.weaponClassTypes newClass)
+    {
+        currentClass = newClass;
+        ResetRunes();
+    }
+
     public void Apply()
     {
         //LOGIC FOR THE RUNES GOES HERE
