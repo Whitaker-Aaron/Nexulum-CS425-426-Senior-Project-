@@ -574,7 +574,7 @@ public class masterInput : MonoBehaviour
                             return;
                         }
                         engNextAttackTime = engAnimTime;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTime, toolAttackPoint, toolAttackRadius, layer));
+                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTime, swordAttackPoint, toolAttackRadius, layer));
                         animationControl.engAttackOne(engAnimTime);
                         StartCoroutine(waitAttack(engAnimTime * 2));
                         StartCoroutine(wait(engAnimTime));

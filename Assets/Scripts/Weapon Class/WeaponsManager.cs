@@ -21,10 +21,14 @@ public class WeaponsManager : MonoBehaviour
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         shieldPrefab = characterReference.knightShield.weaponMesh;
+        GameObject inputManager = GameObject.FindGameObjectWithTag("inputManager");
+
 
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 1);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 1);
         }
             
         if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
@@ -32,11 +36,15 @@ public class WeaponsManager : MonoBehaviour
             toolPrefab = characterReference.engineerTool.weaponMesh;
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
             currentTool = Instantiate(toolPrefab, characterReference.leftHand);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 2);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 2);
         }
         if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
             currentShield = Instantiate(shieldPrefab, characterReference.leftForearm);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 0);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 0);
         }
 
         AddToInventory(characterReference.equippedWeapon);
@@ -77,20 +85,29 @@ public class WeaponsManager : MonoBehaviour
         characterReference.UpdateWeapon(newWeapon);
         Destroy(currentWeapon);
 
+        GameObject inputManager = GameObject.FindGameObjectWithTag("inputManager");
 
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         if (newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
+        {
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 1);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 1);
+        }
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
         {
             toolPrefab = characterReference.engineerTool.weaponMesh;
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
             currentTool = Instantiate(toolPrefab, characterReference.leftHand);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 2);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 2);
         }
         if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
             currentShield = Instantiate(shieldPrefab, characterReference.leftForearm);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 0);
+            inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 0);
         }
             
 
