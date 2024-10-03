@@ -21,8 +21,12 @@ public class WeaponsManager : MonoBehaviour
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         shieldPrefab = characterReference.knightShield.weaponMesh;
+
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
+        {
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
+        }
+            
         if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
         {
             toolPrefab = characterReference.engineerTool.weaponMesh;
@@ -34,6 +38,8 @@ public class WeaponsManager : MonoBehaviour
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
             currentShield = Instantiate(shieldPrefab, characterReference.leftForearm);
         }
+
+        AddToInventory(characterReference.equippedWeapon);
             
     }
 
