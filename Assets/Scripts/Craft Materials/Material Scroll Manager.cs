@@ -12,16 +12,35 @@ public class MaterialScrollManager : MonoBehaviour
     [SerializeField] GameObject content;
     [SerializeField] GameObject scrollContent;
 
+    [SerializeField] Texture placeholder;
+
     private IEnumerator coroutine;
 
     MaterialsInventory materialInventory;
 
     List<GameObject> currentMaterials = new List<GameObject>();
+    MaterialScrollObject scrollObject;
     // Start is called before the first frame update
     void Start()
     {
-        
+        scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
+
+        scrollObject.description.text = "empty";
+        scrollObject.imageRef.texture = placeholder;
+        scrollObject.quantityInt = 1;
+        scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
+
+        GameObject newScrollMaterial = Instantiate(scrollContent);
+        newScrollMaterial.transform.SetParent(content.transform);
+        currentMaterials.Add(newScrollMaterial);
+        currentMaterials.RemoveAt(0);
+        Destroy(newScrollMaterial);
         //UpdateScroll();
+        var child = content.transform.GetChild(0);
+        Debug.Log(child);
+        child.gameObject.SetActive(false);
+
+        Debug.Log("Inside the MSM's Start()");
     }
 
     // Update is called once per frame
@@ -33,7 +52,7 @@ public class MaterialScrollManager : MonoBehaviour
     public void UpdateScroll(Texture materialTexture, string materialName)
     {
         CheckForNull();
-        var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
+
         int existingIndex = -1; 
         bool exists = false; 
 
