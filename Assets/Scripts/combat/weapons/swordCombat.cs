@@ -12,7 +12,7 @@ public class swordCombat : MonoBehaviour
     public bool isFire = false;
     public int fireDmg = 10;
     public float fireTime = 5f;
-    public float fireDmgInterval = 1f;
+    public float fireDmgInterval = 10f;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +40,7 @@ public class swordCombat : MonoBehaviour
         {
             if (collider.gameObject.tag == "Enemy")
             {
-                if (isFire)
+                if (isFire && collider.GetComponent<EnemyFrame>().dmgOverTimeActivated != true)
                 {
                     collider.GetComponent<EnemyFrame>().StartCoroutine(collider.GetComponent<EnemyFrame>().dmgOverTime(fireDmg, fireTime, fireDmgInterval));
                 }

@@ -198,7 +198,7 @@ public class CharacterBase : MonoBehaviour
             {
                 healthBar.value = playerHealth;
             }
-            else if (playerHealth < delayedHealthBar.value)
+            else if (playerHealth < healthBar.value)
             {
                 healthBar.value -= reduceVal * Time.deltaTime;
             }
