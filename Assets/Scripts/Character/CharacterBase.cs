@@ -30,8 +30,8 @@ public class CharacterBase : MonoBehaviour
 
     [SerializeField] GameObject masterInput;
 
-    Slider healthBar;
-    Slider delayedHealthBar;
+    [SerializeField] Slider healthBar;
+    [SerializeField] Slider delayedHealthBar;
 
     public bool invul = false;
 
@@ -44,8 +44,8 @@ public class CharacterBase : MonoBehaviour
     public Transform hand, wrist, leftHand, leftForearm;
 
     //Player Health System
-    public int maxHealth = 100;
-    public int playerHealth;
+    int maxHealth;
+    int playerHealth;
 
     //Knight attackpoint transform - NEEDED FOR MASTERINPUT - Spencer
     public Transform swordAttackPoint;
@@ -53,19 +53,24 @@ public class CharacterBase : MonoBehaviour
 
     private void Awake()
     {
-        runeInt = GetComponent<RuneInt>();
-        runeInt.Apply();
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        playerHealth = maxHealth; 
+        runeInt = GetComponent<RuneInt>();
+        runeInt.Apply();
 
-        
+        maxHealth = 100;
+        playerHealth = 100;
 
-        healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
-        delayedHealthBar = GameObject.Find("DelayedHealthBar").GetComponent<Slider>();
+        Debug.Log("Current Player Health: " + playerHealth);
+
+
+
+        //healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
+        //delayedHealthBar = GameObject.Find("DelayedHealthBar").GetComponent<Slider>();
 
         healthBar.value = playerHealth;
         delayedHealthBar.value = playerHealth;
@@ -75,6 +80,8 @@ public class CharacterBase : MonoBehaviour
 
         EquipClass(equippedWeapon.weaponClassType);
         weaponClass.currentWeapon = equippedWeapon;
+
+        
 
     }
 
@@ -163,7 +170,8 @@ public class CharacterBase : MonoBehaviour
             StartCoroutine(updateHealthBarsNegative());
         }
         
-        
+
+
         print("Player health: " + playerHealth);
     }
 
@@ -186,7 +194,7 @@ public class CharacterBase : MonoBehaviour
         float reduceVal = 150f;
         while (healthBar.value != playerHealth)
         {
-            if (Mathf.Abs(healthBar.value - playerHealth) <= 1)
+            if (Mathf.Abs(healthBar.value - playerHealth) <= 5)
             {
                 healthBar.value = playerHealth;
             }
@@ -209,7 +217,7 @@ public class CharacterBase : MonoBehaviour
         float reduceVal = 150f;
         while (delayedHealthBar.value != playerHealth)
         {
-            if (Mathf.Abs(delayedHealthBar.value - playerHealth) <= 1)
+            if (Mathf.Abs(delayedHealthBar.value - playerHealth) <= 5)
             {
                 delayedHealthBar.value = playerHealth;
             }
@@ -230,15 +238,19 @@ public class CharacterBase : MonoBehaviour
 
     public IEnumerator updateHealthBarsNegative()
     {
+        StopCoroutine(animateHealth());
         yield return animateHealth();
         yield return new WaitForSeconds(0.2f);
+        StopCoroutine(animateDelayedHealth());
         yield return animateDelayedHealth();
     }
 
     public IEnumerator updateHealthBarsPositive()
     {
+        StopCoroutine(animateDelayedHealth());
         yield return animateDelayedHealth();
         yield return new WaitForSeconds(0.2f);
+        StopCoroutine(animateHealth());
         yield return animateHealth();
     }
 }

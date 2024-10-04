@@ -16,12 +16,13 @@ public class WeaponsManager : MonoBehaviour
     CharacterBase characterReference;
     void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         shieldPrefab = characterReference.knightShield.weaponMesh;
-        GameObject inputManager = GameObject.FindGameObjectWithTag("inputManager");
+        GameObject inputManager = GameObject.Find("InputandAnimationManager");
+        
 
 
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
@@ -41,6 +42,7 @@ public class WeaponsManager : MonoBehaviour
         }
         if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
+            Debug.Log(inputManager);
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
             currentShield = Instantiate(shieldPrefab, characterReference.leftForearm);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 0);

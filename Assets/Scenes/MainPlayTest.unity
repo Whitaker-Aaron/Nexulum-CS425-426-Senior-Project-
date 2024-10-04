@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.17462312, g: 0.21841584, b: 0.30067477, a: 1}
+  m_IndirectSpecularColor: {r: 0.1746235, g: 0.2184166, b: 0.30067572, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3417,15 +3417,15 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 994667091}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1000
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 1000
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4021,9 +4021,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1000
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 713
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -10866,9 +10866,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 0587461da855ae24098fc5975ab8d34d, type: 2}
     - target: {fileID: 6429392709217725828, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
+      propertyPath: healthBar
+      value: 
+      objectReference: {fileID: 741295507}
+    - target: {fileID: 6429392709217725828, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
+      propertyPath: maxHealth
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429392709217725828, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
       propertyPath: masterInput
       value: 
       objectReference: {fileID: 1793233890}
+    - target: {fileID: 6429392709217725828, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
+      propertyPath: bubbleShield
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6429392709217725828, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
       propertyPath: engineerTool
       value: 
@@ -10886,6 +10898,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 0587461da855ae24098fc5975ab8d34d, type: 2}
     - target: {fileID: 6429392709217725828, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
+      propertyPath: playerHealth
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429392709217725828, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
       propertyPath: engineerObject
       value: 
       objectReference: {fileID: 11400000, guid: e3ef3f47a6bc3bd41a72438ea84b99af, type: 2}
@@ -10893,6 +10909,10 @@ PrefabInstance:
       propertyPath: equippedWeapon
       value: 
       objectReference: {fileID: 11400000, guid: c6b8b453c9eb0e44bb6daf33497239ca, type: 2}
+    - target: {fileID: 6429392709217725828, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
+      propertyPath: delayedHealthBar
+      value: 
+      objectReference: {fileID: 640739036}
     - target: {fileID: 6429392709217725828, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
       propertyPath: equippedRunes.Array.size
       value: 3

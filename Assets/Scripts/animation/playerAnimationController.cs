@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
+//using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class playerAnimationController : MonoBehaviour, PlayerAnimation
 {
@@ -237,6 +237,14 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     public void changeClassLayer(int layerOne, int layerTwo)
     {
+
+        if (animator == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+            animator = player.GetComponent<Animator>();
+        }
+        Debug.Log(animator);
+
         animator.SetLayerWeight(layerOne, 0);
         animator.SetLayerWeight(layerTwo, 1);
     }
@@ -249,7 +257,7 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        animator = player.GetComponent<Animator>();//.getAnimator();
+        animator = player.GetComponent<Animator>();//.getAnimator();`
     }
 
     // Update is called once per frame
