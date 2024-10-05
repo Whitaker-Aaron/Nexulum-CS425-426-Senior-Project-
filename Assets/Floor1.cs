@@ -8,6 +8,7 @@ public class Floor1 : MonoBehaviour
     void Awake()
     {
         GameObject.FindWithTag("Player").transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+        StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().StartScene());
     }
 
     // Update is called once per frame
