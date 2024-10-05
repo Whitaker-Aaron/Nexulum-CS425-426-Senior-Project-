@@ -10,7 +10,7 @@ public class RuneManager : MonoBehaviour
     void Start()
     {
         
-        DontDestroyOnLoad(this.gameObject);
+        
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         runesInventory = GameObject.Find("RuneInventory").GetComponent<RuneInventory>();
         //characterReference.equippedRunes
