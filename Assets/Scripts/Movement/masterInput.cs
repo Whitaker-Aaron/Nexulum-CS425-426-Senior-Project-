@@ -130,6 +130,9 @@ public class masterInput : MonoBehaviour
     int bulletCount;
     public int magSize = 25;
 
+    //rocket
+    public bool shootingRocket = false;
+
 
     //Engineer variables
 
@@ -493,7 +496,7 @@ public class masterInput : MonoBehaviour
         }
 
         //GUNNER LOGIC
-        if(currentClass == WeaponBase.weaponClassTypes.Gunner)
+        if(currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
         {
             if (bulletCount <= 0 && !isReloading && bulletCount < magSize)
             {

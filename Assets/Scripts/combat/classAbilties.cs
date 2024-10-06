@@ -41,6 +41,10 @@ public class classAbilties : MonoBehaviour
 
 
     //Gunner
+    public GameObject rocketPrefab;
+    public float rocketSpeed = 5f;
+    public float rocketTime;
+    bool shootingRocket, shotRocket = false;
 
     //Engineer
     public GameObject turretPrefab;
@@ -66,7 +70,7 @@ public class classAbilties : MonoBehaviour
         }
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-
+            shootingRocket = true;
         }
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
@@ -170,6 +174,18 @@ public class classAbilties : MonoBehaviour
     }
 
     //Gunner
+
+    IEnumerator shootRocket()
+    {
+        shotRocket = true;
+        var rocket = Instantiate(rocketPrefab, swordSpawn.position, swordSpawn.rotation);
+        rocket.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * rocketSpeed;
+        gameObject.GetComponent<masterInput>().shootingRocket = true;
+        yield return new WaitForSeconds(rocketTime);
+        shotRocket = false;
+        shootingRocket = false;
+        yield break;
+    }
 
     //Engineer
 
@@ -277,10 +293,16 @@ public class classAbilties : MonoBehaviour
 
         if(shootingSwords)
         {
-            if(Input.GetMouseButton(0) && !shotSword)
+            if(Input.GetMouseButtonDown(0) && !shotSword)
             {
                 StartCoroutine(swordShooting());
             }
+        }
+
+        if(shootingRocket)
+        {
+            if (Input.GetMouseButtonDown(0) && !shotRocket)
+                StartCoroutine(shootRocket());
         }
     }
 }
