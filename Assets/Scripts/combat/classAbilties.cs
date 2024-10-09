@@ -22,6 +22,7 @@ public class classAbilties : MonoBehaviour
     //----------------Variables------------------
 
     GameObject player;
+    public LayerMask enemy;
 
     //private WeaponBase.weaponClassTypes currentClass;
 
@@ -45,6 +46,14 @@ public class classAbilties : MonoBehaviour
     public float rocketSpeed = 5f;
     public float rocketTime;
     bool shootingRocket, shotRocket = false;
+
+    bool shootingLaser, shotLaser, checkHit = false;
+    public GameObject laserPrefab;
+    public float laserCooldown = 4f;
+    GameObject currentLaserEffect = null;
+    public float maxLaserDistance = 10f;
+    public int laserDamage = 2;
+    public float laserHitRate = .4f;
 
     //Engineer
     public GameObject turretPrefab;
@@ -88,9 +97,17 @@ public class classAbilties : MonoBehaviour
         {
 
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
         {
-
+            shootingLaser = true;
+            gameObject.GetComponent<masterInput>().shootingLaser = true;
+            Transform pos = gameObject.GetComponent<masterInput>().bulletSpawn;
+            currentLaserEffect = Instantiate(laserPrefab, pos.position, Quaternion.identity);
+            currentLaserEffect.GetComponent<ParticleSystem>().Stop();
+            currentLaserEffect.transform.SetParent(player.transform, false);
+            pos = gameObject.GetComponent<masterInput>().bulletSpawn;
+            currentLaserEffect.transform.position = pos.position;
+            StartCoroutine(laserStop());
         }
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
@@ -187,6 +204,33 @@ public class classAbilties : MonoBehaviour
         yield break;
     }
 
+    IEnumerator laserStop()
+    {
+        yield return new WaitForSeconds(laserCooldown);
+        shootingLaser = false;
+        gameObject.GetComponent<masterInput>().shootingLaser = false;
+        currentLaserEffect.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        Destroy(currentLaserEffect);
+        yield break;
+    }
+
+    IEnumerator checkLaserHit()
+    {
+        if (!shootingLaser)
+            yield break;
+        checkHit = true;
+        RaycastHit hit;
+        //Transform pos = gameObject.GetComponent<masterInput>().bulletSpawn;
+        if (Physics.Raycast(currentLaserEffect.transform.position, currentLaserEffect.transform.forward, out hit, maxLaserDistance, enemy))
+        {
+            print("Hitting enemy");
+            hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserDamage);
+        }
+        yield return new WaitForSeconds(laserHitRate);
+        checkHit = false;
+        yield break;
+    }
+
     //Engineer
 
    
@@ -280,7 +324,7 @@ public class classAbilties : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -303,6 +347,40 @@ public class classAbilties : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) && !shotRocket)
                 StartCoroutine(shootRocket());
+        }
+
+        if(shootingLaser)
+        {
+            if(Input.GetMouseButtonDown(0) && !shotLaser)
+            {
+                shotLaser = true;
+
+                //if (currentLaserEffect != null)
+                currentLaserEffect.GetComponent<ParticleSystem>().Clear(true);
+                currentLaserEffect.GetComponent<ParticleSystem>().Play();
+            }
+            if(Input.GetMouseButtonUp(0) && shotLaser)
+            {
+                shotLaser = false;
+                //if (currentLaserEffect != null)
+                currentLaserEffect.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                currentLaserEffect.GetComponent<ParticleSystem>().Clear(true);
+            }
+        }
+        else
+        {
+            shotLaser = false;
+            shootingLaser = false;
+            if (currentLaserEffect != null)
+            {
+                currentLaserEffect.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                currentLaserEffect.GetComponent<ParticleSystem>().Clear(true);
+            }
+        }
+
+        if (shotLaser && !checkHit)
+        {
+            StartCoroutine(checkLaserHit());
         }
     }
 }
