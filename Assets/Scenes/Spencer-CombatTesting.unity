@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.1746235, g: 0.2184166, b: 0.30067572, a: 1}
+  m_IndirectSpecularColor: {r: 0.17462312, g: 0.21841584, b: 0.30067477, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1049,6 +1049,7 @@ GameObject:
   m_Component:
   - component: {fileID: 267559486}
   - component: {fileID: 267559485}
+  - component: {fileID: 267559487}
   m_Layer: 0
   m_Name: drone
   m_TagString: Untagged
@@ -1069,8 +1070,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followSpeed: 2
-  followOffset: {x: 3, y: 3, z: 3}
-  rotationSpeed: 5
+  followOffset: {x: 1, y: 2.5, z: -1}
+  maxDistance: 2
+  rotationSpeed: 1.8
+  isAiming: 0
 --- !u!4 &267559486
 Transform:
   m_ObjectHideFlags: 0
@@ -1087,6 +1090,30 @@ Transform:
   - {fileID: 3367393413485124882}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &267559487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267559484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32a8cf61faf417a4bb0344d195aa50b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  missileSpawn: {fileID: 0}
+  bulletSpawn: {fileID: 684370460}
+  fireRate: 0.5
+  missileFireRate: 0
+  bulletPrefab: {fileID: 2530541377710386135, guid: 7510944112223ae4282d0a776229efd9, type: 3}
+  missilePrefab: {fileID: 0}
+  detectionRange: 5
+  enemy:
+    serializedVersion: 2
+    m_Bits: 128
+  bulletSpeed: 10
+  shooting: 0
 --- !u!4 &271511218 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5448173084780246536, guid: 69666af943a1e16488c2da014a0208d1, type: 3}

@@ -17,37 +17,32 @@ public class droneAnimation : MonoBehaviour
 
     private void Awake()
     {
-        lastDronePosition = droneBody.position;
-        animator = droneBody.GetComponent<Animator>();
+        //lastDronePosition = droneBody.position;
+        animator = gameObject.GetComponent<Animator>();
     }
 
     private void Update()
     {
-        AnimateDrone();
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(horizontal, 0, vertical);
+
+        if (movement.magnitude > 1)
+        {
+            movement.Normalize();
+        }
+
+        AnimateDrone(movement);
     }
 
-    void AnimateDrone()
+    void AnimateDrone(Vector3 movement)
     {
-        // Calculate the drone's movement direction in local space
-        Vector3 droneMovementDirection = droneBody.InverseTransformDirection((droneBody.position - lastDronePosition) / Time.deltaTime);
-        lastDronePosition = droneBody.position;
+        Vector3 localMove = droneBody.gameObject.transform.InverseTransformDirection(movement);
+        turnAmount = localMove.z;
+        forwardAmount = localMove.x;
 
-        // Calculate forward and turn amounts
-        float targetForward = droneMovementDirection.z; // Use local Z axis for forward/backward movement
-        float targetTurn = droneMovementDirection.x; // Use local X axis for turning left/right
-
-        // Smooth the forward and turn values for a smoother transition
-        forwardAmount = Mathf.Lerp(forwardAmount, targetForward, movementSmoothing);
-        turnAmount = Mathf.Lerp(turnAmount, targetTurn, movementSmoothing);
-
-        // Update animator parameters with smoothed values
-        animator.SetFloat("Forward", forwardAmount, movementSmoothing, Time.deltaTime);
-        animator.SetFloat("Turn", turnAmount, movementSmoothing, Time.deltaTime);
-
-        // Determine if the drone is moving based on the magnitude of its local velocity
-        bool isMoving = droneMovementDirection.magnitude > idleThreshold;
-
-        // Update the animator with the isMoving state
-        animator.SetBool("isMoving", isMoving);
+        animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
+        animator.SetFloat("Turn", turnAmount, 0.1f, Time.deltaTime);
     }
 }
