@@ -13,6 +13,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject equipMenuReference;
     [SerializeField] GameObject scrollContent;
     [SerializeField] GameObject craftListsReference;
+    [SerializeField] GameObject pauseMenuReference;
 
     List<GameObject> currentMaterials = new List<GameObject>();
 
@@ -21,6 +22,7 @@ public class MenuManager : MonoBehaviour
     GameObject materialManager;
 
     bool menuActive = false;
+    bool pauseMenuActive = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,9 +36,56 @@ public class MenuManager : MonoBehaviour
         
     }
 
-    public void openMenu(InputAction.CallbackContext context)
+    public void openPauseMenu(InputAction.CallbackContext context)
     {
-        if(!menuActive) {
+
+        if (GameObject.FindGameObjectWithTag("CraftLists") != null)
+        {
+            Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+        }
+        if (GameObject.FindGameObjectWithTag("MainMenu") != null)
+        {
+            Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
+
+        }
+        if (GameObject.FindGameObjectWithTag("EquipMenu") != null)
+        {
+
+            Destroy(GameObject.FindGameObjectWithTag("EquipMenu"));
+        }
+        if (GameObject.FindGameObjectWithTag("CraftMenu") != null)
+        {
+
+            Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
+        }
+
+        menuActive = false;
+
+        if (!pauseMenuActive)
+        {
+            currentMenuObject = Instantiate(pauseMenuReference);
+            pauseMenuActive = true;
+            Time.timeScale = 0;
+        }
+        else
+        {
+            closePauseMenu();
+        }
+
+        
+
+    }
+
+    public void closePauseMenu()
+    {
+        Destroy(currentMenuObject);
+        pauseMenuActive = false;
+        Time.timeScale = 1;
+    }
+
+        public void openMenu(InputAction.CallbackContext context)
+    {
+        if(!menuActive && !pauseMenuActive) {
             currentMenuObject = Instantiate(materialsMenuReference);
             Debug.Log("activating main menu");
             currentMenuObject.transform.SetParent(canvas.transform);

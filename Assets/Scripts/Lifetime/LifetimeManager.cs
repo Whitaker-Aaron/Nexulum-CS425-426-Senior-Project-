@@ -24,6 +24,7 @@ public class LifetimeManager : MonoBehaviour
         
         yield return StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         SceneManager.LoadScene(sceneName);
+
         
     }
 

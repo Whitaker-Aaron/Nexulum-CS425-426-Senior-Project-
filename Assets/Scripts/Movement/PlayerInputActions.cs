@@ -196,6 +196,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""OpenPauseMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""ed1c9717-1097-496d-a033-fec83905f26a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -220,6 +229,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""OpenMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f839b9c-e013-4cd5-b811-06fdf226fe50"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenPauseMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -237,6 +257,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_MenuControl = asset.FindActionMap("MenuControl", throwIfNotFound: true);
         m_MenuControl_Pause = m_MenuControl.FindAction("Pause", throwIfNotFound: true);
         m_MenuControl_OpenMenu = m_MenuControl.FindAction("OpenMenu", throwIfNotFound: true);
+        m_MenuControl_OpenPauseMenu = m_MenuControl.FindAction("OpenPauseMenu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -378,12 +399,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private List<IMenuControlActions> m_MenuControlActionsCallbackInterfaces = new List<IMenuControlActions>();
     private readonly InputAction m_MenuControl_Pause;
     private readonly InputAction m_MenuControl_OpenMenu;
+    private readonly InputAction m_MenuControl_OpenPauseMenu;
     public struct MenuControlActions
     {
         private @PlayerInputActions m_Wrapper;
         public MenuControlActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pause => m_Wrapper.m_MenuControl_Pause;
         public InputAction @OpenMenu => m_Wrapper.m_MenuControl_OpenMenu;
+        public InputAction @OpenPauseMenu => m_Wrapper.m_MenuControl_OpenPauseMenu;
         public InputActionMap Get() { return m_Wrapper.m_MenuControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -399,6 +422,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @OpenMenu.started += instance.OnOpenMenu;
             @OpenMenu.performed += instance.OnOpenMenu;
             @OpenMenu.canceled += instance.OnOpenMenu;
+            @OpenPauseMenu.started += instance.OnOpenPauseMenu;
+            @OpenPauseMenu.performed += instance.OnOpenPauseMenu;
+            @OpenPauseMenu.canceled += instance.OnOpenPauseMenu;
         }
 
         private void UnregisterCallbacks(IMenuControlActions instance)
@@ -409,6 +435,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @OpenMenu.started -= instance.OnOpenMenu;
             @OpenMenu.performed -= instance.OnOpenMenu;
             @OpenMenu.canceled -= instance.OnOpenMenu;
+            @OpenPauseMenu.started -= instance.OnOpenPauseMenu;
+            @OpenPauseMenu.performed -= instance.OnOpenPauseMenu;
+            @OpenPauseMenu.canceled -= instance.OnOpenPauseMenu;
         }
 
         public void RemoveCallbacks(IMenuControlActions instance)
@@ -438,5 +467,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
         void OnPause(InputAction.CallbackContext context);
         void OnOpenMenu(InputAction.CallbackContext context);
+        void OnOpenPauseMenu(InputAction.CallbackContext context);
     }
 }
