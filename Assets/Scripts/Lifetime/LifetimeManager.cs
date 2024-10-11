@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class LifetimeManager : MonoBehaviour
 {
     // Start is called before the first frame update
+    string currentScene;
+
     void Start()
     {
         
@@ -28,8 +30,10 @@ public class LifetimeManager : MonoBehaviour
 
     public IEnumerator StartScene()
     {
+        currentScene = GameObject.Find("SceneInformation").GetComponent<SceneInformation>().name;
         yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(ReduceOpacity(GameObject.Find("TransitionScreen")));
+
     }
 
     private void OnEnable()

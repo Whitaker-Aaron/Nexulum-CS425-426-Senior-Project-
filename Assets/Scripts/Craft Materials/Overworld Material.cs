@@ -51,25 +51,39 @@ public class OverworldMaterial : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         
+       // Debug.Log("Colliding with: ");
+       // Debug.Log(collision.gameObject.tag);
+       // if(collision.gameObject.tag == "Player")
+        //{
+        //    var scrollRef = scrollManager.GetComponent<MaterialScrollManager>();
+        //    scrollRef.AddToMaterialsInventory(this.material);
+        //    scrollRef.UpdateScroll(this.material.materialTexture, this.material.materialName);
+        //    if(GameObject.FindGameObjectWithTag("MainMenu") != null)
+        //    {
+        //        GameObject.Find("MenuManager").GetComponent<MenuManager>().AddToCurrentInventory(this.material);
+        //    }
+            
+        //    Destroy(this.gameObject);
+        //}
+        
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
         Debug.Log("Colliding with: ");
-        Debug.Log(collision.gameObject.tag);
-        if(collision.gameObject.tag == "Player")
+        Debug.Log(other.gameObject.tag);
+        if (other.gameObject.tag == "Player")
 
         {
             var scrollRef = scrollManager.GetComponent<MaterialScrollManager>();
             scrollRef.AddToMaterialsInventory(this.material);
             scrollRef.UpdateScroll(this.material.materialTexture, this.material.materialName);
-            if(GameObject.FindGameObjectWithTag("MainMenu") != null)
+            if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
                 GameObject.Find("MenuManager").GetComponent<MenuManager>().AddToCurrentInventory(this.material);
             }
-            
+
             Destroy(this.gameObject);
         }
-        
-    }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log("Inside collision");
     }
 }

@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
 public class MaterialScrollManager : MonoBehaviour
@@ -11,6 +12,7 @@ public class MaterialScrollManager : MonoBehaviour
     [SerializeField] ScrollView scrollView;
     [SerializeField] GameObject content;
     [SerializeField] GameObject scrollContent;
+    [SerializeField] GameObject materialGradient;
 
     [SerializeField] Texture placeholder;
 
@@ -23,6 +25,8 @@ public class MaterialScrollManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        materialInventory = GameObject.Find("MaterialsInventory").GetComponent<MaterialsInventory>();
+
         scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
 
         scrollObject.description.text = "empty";
@@ -41,12 +45,23 @@ public class MaterialScrollManager : MonoBehaviour
         child.gameObject.SetActive(false);
 
         Debug.Log("Inside the MSM's Start()");
+
+        currentMaterials.Clear();
     }
 
     // Update is called once per frame
     void Update()
     {
-        materialInventory = GameObject.Find("MaterialsInventory").GetComponent<MaterialsInventory>();
+        
+        //Debug.Log(currentMaterials.Count);
+        if(currentMaterials.Count <= 0)
+        {
+            materialGradient.SetActive(false);
+        }
+        else
+        {
+            materialGradient.SetActive(true);
+        }
     }
 
     public void UpdateScroll(Texture materialTexture, string materialName)
@@ -88,10 +103,7 @@ public class MaterialScrollManager : MonoBehaviour
         Debug.Log(currentMaterials.Count);
         StartCoroutine(StartCooldown(newScrollMaterial));
         Debug.Log("Starting Coroutine");
-        //currentMaterials[0].GetComponent<MaterialScrollObject>().quantity.text = "x" + "4";
 
-        //color = 0.5f;
-        //testContent.transform.parent = content.transform;
     }
 
     public void AddToMaterialsInventory(CraftMaterial material)
@@ -136,14 +148,22 @@ public class MaterialScrollManager : MonoBehaviour
 
     private void CheckForNull()
     {
-        for (int i = 0; i < currentMaterials.Count; i++)
+        int index = 0;
+        for (int i = index ; i < currentMaterials.Count; i++)
         {
             if (currentMaterials[i] == null)
             {
                 currentMaterials.RemoveAt(i);
                 i = i - 1;
             }
+            index = i;
         }
+        if (currentMaterials.Count > 0 && currentMaterials[index] == null)
+        {
+            currentMaterials.RemoveAt(index);
+        }
+        
+        
 
     }
 
@@ -154,6 +174,10 @@ public class MaterialScrollManager : MonoBehaviour
       StartCoroutine(coroutine);
       yield return new WaitForSeconds(5);
       Debug.Log("Finished coroutine");
+      if(currentMaterials.Count == 1)
+        {
+            currentMaterials.Clear();
+        }
       Destroy(scrollObj);
       CheckForNull();
       StopCoroutine(coroutine);
