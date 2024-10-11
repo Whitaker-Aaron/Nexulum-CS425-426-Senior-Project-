@@ -22,6 +22,11 @@ public class CraftMenuTransition : MonoBehaviour
     
     void Start()
     {
+        
+    }
+
+    private void Awake()
+    {
         mainButtons = GameObject.Find("MainButtons");
         mainSelection = GameObject.Find("MainSelection");
         weaponsScroll = GameObject.Find("WeaponsScroll");
@@ -31,6 +36,14 @@ public class CraftMenuTransition : MonoBehaviour
         weaponsScrollContent = GameObject.Find("WeaponsScrollContent");
         itemsScrollContent = GameObject.Find("ItemsScrollContent");
         runesScrollContent = GameObject.Find("RunesScrollContent");
+
+        populateWeaponsScroll();
+        populateItemsScroll();
+        populateRunesScroll();
+
+        weaponsScroll.SetActive(true);
+        runesScroll.SetActive(true);
+        itemsScroll.SetActive(true);
 
         weaponsScroll.SetActive(false);
         runesScroll.SetActive(false);
@@ -100,7 +113,7 @@ public class CraftMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         weaponsScroll.SetActive(true);
-        populateWeaponsScroll();
+        //populateWeaponsScroll();
     }
 
     public void NavigateToRunesCraftMenu()
@@ -109,7 +122,7 @@ public class CraftMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         runesScroll.SetActive(true);
-        populateRunesScroll();
+        //populateRunesScroll();
     }
 
     public void NavigateToItemsCraftMenu()
@@ -118,7 +131,7 @@ public class CraftMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         itemsScroll.SetActive(true);
-        populateItemsScroll();
+        //populateItemsScroll();
     }
 
     public void DestroyRecipe(CraftRecipe recipe, CraftRecipe.CraftTypes type)

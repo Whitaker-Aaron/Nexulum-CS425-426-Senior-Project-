@@ -30,6 +30,8 @@ public class EquipMenuTransition : MonoBehaviour
 
     GameObject classChangeContainer;
 
+    GameObject classChangeButton;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +40,8 @@ public class EquipMenuTransition : MonoBehaviour
         weaponsScroll = GameObject.Find("WeaponsScroll");
         runesScroll = GameObject.Find("RunesScroll");
         classScroll = GameObject.Find("ClassScroll");
+
+        
 
         weaponsScrollContent = GameObject.Find("WeaponsScrollContent");
         classScrollContent = GameObject.Find("ClassScrollContent");
@@ -53,7 +57,7 @@ public class EquipMenuTransition : MonoBehaviour
         currentClassContent = GameObject.Find("CurrentClassPlaceholder");
         currentRuneContainer = GameObject.Find("CurrentRunesList");
 
-
+        
         FillEquipment();
         
         
@@ -63,6 +67,15 @@ public class EquipMenuTransition : MonoBehaviour
         classScroll.SetActive(false);
 
 
+    }
+
+    private void Awake()
+    {
+        classChangeButton = GameObject.Find("ClassButton");
+        if (GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "Base")
+        {
+            classChangeButton.GetComponent<Button>().interactable = false;
+        }
     }
 
     // Update is called once per frame
@@ -231,17 +244,18 @@ public class EquipMenuTransition : MonoBehaviour
     public void populateWeaponsScroll()
     {
         var weaponsInventory = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>().GetWeaponsInventory();
-        for(int i = 0; i < weaponsInventory.Length; i++)
+        var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        for (int i = 0; i < weaponsInventory.Length; i++)
         {
-            if(weaponsInventory[i] != null ) {
+            if(weaponsInventory[i] != null && characterRef.weaponClass.classType == weaponsInventory[i].weaponClassType ) {
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().weapon = weaponsInventory[i];
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Weapon;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<Text>().text = weaponsInventory[i].weaponName;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<Text>().text = weaponsInventory[i].weaponDescription;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<Text>().text = "Attack +" + weaponsInventory[i].weaponAttack;
 
-                var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
-
+                
+                
                 if(characterRef.equippedWeapon.weaponName == weaponsInventory[i].weaponName)
                 {
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<Text>().text = "Equipped";

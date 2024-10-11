@@ -6,6 +6,7 @@ public class SceneInformation : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] public string name;
+    [SerializeField] public string transitionTitle;
     [SerializeField] public bool spawnPlayer;
     [SerializeField] public bool screenTransition;
     void Start()
