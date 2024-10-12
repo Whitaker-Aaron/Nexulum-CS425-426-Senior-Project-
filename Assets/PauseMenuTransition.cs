@@ -37,9 +37,15 @@ public class PauseMenuTransition : MonoBehaviour
     public void ReturnToBase()
     {
         //Time.timeScale = 1.0f;
+        var reference = GameObject.Find("TransitionScreen").GetComponent<Image>();
+        Color imgColor = reference.color;
+        imgColor.a = 1;
+        reference.color = imgColor;
+
+
         StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         GameObject.Find("MenuManager").GetComponent<MenuManager>().closePauseMenu();
-        StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().GoToScene(1));
+        GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().Load(1);
 
 
 
