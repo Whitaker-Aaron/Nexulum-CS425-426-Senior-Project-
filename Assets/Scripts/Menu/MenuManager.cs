@@ -78,9 +78,10 @@ public class MenuManager : MonoBehaviour
 
     public void closePauseMenu()
     {
-        Destroy(currentMenuObject);
         pauseMenuActive = false;
         Time.timeScale = 1.0f;
+        Destroy(currentMenuObject);
+        
     }
 
         public void openMenu(InputAction.CallbackContext context)
