@@ -136,6 +136,9 @@ public class masterInput : MonoBehaviour
     //laser
     public bool shootingLaser = false;
 
+    //grenade
+    public bool throwingGrenade = false;
+
 
     //Engineer variables
 
@@ -499,7 +502,7 @@ public class masterInput : MonoBehaviour
         }
 
         //GUNNER LOGIC
-        if(currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket && !shootingLaser)
+        if(currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket && !shootingLaser && !throwingGrenade)
         {
             if (bulletCount <= 0 && !isReloading && bulletCount < magSize)
             {
