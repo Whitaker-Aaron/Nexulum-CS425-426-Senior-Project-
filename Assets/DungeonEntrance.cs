@@ -22,7 +22,7 @@ public class DungeonEntrance : MonoBehaviour
         if(other.name == "Player")
         {
             Debug.Log("Player detected");
-            StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().GoToScene("MainPlayTest"));
+            StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().GoToScene(2));
         }
     }
 

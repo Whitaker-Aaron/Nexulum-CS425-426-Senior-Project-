@@ -1,6 +1,10 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Collections;
+
 
 public class PauseMenuTransition : MonoBehaviour
 {
@@ -14,7 +18,7 @@ public class PauseMenuTransition : MonoBehaviour
     private void Awake()
     {
         ReturnToBaseButton = GameObject.Find("ReturnToBaseButton");
-        if(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "Base")
+        if(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
         {
             ReturnToBaseButton.GetComponent<Button>().interactable = true;
         }
@@ -32,7 +36,17 @@ public class PauseMenuTransition : MonoBehaviour
 
     public void ReturnToBase()
     {
+        //Time.timeScale = 1.0f;
+        StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         GameObject.Find("MenuManager").GetComponent<MenuManager>().closePauseMenu();
-        StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().GoToScene("BaseCamp"));
+        StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().GoToScene(1));
+
+
+
+        //StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().ReturnToScene(1));
+
     }
+
+ 
+
 }

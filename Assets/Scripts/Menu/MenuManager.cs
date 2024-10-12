@@ -80,7 +80,7 @@ public class MenuManager : MonoBehaviour
     {
         Destroy(currentMenuObject);
         pauseMenuActive = false;
-        Time.timeScale = 1;
+        Time.timeScale = 1.0f;
     }
 
         public void openMenu(InputAction.CallbackContext context)

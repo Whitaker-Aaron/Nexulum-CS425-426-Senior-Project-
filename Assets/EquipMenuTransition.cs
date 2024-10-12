@@ -72,7 +72,7 @@ public class EquipMenuTransition : MonoBehaviour
     private void Awake()
     {
         classChangeButton = GameObject.Find("ClassButton");
-        if (GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "Base")
+        if (GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
         {
             classChangeButton.GetComponent<Button>().interactable = false;
         }

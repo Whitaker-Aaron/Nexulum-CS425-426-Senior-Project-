@@ -9,6 +9,7 @@ public class SceneInformation : MonoBehaviour
     [SerializeField] public string transitionTitle;
     [SerializeField] public bool spawnPlayer;
     [SerializeField] public bool screenTransition;
+    [SerializeField] public Vector3 playerSpawnPos; 
     void Start()
     {
         
@@ -16,7 +17,7 @@ public class SceneInformation : MonoBehaviour
 
     private void Awake()
     {
-        if(spawnPlayer) GameObject.FindWithTag("Player").transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+        if(spawnPlayer) GameObject.FindWithTag("Player").transform.position = playerSpawnPos;
         if(screenTransition) StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().StartScene());
     }
 
