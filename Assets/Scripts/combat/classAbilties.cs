@@ -55,6 +55,13 @@ public class classAbilties : MonoBehaviour
     public int laserDamage = 2;
     public float laserHitRate = .4f;
 
+    bool throwingGrenade, threwGrenade = false;
+    public GameObject grenadePrefab;
+    public float grenadeSpeed;
+    public Transform grenadeSpawn;
+    public float grenadeCooldown;
+
+
     //Engineer
     public GameObject turretPrefab;
     public GameObject turretTransparentPrefab;
@@ -79,6 +86,7 @@ public class classAbilties : MonoBehaviour
         }
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
+            gameObject.GetComponent<masterInput>().shootingRocket = true;
             shootingRocket = true;
         }
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
@@ -97,17 +105,10 @@ public class classAbilties : MonoBehaviour
         {
 
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
+        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !throwingGrenade)
         {
-            shootingLaser = true;
-            gameObject.GetComponent<masterInput>().shootingLaser = true;
-            Transform pos = gameObject.GetComponent<masterInput>().bulletSpawn;
-            currentLaserEffect = Instantiate(laserPrefab, pos.position, Quaternion.identity);
-            currentLaserEffect.GetComponent<ParticleSystem>().Stop();
-            currentLaserEffect.transform.SetParent(player.transform, false);
-            pos = gameObject.GetComponent<masterInput>().bulletSpawn;
-            currentLaserEffect.transform.position = pos.position;
-            StartCoroutine(laserStop());
+            throwingGrenade = true;
+            gameObject.GetComponent<masterInput>().throwingGrenade = true;
         }
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
@@ -128,9 +129,17 @@ public class classAbilties : MonoBehaviour
 
             StartCoroutine(stopSword(currentEffect));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
         {
-
+            shootingLaser = true;
+            gameObject.GetComponent<masterInput>().shootingLaser = true;
+            Transform pos = gameObject.GetComponent<masterInput>().bulletSpawn;
+            currentLaserEffect = Instantiate(laserPrefab, pos.position, Quaternion.identity);
+            currentLaserEffect.GetComponent<ParticleSystem>().Stop();
+            currentLaserEffect.transform.SetParent(player.transform, false);
+            pos = gameObject.GetComponent<masterInput>().bulletSpawn;
+            currentLaserEffect.transform.position = pos.position;
+            StartCoroutine(laserStop());
         }
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
@@ -201,6 +210,7 @@ public class classAbilties : MonoBehaviour
         yield return new WaitForSeconds(rocketTime);
         shotRocket = false;
         shootingRocket = false;
+        gameObject.GetComponent<masterInput>().shootingRocket = false;
         yield break;
     }
 
@@ -228,6 +238,14 @@ public class classAbilties : MonoBehaviour
         }
         yield return new WaitForSeconds(laserHitRate);
         checkHit = false;
+        yield break;
+    }
+
+    IEnumerator grenadeWait(float time)
+    {
+        yield return new WaitForSeconds(time);
+        throwingGrenade = false;
+        threwGrenade = false;
         yield break;
     }
 
@@ -381,6 +399,20 @@ public class classAbilties : MonoBehaviour
         if (shotLaser && !checkHit)
         {
             StartCoroutine(checkLaserHit());
+        }
+
+        if(throwingGrenade && !threwGrenade)
+        {
+            if(Input.GetMouseButtonDown(0))
+            {
+                threwGrenade = true;
+                gameObject.GetComponent<masterInput>().throwingGrenade = false;
+                GameObject grenade = Instantiate(grenadePrefab, grenadeSpawn.transform.position, grenadeSpawn.transform.rotation);
+                grenade.GetComponent<Rigidbody>().velocity = grenade.transform.forward * grenadeSpeed;
+                StartCoroutine(grenade.GetComponent<grenade>().explode());
+                StartCoroutine(grenadeWait(grenadeCooldown));
+            }
+            
         }
     }
 }
