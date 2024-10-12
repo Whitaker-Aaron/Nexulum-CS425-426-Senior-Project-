@@ -79,6 +79,7 @@ public class classAbilties : MonoBehaviour
         }
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
+            gameObject.GetComponent<masterInput>().shootingRocket = true;
             shootingRocket = true;
         }
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
@@ -201,6 +202,7 @@ public class classAbilties : MonoBehaviour
         yield return new WaitForSeconds(rocketTime);
         shotRocket = false;
         shootingRocket = false;
+        gameObject.GetComponent<masterInput>().shootingRocket = false;
         yield break;
     }
 
