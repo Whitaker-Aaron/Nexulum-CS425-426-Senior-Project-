@@ -156,5 +156,33 @@ public class LifetimeManager : MonoBehaviour
         yield break;
     }
 
+    public IEnumerator AnimateRoomTransition()
+    {
+        var trans = GameObject.Find("RoomTransition");
+        Color imgColor = trans.GetComponent<Image>().color;
+        imgColor.a = 1.0f;
+        trans.GetComponent<Image>().color = imgColor; 
+
+        var reference = trans.GetComponent<RectTransform>();
+        reference.transform.localPosition = new Vector3(0.0f, 1200.0f, 0.0f);
+        bool hasStopped = false;
+        while (reference.transform.localPosition.y >= -1200.0f)
+        {
+            var val = reference.transform.localPosition;
+            reference.transform.localPosition = new Vector3(val.x, val.y -= (4500.0f * Time.deltaTime), val.z);
+            if(reference.transform.localPosition.y <= 0.0f && !hasStopped)
+            {
+                yield return new WaitForSeconds(1);
+                hasStopped = true;
+            }
+            yield return null;
+        }
+        imgColor = trans.GetComponent<Image>().color;
+        imgColor.a = 0.0f;
+        trans.GetComponent<Image>().color = imgColor;
+
+        yield break;
+    }
+
 
 }
