@@ -61,13 +61,13 @@ public class MenuManager : MonoBehaviour
 
         menuActive = false;
 
-        if (!pauseMenuActive)
+        if (!pauseMenuActive && context.performed)
         {
             currentMenuObject = Instantiate(pauseMenuReference);
             pauseMenuActive = true;
             Time.timeScale = 0;
         }
-        else
+        else if(pauseMenuActive && context.performed)
         {
             closePauseMenu();
         }
@@ -86,7 +86,7 @@ public class MenuManager : MonoBehaviour
 
         public void openMenu(InputAction.CallbackContext context)
     {
-        if(!menuActive && !pauseMenuActive) {
+        if(!menuActive && !pauseMenuActive && context.performed) {
             currentMenuObject = Instantiate(materialsMenuReference);
             Debug.Log("activating main menu");
             currentMenuObject.transform.SetParent(canvas.transform);
@@ -94,7 +94,7 @@ public class MenuManager : MonoBehaviour
             populateInventoryMaterials();
             menuActive = true;
         }
-        else
+        else if(context.performed)
         {
             //currentMenuObject.SetActive(false);
             if(GameObject.FindGameObjectWithTag("CraftLists") != null)

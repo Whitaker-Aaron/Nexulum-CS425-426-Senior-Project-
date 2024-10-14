@@ -9,6 +9,12 @@ using System.Collections;
 public class PauseMenuTransition : MonoBehaviour
 {
     GameObject ReturnToBaseButton;
+    [SerializeField] GameObject SkillMenu;
+    [SerializeField] GameObject PauseMenu;
+    [SerializeField] GameObject KnightSkillMenu;
+    [SerializeField] GameObject GunnerSkillMenu;
+    [SerializeField] GameObject EngineerSkillMenu;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +23,9 @@ public class PauseMenuTransition : MonoBehaviour
 
     private void Awake()
     {
+        SkillMenu.SetActive(false);
+        KnightSkillMenu.SetActive(false);
+
         ReturnToBaseButton = GameObject.Find("ReturnToBaseButton");
         if(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
         {
@@ -58,6 +67,30 @@ public class PauseMenuTransition : MonoBehaviour
         Application.Quit();
     }
 
- 
+    public void OpenSkills()
+    {
+        PauseMenu.SetActive(false);
+        SkillMenu.SetActive(true);
+    }
+
+    public void OpenKnightSkills()
+    {
+        SkillMenu.SetActive(false);
+        KnightSkillMenu.SetActive(true);
+    }
+
+    public void OpenGunnerSkills()
+    {
+        SkillMenu.SetActive(false);
+        GunnerSkillMenu.SetActive(true);
+    }
+
+    public void OpenEngineerSkills()
+    {
+        SkillMenu.SetActive(false);
+        EngineerSkillMenu.SetActive(true);
+    }
+
+
 
 }
