@@ -20,6 +20,11 @@ public class CraftRecipePrefab : MonoBehaviour
 
     void Start()
     {
+        
+    }
+
+    private void Awake()
+    {
         craftButton.GetComponent<Button>().interactable = false;
         craftRecipeName.GetComponent<Text>().text = craftRecipe.recipeName;
         populateMaterialsList();
