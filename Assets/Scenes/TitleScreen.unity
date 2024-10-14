@@ -2257,6 +2257,10 @@ MonoBehaviour:
   maxLaserDistance: 10
   laserDamage: 2
   laserHitRate: 0.4
+  grenadePrefab: {fileID: 0}
+  grenadeSpeed: 0
+  grenadeSpawn: {fileID: 0}
+  grenadeCooldown: 0
   turretPrefab: {fileID: 5704764661508924874, guid: feace989f75f68f4b95b0f33c1c23870, type: 3}
   turretTransparentPrefab: {fileID: 2661081280440098164, guid: 78011e8c7abd6594ea6eb51b6e3a49e8, type: 3}
   turretPlacementRadius: 3.5
@@ -2413,6 +2417,7 @@ MonoBehaviour:
   magSize: 25
   shootingRocket: 0
   shootingLaser: 0
+  throwingGrenade: 0
   pistolBulletSpawn: {fileID: 0}
   pistolBulletObj: {fileID: 2530541377710386135, guid: e87bcbfff9c07e24b88e976b1e94e497, type: 3}
   pistolBulletSpeed: 25
@@ -2698,7 +2703,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 1920, y: 1452}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1597333921
 MonoBehaviour:
