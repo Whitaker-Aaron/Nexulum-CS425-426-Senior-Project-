@@ -50,6 +50,14 @@ public class PauseMenuTransition : MonoBehaviour
         
     }
 
+    public void returnToMainSkills()
+    {
+        SkillMenu.SetActive(true);
+        KnightSkillMenu.SetActive(false);
+        EngineerSkillMenu.SetActive(false);
+        GunnerSkillMenu.SetActive(false);
+    }
+
     public void ReturnToBase()
     {
         //Time.timeScale = 1.0f;

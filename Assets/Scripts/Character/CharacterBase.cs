@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 
 
-public class CharacterBase : MonoBehaviour
+public class CharacterBase : MonoBehaviour, SaveSystemInterface
 {
     //Will remove serialize field later. Here for testing purposes. Will have to be handled by lifetime 
     //managers.
@@ -61,8 +61,7 @@ public class CharacterBase : MonoBehaviour
         runeInt = GetComponent<RuneInt>();
         runeInt.Apply();
 
-        maxHealth = 100;
-        playerHealth = 100;
+
 
         Debug.Log("Current Player Health: " + playerHealth);
 
@@ -88,6 +87,17 @@ public class CharacterBase : MonoBehaviour
     void Update()
     {
            
+    }
+
+    public void SaveData(ref SaveData data)
+    {
+
+    }
+    public void LoadData(SaveData data)
+    {
+        playerHealth = data.playerHealth;
+        maxHealth = data.maxPlayerHealth;
+
     }
 
     public WeaponClass GetWeaponClass()

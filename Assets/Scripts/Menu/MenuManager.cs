@@ -39,30 +39,33 @@ public class MenuManager : MonoBehaviour
     public void openPauseMenu(InputAction.CallbackContext context)
     {
 
-        if (GameObject.FindGameObjectWithTag("CraftLists") != null)
-        {
-            Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
-        }
-        if (GameObject.FindGameObjectWithTag("MainMenu") != null)
-        {
-            Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
-
-        }
-        if (GameObject.FindGameObjectWithTag("EquipMenu") != null)
-        {
-
-            Destroy(GameObject.FindGameObjectWithTag("EquipMenu"));
-        }
-        if (GameObject.FindGameObjectWithTag("CraftMenu") != null)
-        {
-
-            Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
-        }
-
-        menuActive = false;
+        
 
         if (!pauseMenuActive && context.performed)
         {
+
+            if (GameObject.FindGameObjectWithTag("CraftLists") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+            }
+            if (GameObject.FindGameObjectWithTag("MainMenu") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
+
+            }
+            if (GameObject.FindGameObjectWithTag("EquipMenu") != null)
+            {
+
+                Destroy(GameObject.FindGameObjectWithTag("EquipMenu"));
+            }
+            if (GameObject.FindGameObjectWithTag("CraftMenu") != null)
+            {
+
+                Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
+            }
+
+            menuActive = false;
+
             currentMenuObject = Instantiate(pauseMenuReference);
             pauseMenuActive = true;
             Time.timeScale = 0;
@@ -75,6 +78,8 @@ public class MenuManager : MonoBehaviour
         
 
     }
+
+    
 
     public void closePauseMenu()
     {
