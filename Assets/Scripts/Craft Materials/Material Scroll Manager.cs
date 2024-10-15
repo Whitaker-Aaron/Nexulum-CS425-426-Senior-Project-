@@ -35,7 +35,7 @@ public class MaterialScrollManager : MonoBehaviour
         scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
 
         GameObject newScrollMaterial = Instantiate(scrollContent);
-        newScrollMaterial.transform.SetParent(content.transform);
+        newScrollMaterial.transform.SetParent(content.transform, false);
         currentMaterials.Add(newScrollMaterial);
         currentMaterials.RemoveAt(0);
         Destroy(newScrollMaterial);
@@ -76,7 +76,7 @@ public class MaterialScrollManager : MonoBehaviour
         scrollObject.quantityInt = 1;
         scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
         GameObject newScrollMaterial = Instantiate(scrollContent);
-        newScrollMaterial.transform.SetParent(content.transform);
+        newScrollMaterial.transform.SetParent(content.transform, false);
 
         var existingScroll = newScrollMaterial.GetComponent<MaterialScrollObject>();
 

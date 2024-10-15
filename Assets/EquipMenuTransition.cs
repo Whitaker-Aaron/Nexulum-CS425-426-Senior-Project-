@@ -233,7 +233,7 @@ public class EquipMenuTransition : MonoBehaviour
                 }
 
                 var equipRuneRef = Instantiate(equippedRunePrefab);
-                equipRuneRef.transform.SetParent(currentRuneContainer.transform);
+                equipRuneRef.transform.SetParent(currentRuneContainer.transform, false);
                 equipRuneRef.transform.localScale = Vector3.one;
 
                 currentEquipmentObjects.Add(equipRuneRef);
@@ -268,7 +268,7 @@ public class EquipMenuTransition : MonoBehaviour
                 }
 
                 var equipRec = Instantiate(equipOptionPrefab);
-                equipRec.transform.SetParent(weaponsScrollContent.transform);
+                equipRec.transform.SetParent(weaponsScrollContent.transform, false);
                 currentScrollObjects.Add(equipRec);
             }
             else
@@ -319,7 +319,7 @@ public class EquipMenuTransition : MonoBehaviour
                 }
 
                 var equipRec = Instantiate(equipOptionPrefab);
-                equipRec.transform.SetParent(runesScrollContent.transform);
+                equipRec.transform.SetParent(runesScrollContent.transform, false);
                 currentScrollObjects.Add(equipRec);
             }
             else
