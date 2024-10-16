@@ -58,7 +58,7 @@ public class EquipOptionPrefab : MonoBehaviour
 
     public void EquipRune()
     {
-        GameObject.Find("RuneManager").GetComponent<RuneManager>().ChangeRunes(rune, 1);
+        GameObject.Find("RuneManager").GetComponent<RuneManager>().ChangeRunes(rune);
     }
 
     public enum EquipTypes

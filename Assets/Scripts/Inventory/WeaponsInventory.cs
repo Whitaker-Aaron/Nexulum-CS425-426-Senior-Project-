@@ -5,12 +5,13 @@ using UnityEngine;
 public class WeaponsInventory : MonoBehaviour, SaveSystemInterface
 {
     WeaponBase[] inventory = new WeaponBase[100];
+    WeaponsList weaponsList;
     int nextFreeIndex = 0;
     //public WeaponBase equippedWeapon;
     // Start is called before the first frame update
     void Start()
     {
-        
+        weaponsList = GameObject.Find("WeaponsList").GetComponent<WeaponsList>();
     }
 
     private void Awake()
@@ -28,12 +29,12 @@ public class WeaponsInventory : MonoBehaviour, SaveSystemInterface
 
     public void LoadData(SaveData data)
     {
-        var weapons = GameObject.Find("WeaponsList").GetComponent<WeaponsList>();
+         
         for (int index = 0; index < inventory.Length; index++)
         {
             if (data.weaponInventory[index] != "" && data.weaponInventory[index] != null)
             {
-                AddToInventory(weapons.ReturnWeapon(data.weaponInventory[index]));
+                AddToInventory(weaponsList.ReturnWeapon(data.weaponInventory[index]));
             }
             
         }
