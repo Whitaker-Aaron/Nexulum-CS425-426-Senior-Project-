@@ -9,10 +9,12 @@ public class SaveData
     // Start is called before the first frame update
     public int maxPlayerHealth;
     public int playerHealth;
+    public CraftMaterialSaveData[] materialInventory;
 
     public SaveData()
     {
         maxPlayerHealth = 100;
         playerHealth = 100;
+        materialInventory = new CraftMaterialSaveData[50];
     }
 }

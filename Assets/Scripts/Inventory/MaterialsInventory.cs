@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class MaterialsInventory : MonoBehaviour
+public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
 {
     // Start is called before the first frame update
     CraftMaterial[] inventory = new CraftMaterial[50];
@@ -11,8 +13,8 @@ public class MaterialsInventory : MonoBehaviour
     void Start()
     {
         //Will later initialize this variable with save data.
-        nextFreeIndex = 0;
-        Debug.Log("Inventory size: " + inventory.Length);
+        
+        Debug.Log("Inventory size: " + nextFreeIndex);
     }
 
     // Update is called once per frame
@@ -20,6 +22,56 @@ public class MaterialsInventory : MonoBehaviour
     {
         
     }
+
+    public void SaveData(ref SaveData data)
+    {
+        
+        for(int index = 0; index < inventory.Length; index++) { 
+            if(inventory[index] != null)
+            {
+                var saveData = data.materialInventory[index];
+                saveData = new CraftMaterialSaveData();
+                saveData.materialName = inventory[index].materialName;
+                saveData.currentAmount = inventory[index].currentAmount;
+                saveData.maxMaterialAmount = inventory[index].maxMaterialAmount;
+                saveData.dropRate = inventory[index].dropRate;
+                saveData.dropAmount = inventory[index].dropAmount;
+                data.materialInventory[index] = saveData;
+            }
+            else
+            {
+                break;
+            }
+
+        }
+    }
+    
+        
+    public void LoadData(SaveData data)
+    {
+        var materialList = GameObject.Find("MaterialsList").GetComponent<MaterialList>();
+        for (int index = 0; index < inventory.Length; index++)
+        {
+            if (data.materialInventory[index] != null && data.materialInventory[index].materialName != "")
+            {
+                inventory[index] = new CraftMaterial();
+                inventory[index].materialName = data.materialInventory[index].materialName;
+                inventory[index].currentAmount = data.materialInventory[index].currentAmount;
+                inventory[index].maxMaterialAmount = data.materialInventory[index].maxMaterialAmount;
+                inventory[index].dropRate = data.materialInventory[index].dropRate;
+                inventory[index].dropAmount = data.materialInventory[index].dropAmount;
+                inventory[index].materialTexture = materialList.ReturnTexture(inventory[index].materialName);
+
+                nextFreeIndex++;
+            }
+            else
+            {
+                break;
+            }
+
+        }
+    }
+
 
     public void AddToInventory(CraftMaterial materialToAdd)
     {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEditor;
 
 
 public class FileManager
@@ -49,6 +50,7 @@ public class FileManager
                 }
             }
             data = JsonUtility.FromJson<SaveData>(storedData);
+            
             
         }
         else
