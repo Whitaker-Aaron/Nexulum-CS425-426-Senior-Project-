@@ -1170,7 +1170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &267559485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3884,13 +3884,14 @@ GameObject:
   - component: {fileID: 850635472}
   - component: {fileID: 850635471}
   - component: {fileID: 850635470}
+  - component: {fileID: 850635474}
   m_Layer: 0
-  m_Name: teslaCoil (1)
+  m_Name: teslaCoil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!199 &850635470
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -8728,6 +8729,19 @@ Transform:
   - {fileID: 1026565198}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &850635474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850635469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cee2c4db7af12be43b5f8490e242610b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teslaParent: {fileID: 0}
 --- !u!4 &856157587 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -598241419030433644, guid: d2bf809b7c9fbf64c8489072bf24c235, type: 3}
@@ -18377,9 +18391,12 @@ MonoBehaviour:
     m_Bits: 8
   teslaTransparent: {fileID: 5626051507642160485, guid: 98c204b818328894ea287d629e43d018, type: 3}
   teslaPrefab: {fileID: 4069832967180382325, guid: 1991b6781362990439fca0c4bb381969, type: 3}
+  teslaParentPrefab: {fileID: 4479732342003087166, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
   teslaSpawnHeight: 0
   teslaPlacementRadius: 4
+  teslaMinPlacementRad: 2.5
   teslaWall: {fileID: 1175084382555679053, guid: 9063764d61cb9bc429868fca1dafc1b9, type: 3}
+  teslaParent: {fileID: 0}
 --- !u!1001 &1796014581
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33480,7 +33497,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1175084382555679053, guid: 9063764d61cb9bc429868fca1dafc1b9, type: 3}
       propertyPath: m_Name
-      value: LightingWall
+      value: teslaWall
+      objectReference: {fileID: 0}
+    - target: {fileID: 1175084382555679053, guid: 9063764d61cb9bc429868fca1dafc1b9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3983038630924957224, guid: 9063764d61cb9bc429868fca1dafc1b9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -33521,10 +33542,6 @@ PrefabInstance:
     - target: {fileID: 3983038630924957224, guid: 9063764d61cb9bc429868fca1dafc1b9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5234388368779454990, guid: 9063764d61cb9bc429868fca1dafc1b9, type: 3}
-      propertyPath: m_Intensity
-      value: 2.31
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36811,6 +36828,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3333819124146207783, guid: de03ec5908816d140afd9391eed714b5, type: 3}
   m_PrefabInstance: {fileID: 6922447976423802601}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6063905088814116873
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4479732342003087166, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_Name
+      value: teslaParent
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874834816112978666, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 77e6b32ad19c5fe4b86ab5bf93f0f06d, type: 3}
 --- !u!198 &6153888086158539181
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -47755,5 +47829,6 @@ SceneRoots:
   - {fileID: 1167689849}
   - {fileID: 1904156027}
   - {fileID: 4487071905907315651}
+  - {fileID: 6063905088814116873}
   - {fileID: 477313350055768085}
   - {fileID: 850635473}

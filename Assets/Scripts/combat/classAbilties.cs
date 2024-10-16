@@ -76,14 +76,16 @@ public class classAbilties : MonoBehaviour
 
     bool placingTesla, placingOne, placingTwo = false;
     public GameObject teslaTransparent;
-    public GameObject teslaPrefab;
+    public GameObject teslaPrefab, teslaParentPrefab;
     GameObject currentTesla, nextCurrentTesla = null;
     int teslaCount = 0;
     float teslaDistance;
     Vector3 teslaDirection;
     public float teslaSpawnHeight;
     public float teslaPlacementRadius = 4f;
-    public GameObject teslaWall;
+    public float teslaMinPlacementRad = 2.5f;
+    public GameObject teslaWall, teslaParent;
+   
 
     //-------------------------------------------
 
@@ -336,14 +338,14 @@ public class classAbilties : MonoBehaviour
             teslaDistance = Vector3.Distance(currentTesla.transform.position, mousePos);
             teslaDirection = (mousePos - currentTesla.transform.position).normalized;
 
-            if (teslaDistance <= teslaPlacementRadius && teslaDistance > playerRad)
+            if (teslaDistance <= teslaPlacementRadius && teslaDistance > teslaMinPlacementRad)
             {
                 nextCurrentTesla.gameObject.transform.position = mousePos;
                 //nextCurrentTesla.transform.rotation = Quaternion.LookRotation(player.transform.forward);
             }
-            else if (teslaDistance <= playerRad)
+            else if (teslaDistance <= teslaMinPlacementRad)
             {
-                nextCurrentTesla.transform.position = currentTesla.transform.position + teslaDirection * (playerRad + 0.1f);  // Small buffer to avoid overlap
+                nextCurrentTesla.transform.position = currentTesla.transform.position + teslaDirection * (teslaMinPlacementRad + 0.1f);  // Small buffer to avoid overlap
 
                 // Ensure the turret stays above the ground to avoid going under the player
                 nextCurrentTesla.transform.position = new Vector3(
@@ -413,10 +415,16 @@ public class classAbilties : MonoBehaviour
 
             Vector3 difference = (nextCurrentTesla.transform.position - currentTesla.transform.position) / 2;
 
-            var tesWall = GameObject.Instantiate(teslaWall, nextCurrentTesla.transform.position - difference + new Vector3(0, 1, 0), Quaternion.identity);// Quaternion.Euler(difference + new Vector3(0, 90, 0)));
+            GameObject tesWall = GameObject.Instantiate(teslaWall, nextCurrentTesla.transform.position - difference + new Vector3(0, 1, 0), Quaternion.identity);
+            teslaParent = GameObject.Instantiate(teslaParentPrefab, tesWall.transform.position, Quaternion.identity);
             tesWall.transform.LookAt(new Vector3(nextCurrentTesla.transform.position.x, 1, nextCurrentTesla.transform.position.z));
             
-            tesWall.transform.SetParent(currentTesla.transform);
+            tesWall.transform.SetParent(teslaParent.transform);
+            currentTesla.transform.SetParent(teslaParent.transform);
+            nextCurrentTesla.transform.SetParent(teslaParent.transform);
+            teslaParent.GetComponent<teslaTower>().assignVars(currentTesla, nextCurrentTesla, tesWall);
+            teslaParent.GetComponent<teslaTower>().setParents();
+
             /*
             if (currentTurret != null && (teslaDistance > turretPlacementRadius || teslaDistance < playerRad))
             {
