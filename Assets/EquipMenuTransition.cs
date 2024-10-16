@@ -247,7 +247,9 @@ public class EquipMenuTransition : MonoBehaviour
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         for (int i = 0; i < weaponsInventory.Length; i++)
         {
-            if(weaponsInventory[i] != null && characterRef.weaponClass.classType == weaponsInventory[i].weaponClassType ) {
+            
+
+            if (weaponsInventory[i] != null && characterRef.weaponClass.classType == weaponsInventory[i].weaponClassType ) {
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().weapon = weaponsInventory[i];
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Weapon;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<Text>().text = weaponsInventory[i].weaponName;
@@ -271,7 +273,7 @@ public class EquipMenuTransition : MonoBehaviour
                 equipRec.transform.SetParent(weaponsScrollContent.transform, false);
                 currentScrollObjects.Add(equipRec);
             }
-            else
+            else if(weaponsInventory[i] == null)
             {
                 break;
             }

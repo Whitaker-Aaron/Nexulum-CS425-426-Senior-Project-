@@ -49,7 +49,7 @@ public class WeaponsManager : MonoBehaviour
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 0);
         }
 
-        AddToInventory(characterReference.equippedWeapon);
+        //AddToInventory(characterReference.equippedWeapon);
             
     }
 

@@ -13,6 +13,7 @@ public class SaveData
 
     public CraftMaterialSaveData[] materialInventory;
     public WeaponClassSaveData[] weaponClasses;
+    public string[] weaponInventory;
 
     public SaveData()
     {
@@ -25,5 +26,10 @@ public class SaveData
         weaponClasses[0] = new WeaponClassSaveData();
         weaponClasses[1] = new WeaponClassSaveData();
         weaponClasses[2] = new WeaponClassSaveData();
+
+        weaponInventory = new string[100];
+        weaponInventory[0] = "Dagger";
+        weaponInventory[1] = "Rifle";
+        weaponInventory[2] = "Pistol";
     }
 }
