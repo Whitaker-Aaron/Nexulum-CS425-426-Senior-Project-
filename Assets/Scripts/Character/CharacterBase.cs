@@ -60,14 +60,15 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         
 
-        runeInt = GetComponent<RuneInt>();
-        runeInt.Apply();
+        
 
         healthBar.value = playerHealth;
         delayedHealthBar.value = playerHealth;
 
         healthBar.maxValue = maxHealth;
         delayedHealthBar.maxValue = maxHealth;
+
+        
 
     }
 
@@ -152,7 +153,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         EquipClass(equippedWeapon.weaponClassType);
         weaponClass.currentWeapon = equippedWeapon;
 
-
+        runeInt = GetComponent<RuneInt>();
+        runeInt.ChangeClass(weaponClass.classType);
 
 
     }
