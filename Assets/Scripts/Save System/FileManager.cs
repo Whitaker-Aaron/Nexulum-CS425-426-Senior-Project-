@@ -37,17 +37,23 @@ public class FileManager
         SaveData data = null;
         if(File.Exists(path))
         {
+            Debug.Log("Save file found at " + path);
             string storedData = "";
 
-            using (FileStream stream = new FileStream(path, FileMode.Create))
+            using (FileStream stream = new FileStream(path, FileMode.Open))
             {
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     storedData = reader.ReadToEnd();
+                    Debug.Log("JSON Data: " + storedData);
                 }
             }
             data = JsonUtility.FromJson<SaveData>(storedData);
             
+        }
+        else
+        {
+            Debug.Log("Save data not found");
         }
         return data;
     }

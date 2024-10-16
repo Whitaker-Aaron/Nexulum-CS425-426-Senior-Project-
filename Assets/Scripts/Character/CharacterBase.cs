@@ -91,10 +91,15 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     public void SaveData(ref SaveData data)
     {
+        data.playerHealth = playerHealth;
+        data.maxPlayerHealth = maxHealth;
+
+        Debug.Log("Saved player health: " + data.playerHealth);
 
     }
     public void LoadData(SaveData data)
     {
+        Debug.Log("Loaded player health: " + data.playerHealth);
         playerHealth = data.playerHealth;
         maxHealth = data.maxPlayerHealth;
 

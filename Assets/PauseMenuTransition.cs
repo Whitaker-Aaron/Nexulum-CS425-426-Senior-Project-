@@ -50,6 +50,11 @@ public class PauseMenuTransition : MonoBehaviour
         
     }
 
+    public void SaveGame()
+    {
+        GameObject.Find("SaveManager").GetComponent<SaveManager>().SaveGame();
+    }
+
     public void returnToMainSkills()
     {
         SkillMenu.SetActive(true);

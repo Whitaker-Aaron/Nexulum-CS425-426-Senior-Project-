@@ -8,7 +8,7 @@ public class SaveManager : MonoBehaviour
     SaveData data;
     List<SaveSystemInterface> allSaveObjects;
     FileManager fileManager;
-    private string fileName = "nexulumSaveData.json";
+    private string fileName = "nexulumSaveData.game";
     // Start is called before the first frame update
     void Awake()
     {
@@ -30,7 +30,8 @@ public class SaveManager : MonoBehaviour
         {
             item.SaveData(ref data);
         }
-
+        Debug.Log("Saved");
+        Debug.Log("Saved health: " + data.playerHealth);
         fileManager.SaveGameData(data);
     }
 
