@@ -58,28 +58,16 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     // Start is called before the first frame update
     void Start()
     {
+        
+
         runeInt = GetComponent<RuneInt>();
         runeInt.Apply();
-
-
-
-        Debug.Log("Current Player Health: " + playerHealth);
-
-
-
-        //healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
-        //delayedHealthBar = GameObject.Find("DelayedHealthBar").GetComponent<Slider>();
 
         healthBar.value = playerHealth;
         delayedHealthBar.value = playerHealth;
 
         healthBar.maxValue = maxHealth;
         delayedHealthBar.maxValue = maxHealth;
-
-        EquipClass(equippedWeapon.weaponClassType);
-        weaponClass.currentWeapon = equippedWeapon;
-
-        
 
     }
 
@@ -94,14 +82,78 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         data.playerHealth = playerHealth;
         data.maxPlayerHealth = maxHealth;
 
+        data.equippedWeapon = equippedWeapon.weaponName;
+
+        for(int index = 0; index < 3; index++) {
+            switch (index)
+            {
+                case 0:
+                    data.weaponClasses[index].currentWeapon = knightObject.currentWeapon.weaponName;
+                    data.weaponClasses[index].totalExp = knightObject.totalExp;
+                    data.weaponClasses[index].numSkillPoints = knightObject.numSkillPoints;
+                    data.weaponClasses[index].currentLvl = knightObject.currentLvl;
+                    break;
+                case 1:
+                    data.weaponClasses[index].currentWeapon = gunnerObject.currentWeapon.weaponName;
+                    data.weaponClasses[index].totalExp = gunnerObject.totalExp;
+                    data.weaponClasses[index].numSkillPoints = gunnerObject.numSkillPoints;
+                    data.weaponClasses[index].currentLvl = gunnerObject.currentLvl;
+                    break;
+                case 2:
+                    data.weaponClasses[index].currentWeapon = engineerObject.currentWeapon.weaponName;
+                    data.weaponClasses[index].totalExp = engineerObject.totalExp;
+                    data.weaponClasses[index].numSkillPoints = engineerObject.numSkillPoints;
+                    data.weaponClasses[index].currentLvl = engineerObject.currentLvl;
+                    break;
+            }
+        }
+
         Debug.Log("Saved player health: " + data.playerHealth);
 
     }
     public void LoadData(SaveData data)
     {
-        Debug.Log("Loaded player health: " + data.playerHealth);
+        var weapons = GameObject.Find("WeaponsList").GetComponent<WeaponsList>();
+
         playerHealth = data.playerHealth;
         maxHealth = data.maxPlayerHealth;
+
+        equippedWeapon = weapons.ReturnWeapon(data.equippedWeapon);
+
+        if (data.weaponClasses[0].currentWeapon != null)
+        {
+            
+            for (int index = 0; index < 3; index++)
+            {
+                switch (index)
+                {
+                    case 0:
+                        knightObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        knightObject.totalExp = data.weaponClasses[index].totalExp;
+                        knightObject.numSkillPoints = data.weaponClasses[index].numSkillPoints;
+                        knightObject.currentLvl = data.weaponClasses[index].currentLvl;
+                        break;
+                    case 1:
+                        gunnerObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        gunnerObject.totalExp = data.weaponClasses[index].totalExp;
+                        gunnerObject.numSkillPoints = data.weaponClasses[index].numSkillPoints;
+                        gunnerObject.currentLvl = data.weaponClasses[index].currentLvl;
+                        break;
+                    case 2:
+                        engineerObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        engineerObject.totalExp = data.weaponClasses[index].totalExp;
+                        engineerObject.numSkillPoints = data.weaponClasses[index].numSkillPoints;
+                        engineerObject.currentLvl = data.weaponClasses[index].currentLvl;
+                        break;
+                }
+            }
+        }
+
+        EquipClass(equippedWeapon.weaponClassType);
+        weaponClass.currentWeapon = equippedWeapon;
+
+
+
 
     }
 

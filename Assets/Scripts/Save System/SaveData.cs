@@ -9,12 +9,21 @@ public class SaveData
     // Start is called before the first frame update
     public int maxPlayerHealth;
     public int playerHealth;
+    public string equippedWeapon; 
+
     public CraftMaterialSaveData[] materialInventory;
+    public WeaponClassSaveData[] weaponClasses;
 
     public SaveData()
     {
         maxPlayerHealth = 100;
         playerHealth = 100;
+        equippedWeapon = "Dagger";
+
         materialInventory = new CraftMaterialSaveData[50];
+        weaponClasses = new WeaponClassSaveData[3];
+        weaponClasses[0] = new WeaponClassSaveData();
+        weaponClasses[1] = new WeaponClassSaveData();
+        weaponClasses[2] = new WeaponClassSaveData();
     }
 }

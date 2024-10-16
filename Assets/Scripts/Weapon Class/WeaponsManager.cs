@@ -22,9 +22,9 @@ public class WeaponsManager : MonoBehaviour
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         shieldPrefab = characterReference.knightShield.weaponMesh;
         GameObject inputManager = GameObject.Find("InputandAnimationManager");
-        
 
 
+        Debug.Log("Current weapon type on load: " + characterReference.equippedWeapon.weaponClassType);
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
@@ -32,7 +32,7 @@ public class WeaponsManager : MonoBehaviour
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 1);
         }
             
-        if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
+        else if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
         {
             toolPrefab = characterReference.engineerTool.weaponMesh;
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
@@ -40,7 +40,7 @@ public class WeaponsManager : MonoBehaviour
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 2);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 2);
         }
-        if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
+        else if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
             Debug.Log(inputManager);
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);

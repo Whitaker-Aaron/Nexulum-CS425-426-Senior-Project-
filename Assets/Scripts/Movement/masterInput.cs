@@ -30,7 +30,7 @@ public class masterInput : MonoBehaviour
 
     //temporary player object - CHANGE TO CharacterBase ONCE IMPLEMENTED
     private GameObject player;
-    [SerializeField] public WeaponBase.weaponClassTypes currentClass;
+    public WeaponBase.weaponClassTypes currentClass;
 
     private void Awake()
     {
@@ -48,18 +48,7 @@ public class masterInput : MonoBehaviour
         Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
         staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
 
-        character = player.GetComponent<CharacterBase>();
-        if (currentClass == WeaponBase.weaponClassTypes.Knight)
-        { 
-            sword = character.equippedWeapon.weaponMesh;
-            swordAttackPoint = character.swordAttackPoint;
-        }
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
-        {
-            pistol = character.equippedWeapon.weaponMesh;
-            tool = character.engineerTool.weaponMesh;
-            toolAttackPoint = character.toolAttackPoint;
-        }
+        
 
     }
 
@@ -348,21 +337,31 @@ public class masterInput : MonoBehaviour
         animationControl = GetComponent<PlayerAnimation>();
         camera = Camera.main.transform;
 
-        //animation layer changing
-        if(currentClass == WeaponBase.weaponClassTypes.Knight)
+        character = player.GetComponent<CharacterBase>();
+        currentClass = character.weaponClass.classType;
+        Debug.Log("Character's current class from master input: " + currentClass);
+
+        ;
+        if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
-            animationControl.changeClassLayer(1, 0);
-            animationControl.changeClassLayer(2, 0);
+            sword = character.equippedWeapon.weaponMesh;
+            swordAttackPoint = character.swordAttackPoint;
+            //animationControl.changeClassLayer(1, 0);
+            //animationControl.changeClassLayer(2, 0);
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+        else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-            animationControl.changeClassLayer(0, 1);
-            animationControl.changeClassLayer(2, 1);
+            //animationControl.changeClassLayer(0, 1);
+            //animationControl.changeClassLayer(2, 1);
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
-            animationControl.changeClassLayer(0, 2);
-            animationControl.changeClassLayer(1, 2);
+            pistol = character.equippedWeapon.weaponMesh;
+            tool = character.engineerTool.weaponMesh;
+            toolAttackPoint = character.toolAttackPoint;
+
+            //animationControl.changeClassLayer(0, 2);
+            //animationControl.changeClassLayer(1, 2);
         }
 
     }

@@ -10,9 +10,10 @@ public class WeaponClass : ScriptableObject
     public WeaponBase currentWeapon;
     public WeaponBase.weaponClassTypes classType;
 
-    public float totalExp;
-    public float numSkillPoints;
-    public int currentLvl; 
+    public float totalExp = 0;
+    public float numSkillPoints = 0;
+    public int currentLvl = 1;
+
 
     [SerializedDictionary("Experience", "Level")]
     public SerializedDictionary<float, int> levelUnlocks;
