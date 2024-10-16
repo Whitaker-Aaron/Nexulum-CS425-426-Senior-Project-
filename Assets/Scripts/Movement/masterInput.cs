@@ -34,7 +34,7 @@ public class masterInput : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        
 
         staminaBar = GameObject.Find("StaminaBar");
         staminaFill = GameObject.Find("StaminaFill");
@@ -75,6 +75,7 @@ public class masterInput : MonoBehaviour
     bool isAttacking = false;
     float cooldown = 1f;
     bool inputPaused = false;
+    bool pauseMenuOpen = false;
     bool returningFromMenu = true;
     public float cooldownTime = 2f;
     public float nextAttackTime = .3f;
@@ -201,12 +202,22 @@ public class masterInput : MonoBehaviour
 
     public void pauseInput(InputAction.CallbackContext context)
     {
-        inputPaused = !inputPaused;
-        returningFromMenu = !returningFromMenu;
-        animationControl.stop();
-        Input.ResetInputAxes();
-        noOfClicks = 0;
+        if (context.performed && !pauseMenuOpen)
+        {
+            Debug.Log("Input pause toggled");
+            inputPaused = !inputPaused;
+            returningFromMenu = !returningFromMenu;
+            animationControl.stop();
+            Input.ResetInputAxes();
+            noOfClicks = 0;
+        }
 
+    }
+
+    public void pauseMenuOpened(InputAction.CallbackContext context)
+    {
+        inputPaused = !inputPaused;
+        pauseMenuOpen = !pauseMenuOpen;
     }
 
     //Knight Functions
@@ -333,12 +344,15 @@ public class masterInput : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+
         playerControl = new PlayerInputActions();
         animationControl = GetComponent<PlayerAnimation>();
         camera = Camera.main.transform;
 
         character = player.GetComponent<CharacterBase>();
-        currentClass = character.weaponClass.classType;
+        Debug.Log("Character: " + character.equippedWeapon.weaponClassType);
+        currentClass = character.equippedWeapon.weaponClassType;
         Debug.Log("Character's current class from master input: " + currentClass);
 
         ;

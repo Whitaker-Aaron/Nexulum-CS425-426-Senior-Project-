@@ -39,7 +39,6 @@ public class MenuManager : MonoBehaviour
     public void openPauseMenu(InputAction.CallbackContext context)
     {
 
-        
 
         if (!pauseMenuActive && context.performed)
         {
@@ -99,7 +98,7 @@ public class MenuManager : MonoBehaviour
             populateInventoryMaterials();
             menuActive = true;
         }
-        else if(context.performed)
+        else if(!pauseMenuActive && context.performed)
         {
             //currentMenuObject.SetActive(false);
             if(GameObject.FindGameObjectWithTag("CraftLists") != null)

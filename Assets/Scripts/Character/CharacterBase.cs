@@ -62,11 +62,6 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
         
 
-        healthBar.value = playerHealth;
-        delayedHealthBar.value = playerHealth;
-
-        healthBar.maxValue = maxHealth;
-        delayedHealthBar.maxValue = maxHealth;
 
         
 
@@ -112,14 +107,28 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         Debug.Log("Saved player health: " + data.playerHealth);
 
     }
+
+    public void InitializeHealth()
+    {
+        healthBar.value = playerHealth;
+        delayedHealthBar.value = playerHealth;
+
+        healthBar.maxValue = maxHealth;
+        delayedHealthBar.maxValue = maxHealth;
+    }
+
     public void LoadData(SaveData data)
     {
+        Debug.Log("Tracking load error");
+
         var weapons = GameObject.Find("WeaponsList").GetComponent<WeaponsList>();
 
         playerHealth = data.playerHealth;
         maxHealth = data.maxPlayerHealth;
 
         equippedWeapon = weapons.ReturnWeapon(data.equippedWeapon);
+
+        
 
         if (data.weaponClasses[0].currentWeapon != null)
         {
@@ -150,11 +159,15 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             }
         }
 
+        
+
         EquipClass(equippedWeapon.weaponClassType);
         weaponClass.currentWeapon = equippedWeapon;
 
         runeInt = GetComponent<RuneInt>();
-        runeInt.ChangeClass(weaponClass.classType);
+        runeInt.ChangeClass(equippedWeapon.weaponClassType);
+
+        InitializeHealth();
 
 
     }

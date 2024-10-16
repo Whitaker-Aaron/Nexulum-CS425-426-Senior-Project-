@@ -10,7 +10,17 @@ public class RuneManager : MonoBehaviour
     void Start()
     {
         
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         
+    }
+
+    public void Initialize()
+    {
+
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         runesInventory = GameObject.Find("RuneInventory").GetComponent<RuneInventory>();
         //characterReference.equippedRunes
@@ -25,14 +35,8 @@ public class RuneManager : MonoBehaviour
             {
                 break;
             }
-            
-        }
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        }
     }
 
     public void AddToInventory(Rune runeToAdd)

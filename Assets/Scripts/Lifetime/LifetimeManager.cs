@@ -10,10 +10,15 @@ public class LifetimeManager : MonoBehaviour
     // Start is called before the first frame update
     public string currentScene;
     GameObject currentInputRef;
+    WeaponsManager weaponsManager;
+    RuneManager runeManager;
+    
+    
 
     void Start()
     {
-       
+       weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
+       runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
         //currentInputRef.SetActive(false);
     }
 
@@ -55,8 +60,14 @@ public class LifetimeManager : MonoBehaviour
     public void StartGame()
     {
         //currentInputRef.SetActive(true);
+        GameObject.Find("InputandAnimationManager").GetComponent<masterInput>().enabled = true;
+        weaponsManager.Initialize();
+        runeManager.Initialize();
         SceneManager.LoadSceneAsync(1);
+
     }
+
+ 
 
     public IEnumerator StartScene()
     {

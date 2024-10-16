@@ -10,6 +10,7 @@ public class FileManager
     private string dataDirectory;
     private string dataName;
 
+
     public void SaveGameData(SaveData data)
     {
         var path = Path.Combine(dataDirectory, dataName);
@@ -24,6 +25,14 @@ public class FileManager
                 writer.Write(storedData);
             }
         }
+    }
+
+    public bool IsData()
+    {
+        var path = Path.Combine(dataDirectory, dataName);
+        return File.Exists(path);
+
+
     }
 
     public FileManager(string directory, string name)

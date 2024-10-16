@@ -6,6 +6,7 @@ using System.Linq;
 public class SaveManager : MonoBehaviour
 {
     SaveData data;
+    public bool hasData;
     List<SaveSystemInterface> allSaveObjects;
     FileManager fileManager;
     private string fileName = "nexulumSaveData.game";
@@ -15,7 +16,8 @@ public class SaveManager : MonoBehaviour
         var saveObjects = FindObjectsOfType<MonoBehaviour>().OfType<SaveSystemInterface>();
         allSaveObjects = new List<SaveSystemInterface>(saveObjects);
         fileManager = new FileManager(Application.persistentDataPath, fileName);
-        LoadGame();
+        hasData = fileManager.IsData();
+        //LoadGame();
     }
 
     // Update is called once per frame
@@ -39,21 +41,21 @@ public class SaveManager : MonoBehaviour
     {
         data = fileManager.LoadGameData();
 
-        if(data == null)
-        {
-            NewGame();
-        }
-
         foreach (var item in allSaveObjects)
         {
             item.LoadData(data);
         }
-        
         
     }
 
     public void NewGame()
     {
         data = new SaveData();
+
+        foreach (var item in allSaveObjects)
+        {
+            item.LoadData(data);
+        }
+
     }
 }
