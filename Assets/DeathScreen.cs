@@ -15,24 +15,16 @@ public class DeathScreen : MonoBehaviour
     RawImage material2;
     RawImage material3;
 
-    GameObject mat1Obj;
-    GameObject mat2Obj;
-    GameObject mat3Obj;
+    [SerializeField] GameObject mat1Obj;
+    [SerializeField] GameObject mat2Obj;
+    [SerializeField] GameObject mat3Obj;
 
     private void Start()
     {
-        mat1Obj = GameObject.Find("firstMat");
-        mat2Obj = GameObject.Find("secondMat");
-        mat3Obj = GameObject.Find("thirdMat");
 
-       material1 = mat1Obj.GetComponent<RawImage>();
-       material2 =  mat2Obj.GetComponent<RawImage>();
-       material3 =  mat3Obj.GetComponent<RawImage>();
+  
 
-       
-
-
-        var color1 = firstText.color;
+       var color1 = firstText.color;
        color1.a = 0.0f;
        firstText.color = color1;
 
@@ -47,8 +39,11 @@ public class DeathScreen : MonoBehaviour
 
     public IEnumerator AnimateDeath()
     {
+        material1 = mat1Obj.GetComponent<RawImage>();
+        material2 = mat2Obj.GetComponent<RawImage>();
+        material3 = mat3Obj.GetComponent<RawImage>();
+
         Texture[] matText = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>().ReturnFirstThreeMatTextures();
-        Debug.Log(matText[0]);
         material1.texture = matText[2];
         Color col = material1.color;
         col.a = 0.0f;
