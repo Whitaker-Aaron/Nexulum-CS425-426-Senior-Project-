@@ -106,6 +106,26 @@ public class MaterialScrollManager : MonoBehaviour
 
     }
 
+    public Texture[] ReturnFirstThreeMatTextures()
+    {
+        var mat = materialInventory.GetFirstThreeMat();
+        Texture[] matText = new Texture[3];
+        for(int i =0; i < mat.Length; i++)
+        {
+            if (mat[i] != null)
+            {
+                Debug.Log(mat[i].materialTexture);
+                matText[i] = mat[i].materialTexture;
+            }
+            else
+            {
+                matText[i] = null;
+            }
+            
+        }
+        return matText;
+    }
+
     public void AddToMaterialsInventory(CraftMaterial material)
     {
         Debug.Log("Material getting added to inventory: " + material.materialName);

@@ -40,7 +40,13 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
             }
             else
             {
-                data.materialInventory = null;
+                var saveData = new CraftMaterialSaveData();
+                saveData.materialName = "";
+                saveData.currentAmount = 0;
+                saveData.maxMaterialAmount = 0;
+                saveData.dropRate = 0.0f;
+                saveData.dropAmount = 0;
+                data.materialInventory[index] = saveData;
             }
 
         }
@@ -107,10 +113,8 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
 
     public void ClearInventory()
     {
-        for(int index =0; index < inventory.Length; index++)
-        {
-            inventory[index] = null;
-        }
+        Array.Clear(inventory, 0, inventory.Length);
+        nextFreeIndex = 0;
     }
 
     public void RemoveFromInventory(CraftMaterial materialToRemove, int amountToRemove)
@@ -178,6 +182,25 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
         }
         return 0;
    
+    }
+
+    public CraftMaterial[] GetFirstThreeMat()
+    {
+        CraftMaterial[] mats = new CraftMaterial[3];
+        for(int i = 0; i < 3; i++)
+        {
+            if (inventory[i] != null)
+            {
+                mats[i] = inventory[i];
+                Debug.Log(mats[i].materialName);
+            }
+            else
+            {
+                Debug.Log(i + " is null");
+                mats[i] = null;
+            }
+        }
+        return mats;
     }
 
 }

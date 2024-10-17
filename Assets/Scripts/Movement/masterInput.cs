@@ -211,7 +211,17 @@ public class masterInput : MonoBehaviour
             Input.ResetInputAxes();
             noOfClicks = 0;
         }
+    }
 
+    public void pausePlayerInput()
+    {
+        inputPaused = true;
+        animationControl.stop();
+    }
+
+    public void resumePlayerInput()
+    {
+        inputPaused = false;
     }
 
     public void pauseMenuOpened(InputAction.CallbackContext context)

@@ -10,9 +10,13 @@ public class LifetimeManager : MonoBehaviour
     // Start is called before the first frame update
     public string currentScene;
     GameObject currentInputRef;
+
     WeaponsManager weaponsManager;
     RuneManager runeManager;
     MaterialScrollManager scrollManager;
+    CharacterBase characterRef;
+
+
     GameObject deathScreen;
     
     
@@ -22,6 +26,7 @@ public class LifetimeManager : MonoBehaviour
        weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
        runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
        scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
+       characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();    
        deathScreen = GameObject.Find("DeathScreen");
        deathScreen.SetActive(false);
         //currentInputRef.SetActive(false);
@@ -78,7 +83,6 @@ public class LifetimeManager : MonoBehaviour
         Color imgColor = reference.color;
         imgColor.a = 1;
         reference.color = imgColor;
-        scrollManager.ClearInventory();
         StartCoroutine(AnimateDeathScreen());
 
         
@@ -86,10 +90,18 @@ public class LifetimeManager : MonoBehaviour
 
     public IEnumerator AnimateDeathScreen()
     {
+        var deathScreenObj = deathScreen.GetComponent<DeathScreen>();
+        characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         deathScreen.SetActive(true);
+        StartCoroutine(deathScreenObj.AnimateDeath());
+        yield return new WaitForSeconds(12);
         Load(1);
         yield return new WaitForSeconds(3);
-        deathScreen.SetActive(false);       
+        deathScreenObj.ResetObjScales();
+        deathScreen.SetActive(false);
+        characterRef.RecoverFromDeath();
+        scrollManager.ClearInventory();
+        characterRef.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         yield return null;
     }
 

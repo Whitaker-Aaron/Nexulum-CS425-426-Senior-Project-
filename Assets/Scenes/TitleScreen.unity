@@ -744,7 +744,7 @@ GameObject:
   - component: {fileID: 540940345}
   - component: {fileID: 540940344}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: firstText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -766,8 +766,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 215}
-  m_SizeDelta: {x: 982.7241, y: 155.0972}
+  m_AnchoredPosition: {x: 0, y: 101}
+  m_SizeDelta: {x: 1260.3073, y: 169}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &540940344
 MonoBehaviour:
@@ -791,11 +791,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 7d8a92a4bae164b41a410425bfcdba57, type: 3}
-    m_FontSize: 72
+    m_FontSize: 92
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 6
-    m_MaxSize: 72
+    m_MaxSize: 92
     m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1089,6 +1089,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 636273024}
+  - component: {fileID: 636273025}
   m_Layer: 5
   m_Name: DeathScreen
   m_TagString: Untagged
@@ -1108,8 +1109,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2010255171}
   - {fileID: 1188409322}
+  - {fileID: 2010255171}
   - {fileID: 846896887}
   - {fileID: 760495434}
   m_Father: {fileID: 1903756091}
@@ -1119,6 +1120,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &636273025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636273023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0067b7fb58997448988f5fa525cb800, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstText: {fileID: 540940344}
+  secondText: {fileID: 981563137}
+  thirdText: {fileID: 739038861}
 --- !u!1 &670889619
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,12 +1355,12 @@ GameObject:
   - component: {fileID: 739038862}
   - component: {fileID: 739038861}
   m_Layer: 5
-  m_Name: Text (Legacy) (2)
+  m_Name: thirdText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &739038860
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1361,7 +1377,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 145}
+  m_AnchoredPosition: {x: 0, y: 59}
   m_SizeDelta: {x: 982.7241, y: 155.0972}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &739038861
@@ -1386,11 +1402,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 7d8a92a4bae164b41a410425bfcdba57, type: 3}
-    m_FontSize: 72
+    m_FontSize: 92
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 6
-    m_MaxSize: 72
+    m_MaxSize: 92
     m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1480,7 +1496,7 @@ GameObject:
   - component: {fileID: 760495436}
   - component: {fileID: 760495435}
   m_Layer: 5
-  m_Name: RawImage (5)
+  m_Name: thirdMat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1732,7 +1748,7 @@ GameObject:
   - component: {fileID: 846896889}
   - component: {fileID: 846896888}
   m_Layer: 5
-  m_Name: RawImage (4)
+  m_Name: secondMat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2158,7 +2174,7 @@ GameObject:
   - component: {fileID: 981563138}
   - component: {fileID: 981563137}
   m_Layer: 5
-  m_Name: Text (Legacy) (1)
+  m_Name: secondText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2180,7 +2196,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 78}
+  m_AnchoredPosition: {x: 0, y: -37}
   m_SizeDelta: {x: 982.7241, y: 155.0972}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &981563137
@@ -2205,11 +2221,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 7d8a92a4bae164b41a410425bfcdba57, type: 3}
-    m_FontSize: 72
+    m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 6
-    m_MaxSize: 72
+    m_MaxSize: 80
     m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2402,7 +2418,7 @@ GameObject:
   - component: {fileID: 1188409324}
   - component: {fileID: 1188409323}
   m_Layer: 5
-  m_Name: Image
+  m_Name: deathText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2499,9 +2515,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1886349204}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 50, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1228320050
@@ -4620,7 +4636,7 @@ GameObject:
   - component: {fileID: 2010255173}
   - component: {fileID: 2010255172}
   m_Layer: 5
-  m_Name: RawImage (3)
+  m_Name: firstMat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

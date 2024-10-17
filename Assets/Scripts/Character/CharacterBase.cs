@@ -264,11 +264,12 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         
 
 
-        print("Player health: " + playerHealth);
+        //print("Player health: " + playerHealth);
     }
 
     public void Death()
     {
+        invul = true;
         lifetimeManager.OnDeath();
 
         StopCoroutine(animateHealth());
@@ -278,6 +279,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         healthBar.value = maxHealth;
         delayedHealthBar.value = maxHealth;
         
+    }
+
+    public void RecoverFromDeath()
+    {
+        invul = false;
     }
 
     public void restoreHealth(int amount)
