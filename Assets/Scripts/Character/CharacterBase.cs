@@ -33,8 +33,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     [SerializeField] Slider delayedHealthBar;
 
     public bool invul = false;
-
     public bool bubbleShield = false;
+
+    public bool transitioningRoom = false;
+    public bool transitionedRoom = false;
+
     
 
     private RuneInt runeInt;

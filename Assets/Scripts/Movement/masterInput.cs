@@ -410,7 +410,7 @@ public class masterInput : MonoBehaviour
 
         Vector3 lookDir = lookPos - player.transform.position;
         lookDir.y = 0;
-        player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
+        if(!inputPaused && !pauseMenuOpen) player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
 
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
             return;
