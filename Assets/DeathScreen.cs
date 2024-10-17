@@ -20,9 +20,7 @@ public class DeathScreen : MonoBehaviour
     [SerializeField] GameObject mat3Obj;
 
     private void Start()
-    {
-
-  
+    { 
 
        var color1 = firstText.color;
        color1.a = 0.0f;

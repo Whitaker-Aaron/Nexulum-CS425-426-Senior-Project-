@@ -69,12 +69,15 @@ public class LifetimeManager : MonoBehaviour
 
     public void StartGame()
     {
-        //currentInputRef.SetActive(true);
+        InitializeManagers();
+        SceneManager.LoadSceneAsync(1);
+    }
+
+    public void InitializeManagers()
+    {
         GameObject.Find("InputandAnimationManager").GetComponent<masterInput>().enabled = true;
         weaponsManager.Initialize();
         runeManager.Initialize();
-        SceneManager.LoadSceneAsync(1);
-
     }
 
     public void OnDeath()

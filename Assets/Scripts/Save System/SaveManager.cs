@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class SaveManager : MonoBehaviour
     public bool hasData;
     List<SaveSystemInterface> allSaveObjects;
     FileManager fileManager;
+    LifetimeManager lifetimeManager;
     private string fileName = "nexulumSaveData.game";
     // Start is called before the first frame update
     void Awake()
@@ -16,8 +18,18 @@ public class SaveManager : MonoBehaviour
         var saveObjects = FindObjectsOfType<MonoBehaviour>().OfType<SaveSystemInterface>();
         allSaveObjects = new List<SaveSystemInterface>(saveObjects);
         fileManager = new FileManager(Application.persistentDataPath, fileName);
+        lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
         hasData = fileManager.IsData();
-        //LoadGame();
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        if(currentScene.name != "TitleScreen")
+        {
+            Debug.Log("Not starting from title screen");
+            NewGame();
+            lifetimeManager.InitializeManagers();
+
+        }
+
     }
 
     // Update is called once per frame
