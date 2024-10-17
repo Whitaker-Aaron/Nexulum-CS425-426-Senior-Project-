@@ -40,7 +40,7 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
             }
             else
             {
-                break;
+                data.materialInventory = null;
             }
 
         }
@@ -102,6 +102,14 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
             Debug.Log(inventory[nextFreeIndex].materialName + " has been added to inventory!");
             nextFreeIndex++;
 
+        }
+    }
+
+    public void ClearInventory()
+    {
+        for(int index =0; index < inventory.Length; index++)
+        {
+            inventory[index] = null;
         }
     }
 

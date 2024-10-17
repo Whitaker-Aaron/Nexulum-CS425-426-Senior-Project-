@@ -113,6 +113,11 @@ public class MaterialScrollManager : MonoBehaviour
 
     }
 
+    public void ClearInventory()
+    {
+        materialInventory.ClearInventory();
+    }
+
     public void RemoveFromMaterialsInventory(CraftMaterial material, int amount)
     {
         Debug.Log("Material getting removed from inventory: " + material.materialName);

@@ -12,6 +12,8 @@ public class LifetimeManager : MonoBehaviour
     GameObject currentInputRef;
     WeaponsManager weaponsManager;
     RuneManager runeManager;
+    MaterialScrollManager scrollManager;
+    GameObject deathScreen;
     
     
 
@@ -19,6 +21,9 @@ public class LifetimeManager : MonoBehaviour
     {
        weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
        runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
+       scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
+       deathScreen = GameObject.Find("DeathScreen");
+       deathScreen.SetActive(false);
         //currentInputRef.SetActive(false);
     }
 
@@ -67,6 +72,27 @@ public class LifetimeManager : MonoBehaviour
 
     }
 
+    public void OnDeath()
+    {
+        var reference = GameObject.Find("TransitionScreen").GetComponent<Image>();
+        Color imgColor = reference.color;
+        imgColor.a = 1;
+        reference.color = imgColor;
+        scrollManager.ClearInventory();
+        StartCoroutine(AnimateDeathScreen());
+
+        
+    }
+
+    public IEnumerator AnimateDeathScreen()
+    {
+        deathScreen.SetActive(true);
+        Load(1);
+        yield return new WaitForSeconds(3);
+        deathScreen.SetActive(false);       
+        yield return null;
+    }
+
  
 
     public IEnumerator StartScene()
@@ -113,6 +139,7 @@ public class LifetimeManager : MonoBehaviour
         
         yield break;
     }
+
 
     public IEnumerator IncreaseOpacity(GameObject transition, float rate)
     {

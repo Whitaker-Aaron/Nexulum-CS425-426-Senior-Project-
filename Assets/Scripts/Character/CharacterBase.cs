@@ -24,6 +24,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
 
+    LifetimeManager lifetimeManager;
+
 
     [SerializeField] GameObject masterInput;
 
@@ -58,7 +60,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     // Start is called before the first frame update
     void Start()
     {
-        
+        lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
 
         
 
@@ -247,13 +249,35 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             return;
         if (!invul)
         {
-            playerHealth -= damage;
+            if(playerHealth - damage <= 0)
+            {
+                playerHealth = 0;
+            }
+            else
+            {
+                playerHealth -= damage;
+            }
             StartCoroutine(updateHealthBarsNegative());
+            
         }
+
         
 
 
         print("Player health: " + playerHealth);
+    }
+
+    public void Death()
+    {
+        lifetimeManager.OnDeath();
+
+        StopCoroutine(animateHealth());
+        StopCoroutine(animateDelayedHealth());
+
+        playerHealth = maxHealth;
+        healthBar.value = maxHealth;
+        delayedHealthBar.value = maxHealth;
+        
     }
 
     public void restoreHealth(int amount)
@@ -312,6 +336,10 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             }
 
             yield return null;
+        }
+        if(delayedHealthBar.value == 0)
+        {
+            Death();
         }
         yield break;
     }
