@@ -365,7 +365,7 @@ public class masterInput : MonoBehaviour
         currentClass = character.equippedWeapon.weaponClassType;
         Debug.Log("Character's current class from master input: " + currentClass);
 
-        ;
+        
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
             sword = character.equippedWeapon.weaponMesh;

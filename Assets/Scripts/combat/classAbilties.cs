@@ -301,6 +301,8 @@ public class classAbilties : MonoBehaviour
 
     IEnumerator grenadeWait(float time)
     {
+        yield return new WaitForSeconds(.5f);
+        gameObject.GetComponent<masterInput>().throwingGrenade = false;
         yield return new WaitForSeconds(time);
         throwingGrenade = false;
         threwGrenade = false;
@@ -665,10 +667,11 @@ public class classAbilties : MonoBehaviour
 
         if(throwingGrenade && !threwGrenade)
         {
-            if(Input.GetMouseButtonDown(0))
+            gameObject.GetComponent<masterInput>().throwingGrenade = true;
+            if (Input.GetMouseButtonDown(0))
             {
                 threwGrenade = true;
-                gameObject.GetComponent<masterInput>().throwingGrenade = false;
+                //gameObject.GetComponent<masterInput>().throwingGrenade = false;
                 GameObject grenade = Instantiate(grenadePrefab, grenadeSpawn.transform.position, grenadeSpawn.transform.rotation);
                 grenade.GetComponent<Rigidbody>().velocity = grenade.transform.forward * grenadeSpeed;
                 StartCoroutine(grenade.GetComponent<grenade>().explode());
