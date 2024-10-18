@@ -190,6 +190,11 @@ public class CharacterBase : MonoBehaviour
 
     }
 
+    public void buffPlayer()
+    {
+
+    }
+
     public IEnumerator animateHealth()
     {
         
