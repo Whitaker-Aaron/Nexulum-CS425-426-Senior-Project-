@@ -9,7 +9,7 @@ public class RuneInventory : MonoBehaviour, SaveSystemInterface
     RuneList runeList;
     int nextFreeIndex = 0;
     //public Rune equippedRune;
-    void Start()
+    void Awake()
     {
         runeList = GameObject.Find("RunesList").GetComponent<RuneList>();
     }

@@ -21,7 +21,7 @@ public class LifetimeManager : MonoBehaviour
     
     
 
-    void Start()
+    void Awake()
     {
        weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
        runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
