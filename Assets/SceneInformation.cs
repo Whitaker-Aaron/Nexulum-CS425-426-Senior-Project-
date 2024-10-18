@@ -10,7 +10,8 @@ public class SceneInformation : MonoBehaviour
     [SerializeField] public bool spawnPlayer;
     [SerializeField] public bool screenTransition;
     [SerializeField] RoomInformation beginningRoom;
-    [SerializeField] public Vector3 playerSpawnPos; 
+    [SerializeField] public Vector3 playerSpawnPos;
+    [SerializeField] public GameObject initialSpawnLocation;
     void Start()
     {
         var roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
@@ -32,7 +33,21 @@ public class SceneInformation : MonoBehaviour
 
     private void Awake()
     {
-        if(spawnPlayer) GameObject.FindWithTag("Player").transform.position = playerSpawnPos;
+        
+        if (spawnPlayer)
+        {
+            var player = GameObject.FindWithTag("Player");
+            if (initialSpawnLocation != null)
+            {
+                player.transform.position = initialSpawnLocation.transform.position;
+            }
+            else
+            {
+                player.transform.position = playerSpawnPos;
+            }
+            
+        }
+        
         if(screenTransition) StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().StartScene());
     }
 
