@@ -29,26 +29,34 @@ public class classAbilties : MonoBehaviour
     //Knight
     bool bubble = false;
     public float bubbleTime = 5f;
-    public GameObject knightBubblePrefab;
+    [SerializeField] private GameObject knightBubblePrefab;
     public float bubbleRadius;
-    public GameObject knightBubbleEffect;
+    [SerializeField] private GameObject knightBubbleEffect;
 
-    public GameObject swordShot;
-    public Transform swordSpawn;
+    [SerializeField] private GameObject swordShot;
+    [SerializeField] private Transform swordSpawn;
     public float swordSpeed;
     public float swordTime, swordAbilityTime;
     bool shootingSwords, shotSword = false;
-    public GameObject swordShotEffect;
+    [SerializeField] private GameObject swordShotEffect;
+    [SerializeField] private GameObject combatAuraEffectStart, combatAuraEffectEnd, combatAuraEffectLoop;
+    public float comatAuraRadius = 4f;
+    private bool activatedAura, checkingAura = false;
+    public float auraTime = 5f;
+    private Vector3 currentAura;
+    bool buffingPlayer = false;
+    public float buffRate = .5f;
+    
 
 
     //Gunner
-    public GameObject rocketPrefab;
+    [SerializeField] private GameObject rocketPrefab;
     public float rocketSpeed = 5f;
     public float rocketTime;
     bool shootingRocket, shotRocket = false;
 
     bool shootingLaser, shotLaser, checkHit = false;
-    public GameObject laserPrefab;
+    [SerializeField] private GameObject laserPrefab;
     public float laserCooldown = 4f;
     GameObject currentLaserEffect = null;
     public float maxLaserDistance = 10f;
@@ -114,9 +122,10 @@ public class classAbilties : MonoBehaviour
 
     public void activateAbilityTwo(WeaponBase.weaponClassTypes currentClass)
     {
-        if (currentClass == WeaponBase.weaponClassTypes.Knight)
+        if (currentClass == WeaponBase.weaponClassTypes.Knight && !activatedAura)
         {
-
+            activatedAura = true;
+            StartCoroutine(auraWait());
         }
         if (currentClass == WeaponBase.weaponClassTypes.Gunner && !throwingGrenade)
         {
@@ -191,6 +200,39 @@ public class classAbilties : MonoBehaviour
             currentEffect.GetComponent<ParticleSystem>().Stop();
             Destroy(currentEffect);
         }
+        yield break;
+    }
+
+    IEnumerator auraWait()
+    {
+        checkingAura = true;
+        currentAura = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
+        GameObject tempEffect = Instantiate(combatAuraEffectStart, currentAura, Quaternion.identity);
+        tempEffect.GetComponent<ParticleSystem>().Play();
+        yield return new WaitForSeconds(.3f);
+        tempEffect.GetComponent<ParticleSystem>().Stop();
+        GameObject tempEffect2 = Instantiate(combatAuraEffectLoop, currentAura, Quaternion.identity);
+        tempEffect2.GetComponent<ParticleSystem>().Play();
+
+        yield return new WaitForSeconds(auraTime);
+        checkingAura = false;
+        activatedAura = false;
+        tempEffect2.GetComponent<ParticleSystem>().Stop();
+        Destroy(tempEffect);
+        tempEffect = Instantiate(combatAuraEffectEnd, currentAura, Quaternion.identity);
+        tempEffect.GetComponent<ParticleSystem>().Play();
+        yield return new WaitForSeconds(1.5f);
+        tempEffect.GetComponent<ParticleSystem>().Stop();
+        Destroy(tempEffect);
+        Destroy(tempEffect2);
+        currentAura = Vector3.zero;
+        yield break;
+    }
+
+    IEnumerator buffWait()
+    {
+        yield return new WaitForSeconds(buffRate);
+        buffingPlayer = false;
         yield break;
     }
 
@@ -528,6 +570,12 @@ public class classAbilties : MonoBehaviour
 
     //--------------Main Functions---------------
 
+    private void OnDrawGizmos()
+    {
+        if (currentAura != null)
+            Gizmos.DrawWireSphere(currentAura, comatAuraRadius);
+    }
+
     private void Awake()
     {
         //currentClass = gameObject.GetComponent<masterInput>().currentClass;
@@ -543,6 +591,21 @@ public class classAbilties : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(checkingAura && currentAura != null)
+        {
+            Collider[] colliders = Physics.OverlapSphere(currentAura, comatAuraRadius);
+
+            foreach(Collider c in colliders)
+            {
+                if(c.gameObject.tag == "Player" && buffingPlayer == false)
+                {
+                    buffingPlayer = true;
+                    player.GetComponent<CharacterBase>().buffPlayer();
+                    StartCoroutine(buffWait());
+                }
+            }
+        }
+
         if(placing)
         {
             activateTurret();
