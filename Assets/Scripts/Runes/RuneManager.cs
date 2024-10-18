@@ -2,24 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RuneManager : MonoBehaviour
+public class RuneManager : MonoBehaviour, SaveSystemInterface
 {
     RuneInventory runesInventory;
     CharacterBase characterReference;
+    RuneList runeList;
     // Start is called before the first frame update
     void Start()
     {
-        
-        
+        runeList = GameObject.Find("RunesList").GetComponent<RuneList>();
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         runesInventory = GameObject.Find("RuneInventory").GetComponent<RuneInventory>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public void Initialize()
+    {
+
+        
+        
         //characterReference.equippedRunes
-        for (int i = 0; i < characterReference.equippedRunes.Length; i++)
+    }
+
+    public void SaveData(ref SaveData data)
+    {
+        var currentRunes = characterReference.equippedRunes;
+        for(int index = 0; index < currentRunes.Length; index++)
         {
-            if (characterReference.equippedRunes[i] != null)
+            if (currentRunes[index] != null){
+                data.equippedRunes[index] = currentRunes[index].runeName;
+            }
+            
+        }
+    }
+    public void LoadData(SaveData data)
+    {
+        var currentRunes = characterReference.equippedRunes;
+        for (int index = 0; index < currentRunes.Length; index++)
+        {
+            if (data.equippedRunes[index] != null && data.equippedRunes[index] != "")
             {
-                Debug.Log(characterReference.equippedRunes[i].runeName);
-                AddToInventory(characterReference.equippedRunes[i]);
+                currentRunes[index] = runeList.ReturnRune(data.equippedRunes[index]);
             }
             else
             {
@@ -27,12 +55,7 @@ public class RuneManager : MonoBehaviour
             }
             
         }
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void AddToInventory(Rune runeToAdd)
@@ -59,9 +82,22 @@ public class RuneManager : MonoBehaviour
 
     }
 
-    public void ChangeRunes(Rune runeToEquip, int position)
+    public void ChangeRunes(Rune runeToEquip)
     {
-        
+
+        var position = 0;
+        var charRunes = characterReference.equippedRunes;
+        for (int index = 0; index < charRunes.Length; index++)
+        {
+            if (charRunes[index] != null)
+            {
+                position++;
+            }
+        }
+        if(position >= 2)
+        {
+            position = 0;
+        }
         characterReference.UpdateRunes(runeToEquip, position);
     }
 

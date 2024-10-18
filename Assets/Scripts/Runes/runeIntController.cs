@@ -6,13 +6,13 @@ public class runeIntController : MonoBehaviour, RuneInt
 {
 
     WeaponBase weapon;
-    [SerializeField] public WeaponBase.weaponClassTypes currentClass;
+    public WeaponBase.weaponClassTypes currentClass;
     public CharacterBase character;
 
     // Start is called before the first frame update
     void Start()
     {
-        ResetRunes();
+        //ResetRunes();
     }
 
     void Awake()
@@ -21,7 +21,7 @@ public class runeIntController : MonoBehaviour, RuneInt
         //runeInventory = runeManager.GetComponent<RuneInventory>();
 
         //weaponsInventory = weaponsManager.GetComponent<WeaponsInventory>();
-        weapon = character.equippedWeapon;
+        //weapon = character.equippedWeapon;
 
     }
 
@@ -33,6 +33,7 @@ public class runeIntController : MonoBehaviour, RuneInt
 
     public void ChangeClass(WeaponBase.weaponClassTypes newClass)
     {
+        Debug.Log("Rune class before change: " + currentClass);
         currentClass = newClass;
         ResetRunes();
     }
@@ -87,7 +88,7 @@ public class runeIntController : MonoBehaviour, RuneInt
         {
             if (currentClass == WeaponBase.weaponClassTypes.Knight)
             {
-                weapon.weaponMesh.GetComponent<swordCombat>().activateFire(true);
+                character.equippedWeapon.weaponMesh.GetComponent<swordCombat>().activateFire(true);
             }
             else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
             {

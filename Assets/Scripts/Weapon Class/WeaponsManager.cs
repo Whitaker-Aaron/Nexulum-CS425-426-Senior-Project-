@@ -17,22 +17,30 @@ public class WeaponsManager : MonoBehaviour
     void Start()
     {
         //DontDestroyOnLoad(this.gameObject);
+        
+
+        //AddToInventory(characterReference.equippedWeapon);
+            
+    }
+
+    public void Initialize()
+    {
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         shieldPrefab = characterReference.knightShield.weaponMesh;
         GameObject inputManager = GameObject.Find("InputandAnimationManager");
-        
 
 
+        Debug.Log("Current weapon type on load: " + characterReference.equippedWeapon.weaponClassType);
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 1);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 1);
         }
-            
-        if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
+
+        else if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
         {
             toolPrefab = characterReference.engineerTool.weaponMesh;
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
@@ -40,7 +48,7 @@ public class WeaponsManager : MonoBehaviour
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 2);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 2);
         }
-        if(characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
+        else if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
             Debug.Log(inputManager);
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
@@ -48,9 +56,6 @@ public class WeaponsManager : MonoBehaviour
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 0);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 0);
         }
-
-        AddToInventory(characterReference.equippedWeapon);
-            
     }
 
     private void Awake()

@@ -30,11 +30,11 @@ public class masterInput : MonoBehaviour
 
     //temporary player object - CHANGE TO CharacterBase ONCE IMPLEMENTED
     private GameObject player;
-    [SerializeField] public WeaponBase.weaponClassTypes currentClass;
+    public WeaponBase.weaponClassTypes currentClass;
 
     private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        
 
         staminaBar = GameObject.Find("StaminaBar");
         staminaFill = GameObject.Find("StaminaFill");
@@ -48,18 +48,7 @@ public class masterInput : MonoBehaviour
         Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
         staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
 
-        character = player.GetComponent<CharacterBase>();
-        if (currentClass == WeaponBase.weaponClassTypes.Knight)
-        { 
-            sword = character.equippedWeapon.weaponMesh;
-            swordAttackPoint = character.swordAttackPoint;
-        }
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
-        {
-            pistol = character.equippedWeapon.weaponMesh;
-            tool = character.engineerTool.weaponMesh;
-            toolAttackPoint = character.toolAttackPoint;
-        }
+        
 
     }
 
@@ -86,6 +75,7 @@ public class masterInput : MonoBehaviour
     bool isAttacking = false;
     float cooldown = 1f;
     bool inputPaused = false;
+    bool pauseMenuOpen = false;
     bool returningFromMenu = true;
     public float cooldownTime = 2f;
     public float nextAttackTime = .3f;
@@ -212,12 +202,32 @@ public class masterInput : MonoBehaviour
 
     public void pauseInput(InputAction.CallbackContext context)
     {
-        inputPaused = !inputPaused;
-        returningFromMenu = !returningFromMenu;
-        animationControl.stop();
-        Input.ResetInputAxes();
-        noOfClicks = 0;
+        if (context.performed && !pauseMenuOpen)
+        {
+            Debug.Log("Input pause toggled");
+            inputPaused = !inputPaused;
+            returningFromMenu = !returningFromMenu;
+            animationControl.stop();
+            Input.ResetInputAxes();
+            noOfClicks = 0;
+        }
+    }
 
+    public void pausePlayerInput()
+    {
+        inputPaused = true;
+        animationControl.stop();
+    }
+
+    public void resumePlayerInput()
+    {
+        inputPaused = false;
+    }
+
+    public void pauseMenuOpened(InputAction.CallbackContext context)
+    {
+        inputPaused = !inputPaused;
+        pauseMenuOpen = !pauseMenuOpen;
     }
 
     //Knight Functions
@@ -344,25 +354,38 @@ public class masterInput : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+
         playerControl = new PlayerInputActions();
         animationControl = GetComponent<PlayerAnimation>();
         camera = Camera.main.transform;
 
-        //animation layer changing
-        if(currentClass == WeaponBase.weaponClassTypes.Knight)
+        character = player.GetComponent<CharacterBase>();
+        Debug.Log("Character: " + character.equippedWeapon.weaponClassType);
+        currentClass = character.equippedWeapon.weaponClassType;
+        Debug.Log("Character's current class from master input: " + currentClass);
+
+        ;
+        if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
-            animationControl.changeClassLayer(1, 0);
-            animationControl.changeClassLayer(2, 0);
+            sword = character.equippedWeapon.weaponMesh;
+            swordAttackPoint = character.swordAttackPoint;
+            //animationControl.changeClassLayer(1, 0);
+            //animationControl.changeClassLayer(2, 0);
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+        else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-            animationControl.changeClassLayer(0, 1);
-            animationControl.changeClassLayer(2, 1);
+            //animationControl.changeClassLayer(0, 1);
+            //animationControl.changeClassLayer(2, 1);
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
-            animationControl.changeClassLayer(0, 2);
-            animationControl.changeClassLayer(1, 2);
+            pistol = character.equippedWeapon.weaponMesh;
+            tool = character.engineerTool.weaponMesh;
+            toolAttackPoint = character.toolAttackPoint;
+
+            //animationControl.changeClassLayer(0, 2);
+            //animationControl.changeClassLayer(1, 2);
         }
 
     }
@@ -387,7 +410,7 @@ public class masterInput : MonoBehaviour
 
         Vector3 lookDir = lookPos - player.transform.position;
         lookDir.y = 0;
-        player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
+        if(!inputPaused && !pauseMenuOpen) player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
 
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
             return;

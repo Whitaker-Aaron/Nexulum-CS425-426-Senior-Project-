@@ -18,6 +18,7 @@ public class EnemyBehavior : MonoBehaviour
 
     //stop movement implementation for combat, simple bool control - Spencer
     bool isMoving = true;
+    bool paused = false;
 
     public IEnumerator pauseMovement(float time)
     {
@@ -44,7 +45,7 @@ public class EnemyBehavior : MonoBehaviour
 
     void Update()
     {
-        if (!isMoving)
+        if (!isMoving || paused)
             return;
 
         selfPosition = transform.position;

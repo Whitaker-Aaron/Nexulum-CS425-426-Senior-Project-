@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 
 
 
-public class CharacterBase : MonoBehaviour
+public class CharacterBase : MonoBehaviour, SaveSystemInterface
 {
     //Will remove serialize field later. Here for testing purposes. Will have to be handled by lifetime 
     //managers.
@@ -21,12 +22,11 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] private WeaponClass engineerObject;
 
     //[SerializeField] public RuneInt runeInt;
-     WeaponClass weaponClass;
+    public WeaponClass weaponClass;
+    public CharacterStat characterStats;
 
-     MaterialsInventory materialInventory;
-     RuneInventory runesInventory;
-     WeaponsInventory weaponsInventory;
-     ItemsInventory itemsInventory;
+    LifetimeManager lifetimeManager;
+
 
     [SerializeField] GameObject masterInput;
 
@@ -34,8 +34,11 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] Slider delayedHealthBar;
 
     public bool invul = false;
-
     public bool bubbleShield = false;
+
+    public bool transitioningRoom = false;
+    public bool transitionedRoom = false;
+
     
 
     private RuneInt runeInt;
@@ -61,36 +64,124 @@ public class CharacterBase : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        runeInt = GetComponent<RuneInt>();
-        runeInt.Apply();
-
-        maxHealth = 100;
-        playerHealth = 100;
-
-        Debug.Log("Current Player Health: " + playerHealth);
-
-
-
-        //healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
-        //delayedHealthBar = GameObject.Find("DelayedHealthBar").GetComponent<Slider>();
-
-        healthBar.value = playerHealth;
-        delayedHealthBar.value = playerHealth;
-
-        healthBar.maxValue = maxHealth;
-        delayedHealthBar.maxValue = maxHealth;
-
-        EquipClass(equippedWeapon.weaponClassType);
-        weaponClass.currentWeapon = equippedWeapon;
-
-        
-
+        lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
            
+    }
+
+    public IEnumerator MoveForward()
+    {
+        var changeAmount = new Vector3(0.0f, 0.0f, 2.5f);
+        while (transitioningRoom)
+        {
+            Debug.Log("Moving forward");
+            transform.position += changeAmount * Time.deltaTime;
+            yield return null;
+        }
+        yield break;
+    }
+
+    public void SaveData(ref SaveData data)
+    {
+        data.playerHealth = playerHealth;
+        data.maxPlayerHealth = maxHealth;
+
+        data.equippedWeapon = equippedWeapon.weaponName;
+
+        for(int index = 0; index < 3; index++) {
+            switch (index)
+            {
+                case 0:
+                    data.weaponClasses[index].currentWeapon = knightObject.currentWeapon.weaponName;
+                    data.weaponClasses[index].totalExp = knightObject.totalExp;
+                    data.weaponClasses[index].numSkillPoints = knightObject.numSkillPoints;
+                    data.weaponClasses[index].currentLvl = knightObject.currentLvl;
+                    break;
+                case 1:
+                    data.weaponClasses[index].currentWeapon = gunnerObject.currentWeapon.weaponName;
+                    data.weaponClasses[index].totalExp = gunnerObject.totalExp;
+                    data.weaponClasses[index].numSkillPoints = gunnerObject.numSkillPoints;
+                    data.weaponClasses[index].currentLvl = gunnerObject.currentLvl;
+                    break;
+                case 2:
+                    data.weaponClasses[index].currentWeapon = engineerObject.currentWeapon.weaponName;
+                    data.weaponClasses[index].totalExp = engineerObject.totalExp;
+                    data.weaponClasses[index].numSkillPoints = engineerObject.numSkillPoints;
+                    data.weaponClasses[index].currentLvl = engineerObject.currentLvl;
+                    break;
+            }
+        }
+
+        Debug.Log("Saved player health: " + data.playerHealth);
+
+    }
+
+    public void InitializeHealth()
+    {
+        healthBar.value = playerHealth;
+        delayedHealthBar.value = playerHealth;
+
+        healthBar.maxValue = maxHealth;
+        delayedHealthBar.maxValue = maxHealth;
+    }
+
+    public void LoadData(SaveData data)
+    {
+        Debug.Log("Tracking load error");
+
+        var weapons = GameObject.Find("WeaponsList").GetComponent<WeaponsList>();
+
+        playerHealth = data.playerHealth;
+        maxHealth = data.maxPlayerHealth;
+
+        equippedWeapon = weapons.ReturnWeapon(data.equippedWeapon);
+
+        
+
+        if (data.weaponClasses[0].currentWeapon != null)
+        {
+            
+            for (int index = 0; index < 3; index++)
+            {
+                switch (index)
+                {
+                    case 0:
+                        knightObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        knightObject.totalExp = data.weaponClasses[index].totalExp;
+                        knightObject.numSkillPoints = data.weaponClasses[index].numSkillPoints;
+                        knightObject.currentLvl = data.weaponClasses[index].currentLvl;
+                        break;
+                    case 1:
+                        gunnerObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        gunnerObject.totalExp = data.weaponClasses[index].totalExp;
+                        gunnerObject.numSkillPoints = data.weaponClasses[index].numSkillPoints;
+                        gunnerObject.currentLvl = data.weaponClasses[index].currentLvl;
+                        break;
+                    case 2:
+                        engineerObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        engineerObject.totalExp = data.weaponClasses[index].totalExp;
+                        engineerObject.numSkillPoints = data.weaponClasses[index].numSkillPoints;
+                        engineerObject.currentLvl = data.weaponClasses[index].currentLvl;
+                        break;
+                }
+            }
+        }
+
+        
+
+        EquipClass(equippedWeapon.weaponClassType);
+        weaponClass.currentWeapon = equippedWeapon;
+
+        runeInt = GetComponent<RuneInt>();
+        runeInt.ChangeClass(equippedWeapon.weaponClassType);
+
+        InitializeHealth();
+
+
     }
 
     public WeaponClass GetWeaponClass()
@@ -168,13 +259,41 @@ public class CharacterBase : MonoBehaviour
             return;
         if (!invul)
         {
-            playerHealth -= damage;
+            if(playerHealth - damage <= 0)
+            {
+                playerHealth = 0;
+            }
+            else
+            {
+                playerHealth -= damage;
+            }
             StartCoroutine(updateHealthBarsNegative());
+            
         }
+
         
 
 
-        print("Player health: " + playerHealth);
+        //print("Player health: " + playerHealth);
+    }
+
+    public void Death()
+    {
+        invul = true;
+        lifetimeManager.OnDeath();
+
+        StopCoroutine(animateHealth());
+        StopCoroutine(animateDelayedHealth());
+
+        playerHealth = maxHealth;
+        healthBar.value = maxHealth;
+        delayedHealthBar.value = maxHealth;
+        
+    }
+
+    public void RecoverFromDeath()
+    {
+        invul = false;
     }
 
     public void restoreHealth(int amount)
@@ -238,6 +357,10 @@ public class CharacterBase : MonoBehaviour
             }
 
             yield return null;
+        }
+        if(delayedHealthBar.value == 0)
+        {
+            Death();
         }
         yield break;
     }
