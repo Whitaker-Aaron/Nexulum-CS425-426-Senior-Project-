@@ -119,7 +119,7 @@ public class LifetimeManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        currentScene = GameObject.Find("SceneInformation").GetComponent<SceneInformation>().name;
+        currentScene = GameObject.Find("SceneInformation").GetComponent<SceneInformation>().sceneName;
         var title = GameObject.Find("TransitionTitle");
         title.GetComponent<Text>().text = GameObject.Find("SceneInformation").GetComponent<SceneInformation>().transitionTitle;
         yield return new WaitForSeconds(0.2f);

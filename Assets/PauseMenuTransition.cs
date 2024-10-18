@@ -9,6 +9,8 @@ using System.Collections;
 public class PauseMenuTransition : MonoBehaviour
 {
     GameObject ReturnToBaseButton;
+    GameObject SaveButton;
+
     [SerializeField] GameObject SkillMenu;
     [SerializeField] GameObject PauseMenu;
     [SerializeField] GameObject KnightSkillMenu;
@@ -34,12 +36,25 @@ public class PauseMenuTransition : MonoBehaviour
         GunnerSkillMenu.SetActive(false);
 
         ReturnToBaseButton = GameObject.Find("ReturnToBaseButton");
-        if(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
+        SaveButton = GameObject.Find("SaveButton");
+
+        
+
+        if (GameObject.Find("RoomManager").GetComponent<RoomManager>().IsCheckpoint())
         {
-            ReturnToBaseButton.GetComponent<Button>().interactable = true;
+            SaveButton.GetComponent<Button>().interactable = true;
+            if (GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
+            {
+                ReturnToBaseButton.GetComponent<Button>().interactable = true;
+            }
+            else
+            {
+                ReturnToBaseButton.GetComponent<Button>().interactable = false;
+            }
         }
         else
         {
+            SaveButton.GetComponent<Button>().interactable = false;
             ReturnToBaseButton.GetComponent<Button>().interactable = false;
         }
     }
