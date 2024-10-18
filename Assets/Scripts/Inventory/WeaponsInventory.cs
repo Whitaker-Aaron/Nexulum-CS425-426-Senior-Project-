@@ -11,12 +11,12 @@ public class WeaponsInventory : MonoBehaviour, SaveSystemInterface
     // Start is called before the first frame update
     void Start()
     {
-        weaponsList = GameObject.Find("WeaponsList").GetComponent<WeaponsList>();
+        //weaponsList = GameObject.Find("WeaponsList").GetComponent<WeaponsList>();
     }
 
     private void Awake()
     {
-        
+        weaponsList = GameObject.Find("WeaponsList").GetComponent<WeaponsList>();
     }
 
     public void SaveData(ref SaveData data)

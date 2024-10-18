@@ -8,7 +8,7 @@ public class RuneManager : MonoBehaviour, SaveSystemInterface
     CharacterBase characterReference;
     RuneList runeList;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         runeList = GameObject.Find("RunesList").GetComponent<RuneList>();
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
@@ -42,6 +42,7 @@ public class RuneManager : MonoBehaviour, SaveSystemInterface
     }
     public void LoadData(SaveData data)
     {
+        Debug.Log(characterReference);
         var currentRunes = characterReference.equippedRunes;
         for (int index = 0; index < currentRunes.Length; index++)
         {
