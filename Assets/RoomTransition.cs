@@ -9,14 +9,18 @@ public class RoomTransition : MonoBehaviour
     // Start is called before the first frame update
     //[SerializeField] Vector3 changeAmount;
     [SerializeField] GameObject targetRoom;
+    [SerializeField] GameObject currentRoom;
     [SerializeField] GameObject targetLoad;
     [SerializeField] TransitionDirection direction;
-    RoomInformation roomInfo;
+    RoomInformation targetInfo;
+    RoomInformation currentInfo;
+    UIManager uiManager;
     Coroutine currentMove;
     void Start()
     {
-        roomInfo = targetRoom.GetComponent<RoomInformation>();
-
+        targetInfo = targetRoom.GetComponent<RoomInformation>();
+        currentInfo = currentRoom.GetComponent<RoomInformation>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
     }
 
     // Update is called once per frame
@@ -27,7 +31,7 @@ public class RoomTransition : MonoBehaviour
 
     public void ResetEnemyPositions()
     {
-        var enemies = roomInfo.GetEnemies();
+        var enemies = targetInfo.GetEnemies();
         for(int i =0;  i < enemies.Length; i++)
         {
             if (enemies[i] != null)
@@ -43,10 +47,10 @@ public class RoomTransition : MonoBehaviour
         if (other.name == "Player")
         {
             var character = other.GetComponent<CharacterBase>();
-            GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(roomInfo);
             Debug.Log("Player detected");
             if (!character.transitioningRoom)
             {
+                GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(targetInfo);
                 character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
                 character.transitioningRoom = true;
                 StartCoroutine(MovePlayerForward(other, direction));
@@ -64,26 +68,36 @@ public class RoomTransition : MonoBehaviour
     {
         var character = other.GetComponent<CharacterBase>();
         if (other.name == "Player")
-        {
-            
+        {   
             Debug.Log("Player detected");
             if (character.transitionedRoom)
             {
-                this.StopAllCoroutines();
-                character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
-                character.transitionedRoom = false;
-                character.transitioningRoom= false;
-                
+                StartCoroutine(ResumeControl(other));
 
-                //StartCoroutine(Transition(other));
             }
         }
+    }
+
+    public IEnumerator ResumeControl(Collider other)
+    {
+        var character = other.GetComponent<CharacterBase>();
+        yield return new WaitForSeconds(0.3f);
+        character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        character.transitionedRoom = false;
+        character.transitioningRoom = false;
+        if (currentInfo.isCheckpoint && currentInfo.firstVisit)
+        {
+            Debug.Log("Need to animate checkpoint");
+            StartCoroutine(uiManager.AnimateCheckpointReached());
+        }
+        
+        yield return null;
     }
 
     public IEnumerator Transition(Collider other)
     {
         var character = other.GetComponent<CharacterBase>();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().AnimateRoomTransition());
         yield return new WaitForSeconds(0.5f);
         

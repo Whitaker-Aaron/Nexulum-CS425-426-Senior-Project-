@@ -9,6 +9,7 @@ public class RoomInformation : MonoBehaviour
     [SerializeField] public string roomName;
     [SerializeField] GameObject enemies;
     GameObject[] allEnemies;
+    public bool firstVisit = true;
 
     GameObject character; 
     // Start is called before the first frame update

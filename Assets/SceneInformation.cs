@@ -9,17 +9,25 @@ public class SceneInformation : MonoBehaviour
     [SerializeField] public string transitionTitle;
     [SerializeField] public bool spawnPlayer;
     [SerializeField] public bool screenTransition;
+    [SerializeField] RoomInformation beginningRoom;
     [SerializeField] public Vector3 playerSpawnPos; 
     void Start()
     {
-        if(sceneName == "BaseCamp")
+        var roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
+        if (sceneName == "BaseCamp")
         {
-            var baseRoom = new RoomInformation();
-            baseRoom.roomName = sceneName;
-            baseRoom.isCheckpoint = true;
-            GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(baseRoom);
+            beginningRoom = new RoomInformation();
+            beginningRoom.roomName = sceneName;
+            beginningRoom.isCheckpoint = true;
+            roomManager.SetRoom(beginningRoom);
+
         }
-       
+        else if(beginningRoom != null)
+        {
+            roomManager.SetRoom(beginningRoom);
+        }
+        
+
     }
 
     private void Awake()
