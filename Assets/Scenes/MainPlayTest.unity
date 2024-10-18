@@ -4031,7 +4031,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 479ec0b9f268a984d9b7b35ba87dbc1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: PlayTest
+  sceneName: Floor1
   transitionTitle: Floor 1
   spawnPlayer: 1
   screenTransition: 1
@@ -6146,6 +6146,42 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &755651173
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 755651174}
+  m_Layer: 0
+  m_Name: BackgroundObjects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &755651174
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755651173}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 46.36467, y: 36.352177, z: -53.419895}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2048334571}
+  - {fileID: 1522278567}
+  - {fileID: 1362957755}
+  - {fileID: 756036789}
+  - {fileID: 1905930786}
+  m_Father: {fileID: 2079344004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &756036788
 GameObject:
   m_ObjectHideFlags: 0
@@ -6173,11 +6209,11 @@ Transform:
   m_GameObject: {fileID: 756036788}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 47.43, y: 35.18, z: -27.48}
+  m_LocalPosition: {x: 1.0653284, y: -1.1721761, z: 25.939896}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2079344004}
+  m_Father: {fileID: 755651174}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &756036790
 MeshRenderer:
@@ -10858,6 +10894,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1344920589}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1346152659
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1346152660}
+  m_Layer: 0
+  m_Name: Enemies
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1346152660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1346152659}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1700.8068, y: 1001.09595, z: -73.780396}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1399646237}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1347676722 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6040585352637831353, guid: ec3da66061dcb8548b506fe5bd8ed024, type: 3}
@@ -10985,11 +11052,11 @@ Transform:
   m_GameObject: {fileID: 1362957754}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 42.76108, y: 40.11, z: -27.12}
+  m_LocalPosition: {x: -3.6035903, y: 3.7578242, z: 26.299896}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2079344004}
+  m_Father: {fileID: 755651174}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1362957756
 MeshRenderer:
@@ -11342,6 +11409,7 @@ Transform:
   m_Children:
   - {fileID: 1608311816}
   - {fileID: 1658378857}
+  - {fileID: 1346152660}
   - {fileID: 370419409}
   - {fileID: 1780832690}
   - {fileID: 35726835}
@@ -11360,8 +11428,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68c86730cf891c044948e8a02a0a9102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isCheckpoint: 0
-  roomName: RoomOne
+  isCheckpoint: 1
+  roomName: Room2
+  enemies: {fileID: 1346152659}
 --- !u!1 &1407422740
 GameObject:
   m_ObjectHideFlags: 0
@@ -12242,11 +12311,11 @@ Transform:
   m_GameObject: {fileID: 1522278566}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 42.76108, y: 40.11, z: -23.02}
+  m_LocalPosition: {x: -3.6035903, y: 3.7578242, z: 30.399895}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2079344004}
+  m_Father: {fileID: 755651174}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1522278568
 MeshRenderer:
@@ -14795,11 +14864,11 @@ Transform:
   m_GameObject: {fileID: 1905930785}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 37.75, y: 35.18, z: -27.25}
+  m_LocalPosition: {x: -8.614672, y: -1.1721761, z: 26.169895}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2079344004}
+  m_Father: {fileID: 755651174}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1905930787
 MeshRenderer:
@@ -15841,11 +15910,11 @@ Transform:
   m_GameObject: {fileID: 2048334570}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 42.76108, y: 34.85, z: -24.21}
+  m_LocalPosition: {x: -3.6035903, y: -1.502178, z: 29.209896}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2079344004}
+  m_Father: {fileID: 755651174}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2048334572
 MeshRenderer:
@@ -16402,13 +16471,9 @@ Transform:
   - {fileID: 345935346}
   - {fileID: 889779393}
   - {fileID: 1118706414}
+  - {fileID: 755651174}
   - {fileID: 806914971}
   - {fileID: 2035307550}
-  - {fileID: 2048334571}
-  - {fileID: 1522278567}
-  - {fileID: 1362957755}
-  - {fileID: 756036789}
-  - {fileID: 1905930786}
   - {fileID: 1926888365}
   - {fileID: 1179660145}
   - {fileID: 1407422741}
@@ -16428,7 +16493,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isCheckpoint: 0
-  roomName: 
+  roomName: Room1
+  enemies: {fileID: 806914970}
 --- !u!1001 &2082328629
 PrefabInstance:
   m_ObjectHideFlags: 0

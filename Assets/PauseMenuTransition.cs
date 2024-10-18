@@ -34,7 +34,7 @@ public class PauseMenuTransition : MonoBehaviour
         GunnerSkillMenu.SetActive(false);
 
         ReturnToBaseButton = GameObject.Find("ReturnToBaseButton");
-        if(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
+        if(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp" && GameObject.Find("RoomManager").GetComponent<RoomManager>().IsCheckpoint())
         {
             ReturnToBaseButton.GetComponent<Button>().interactable = true;
         }

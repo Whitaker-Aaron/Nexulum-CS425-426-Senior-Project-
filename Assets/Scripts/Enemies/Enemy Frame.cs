@@ -21,6 +21,8 @@ public class EnemyFrame : MonoBehaviour
     public int health = 200;
     public int maxHealth = 200;
 
+    Vector3 initialPos;
+
     public bool dmgOverTimeActivated = false;
     bool dying = false;
 
@@ -34,6 +36,7 @@ public class EnemyFrame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        initialPos = transform.position;
         //Slider enemyHealthBar = enemyHealth.GetComponentInChildren<Slider>();
         //Slider delayedEnemyHealthBar = delayedEnemyHealth.GetComponent<Slider>()
         var sliders = enemyHealth.GetComponentsInChildren<Slider>();
@@ -86,6 +89,11 @@ public class EnemyFrame : MonoBehaviour
             
         
 
+    }
+
+    public void resetPosition()
+    {
+        transform.position = initialPos;
     }
 
     

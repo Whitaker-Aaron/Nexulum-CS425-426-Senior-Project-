@@ -25,12 +25,25 @@ public class RoomTransition : MonoBehaviour
         
     }
 
+    public void ResetEnemyPositions()
+    {
+        var enemies = roomInfo.GetEnemies();
+        for(int i =0;  i < enemies.Length; i++)
+        {
+            if (enemies[i] != null)
+            {
+                enemies[i].GetComponent<EnemyFrame>().resetPosition();
+            }           
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
 
         if (other.name == "Player")
         {
             var character = other.GetComponent<CharacterBase>();
+            GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(roomInfo);
             Debug.Log("Player detected");
             if (!character.transitioningRoom)
             {
@@ -38,6 +51,7 @@ public class RoomTransition : MonoBehaviour
                 character.transitioningRoom = true;
                 StartCoroutine(MovePlayerForward(other, direction));
                 StartCoroutine(Transition(other));
+                ResetEnemyPositions();
             }
             else if(character.transitioningRoom)
             {
