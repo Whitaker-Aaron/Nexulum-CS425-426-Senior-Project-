@@ -1,3 +1,4 @@
+using Cinemachine.Utility;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -11,9 +12,11 @@ public class RoomTransition : MonoBehaviour
     [SerializeField] GameObject targetRoom;
     [SerializeField] GameObject currentRoom;
     [SerializeField] GameObject targetLoad;
-    [SerializeField] TransitionDirection direction;
+    [SerializeField] TransitionDirection exitDirection;
+    [SerializeField] TransitionDirection enterDirection;
     RoomInformation targetInfo;
     RoomInformation currentInfo;
+    CameraFollow cameraBehavior;
     UIManager uiManager;
     Coroutine currentMove;
     void Start()
@@ -21,6 +24,7 @@ public class RoomTransition : MonoBehaviour
         targetInfo = targetRoom.GetComponent<RoomInformation>();
         currentInfo = currentRoom.GetComponent<RoomInformation>();
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        cameraBehavior = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>();
     }
 
     // Update is called once per frame
@@ -50,16 +54,36 @@ public class RoomTransition : MonoBehaviour
             Debug.Log("Player detected");
             if (!character.transitioningRoom)
             {
+                cameraBehavior.PauseFollow();
                 GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(targetInfo);
                 character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
                 character.transitioningRoom = true;
-                StartCoroutine(MovePlayerForward(other, direction));
+                StartCoroutine(MovePlayerForward(other, exitDirection));
                 StartCoroutine(Transition(other));
                 ResetEnemyPositions();
             }
             else if(character.transitioningRoom)
             {
                 character.transitionedRoom = true;
+                var directionOffset = new Vector3(0.0f, 0.0f, 0.0f);
+                switch (enterDirection)
+                {
+                    case TransitionDirection.forward:
+                        directionOffset = new Vector3(0.0f, 0.0f, 5.0f);
+                        break;
+                    case TransitionDirection.backward:
+                        directionOffset = new Vector3(0.0f, 0.0f, -5.0f);
+                        break;
+                    case TransitionDirection.right:
+                        directionOffset = new Vector3(10.0f, 0.0f, 0.0f);
+                        break;
+                    case TransitionDirection.left:
+                        directionOffset = new Vector3(-10.0f, 0.0f, 0.0f);
+                        break;
+
+                }
+                cameraBehavior.transform.position = character.transform.position + cameraBehavior.offset + directionOffset;
+                
             }
         }
     }
@@ -85,6 +109,7 @@ public class RoomTransition : MonoBehaviour
         character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         character.transitionedRoom = false;
         character.transitioningRoom = false;
+        cameraBehavior.UnpauseFollow();
         if (currentInfo.isCheckpoint && currentInfo.firstVisit)
         {
             Debug.Log("Need to animate checkpoint");
@@ -121,6 +146,14 @@ public class RoomTransition : MonoBehaviour
             case TransitionDirection.backward:
                 changeAmount = new Vector3(0.0f, 0.0f, -2.5f);
                 character.transform.rotation = Quaternion.Euler(character.transform.rotation.x, 180.0f, character.transform.rotation.z);
+                break;
+            case TransitionDirection.right:
+                changeAmount = new Vector3(2.5f, 0.0f, 0.0f);
+                character.transform.rotation = Quaternion.Euler(character.transform.rotation.x, 90.0f, character.transform.rotation.z);
+                break;
+            case TransitionDirection.left:
+                changeAmount = new Vector3(-2.5f, 0.0f, 0.0f);
+                character.transform.rotation = Quaternion.Euler(character.transform.rotation.x, 270.0f, character.transform.rotation.z);
                 break;
         }
 
