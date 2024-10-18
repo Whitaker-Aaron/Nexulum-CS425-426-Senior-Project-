@@ -61,6 +61,7 @@ public class masterInput : MonoBehaviour
     Vector3 lookPos;
     public float speed = 3f;
     bool isMoving = false;
+    public float minLookDistance = 1f;
 
     bool stopVelocity = true;
 
@@ -410,7 +411,9 @@ public class masterInput : MonoBehaviour
 
         Vector3 lookDir = lookPos - player.transform.position;
         lookDir.y = 0;
-        if(!inputPaused && !pauseMenuOpen) player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
+
+        
+        if(lookDir.magnitude > minLookDistance && !inputPaused && !pauseMenuOpen) player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
 
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
             return;

@@ -309,9 +309,10 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     }
 
-    public void buffPlayer()
+    public void buffPlayer(int amount)
     {
-
+        
+        restoreHealth(amount);
     }
 
     public IEnumerator animateHealth()
