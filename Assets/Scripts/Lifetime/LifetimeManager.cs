@@ -18,18 +18,21 @@ public class LifetimeManager : MonoBehaviour
 
 
     GameObject deathScreen;
-    
-    
+
+    private void Awake()
+    {
+        weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
+        runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
+        scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
+        characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        deathScreen = GameObject.Find("DeathScreen");
+        deathScreen.SetActive(false);
+        //currentInputRef.SetActive(false);
+    }
 
     void Awake()
     {
-       weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
-       runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
-       scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
-       characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();    
-       deathScreen = GameObject.Find("DeathScreen");
-       deathScreen.SetActive(false);
-        //currentInputRef.SetActive(false);
+       
     }
 
     // Update is called once per frame
@@ -225,7 +228,7 @@ public class LifetimeManager : MonoBehaviour
             reference.transform.localPosition = new Vector3(val.x, val.y -= (4500.0f * Time.deltaTime), val.z);
             if(reference.transform.localPosition.y <= 0.0f && !hasStopped)
             {
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.55f);
                 hasStopped = true;
             }
             yield return null;
