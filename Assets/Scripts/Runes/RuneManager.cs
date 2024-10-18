@@ -42,6 +42,7 @@ public class RuneManager : MonoBehaviour, SaveSystemInterface
     }
     public void LoadData(SaveData data)
     {
+        Debug.Log(characterReference);
         var currentRunes = characterReference.equippedRunes;
         for (int index = 0; index < currentRunes.Length; index++)
         {

@@ -30,7 +30,7 @@ public class LifetimeManager : MonoBehaviour
         //currentInputRef.SetActive(false);
     }
 
-    void Start()
+    void Awake()
     {
        
     }
