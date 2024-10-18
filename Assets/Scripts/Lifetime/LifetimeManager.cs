@@ -15,6 +15,7 @@ public class LifetimeManager : MonoBehaviour
     RuneManager runeManager;
     MaterialScrollManager scrollManager;
     CharacterBase characterRef;
+    masterInput inputManager;
 
 
     GameObject deathScreen;
@@ -25,14 +26,10 @@ public class LifetimeManager : MonoBehaviour
         runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
         scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
         characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
         deathScreen = GameObject.Find("DeathScreen");
         deathScreen.SetActive(false);
         //currentInputRef.SetActive(false);
-    }
-
-    void Awake()
-    {
-       
     }
 
     // Update is called once per frame
@@ -78,9 +75,11 @@ public class LifetimeManager : MonoBehaviour
 
     public void InitializeManagers()
     {
-        GameObject.Find("InputandAnimationManager").GetComponent<masterInput>().enabled = true;
+        inputManager.enabled = true;
         weaponsManager.Initialize();
         runeManager.Initialize();
+        
+        //inputManager.Initialize();
     }
 
     public void OnDeath()
