@@ -38,6 +38,7 @@ public class classAbilties : MonoBehaviour
     public float swordSpeed;
     public float swordTime, swordAbilityTime;
     bool shootingSwords, shotSword = false;
+    public int swordShotDamage = 15;
     [SerializeField] private GameObject swordShotEffect;
     [SerializeField] private GameObject combatAuraEffectStart, combatAuraEffectEnd, combatAuraEffectLoop;
     public float comatAuraRadius = 4f;
@@ -46,6 +47,7 @@ public class classAbilties : MonoBehaviour
     private Vector3 currentAura;
     bool buffingPlayer = false;
     public float buffRate = .5f;
+    public int auraHealthBuff = 25;
     
 
 
@@ -229,8 +231,9 @@ public class classAbilties : MonoBehaviour
         yield break;
     }
 
-    IEnumerator buffWait()
+    IEnumerator buffWait(Collider c)
     {
+        c.gameObject.GetComponent<CharacterBase>().buffPlayer(auraHealthBuff);
         yield return new WaitForSeconds(buffRate);
         buffingPlayer = false;
         yield break;
@@ -241,6 +244,7 @@ public class classAbilties : MonoBehaviour
         shotSword = true;
         var sword = Instantiate(swordShot, swordSpawn.position, swordSpawn.rotation);
         sword.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * swordSpeed;
+        sword.GetComponent<swordShot>().damage = swordShotDamage;
         yield return new WaitForSeconds(swordTime);
         shotSword = false;
         yield break;
@@ -543,7 +547,7 @@ public class classAbilties : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (currentTurret != null && distance <= turretPlacementRadius)
+            if (currentTurret != null)// && distance <= turretPlacementRadius)
             {
                 placing = false;
                 gameObject.GetComponent<masterInput>().placing = false;
@@ -602,11 +606,12 @@ public class classAbilties : MonoBehaviour
                 if(c.gameObject.tag == "Player" && buffingPlayer == false)
                 {
                     buffingPlayer = true;
-                    player.GetComponent<CharacterBase>().buffPlayer();
-                    StartCoroutine(buffWait());
+                    //player.GetComponent<CharacterBase>().buffPlayer();
+                    StartCoroutine(buffWait(c));
                 }
             }
         }
+        
 
         if(placing)
         {
