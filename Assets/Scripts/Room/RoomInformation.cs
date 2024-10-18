@@ -10,6 +10,7 @@ public class RoomInformation : MonoBehaviour
     [SerializeField] GameObject enemies;
     GameObject[] allEnemies;
     public bool firstVisit = true;
+    public bool floorEntrance = false;
 
     GameObject character; 
     // Start is called before the first frame update
@@ -17,6 +18,7 @@ public class RoomInformation : MonoBehaviour
     private void Awake()
     {
         character = GameObject.FindGameObjectWithTag("Player");
+        
 
         allEnemies = new GameObject[enemies.transform.childCount];
 
@@ -24,6 +26,21 @@ public class RoomInformation : MonoBehaviour
         {
             allEnemies[i] = enemies.transform.GetChild(i).gameObject;
         }
+    }
+
+    private void Start()
+    {
+        if (floorEntrance)
+        {
+            StartCoroutine(WaitThenStartCharacterMove());
+        }
+    }
+
+    public IEnumerator WaitThenStartCharacterMove()
+    {
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(character.GetComponent<CharacterBase>().MoveForward());
+        yield break;
     }
 
     public void OnTransition()

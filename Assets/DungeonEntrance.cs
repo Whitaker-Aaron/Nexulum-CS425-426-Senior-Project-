@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class DungeonEntrance : MonoBehaviour
 {
@@ -24,11 +25,24 @@ public class DungeonEntrance : MonoBehaviour
             var character = other.GetComponent<CharacterBase>();
             if (!character.transitioningRoom)
             {
-                //character.transitioningRoom = true;
-                StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().GoToScene(2));
+                StartCoroutine(AnimateDungeonEntrance(other));
+
             }
             
         }
+    }
+
+    public IEnumerator AnimateDungeonEntrance(Collider other)
+    {
+        var character = other.GetComponent<CharacterBase>();
+        character.transitioningRoom = true;
+        character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().PauseFollow();
+        character.transform.rotation = Quaternion.Euler(character.transform.rotation.x, 0, character.transform.rotation.z);
+        StartCoroutine(character.MoveForward());
+        yield return new WaitForSeconds(2);
+        StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().GoToScene(2));
+        //character.transform.position += changeAmount * Time.deltaTime;
     }
 
 

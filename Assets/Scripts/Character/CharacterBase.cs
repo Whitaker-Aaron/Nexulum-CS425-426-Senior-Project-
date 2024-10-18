@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 
@@ -64,18 +65,24 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     void Start()
     {
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
-
-        
-
-
-        
-
     }
 
     // Update is called once per frame
     void Update()
     {
            
+    }
+
+    public IEnumerator MoveForward()
+    {
+        var changeAmount = new Vector3(0.0f, 0.0f, 2.5f);
+        while (transitioningRoom)
+        {
+            Debug.Log("Moving forward");
+            transform.position += changeAmount * Time.deltaTime;
+            yield return null;
+        }
+        yield break;
     }
 
     public void SaveData(ref SaveData data)
