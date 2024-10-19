@@ -61,6 +61,10 @@ public class SceneInformation : MonoBehaviour
     public IEnumerator WaitThenStartCharacterMove(GameObject character)
     {
         character.transform.position = initialSpawnLocation.transform.position;
+        var cameraBehavior = GameObject.Find("Main Camera").GetComponent<CameraFollow>();
+        var directionOffset = new Vector3(0.0f, 0.0f, -7.0f);
+        cameraBehavior.PauseFollow();
+        cameraBehavior.transform.position = character.transform.position + cameraBehavior.offset + directionOffset;
         yield return new WaitForSeconds(1.5f);
         character.transform.rotation = Quaternion.Euler(character.transform.rotation.x, 180.0f, character.transform.rotation.z);
         StartCoroutine(character.GetComponent<CharacterBase>().MoveBackward());

@@ -66,6 +66,7 @@ public class RoomTransition : MonoBehaviour
                 }
                 else
                 {
+                    cameraBehavior.PauseFollow();
                     character.transitioningRoom = true;
                     character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
                     StartCoroutine(MovePlayerForward(other, enterDirection));

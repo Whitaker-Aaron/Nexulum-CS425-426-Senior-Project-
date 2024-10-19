@@ -45,6 +45,7 @@ public class DungeonEntrance : MonoBehaviour
             {
                 character.transitioningRoom = false;
                 character.transitionedRoom = false;
+                GameObject.Find("Main Camera").GetComponent<CameraFollow>().UnpauseFollow();  
                 character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
             }
 
