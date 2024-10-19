@@ -48,17 +48,17 @@ public class DeathScreen : MonoBehaviour
         material1.color = col;
 
         material2.texture = matText[1];
-        col = material2.color;
-        col.a = 0.0f;
-        material2.color = col;
+        Color col2 = material2.color;
+        col2.a = 0.0f;
+        material2.color = col2;
 
         material3.texture = matText[0];
-        col = material1.color;
-        col.a = 0.0f;
-        material3.color = col;
+        Color col3 = material3.color;
+        col3.a = 0.0f;
+        material3.color = col3;
 
 
-
+        yield return new WaitForSeconds(0.2f);
         StartCoroutine(IncreaseOpacity(firstText, .6f));
         yield return new WaitForSeconds(1f);
         StartCoroutine(IncreaseOpacity(secondText, .6f));
@@ -67,6 +67,7 @@ public class DeathScreen : MonoBehaviour
         if (material3.texture != null) StartCoroutine(IncreaseMaterialOpacity(material3, 0.6f));
 
         //StartCoroutine(IncreaseOpacity(thirdText, 1.0f));5
+        yield break;
 
     }
 
@@ -79,10 +80,11 @@ public class DeathScreen : MonoBehaviour
 
     public IEnumerator IncreaseOpacity(Text text, float rate)
     {
-        //Debug.Log("Inside DeathScreen increase opacity");
+        
         
         while (text.color.a < 1.0f)
         {
+            Debug.Log("Inside DeathScreen increase opacity for :" + text.name);
             if (Mathf.Abs(text.color.a - 1.0f) <= 0.05)
             {
                 Color txtColor = text.color;

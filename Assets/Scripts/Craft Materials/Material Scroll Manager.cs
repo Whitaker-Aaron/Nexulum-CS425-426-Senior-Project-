@@ -42,7 +42,7 @@ public class MaterialScrollManager : MonoBehaviour
         //UpdateScroll();
         var child = content.transform.GetChild(0);
         Debug.Log(child);
-        //child.gameObject.SetActive(false);
+        child.gameObject.SetActive(false);
 
         Debug.Log("Inside the MSM's Start()");
 
