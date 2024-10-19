@@ -28,7 +28,26 @@ public class DungeonEntrance : MonoBehaviour
                 StartCoroutine(AnimateDungeonEntrance(other));
 
             }
+            else if(character.transitioningRoom)
+            {
+                character.transitionedRoom = true;
+            }
             
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.name == "Player")
+        {
+            var character = other.GetComponent<CharacterBase>();
+            if (character.transitioningRoom && character.transitionedRoom)
+            {
+                character.transitioningRoom = false;
+                character.transitionedRoom = false;
+                character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+            }
+
         }
     }
 

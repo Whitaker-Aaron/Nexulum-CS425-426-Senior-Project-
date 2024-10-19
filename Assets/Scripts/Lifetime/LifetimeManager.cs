@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 
@@ -14,6 +15,7 @@ public class LifetimeManager : MonoBehaviour
     WeaponsManager weaponsManager;
     RuneManager runeManager;
     MaterialScrollManager scrollManager;
+    MenuManager menuManager;
     CharacterBase characterRef;
     masterInput inputManager;
 
@@ -27,6 +29,7 @@ public class LifetimeManager : MonoBehaviour
         scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
         characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         deathScreen = GameObject.Find("DeathScreen");
         deathScreen.SetActive(false);
         //currentInputRef.SetActive(false);
@@ -71,6 +74,15 @@ public class LifetimeManager : MonoBehaviour
     {
         InitializeManagers();
         SceneManager.LoadSceneAsync(1);
+    }
+
+    public void ReturnToBase()
+    {
+        StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
+        menuManager.closePauseMenu();
+        characterRef.transitioningRoom = true;
+        characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        Load(1);
     }
 
     public void InitializeManagers()

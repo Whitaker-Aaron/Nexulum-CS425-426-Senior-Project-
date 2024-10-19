@@ -54,13 +54,25 @@ public class RoomTransition : MonoBehaviour
             Debug.Log("Player detected");
             if (!character.transitioningRoom)
             {
-                cameraBehavior.PauseFollow();
-                GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(targetInfo);
-                character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
-                character.transitioningRoom = true;
-                StartCoroutine(MovePlayerForward(other, exitDirection));
-                StartCoroutine(Transition(other));
-                ResetEnemyPositions();
+                if(targetInfo.roomName != "BaseCamp")
+                {
+                    cameraBehavior.PauseFollow();
+                    GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(targetInfo);
+                    character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+                    character.transitioningRoom = true;
+                    StartCoroutine(MovePlayerForward(other, exitDirection));
+                    StartCoroutine(Transition(other));
+                    ResetEnemyPositions();
+                }
+                else
+                {
+                    character.transitioningRoom = true;
+                    character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+                    StartCoroutine(MovePlayerForward(other, enterDirection));
+                    StartCoroutine(Transition(other));
+                    
+                }
+                
             }
             else if(character.transitioningRoom)
             {
@@ -121,12 +133,21 @@ public class RoomTransition : MonoBehaviour
 
     public IEnumerator Transition(Collider other)
     {
-        var character = other.GetComponent<CharacterBase>();
-        yield return new WaitForSeconds(1f);
-        StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().AnimateRoomTransition());
-        yield return new WaitForSeconds(0.22f);
+        if(targetInfo.roomName != "BaseCamp")
+        {
+            var character = other.GetComponent<CharacterBase>();
+            yield return new WaitForSeconds(1f);
+            StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().AnimateRoomTransition());
+            yield return new WaitForSeconds(0.22f);
+            character.transform.position = targetLoad.transform.position;
+        }
+        else
+        {
+
+            yield return new WaitForSeconds(2f);
+            GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().ReturnToBase();
+        }
         
-        character.transform.position = targetLoad.transform.position;
         //roomInfo.OnTransition();
         //var translate = new Vector3(other.transform.position.x + changeAmount.x, other.transform.position.y + changeAmount.y, other.transform.position.z + changeAmount.z);
         //other.transform.position = translate;

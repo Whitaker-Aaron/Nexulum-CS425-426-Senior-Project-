@@ -21,6 +21,8 @@ public class PauseMenuTransition : MonoBehaviour
     [SerializeField] WeaponClass gunnerRef;
     [SerializeField] WeaponClass engineerRef;
 
+    
+
 
     // Start is called before the first frame update
     void Start()
@@ -87,9 +89,7 @@ public class PauseMenuTransition : MonoBehaviour
         reference.color = imgColor;
 
 
-        StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
-        GameObject.Find("MenuManager").GetComponent<MenuManager>().closePauseMenu();
-        GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().Load(1);
+        GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().ReturnToBase();
 
 
 
