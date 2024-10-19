@@ -38,11 +38,11 @@ public class MaterialScrollManager : MonoBehaviour
         newScrollMaterial.transform.SetParent(content.transform, false);
         currentMaterials.Add(newScrollMaterial);
         currentMaterials.RemoveAt(0);
-        Destroy(newScrollMaterial);
+        //Destroy(newScrollMaterial);
         //UpdateScroll();
         var child = content.transform.GetChild(0);
         Debug.Log(child);
-        child.gameObject.SetActive(false);
+        //child.gameObject.SetActive(false);
 
         Debug.Log("Inside the MSM's Start()");
 

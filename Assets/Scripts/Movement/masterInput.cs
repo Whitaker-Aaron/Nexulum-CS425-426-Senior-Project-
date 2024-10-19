@@ -434,8 +434,6 @@ public class masterInput : MonoBehaviour
         yield break;
     }
 
-    
-    //-----------------------------------------------
 
     private void runLogic()
     {
