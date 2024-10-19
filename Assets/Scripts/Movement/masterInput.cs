@@ -28,29 +28,10 @@ public class masterInput : MonoBehaviour
 {
     //-------------VARIABLES------------
 
-    //temporary player object - CHANGE TO CharacterBase ONCE IMPLEMENTED
     private GameObject player;
     public WeaponBase.weaponClassTypes currentClass;
 
-    private void Awake()
-    {
-        
-
-        staminaBar = GameObject.Find("StaminaBar");
-        staminaFill = GameObject.Find("StaminaFill");
-        staminaBorder = GameObject.Find("StaminaBorder");
-
-        maxStaminaValue = staminaBar.GetComponent<Slider>().value;
-
-        Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
-        staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 0.0f);
-
-        Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
-        staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
-
-        
-
-    }
+    
 
     //player
     CharacterBase character;
@@ -62,6 +43,7 @@ public class masterInput : MonoBehaviour
     public float speed = 3f;
     bool isMoving = false;
     public float minLookDistance = 1f;
+    public LayerMask ground;
 
     bool stopVelocity = true;
 
@@ -72,16 +54,16 @@ public class masterInput : MonoBehaviour
 
 
     //Knight Combat Variables
-    [Header("Knight Variables")]
     bool isAttacking = false;
     float cooldown = 1f;
     bool inputPaused = false;
     bool pauseMenuOpen = false;
     bool returningFromMenu = true;
-    public float cooldownTime = 2f;
-    public float nextAttackTime = .3f;
     private static int noOfClicks = 0;
     private float lastClickedTime = 0;
+    //[Header("Knight Variables")]
+    public float cooldownTime = 2f;
+    public float nextAttackTime = .3f;
     public float maxComboDelay = .7f;
     public float animTime = 0.5f;
     public float animTimeTwo = 0.5f;
@@ -164,13 +146,138 @@ public class masterInput : MonoBehaviour
     public bool placing = false;
 
 
-    //--------------FUNCTIONS--------------
+    //--------------MAIN RUNNING FUNCTIONS--------------
 
     private void OnCollisionEnter(Collision collision)
     {
         player.GetComponent<Rigidbody>().velocity = Vector3.zero;
     }
+    private void Awake()
+    {
+        
 
+        staminaBar = GameObject.Find("StaminaBar");
+        staminaFill = GameObject.Find("StaminaFill");
+        staminaBorder = GameObject.Find("StaminaBorder");
+
+        maxStaminaValue = staminaBar.GetComponent<Slider>().value;
+
+        Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
+        staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 0.0f);
+
+        Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
+        staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
+
+        
+
+    }
+    
+
+    void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+
+        playerControl = new PlayerInputActions();
+        animationControl = GetComponent<PlayerAnimation>();
+        camera = Camera.main.transform;
+
+        character = player.GetComponent<CharacterBase>();
+        Debug.Log("Character: " + character.equippedWeapon.weaponClassType);
+        currentClass = character.equippedWeapon.weaponClassType;
+        Debug.Log("Character's current class from master input: " + currentClass);
+
+        
+        if (currentClass == WeaponBase.weaponClassTypes.Knight)
+        {
+            sword = character.equippedWeapon.weaponMesh;
+            swordAttackPoint = character.swordAttackPoint;
+        }
+        else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+        {
+
+        }
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            pistol = character.equippedWeapon.weaponMesh;
+            tool = character.engineerTool.weaponMesh;
+            toolAttackPoint = character.toolAttackPoint;
+
+        }
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        if (stopVelocity)
+            player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
+
+        //player look at cursor position
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100, ground))
+        {
+            lookPos = hit.point;
+        }
+
+        Vector3 lookDir = lookPos - player.transform.position;
+        lookDir.y = 0;
+
+        
+        if(lookDir.magnitude > minLookDistance && !inputPaused && !pauseMenuOpen) player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
+
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
+            return;
+
+        if (inputPaused) return;
+
+        runLogic();
+
+        returningFromMenu = false;
+    }
+    private void FixedUpdate()
+    {
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+            return;
+
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        //universal player movement
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        if (direction.magnitude >= 0.1f)
+        {
+            movePlayer();
+        }
+
+
+
+        //animation
+
+        movement = new Vector3(horizontal, 0, vertical);
+        if (camera != null)
+        {
+            camForward = Vector3.Scale(camera.up, new Vector3(1, 0, 1)).normalized;
+            movement = vertical * camForward + horizontal * camera.right;
+        }
+        else
+            movement = vertical * Vector3.forward + horizontal * Vector3.right;
+
+        if (movement.magnitude > 1)
+        {
+            movement.Normalize();
+        }
+
+        animationControl.updatePlayerAnimation(movement);
+    }
+
+
+
+    //--------------------USER DEFINED FUNCTIONS----------------------
 
     //onMove is implemented through InputSystem in unity, context is the input
     public void onMove(InputAction.CallbackContext context)
@@ -231,7 +338,7 @@ public class masterInput : MonoBehaviour
         pauseMenuOpen = !pauseMenuOpen;
     }
 
-    //Knight Functions
+    //----------------Knight Functions------------------
 
     public void changeSword(WeaponBase newSword)
     {
@@ -258,36 +365,18 @@ public class masterInput : MonoBehaviour
         yield break;
     }
 
-    IEnumerator dash(float time)
-    {
-        //player.GetComponent<Rigidbody>().velocity = new Vector3(player.transform.forward.x * dashSpeed, 0, player.transform.forward.z * dashSpeed);
-        //player.transform.Translate(player.transform.forward * dashSpeed * Time.deltaTime, Space.Self);
-        yield return new WaitForSeconds(time);
-        //player.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-        yield break;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(swordAttackPoint.position, swordAttackRadius);
-        Gizmos.DrawWireSphere(toolAttackPoint.position, toolAttackRadius);
-    }
+    
 
 
-    //Gunner functions
+    //--------------------Gunner functions-------------------
 
     IEnumerator shoot()
     {
         canShoot = false;
-        //print("Shooting");
         while (Input.GetButton("Fire1") && bulletCount > 0 && isReloading == false)
         {
             bulletCount--;
-            //int temp = bulletCount;
-            //bulletUI.text = temp.ToString();
-            //muzzleFlash.Play();
             var bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-            //bullet.GetComponent<bullet>().setPower(true);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * bulletSpeed;
             yield return new WaitForSeconds(fireRateTime);
         }
@@ -297,24 +386,19 @@ public class masterInput : MonoBehaviour
 
     IEnumerator reload()
     {
-        //animationControl.gunnerReload();
-        //print("reloading");
         if (bulletCount == magSize)
             yield break;
 
         isReloading = true;
-        //FindObjectOfType<AudioManager>().Pause("AutoShot");
         yield return new WaitForSeconds(reloadTime);
         bulletCount = magSize;
-        //int temp = bulletCount;
-        //bulletUI.text = temp.ToString();
         isReloading = false;
         canShoot = true;
         yield break;
     }
 
 
-    //Engineer Functions
+    //----------------------Engineer Functions------------------------
 
     public void changeTool(WeaponBase newTool)
     {
@@ -350,82 +434,11 @@ public class masterInput : MonoBehaviour
         yield break;
     }
 
-    public void Initialize()
+
+    private void runLogic()
     {
-        
-    }
-
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player");
-
-        playerControl = new PlayerInputActions();
-        animationControl = GetComponent<PlayerAnimation>();
-        camera = Camera.main.transform;
-
-        character = player.GetComponent<CharacterBase>();
-        Debug.Log("Character: " + character.equippedWeapon.weaponClassType);
-        currentClass = character.equippedWeapon.weaponClassType;
-        Debug.Log("Character's current class from master input: " + currentClass);
-
-
-        if (currentClass == WeaponBase.weaponClassTypes.Knight)
-        {
-            sword = character.equippedWeapon.weaponMesh;
-            swordAttackPoint = character.swordAttackPoint;
-            //animationControl.changeClassLayer(1, 0);
-            //animationControl.changeClassLayer(2, 0);
-        }
-        else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
-        {
-            //animationControl.changeClassLayer(0, 1);
-            //animationControl.changeClassLayer(2, 1);
-        }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
-        {
-            pistol = character.equippedWeapon.weaponMesh;
-            tool = character.engineerTool.weaponMesh;
-            toolAttackPoint = character.toolAttackPoint;
-
-            //animationControl.changeClassLayer(0, 2);
-            //animationControl.changeClassLayer(1, 2);
-        }
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //print(player.GetComponent<Rigidbody>().velocity);
-
-        if (stopVelocity)
-            player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
-
-        //player look at cursor position
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100))
-        {
-            lookPos = hit.point;
-        }
-
-        Vector3 lookDir = lookPos - player.transform.position;
-        lookDir.y = 0;
-
-        
-        if(lookDir.magnitude > minLookDistance && !inputPaused && !pauseMenuOpen) player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
-
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
-            return;
-
-        if (inputPaused) return;
-
         //KNIGHT LOGIC
-        if(currentClass == WeaponBase.weaponClassTypes.Knight)
+        if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
             if (Time.time - lastClickedTime > maxComboDelay)
             {
@@ -438,7 +451,7 @@ public class masterInput : MonoBehaviour
                     print("click: " + noOfClicks);
 
                     lastClickedTime = Time.time;
-                    
+
                     noOfClicks++;
                     if (noOfClicks == 1)
                     {
@@ -452,25 +465,15 @@ public class masterInput : MonoBehaviour
                             noOfClicks = 0;
                             return;
                         }
-                        //anim.SetTrigger("Attack");
-                        //anim.SetBool("attack1", true);
-                        //StartCoroutine(dash(dashTime));
-                        //StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer));
                         sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
                         animationControl.knightAttackOne(animTime);
                         StartCoroutine(waitAttack(animTime * 2));
                         StartCoroutine(wait(animTime));
-                        //anim.Play("attackOne");
-                        //nextAttackTime = anim.GetCurrentAnimatorStateInfo(0).length - differenceTime;
-                        //print("Anim: " + anim.GetBool("attack1"));
                     }
                     noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
 
                     if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("waitOne"))
                     {
-                        //anim.SetBool("attack2", true);
-                        //anim.SetBool("attack1", false);
-                        //anim.Play("attackTwo");
                         nextAttackTime = animTimeTwo;
                         sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
                         animationControl.knightAttackTwo(animTimeTwo);
@@ -487,27 +490,24 @@ public class masterInput : MonoBehaviour
                         animationControl.knightAttackThree();
                         StartCoroutine(wait(animTimeThree));
                         StartCoroutine(waitAttack(animTimeThree * 2));
-                        //nextAttackTime -= differenceTime;
                         nextAttackTime = animTime;
 
                     }
                     else
                     {
-                        if(Time.time - lastClickedTime > maxComboDelay)
+                        if (Time.time - lastClickedTime > maxComboDelay)
                             animationControl.resetKnight();
-                        //if(noOfClicks == 2)
-                            //noOfClicks = 0;
                     }
                 }
             }
 
-            if(Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1))
             {
                 isBlocking = true;
                 character.invul = true;
- 
+
                 Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
-                staminaFill.GetComponent<Image>().color =  new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 1.0f);
+                staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 1.0f);
 
                 Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
                 staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.51f);
@@ -516,9 +516,9 @@ public class masterInput : MonoBehaviour
                     animationControl.blocking();
                 else
                     StartCoroutine(animationControl.startKnightBlock(blockTime));
-                    StartCoroutine(StartStaminaCooldown());
+                StartCoroutine(StartStaminaCooldown());
             }
-            if(Input.GetMouseButtonUp(1))
+            if (Input.GetMouseButtonUp(1))
             {
                 isBlocking = false;
                 character.invul = false;
@@ -532,7 +532,7 @@ public class masterInput : MonoBehaviour
         }
 
         //GUNNER LOGIC
-        if(currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket && !shootingLaser && !throwingGrenade)
+        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket && !shootingLaser && !throwingGrenade)
         {
             if (bulletCount <= 0 && !isReloading && bulletCount < magSize)
             {
@@ -553,12 +553,12 @@ public class masterInput : MonoBehaviour
             {
                 shooting = true;
             }
-            if (Input.GetMouseButtonUp(0))   
+            if (Input.GetMouseButtonUp(0))
                 shooting = false;
 
             if (shooting && isReloading == false && bulletCount > 0 && canShoot)
             {
-                    
+
                 StartCoroutine(shoot());
             }
         }
@@ -598,7 +598,7 @@ public class masterInput : MonoBehaviour
                     lastClickedTime = Time.time;
 
                     noOfClicks++;
-                    
+
 
                     if (noOfClicks == 1 && !animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > engAnimTime)
                     {
@@ -617,18 +617,12 @@ public class masterInput : MonoBehaviour
                         animationControl.engAttackOne(engAnimTime);
                         StartCoroutine(waitAttack(engAnimTime * 2));
                         StartCoroutine(wait(engAnimTime));
-                        //anim.Play("attackOne");
-                        //nextAttackTime = anim.GetCurrentAnimatorStateInfo(0).length - differenceTime;
-                        //print("Anim: " + anim.GetBool("attack1"));
                     }
                     noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
 
                     if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeTwo * 2)
                     {
                         print("animate two");
-                        //anim.SetBool("attack2", true);
-                        //anim.SetBool("attack1", false);
-                        //anim.Play("attackTwo");
                         engNextAttackTime = engAnimTimeTwo;
                         StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
                         animationControl.engAttackTwo(engAnimTimeTwo);
@@ -646,7 +640,6 @@ public class masterInput : MonoBehaviour
                         animationControl.engAttackThree();
                         StartCoroutine(wait(engAnimTimeThree));
                         StartCoroutine(waitAttack(engAnimTimeThree * 2));
-                        //nextAttackTime -= differenceTime;
                         engNextAttackTime = engAnimTime;
 
                     }
@@ -662,7 +655,7 @@ public class masterInput : MonoBehaviour
 
             }
 
-            
+
 
         }
 
@@ -685,44 +678,6 @@ public class masterInput : MonoBehaviour
             }
             gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
         }
-
-        returningFromMenu = false;
-    }
-    private void FixedUpdate()
-    {
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
-            return;
-
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        //universal player movement
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-        if (direction.magnitude >= 0.1f)
-        {
-            movePlayer();
-        }
-
-
-
-        //animation
-
-        movement = new Vector3(horizontal, 0, vertical);
-        if (camera != null)
-        {
-            camForward = Vector3.Scale(camera.up, new Vector3(1, 0, 1)).normalized;
-            movement = vertical * camForward + horizontal * camera.right;
-        }
-        else
-            movement = vertical * Vector3.forward + horizontal * Vector3.right;
-
-        if (movement.magnitude > 1)
-        {
-            movement.Normalize();
-        }
-
-        animationControl.updatePlayerAnimation(movement);
     }
 
     private IEnumerator ReduceStaminaValue()
@@ -810,6 +765,11 @@ public class masterInput : MonoBehaviour
             yield return null;
         }
         yield break;
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(swordAttackPoint.position, swordAttackRadius);
+        Gizmos.DrawWireSphere(toolAttackPoint.position, toolAttackRadius);
     }
 }
 
