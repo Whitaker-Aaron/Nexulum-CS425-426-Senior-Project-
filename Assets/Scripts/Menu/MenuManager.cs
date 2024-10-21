@@ -20,6 +20,8 @@ public class MenuManager : MonoBehaviour
     GameObject currentMenuObject;
     GameObject canvas;
     GameObject materialManager;
+    masterInput inputManager;
+    CharacterBase character;
 
     bool menuActive = false;
     bool pauseMenuActive = false;
@@ -28,6 +30,8 @@ public class MenuManager : MonoBehaviour
     {
         canvas = GameObject.FindGameObjectWithTag("UI");
         materialManager = GameObject.FindGameObjectWithTag("ScrollManager");
+        inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
     }
 
     // Update is called once per frame
@@ -40,7 +44,7 @@ public class MenuManager : MonoBehaviour
     {
 
 
-        if (!pauseMenuActive && context.performed)
+        if (!pauseMenuActive && !character.transitioningRoom && context.performed)
         {
 
             if (GameObject.FindGameObjectWithTag("CraftLists") != null)
@@ -68,6 +72,7 @@ public class MenuManager : MonoBehaviour
             currentMenuObject = Instantiate(pauseMenuReference);
             pauseMenuActive = true;
             Time.timeScale = 0;
+            inputManager.pausePlayerInput();
         }
         else if(pauseMenuActive && context.performed)
         {
@@ -82,23 +87,33 @@ public class MenuManager : MonoBehaviour
 
     public void closePauseMenu()
     {
-        pauseMenuActive = false;
-        Time.timeScale = 1.0f;
-        Destroy(currentMenuObject);
-        
+        if(pauseMenuActive)
+        {
+            pauseMenuActive = false;
+            Time.timeScale = 1.0f;
+            Destroy(currentMenuObject);
+            if (!character.transitioningRoom)
+            {
+                inputManager.resumePlayerInput();
+            }
+            
+
+        }
+
     }
 
         public void openMenu(InputAction.CallbackContext context)
     {
-        if(!menuActive && !pauseMenuActive && context.performed) {
+        if(!menuActive && !pauseMenuActive && !character.transitioningRoom && context.performed) {
             currentMenuObject = Instantiate(materialsMenuReference);
             Debug.Log("activating main menu");
             currentMenuObject.transform.SetParent(canvas.transform, false);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
             populateInventoryMaterials();
+            inputManager.pausePlayerInput();
             menuActive = true;
         }
-        else if(!pauseMenuActive && context.performed)
+        else if(menuActive && !pauseMenuActive && !character.transitioningRoom && context.performed)
         {
             //currentMenuObject.SetActive(false);
             if(GameObject.FindGameObjectWithTag("CraftLists") != null)
@@ -122,6 +137,7 @@ public class MenuManager : MonoBehaviour
             }
 
             menuActive = false;
+            inputManager.resumePlayerInput();
         }
 
     }

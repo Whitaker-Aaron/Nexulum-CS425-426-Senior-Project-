@@ -32,13 +32,15 @@ public class RoomInformation : MonoBehaviour
     {
         if (floorEntrance)
         {
+            
             StartCoroutine(WaitThenStartCharacterMove());
         }
     }
 
     public IEnumerator WaitThenStartCharacterMove()
     {
-        yield return new WaitForSeconds(1f);
+        
+        yield return new WaitForSeconds(1.0f);
         StartCoroutine(character.GetComponent<CharacterBase>().MoveForward());
         yield break;
     }

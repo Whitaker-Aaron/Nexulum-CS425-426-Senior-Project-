@@ -59,7 +59,6 @@ public class masterInput : MonoBehaviour
     bool isAttacking = false;
     float cooldown = 1f;
     bool inputPaused = false;
-    bool pauseMenuOpen = false;
     bool returningFromMenu = true;
     private static int noOfClicks = 0;
     private float lastClickedTime = 0;
@@ -229,7 +228,7 @@ public class masterInput : MonoBehaviour
         lookDir.y = 0;
 
         
-        if(lookDir.magnitude > minLookDistance && !inputPaused && !pauseMenuOpen) player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
+        if(lookDir.magnitude > minLookDistance && !inputPaused) player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
 
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
             return;
@@ -310,35 +309,21 @@ public class masterInput : MonoBehaviour
     }
 
 
-    public void pauseInput(InputAction.CallbackContext context)
-    {
-        if (context.performed && !pauseMenuOpen)
-        {
-            Debug.Log("Input pause toggled");
-            inputPaused = !inputPaused;
-            returningFromMenu = !returningFromMenu;
-            animationControl.stop();
-            Input.ResetInputAxes();
-            noOfClicks = 0;
-        }
-    }
 
     public void pausePlayerInput()
     {
         inputPaused = true;
         animationControl.stop();
+
     }
 
     public void resumePlayerInput()
     {
         inputPaused = false;
+        animationControl.stop();
     }
 
-    public void pauseMenuOpened(InputAction.CallbackContext context)
-    {
-        inputPaused = !inputPaused;
-        pauseMenuOpen = !pauseMenuOpen;
-    }
+
 
     //----------------Knight Functions------------------
 

@@ -85,6 +85,18 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         yield break;
     }
 
+    public IEnumerator MoveBackward()
+    {
+        var changeAmount = new Vector3(0.0f, 0.0f, -2.5f);
+        while (transitioningRoom)
+        {
+            Debug.Log("Moving backward");
+            transform.position += changeAmount * Time.deltaTime;
+            yield return null;
+        }
+        yield break;
+    }
+
     public void SaveData(ref SaveData data)
     {
         data.playerHealth = playerHealth;
