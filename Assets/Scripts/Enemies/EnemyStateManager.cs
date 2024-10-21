@@ -35,7 +35,7 @@ public class EnemyStateManager : MonoBehaviour
         idleState = GetComponent<EnemyIdleState>();
         chaseState = GetComponent<EnemyChaseState>();
 
-        ChangeDefaultState(defaultState);
+        ChangeDefaultState(idleState);
 
         ChangeState(defaultState);
 

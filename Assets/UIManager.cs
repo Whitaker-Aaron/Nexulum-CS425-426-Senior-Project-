@@ -21,13 +21,22 @@ public class UIManager : MonoBehaviour
         currentCheckpointText.transform.SetParent(mainCanvas.transform, false);
         currentCheckpointText.transform.localScale = new Vector3(6.0f, 6.0f, 6.0f);
         var rate = new Vector3(20f, 20f, 20f);
-        while(currentCheckpointText.transform.localScale.x >= 1.0f)
+        while(currentCheckpointText.transform.localScale.x != 1.0f)
         {
            Debug.Log(currentCheckpointText.transform.localScale);
-           currentCheckpointText.transform.localScale -= (rate * Time.deltaTime);
-           yield return null;
+            if((currentCheckpointText.transform.localScale.x - (rate.x * Time.deltaTime)) <= 1.0f)
+            {
+                currentCheckpointText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                yield return null;
+            }
+            else
+            {
+                currentCheckpointText.transform.localScale -= (rate * Time.deltaTime);
+                yield return null;
+            }
+
         }
-        yield return new WaitForSeconds(3.0f);
+        //yield return new WaitForSeconds(2.8f);
         yield return StartCoroutine(ReduceTextOpacity(currentCheckpointText, 1.00f));
         Destroy(currentCheckpointText);
         yield break;
