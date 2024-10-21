@@ -36,14 +36,24 @@ public class EnemyBehavior : MonoBehaviour
 
     private Vector3 CalculateMovementDirecton()
     {
-        GameObject player = GameObject.FindGameObjectWithTag(target.tag);
-        return (player.transform.position - transform.position).normalized;
+        if (target != null)
+        {
+            return (target.transform.position - transform.position).normalized;
+        }
+        else
+        {
+            return transform.position;
+        }
     }
 
     void Start()
     {
         enemyStateManager = GetComponent<EnemyStateManager>();
         enemyAnim = GetComponent<EnemyAnimation>();
+    }
+
+    void Awake()
+    {
         target = GameObject.FindWithTag("Player");
     }
 
@@ -59,23 +69,30 @@ public class EnemyBehavior : MonoBehaviour
 
     public bool TargetSpotted()
     {
-        Vector3 selfpos = transform.position;
-        Vector3 targetpos = target.transform.position;
-        Vector3 headingtotarget = targetpos - selfpos;
-
-        float distancetotarget = Vector3.Distance(targetpos, selfpos);
-        float targetangle = Vector3.Angle(headingtotarget, transform.forward);
-
-        RaycastHit hit;
-
-        if ((distancetotarget <= detectionRange)) // Determine if target is within detection range
+        if (target != null)
         {
-            if (targetangle <= visionAngle) // Determine if target is in vision 'cone' (angle)
+            Vector3 selfpos = transform.position;
+            Vector3 targetpos = target.transform.position;
+            Vector3 headingtotarget = targetpos - selfpos;
+
+            float distancetotarget = Vector3.Distance(targetpos, selfpos);
+            float targetangle = Vector3.Angle(headingtotarget, transform.forward);
+
+            RaycastHit hit;
+
+            if ((distancetotarget <= detectionRange)) // Determine if target is within detection range
             {
-                Physics.Raycast(origin: selfpos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange);
-                if (hit.transform == target.transform)
+                if (targetangle <= visionAngle) // Determine if target is in vision 'cone' (angle)
                 {
-                    return true;
+                    Physics.Raycast(origin: selfpos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange);
+                    if (hit.transform == target.transform)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
