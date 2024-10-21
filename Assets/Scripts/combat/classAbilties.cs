@@ -23,8 +23,7 @@ public class classAbilties : MonoBehaviour
 
     GameObject player;
     public LayerMask enemy;
-
-    //private WeaponBase.weaponClassTypes currentClass;
+    
 
     //Knight
     bool bubble = false;
@@ -95,7 +94,16 @@ public class classAbilties : MonoBehaviour
     public float teslaPlacementRadius = 4f;
     public float teslaMinPlacementRad = 2.5f;
     public GameObject teslaWall, teslaParent;
-   
+
+    int teslaNumCount, turretNumCount = 0;
+    [SerializeField] private int teslaMaxQuantity, turretMaxQuantity;
+
+
+    //cooldown rates
+    [SerializeField] private float ka1Time, ka2Time, ka3Time;
+    [SerializeField] private float ga1Time, ga2Time, ga3Time;
+    [SerializeField] private float ea1Time, ea2Time, ea3Time;
+    private bool a1cooldown, a2cooldown, a3cooldown = false;
 
     //-------------------------------------------
 
@@ -103,16 +111,22 @@ public class classAbilties : MonoBehaviour
 
     public void activateAbilityOne(WeaponBase.weaponClassTypes currentClass)
     {
-        if(currentClass == WeaponBase.weaponClassTypes.Knight)
+        if (a1cooldown)
+            return;
+        else
+            a1cooldown = true;
+        if (currentClass == WeaponBase.weaponClassTypes.Knight && !bubble)
         {
             StartCoroutine(bubbleShield());
+            StartCoroutine(abilitiesCooldown(1, ka1Time));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
         {
             gameObject.GetComponent<masterInput>().shootingRocket = true;
             shootingRocket = true;
+            StartCoroutine(abilitiesCooldown(1, ga1Time));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity)
         {
             placing = true;
             instant = true;
@@ -124,6 +138,10 @@ public class classAbilties : MonoBehaviour
 
     public void activateAbilityTwo(WeaponBase.weaponClassTypes currentClass)
     {
+        if (a2cooldown)
+            return;
+        else
+            a2cooldown = true;
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !activatedAura)
         {
             activatedAura = true;
@@ -134,7 +152,7 @@ public class classAbilties : MonoBehaviour
             throwingGrenade = true;
             gameObject.GetComponent<masterInput>().throwingGrenade = true;
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer && teslaNumCount < teslaMaxQuantity)
         {
             placingTesla = true;
             placingOne = true;
@@ -145,7 +163,11 @@ public class classAbilties : MonoBehaviour
 
     public void activateAbilityThree(WeaponBase.weaponClassTypes currentClass)
     {
-        if (currentClass == WeaponBase.weaponClassTypes.Knight)
+        if (a3cooldown)
+            return;
+        else
+            a3cooldown = true;
+        if (currentClass == WeaponBase.weaponClassTypes.Knight && !shootingSwords)
         {
             shootingSwords = true;
             
@@ -156,7 +178,7 @@ public class classAbilties : MonoBehaviour
 
             StartCoroutine(stopSword(currentEffect));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
+        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
         {
             shootingLaser = true;
             gameObject.GetComponent<masterInput>().shootingLaser = true;
@@ -172,6 +194,26 @@ public class classAbilties : MonoBehaviour
         {
 
         }
+    }
+
+    IEnumerator abilitiesCooldown(int ability, float time)
+    {
+        switch(ability)
+        {
+            case 1: yield return new WaitForSeconds(time);
+                a1cooldown = false;
+                break;
+            case 2:
+                yield return new WaitForSeconds(time);
+                a2cooldown = false;
+                break;
+            case 3:
+                yield return new WaitForSeconds(time);
+                a3cooldown = false;
+                break;
+        }
+            
+        yield break;
     }
 
     //Knight
@@ -292,7 +334,7 @@ public class classAbilties : MonoBehaviour
             yield break;
         checkHit = true;
         RaycastHit hit;
-        //Transform pos = gameObject.GetComponent<masterInput>().bulletSpawn;
+
         if (Physics.Raycast(currentLaserEffect.transform.position, currentLaserEffect.transform.forward, out hit, maxLaserDistance, enemy))
         {
             print("Hitting enemy");
@@ -319,9 +361,7 @@ public class classAbilties : MonoBehaviour
 
     void activateTesla()
     {
-        
-        //print("activating turret");
-        //player look at cursor position
+        teslaNumCount += 1;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
@@ -356,7 +396,6 @@ public class classAbilties : MonoBehaviour
             if (teslaDistance <= turretPlacementRadius && teslaDistance > playerRad)
             {
                 currentTesla.gameObject.transform.position = mousePos;
-                //currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
             }
             else if (teslaDistance <= playerRad)
             {
@@ -369,15 +408,10 @@ public class classAbilties : MonoBehaviour
                     currentTesla.transform.position.z
                 );
                 currentTesla.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-                //Vector3 Direction = (mousePos - player.transform.position).normalized;
-                //currentTurret.gameObject.transform.position = player.transform.position + Direction * playerRad;
-                //currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
             }
             else
             {
-                //Vector3 direction = (mousePos - player.transform.position).normalized;
                 currentTesla.gameObject.transform.position = player.transform.position + teslaDirection * turretPlacementRadius;
-                //currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
             }
         }
         if(teslaCount == 1)
@@ -418,42 +452,26 @@ public class classAbilties : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0) && teslaCount == 0 && placingOne && !placingTwo) 
         {
-            print("activate 0");
+            //print("activate 0");
             teslaCount = 1;
             instant = true;
             StartCoroutine(teslaWait());
             if (currentTesla != null)// && teslaDistance <= turretPlacementRadius)
             {
-                //placing = false;
-                //gameObject.GetComponent<masterInput>().placing = false;
-                //Quaternion rot = currentTurret.transform.rotation;
                 Vector3 pos = currentTesla.transform.position;
                 Destroy(currentTesla);
                 currentTesla = Instantiate(teslaPrefab, pos + new Vector3 (0,teslaSpawnHeight,0), Quaternion.identity);
             }
-            /*
-            if(currentTurret != null && (teslaDistance > turretPlacementRadius || teslaDistance < playerRad))
-            {
-                //placing = false;
-                //gameObject.GetComponent<masterInput>().placing = false;
-                //Quaternion rot = currentTurret.transform.rotation;
-                Vector3 pos = currentTesla.transform.position;
-                Destroy(currentTesla);
-                currentTesla = Instantiate(teslaPrefab, pos + new Vector3(0, teslaSpawnHeight, 0), Quaternion.identity);
-            }
-            */
             
 
         }
         if(Input.GetMouseButtonDown(0) && teslaCount == 1 && !placingOne && placingTwo)
         {
-            print("activate 1");
+            //print("activate 1");
             teslaCount = 0;
             if (nextCurrentTesla != null)// && teslaDistance <= turretPlacementRadius)
             {
                 placingTesla = false;
-                gameObject.GetComponent<masterInput>().placing = false;
-                //Quaternion rot = currentTurret.transform.rotation;
                 Vector3 pos = nextCurrentTesla.transform.position;
                 Destroy(nextCurrentTesla);
                 nextCurrentTesla = Instantiate(teslaPrefab, pos + new Vector3(0, teslaSpawnHeight, 0), Quaternion.identity);
@@ -473,18 +491,16 @@ public class classAbilties : MonoBehaviour
             teslaParent.GetComponent<teslaTower>().assignVars(currentTesla, nextCurrentTesla, tesWall);
             teslaParent.GetComponent<teslaTower>().setParents();
 
-            /*
-            if (currentTurret != null && (teslaDistance > turretPlacementRadius || teslaDistance < playerRad))
-            {
-                placing = false;
-                gameObject.GetComponent<masterInput>().placing = false;
-                //Quaternion rot = currentTurret.transform.rotation;
-                Vector3 pos = nextCurrentTesla.transform.position;
-                Destroy(nextCurrentTesla);
-                nextCurrentTesla = Instantiate(teslaPrefab, pos + new Vector3(0, teslaSpawnHeight, 0), Quaternion.identity);
-            }
-            */
+            StartCoroutine(playerInputWait());
+
         }
+    }
+
+    IEnumerator playerInputWait()
+    {
+        yield return new WaitForSeconds(.5f);
+        gameObject.GetComponent<masterInput>().placing = false;
+        yield break;
     }
 
     IEnumerator teslaWait()
@@ -498,6 +514,8 @@ public class classAbilties : MonoBehaviour
 
     void activateTurret()
     {
+        turretNumCount += 1;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
@@ -534,13 +552,9 @@ public class classAbilties : MonoBehaviour
                 currentTurret.transform.position.z
             );
             currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-            //Vector3 Direction = (mousePos - player.transform.position).normalized;
-            //currentTurret.gameObject.transform.position = player.transform.position + Direction * playerRad;
-            //currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
         }
         else
         {
-            //Vector3 direction = (mousePos - player.transform.position).normalized;
             currentTurret.gameObject.transform.position = player.transform.position + direction * turretPlacementRadius;
             currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
         }
@@ -550,23 +564,12 @@ public class classAbilties : MonoBehaviour
             if (currentTurret != null)// && distance <= turretPlacementRadius)
             {
                 placing = false;
-                gameObject.GetComponent<masterInput>().placing = false;
                 Quaternion rot = currentTurret.transform.rotation;
                 Vector3 pos = currentTurret.transform.position;
                 Destroy(currentTurret);
                 currentTurret = Instantiate(turretPrefab, pos + new Vector3(0, turretSpawnHeight, 0), rot);
+                StartCoroutine(playerInputWait());
             }
-            /*
-            if (currentTurret != null && (distance > turretPlacementRadius || distance < playerRad))
-            {
-                placing = false;
-                gameObject.GetComponent<masterInput>().placing = false;
-                Quaternion rot = currentTurret.transform.rotation;
-                Vector3 pos = currentTurret.transform.position;
-                Destroy(currentTurret);
-                currentTurret = Instantiate(turretPrefab, pos + new Vector3(0, turretSpawnHeight, 0), rot);
-            }
-            */
 
         }
     }
