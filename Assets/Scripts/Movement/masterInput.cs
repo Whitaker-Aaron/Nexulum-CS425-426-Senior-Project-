@@ -47,6 +47,8 @@ public class masterInput : MonoBehaviour
 
     bool stopVelocity = true;
 
+    bool abilityInUse = false;
+
     //animation variables
     private PlayerAnimation animationControl;
     Vector3 movement, camForward;
@@ -663,23 +665,36 @@ public class masterInput : MonoBehaviour
 
         //Class ability Logic
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !abilityInUse)
         {
+            abilityInUse = true;
             gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
+            StartCoroutine(abilityWait());
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && !abilityInUse)
         {
+            abilityInUse = true;
             gameObject.GetComponent<classAbilties>().activateAbilityTwo(currentClass);
+            StartCoroutine(abilityWait());
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && !abilityInUse)
         {
+            abilityInUse = true;
             if (currentClass == WeaponBase.weaponClassTypes.Knight)
             {
                 animationControl.knightShootSwords();
                 shootingSwords = true;
             }
             gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
+            StartCoroutine(abilityWait());
         }
+    }
+
+    IEnumerator abilityWait()
+    {
+        yield return new WaitForSeconds(.5f);
+        abilityInUse = false;
+        yield break;
     }
 
     private IEnumerator ReduceStaminaValue()
