@@ -15,7 +15,7 @@ public class EnemyFrame : MonoBehaviour
     [SerializeField] Enemy enemyReference;
 
     GameObject enemyUIRef;
-    GameObject healthRef;
+    public GameObject healthRef;
 
     //PLAYER HEALTH - Spencer
     public int health = 200;

@@ -35,7 +35,7 @@ public class RoomTransition : MonoBehaviour
 
     public void ResetEnemyPositions()
     {
-        var enemies = targetInfo.GetEnemies();
+        var enemies = currentInfo.GetEnemies();
         for(int i =0;  i < enemies.Length; i++)
         {
             if (enemies[i] != null)
@@ -43,6 +43,37 @@ public class RoomTransition : MonoBehaviour
                 enemies[i].GetComponent<EnemyFrame>().resetPosition();
             }           
         }
+    }
+
+    public void DisableEnemyHealthBars()
+    {
+        var enemies = targetInfo.GetEnemies();
+        if(enemies != null)
+        {
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                if (enemies[i] != null)
+                {
+                    enemies[i].GetComponent<EnemyFrame>().healthRef.SetActive(false);
+                }
+            }
+        }
+        
+    }
+    public void EnableEnemyHealthBars()
+    {
+        var enemies = currentInfo.GetEnemies();
+        if(enemies != null)
+        {
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                if (enemies[i] != null)
+                {
+                    enemies[i].GetComponent<EnemyFrame>().healthRef.SetActive(true);
+                }
+            }
+        }
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -54,7 +85,11 @@ public class RoomTransition : MonoBehaviour
             Debug.Log("Player detected");
             if (!character.transitioningRoom)
             {
-                if(targetInfo.roomName != "BaseCamp")
+                if(targetRoom != null)
+                {
+                    targetRoom.SetActive(true);
+                }
+                if (targetInfo.roomName != "BaseCamp")
                 {
                     cameraBehavior.PauseFollow();
                     GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(targetInfo);
@@ -62,7 +97,7 @@ public class RoomTransition : MonoBehaviour
                     character.transitioningRoom = true;
                     StartCoroutine(MovePlayerForward(other, exitDirection));
                     StartCoroutine(Transition(other));
-                    ResetEnemyPositions();
+                    
                 }
                 else
                 {
@@ -77,7 +112,11 @@ public class RoomTransition : MonoBehaviour
             }
             else if(character.transitioningRoom)
             {
+               
                 character.transitionedRoom = true;
+                ResetEnemyPositions();
+                EnableEnemyHealthBars();
+                DisableEnemyHealthBars();
                 var directionOffset = new Vector3(0.0f, 0.0f, 0.0f);
                 switch (enterDirection)
                 {
@@ -96,8 +135,20 @@ public class RoomTransition : MonoBehaviour
 
                 }
                 cameraBehavior.transform.position = character.transform.position + cameraBehavior.offset + directionOffset;
-                
+                StartCoroutine(ClosePreviousRoom());
+
             }
+        }
+
+    
+    }
+
+    public IEnumerator ClosePreviousRoom()
+    {
+        yield return new WaitForSeconds(2);
+        if (targetRoom != null)
+        {
+            targetRoom.SetActive(false);
         }
     }
 
