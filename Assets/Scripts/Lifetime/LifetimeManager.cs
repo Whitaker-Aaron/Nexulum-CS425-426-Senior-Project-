@@ -15,20 +15,20 @@ public class LifetimeManager : MonoBehaviour
     RuneManager runeManager;
     MaterialScrollManager scrollManager;
     CharacterBase characterRef;
+    masterInput inputManager;
 
 
     GameObject deathScreen;
-    
-    
 
-    void Awake()
+    private void Awake()
     {
-       weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
-       runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
-       scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
-       characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();    
-       deathScreen = GameObject.Find("DeathScreen");
-       deathScreen.SetActive(false);
+        weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
+        runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
+        scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
+        characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        deathScreen = GameObject.Find("DeathScreen");
+        deathScreen.SetActive(false);
         //currentInputRef.SetActive(false);
     }
 
@@ -75,9 +75,11 @@ public class LifetimeManager : MonoBehaviour
 
     public void InitializeManagers()
     {
-        GameObject.Find("InputandAnimationManager").GetComponent<masterInput>().enabled = true;
+        inputManager.enabled = true;
         weaponsManager.Initialize();
         runeManager.Initialize();
+        
+        //inputManager.Initialize();
     }
 
     public void OnDeath()
@@ -225,7 +227,7 @@ public class LifetimeManager : MonoBehaviour
             reference.transform.localPosition = new Vector3(val.x, val.y -= (4500.0f * Time.deltaTime), val.z);
             if(reference.transform.localPosition.y <= 0.0f && !hasStopped)
             {
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.55f);
                 hasStopped = true;
             }
             yield return null;
