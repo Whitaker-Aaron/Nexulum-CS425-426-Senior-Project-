@@ -675,10 +675,11 @@ public class masterInput : MonoBehaviour
 
     IEnumerator abilityWait()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
         abilityInUse = false;
         yield break;
     }
+
 
     private IEnumerator ReduceStaminaValue()
     {
