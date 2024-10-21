@@ -13,6 +13,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -104,6 +105,7 @@ public class classAbilties : MonoBehaviour
     [SerializeField] private float ga1Time, ga2Time, ga3Time;
     [SerializeField] private float ea1Time, ea2Time, ea3Time;
     private bool a1cooldown, a2cooldown, a3cooldown = false;
+    private Coroutine acc1, acc2, acc3;
 
     //-------------------------------------------
 
@@ -111,62 +113,80 @@ public class classAbilties : MonoBehaviour
 
     public void activateAbilityOne(WeaponBase.weaponClassTypes currentClass)
     {
-        if (a1cooldown)
+        if (a1cooldown || acc1 != null)
+        {
+            Debug.Log("Ability 1 is on cooldown.");
             return;
-        else
-            a1cooldown = true;
+        }
+        Debug.Log("Activating Ability 1.");
+        a1cooldown = true;
+
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !bubble)
         {
             StartCoroutine(bubbleShield());
-            StartCoroutine(abilitiesCooldown(1, ka1Time));
+            acc1 = StartCoroutine(abilitiesCooldown(1, ka1Time));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
+        else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
         {
             gameObject.GetComponent<masterInput>().shootingRocket = true;
             shootingRocket = true;
             StartCoroutine(abilitiesCooldown(1, ga1Time));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity)
         {
+            turretNumCount += 1;
             placing = true;
             instant = true;
             gameObject.GetComponent<masterInput>().placing = true;
+            StartCoroutine(abilitiesCooldown(1, ea1Time));
             //currentTurret = turretTransparentPrefab;
-            
+
         }
     }
 
     public void activateAbilityTwo(WeaponBase.weaponClassTypes currentClass)
     {
         if (a2cooldown)
+        {
+            Debug.Log("Ability 2 is on cooldown.");
             return;
-        else
-            a2cooldown = true;
+        }
+        Debug.Log("Activating Ability 2.");
+        a2cooldown = true;
+
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !activatedAura)
         {
             activatedAura = true;
             StartCoroutine(auraWait());
+            acc2 = StartCoroutine(abilitiesCooldown(2, ka2Time));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !throwingGrenade)
+        else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !throwingGrenade)
         {
             throwingGrenade = true;
             gameObject.GetComponent<masterInput>().throwingGrenade = true;
+            StartCoroutine(abilitiesCooldown(2, ga2Time));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer && teslaNumCount < teslaMaxQuantity)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && teslaNumCount < teslaMaxQuantity)
         {
+            teslaNumCount += 1;
             placingTesla = true;
             placingOne = true;
             instant = true;
             gameObject.GetComponent<masterInput>().placing = true;
+            StartCoroutine(abilitiesCooldown(2, ea2Time));
         }
     }
 
     public void activateAbilityThree(WeaponBase.weaponClassTypes currentClass)
     {
         if (a3cooldown)
+        {
+            Debug.Log("Ability 3 is on cooldown.");
             return;
-        else
-            a3cooldown = true;
+        }
+        Debug.Log("Activating Ability 3.");
+        a3cooldown = true;
+
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !shootingSwords)
         {
             shootingSwords = true;
@@ -177,8 +197,9 @@ public class classAbilties : MonoBehaviour
             currentEffect.GetComponent<ParticleSystem>().Play();
 
             StartCoroutine(stopSword(currentEffect));
+            StartCoroutine(abilitiesCooldown(3, ka3Time));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
+        else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
         {
             shootingLaser = true;
             gameObject.GetComponent<masterInput>().shootingLaser = true;
@@ -189,27 +210,37 @@ public class classAbilties : MonoBehaviour
             pos = gameObject.GetComponent<masterInput>().bulletSpawn;
             currentLaserEffect.transform.position = pos.position;
             StartCoroutine(laserStop());
+            StartCoroutine(abilitiesCooldown(3, ga3Time));
         }
-        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
-
+            StartCoroutine(abilitiesCooldown(3, ea3Time));
         }
     }
 
     IEnumerator abilitiesCooldown(int ability, float time)
     {
-        switch(ability)
+        yield return new WaitForSeconds(time);
+
+        switch (ability)
         {
-            case 1: yield return new WaitForSeconds(time);
+            case 1:
+                yield return new WaitForSeconds(1f);
                 a1cooldown = false;
+                acc1 = null;
+                print("ability 1 done");
                 break;
             case 2:
-                yield return new WaitForSeconds(time);
+                yield return new WaitForSeconds(1f);
                 a2cooldown = false;
+                acc2 = null;
+                print("ability 2 done");
                 break;
             case 3:
-                yield return new WaitForSeconds(time);
+                yield return new WaitForSeconds(1f);
                 a3cooldown = false;
+                acc3 = null;
+                print("ability 3 done");
                 break;
         }
             
@@ -361,7 +392,6 @@ public class classAbilties : MonoBehaviour
 
     void activateTesla()
     {
-        teslaNumCount += 1;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
@@ -514,8 +544,6 @@ public class classAbilties : MonoBehaviour
 
     void activateTurret()
     {
-        turretNumCount += 1;
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
@@ -589,12 +617,16 @@ public class classAbilties : MonoBehaviour
     {
         //currentClass = gameObject.GetComponent<masterInput>().currentClass;
         player = GameObject.FindGameObjectWithTag("Player");
+        teslaNumCount = 0;
+        turretNumCount = 0;
     }
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        teslaNumCount = 0;
+        turretNumCount = 0;
     }
 
     // Update is called once per frame
