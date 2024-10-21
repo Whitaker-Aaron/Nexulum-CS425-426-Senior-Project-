@@ -44,7 +44,7 @@ public class EnemyBehavior : MonoBehaviour
     {
         enemyStateManager = GetComponent<EnemyStateManager>();
         enemyAnim = GetComponent<EnemyAnimation>();
-        target = GameObject.FindWithTag(target.tag);
+        target = GameObject.FindWithTag("Player");
     }
 
     void Update()
