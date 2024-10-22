@@ -107,6 +107,10 @@ public class classAbilties : MonoBehaviour
     private bool a1cooldown, a2cooldown, a3cooldown = false;
     private Coroutine acc1, acc2, acc3;
 
+
+    //skill tree start
+    skillTreeManager skillTreeManagerObj;
+
     //-------------------------------------------
 
     //----------------Functions------------------
@@ -619,6 +623,8 @@ public class classAbilties : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         teslaNumCount = 0;
         turretNumCount = 0;
+
+        skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<skillTreeManager>();
     }
 
     // Start is called before the first frame update
@@ -627,6 +633,8 @@ public class classAbilties : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         teslaNumCount = 0;
         turretNumCount = 0;
+
+        //skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<skillTreeManager>();
     }
 
     // Update is called once per frame
@@ -719,5 +727,23 @@ public class classAbilties : MonoBehaviour
             }
             
         }
+
+        //skill tree upgrade testing
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("Activating skill upgrade");
+            var temp = bubbleRadius;
+            skillTreeManagerObj.unlockSkill("IncBubRad");
+            print("Bubble rad has been changed from: " + temp + " to: " + bubbleRadius);
+        }
+    }
+
+
+    //modify functions
+
+    public void modifyBubbleRad(float amount)
+    {
+        Debug.Log("Modified bubble radius by: " + amount);
+        bubbleRadius += amount;
     }
 }
