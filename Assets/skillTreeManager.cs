@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class skillTreeManager : MonoBehaviour
+public class SkillTreeManager : MonoBehaviour
 {
-    public static skillTreeManager instance;
+    public static SkillTreeManager instance;
     private List<skillTreeNode> skillTree;
     classAbilties abilities;
 
