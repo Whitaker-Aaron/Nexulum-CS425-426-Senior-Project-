@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 6511575812330288885}
   - component: {fileID: 4537291327857333261}
   m_Layer: 5
-  m_Name: DepositButton
+  m_Name: WithdrawButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -116,7 +116,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 74.394, y: 30}
+  m_SizeDelta: {x: 85.9643, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2141129932434324205
 CanvasRenderer:
@@ -202,7 +202,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3666573219102348042}
         m_TargetAssemblyTypeName: MaterialDepositObject, Assembly-CSharp
-        m_MethodName: DepositToTotalInventory
+        m_MethodName: WithdrawFromTotalInventory
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -524,7 +524,7 @@ GameObject:
   - component: {fileID: 5795810198194454990}
   - component: {fileID: 3666573219102348042}
   m_Layer: 5
-  m_Name: MaterialDepositObject
+  m_Name: MaterialWithdrawObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -591,6 +591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DepositNumber: {fileID: 2230514767655637927}
   currentMaterialCount: 0
+  attachedMaterial: {fileID: 0}
 --- !u!1 &7605567362510502087
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,7 +936,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Deposit
+  m_Text: Withdraw
 --- !u!1001 &8146161646661045848
 PrefabInstance:
   m_ObjectHideFlags: 0
