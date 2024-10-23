@@ -46,11 +46,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialsMenuReference: {fileID: 7173683770421921678, guid: 88d2d817cd8d9054480cde59ea10385e, type: 3}
+  totalMaterialMenuReference: {fileID: 7173683770421921678, guid: efc8d192b5f3340498b955a3380938df, type: 3}
+  terminalMenuReference: {fileID: 7173683770421921678, guid: ed63cf8a235952e41a71545c58b42b42, type: 3}
   craftMenuReference: {fileID: 7173683770421921678, guid: 32a642ac951cdf047a36c62c01826422, type: 3}
   itemsMenuReference: {fileID: 0}
   equipMenuReference: {fileID: 7173683770421921678, guid: fe8b82ca73273cf408a0f25d288847db, type: 3}
   scrollContent: {fileID: 7685760492805647242, guid: 9848dfb507b11a84e80b9770ce5d049a, type: 3}
   craftListsReference: {fileID: 0}
+  pauseMenuReference: {fileID: 0}
 --- !u!114 &5333086485164697951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,6 +119,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 3e9d04e1-80e3-4513-b9af-860cb5ab1772
     m_ActionName: MenuControl/OpenMenu[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 21ef7375-5d47-4590-b429-608d4f19f240
+    m_ActionName: player/PauseMenu[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ed1c9717-1097-496d-a033-fec83905f26a
+    m_ActionName: MenuControl/OpenPauseMenu[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: MenuControl

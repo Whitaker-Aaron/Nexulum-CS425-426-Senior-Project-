@@ -4,20 +4,32 @@ public class PlayerInteraction : MonoBehaviour
 {
     public float interactionRange = 9f;
     private InteractableItem currentItem = null;
+    InteractableItem[] interactableItems;
+    CharacterBase character;
+
+    private void Start()
+    {
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+    }
 
     void Update()
     {
         DetectInteractableItem();
 
-        if (currentItem != null && Input.GetKeyDown(KeyCode.F))
+        if (currentItem != null)
         {
-            currentItem.Interact();
+            character.inRangeOfTerminal = true;
+            //currentItem.Interact();
+        }
+        else
+        {
+            character.inRangeOfTerminal = false;
         }
     }
 
     private void DetectInteractableItem()
     {
-        InteractableItem[] interactableItems = FindObjectsOfType<InteractableItem>();
+        interactableItems = FindObjectsOfType<InteractableItem>();
         currentItem = null;
 
         foreach (InteractableItem item in interactableItems)

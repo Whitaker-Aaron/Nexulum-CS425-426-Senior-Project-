@@ -39,6 +39,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public bool transitioningRoom = false;
     public bool transitionedRoom = false;
 
+    public bool inRangeOfTerminal = false;
+
     
 
     private RuneInt runeInt;

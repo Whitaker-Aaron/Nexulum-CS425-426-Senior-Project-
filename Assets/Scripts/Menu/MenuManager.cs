@@ -8,10 +8,13 @@ public class MenuManager : MonoBehaviour
     
 {
     [SerializeField] GameObject materialsMenuReference;
+    [SerializeField] GameObject totalMaterialMenuReference;
+    [SerializeField] GameObject terminalMenuReference;
     [SerializeField] GameObject craftMenuReference;
     [SerializeField] GameObject itemsMenuReference;
     [SerializeField] GameObject equipMenuReference;
     [SerializeField] GameObject scrollContent;
+    [SerializeField] GameObject terminalScrollContent;
     [SerializeField] GameObject craftListsReference;
     [SerializeField] GameObject pauseMenuReference;
 
@@ -38,6 +41,46 @@ public class MenuManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void openTerminalMenu()
+    {
+        if (!menuActive && !pauseMenuActive)
+        {
+            currentMenuObject = Instantiate(materialsMenuReference);
+            Debug.Log("activating main menu");
+            currentMenuObject.transform.SetParent(canvas.transform, false);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            populateInventoryMaterials();
+            inputManager.pausePlayerInput();
+            menuActive = true;
+        }
+        else if (menuActive && !pauseMenuActive && !character.transitioningRoom)
+        {
+            //currentMenuObject.SetActive(false);
+            if (GameObject.FindGameObjectWithTag("CraftLists") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+            }
+            if (GameObject.FindGameObjectWithTag("MainMenu") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
+
+            }
+            if (GameObject.FindGameObjectWithTag("EquipMenu") != null)
+            {
+
+                Destroy(GameObject.FindGameObjectWithTag("EquipMenu"));
+            }
+            if (GameObject.FindGameObjectWithTag("CraftMenu") != null)
+            {
+
+                Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
+            }
+
+            menuActive = false;
+            inputManager.resumePlayerInput();
+        }
     }
 
     public void openPauseMenu(InputAction.CallbackContext context)
@@ -104,12 +147,22 @@ public class MenuManager : MonoBehaviour
 
         public void openMenu(InputAction.CallbackContext context)
     {
+        
         if(!menuActive && !pauseMenuActive && !character.transitioningRoom && context.performed) {
-            currentMenuObject = Instantiate(materialsMenuReference);
+            if (!character.inRangeOfTerminal)
+            {
+                currentMenuObject = Instantiate(materialsMenuReference);
+                populateInventoryMaterials();
+                currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            }
+            else
+            {
+                currentMenuObject = Instantiate(terminalMenuReference);
+            }
+            
             Debug.Log("activating main menu");
             currentMenuObject.transform.SetParent(canvas.transform, false);
-            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
-            populateInventoryMaterials();
+            
             inputManager.pausePlayerInput();
             menuActive = true;
         }
@@ -167,6 +220,17 @@ public class MenuManager : MonoBehaviour
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
             populateInventoryMaterials();
         }
+    }
+
+    public void navigateToBaseMaterialsMenu()
+    {
+        Debug.Log("Navigating to Base Material Menu");
+        //Instantiate();
+        Destroy(currentMenuObject);
+        currentMenuObject = Instantiate(totalMaterialMenuReference);
+        currentMenuObject.transform.SetParent(canvas.transform, false);
+        populateBaseInventoryMaterials();
+        //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
     }
 
     public void navigateToCraftMenu()
@@ -275,8 +339,40 @@ public class MenuManager : MonoBehaviour
                 currentMaterials.Add(newScrollMaterial);
             }
         }
-
-
-
     }
+
+    public void populateBaseInventoryMaterials()
+    {
+        CraftMaterial[] matInventory = materialManager.GetComponent<MaterialScrollManager>().GetMaterialInventory();
+
+        if (currentMenuObject != null)
+        {
+            var container = currentMenuObject.GetComponentInChildren<GridLayoutGroup>();
+            for (int i = 0; i < matInventory.Length; i++)
+            {
+
+                if (matInventory[i] == null)
+                {
+                    break;
+                }
+
+                var depositMaterial = terminalScrollContent.transform.Find("Material Scroll Object").GetComponent<MaterialScrollObject>();
+                depositMaterial.description.text = matInventory[i].materialName;
+                depositMaterial.imageRef.texture = matInventory[i].materialTexture;
+                depositMaterial.quantityInt = matInventory[i].currentAmount;
+                depositMaterial.quantity.text = "x" + depositMaterial.quantityInt.ToString();
+
+                var newScrollMaterial = Instantiate(terminalScrollContent);
+                newScrollMaterial.transform.SetParent(container.transform, false);
+                
+
+                //var depositMaterial = terminalScrollContent.GetComponentInChildren<MaterialScrollObject>();
+                
+                
+                //currentMaterials.Add(newScrollMaterial);
+            }
+        }
+    }
+    
+    
 }

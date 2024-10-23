@@ -9,6 +9,7 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
 {
     // Start is called before the first frame update
     CraftMaterial[] inventory = new CraftMaterial[50];
+    CraftMaterial[] totalInventory = new CraftMaterial[150];
     int nextFreeIndex = 0;
     void Start()
     {
