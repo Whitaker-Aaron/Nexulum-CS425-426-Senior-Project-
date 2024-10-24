@@ -9,7 +9,9 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
 {
     // Start is called before the first frame update
     CraftMaterial[] inventory = new CraftMaterial[50];
+    CraftMaterial[] totalInventory = new CraftMaterial[150];
     int nextFreeIndex = 0;
+    int totalNextFreeIndex = 0;
     void Start()
     {
         //Will later initialize this variable with save data.
@@ -79,7 +81,7 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
     }
 
 
-    public void AddToInventory(CraftMaterial materialToAdd)
+    public void AddToInventory(CraftMaterial materialToAdd, int amount)
     {
         bool itemFound = false;
         for(int i =0; i < inventory.Length; i++)
@@ -89,12 +91,16 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
                 if (inventory[i].materialName == materialToAdd.materialName)
                 {
                     Debug.Log(materialToAdd.materialName + " is already in inventory!");
-                    if (inventory[i].currentAmount != inventory[i].maxMaterialAmount)
+                    if (!(inventory[i].currentAmount + amount > inventory[i].maxMaterialAmount))
                     {
-                        inventory[i].currentAmount++;
+                        inventory[i].currentAmount += amount;
                         Debug.Log("Amount of " + materialToAdd.materialName + " inside inventory: " + inventory[i].currentAmount);
                     }
-                    
+                    else
+                    {
+                        inventory[i].currentAmount = inventory[i].maxMaterialAmount;
+                    }
+
                     itemFound = true;
                 }
 
@@ -104,9 +110,53 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
         if (!itemFound)
         {
             inventory[nextFreeIndex] = materialToAdd;
-            inventory[nextFreeIndex].currentAmount = 1;
+            if(amount >= inventory[nextFreeIndex].maxMaterialAmount)
+            {
+                inventory[nextFreeIndex].currentAmount = inventory[nextFreeIndex].maxMaterialAmount;
+                
+            }
+            else
+            {
+                inventory[nextFreeIndex].currentAmount = amount;
+            }
             Debug.Log(inventory[nextFreeIndex].materialName + " has been added to inventory!");
             nextFreeIndex++;
+
+        }
+    }
+
+    public void AddToTotalInventory(CraftMaterial materialToAdd, int amount)
+    {
+        bool itemFound = false;
+        for (int i = 0; i < totalInventory.Length; i++)
+        {
+            if (totalInventory[i] != null)
+            {
+                if (totalInventory[i].materialName == materialToAdd.materialName)
+                {
+                    Debug.Log(materialToAdd.materialName + " is already in inventory!");
+                    if (!(totalInventory[i].currentTotalAmount + amount > totalInventory[i].maxTotalMaterialAmount))
+                    {
+                        totalInventory[i].currentTotalAmount += amount;
+                       
+                    }
+                    else
+                    {
+                        totalInventory[i].currentTotalAmount = totalInventory[i].maxTotalMaterialAmount;
+                    }
+
+                    itemFound = true;
+                }
+
+            }
+
+        }
+        if (!itemFound)
+        {
+            totalInventory[totalNextFreeIndex] = materialToAdd;
+            totalInventory[totalNextFreeIndex].currentTotalAmount = amount;
+            Debug.Log(totalInventory[totalNextFreeIndex].materialName + " has been added to total inventory!");
+            totalNextFreeIndex++;
 
         }
     }
@@ -157,8 +207,54 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
 
     }
 
+    public void RemoveFromTotalInventory(CraftMaterial materialToRemove, int amountToRemove)
+    {
+
+        for (int i = 0; i < totalInventory.Length; i++)
+        {
+            if (totalInventory[i] != null)
+            {
+                if (totalInventory[i].materialName == materialToRemove.materialName)
+                {
+                    Debug.Log(materialToRemove.materialName + " is already in inventory!");
+                    if (totalInventory[i].currentTotalAmount - amountToRemove > 0)
+                    {
+                        totalInventory[i].currentTotalAmount -= amountToRemove;
+                        return;
+                    }
+                    else
+                    {
+                        for (int j = i; j < totalInventory.Length; j++)
+                        {
+                            if (totalInventory[j + 1] != null)
+                            {
+                                totalInventory[j] = totalInventory[j + 1];
+                            }
+                            else
+                            {
+                                totalInventory[j] = null;
+                                totalNextFreeIndex--;
+                                return;
+                            }
+
+                        }
+                        return;
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
     public CraftMaterial[] GetInventory() {
         return inventory;
+    }
+
+    public CraftMaterial[] GetTotalInventory()
+    {
+        return totalInventory;
     }
 
     public int GetCurrentInventorySize()
@@ -166,9 +262,19 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
         return nextFreeIndex;
     }
 
+    public int GetCurrentTotalInventorySize()
+    {
+        return totalNextFreeIndex;
+    }
+
     public int GetMaxInventorySize()
     {
         return inventory.Length;
+    }
+
+    public int GetMaxTotalInventorySize()
+    {
+        return totalInventory.Length;
     }
 
     public int GetMaterialAmount(CraftMaterial specifiedMaterial)
@@ -182,6 +288,18 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
         }
         return 0;
    
+    }
+
+    public int GetTotalMaterialAmount(CraftMaterial specifiedMaterial)
+    {
+        for (int i = 0; i < totalNextFreeIndex; i++)
+        {
+            if (specifiedMaterial.materialName == totalInventory[i].materialName)
+            {
+                return totalInventory[i].currentAmount;
+            }
+        }
+        return 0;
     }
 
     public CraftMaterial[] GetFirstThreeMat()

@@ -126,11 +126,16 @@ public class MaterialScrollManager : MonoBehaviour
         return matText;
     }
 
-    public void AddToMaterialsInventory(CraftMaterial material)
+    public void AddToMaterialsInventory(CraftMaterial material, int amount)
     {
         Debug.Log("Material getting added to inventory: " + material.materialName);
-        materialInventory.AddToInventory(material);
+        materialInventory.AddToInventory(material, amount);
+    }
 
+    public void AddToTotalMaterialsInventory(CraftMaterial material, int amount)
+    {
+        Debug.Log("Material getting added to total inventory: " + material.materialName);
+        materialInventory.AddToTotalInventory(material, amount);
     }
 
     public void ClearInventory()
@@ -144,6 +149,11 @@ public class MaterialScrollManager : MonoBehaviour
         materialInventory.RemoveFromInventory(material, amount);
     }
 
+    public void RemoveFromTotalMaterialsInventory(CraftMaterial material, int amount)
+    {
+        materialInventory.RemoveFromTotalInventory(material, amount);
+    }
+
     private void OnDestroy()
     {
         var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
@@ -154,6 +164,11 @@ public class MaterialScrollManager : MonoBehaviour
     public CraftMaterial[] GetMaterialInventory()
     {
         return materialInventory.GetInventory();
+    }
+
+    public CraftMaterial[] GetTotalMaterialInventory()
+    {
+        return materialInventory.GetTotalInventory();
     }
 
     public int GetMaterialInventorySize()

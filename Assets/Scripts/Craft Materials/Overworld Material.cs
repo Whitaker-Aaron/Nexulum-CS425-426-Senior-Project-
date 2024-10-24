@@ -76,7 +76,7 @@ public class OverworldMaterial : MonoBehaviour
 
         {
             var scrollRef = scrollManager.GetComponent<MaterialScrollManager>();
-            scrollRef.AddToMaterialsInventory(this.material);
+            scrollRef.AddToMaterialsInventory(this.material, 1);
             scrollRef.UpdateScroll(this.material.materialTexture, this.material.materialName);
             if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {

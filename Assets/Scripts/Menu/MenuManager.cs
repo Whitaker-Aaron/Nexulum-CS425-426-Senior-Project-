@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -8,14 +9,21 @@ public class MenuManager : MonoBehaviour
     
 {
     [SerializeField] GameObject materialsMenuReference;
+    [SerializeField] GameObject totalMaterialMenuReference;
+    [SerializeField] GameObject terminalMenuReference;
     [SerializeField] GameObject craftMenuReference;
     [SerializeField] GameObject itemsMenuReference;
     [SerializeField] GameObject equipMenuReference;
+
     [SerializeField] GameObject scrollContent;
+    [SerializeField] GameObject DepositScrollContent;
+    [SerializeField] GameObject WithdrawScrollContent;
+
     [SerializeField] GameObject craftListsReference;
     [SerializeField] GameObject pauseMenuReference;
 
     List<GameObject> currentMaterials = new List<GameObject>();
+    List<GameObject> currentBaseMaterials = new List<GameObject>();
 
     GameObject currentMenuObject;
     GameObject canvas;
@@ -38,6 +46,46 @@ public class MenuManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void openTerminalMenu()
+    {
+        if (!menuActive && !pauseMenuActive)
+        {
+            currentMenuObject = Instantiate(materialsMenuReference);
+            Debug.Log("activating main menu");
+            currentMenuObject.transform.SetParent(canvas.transform, false);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            populateInventoryMaterials();
+            inputManager.pausePlayerInput();
+            menuActive = true;
+        }
+        else if (menuActive && !pauseMenuActive && !character.transitioningRoom)
+        {
+            //currentMenuObject.SetActive(false);
+            if (GameObject.FindGameObjectWithTag("CraftLists") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+            }
+            if (GameObject.FindGameObjectWithTag("MainMenu") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
+
+            }
+            if (GameObject.FindGameObjectWithTag("EquipMenu") != null)
+            {
+
+                Destroy(GameObject.FindGameObjectWithTag("EquipMenu"));
+            }
+            if (GameObject.FindGameObjectWithTag("CraftMenu") != null)
+            {
+
+                Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
+            }
+
+            menuActive = false;
+            inputManager.resumePlayerInput();
+        }
     }
 
     public void openPauseMenu(InputAction.CallbackContext context)
@@ -104,12 +152,22 @@ public class MenuManager : MonoBehaviour
 
         public void openMenu(InputAction.CallbackContext context)
     {
+        
         if(!menuActive && !pauseMenuActive && !character.transitioningRoom && context.performed) {
-            currentMenuObject = Instantiate(materialsMenuReference);
+            if (!character.inRangeOfTerminal)
+            {
+                currentMenuObject = Instantiate(materialsMenuReference);
+                populateInventoryMaterials();
+                currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            }
+            else
+            {
+                currentMenuObject = Instantiate(terminalMenuReference);
+            }
+            
             Debug.Log("activating main menu");
             currentMenuObject.transform.SetParent(canvas.transform, false);
-            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
-            populateInventoryMaterials();
+            
             inputManager.pausePlayerInput();
             menuActive = true;
         }
@@ -167,6 +225,18 @@ public class MenuManager : MonoBehaviour
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
             populateInventoryMaterials();
         }
+    }
+
+
+    public void navigateToBaseMaterialsMenu()
+    {
+        Debug.Log("Navigating to Base Material Menu");
+        //Instantiate();
+        Destroy(currentMenuObject);
+        currentMenuObject = Instantiate(totalMaterialMenuReference);
+        currentMenuObject.transform.SetParent(canvas.transform, false);
+        populateBaseInventoryMaterials();
+        //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
     }
 
     public void navigateToCraftMenu()
@@ -275,8 +345,79 @@ public class MenuManager : MonoBehaviour
                 currentMaterials.Add(newScrollMaterial);
             }
         }
-
-
-
     }
+
+    public void updateBaseInventoryMaterials()
+    {
+        if (currentMenuObject != null)
+        {
+            for(int i =0; i < currentMaterials.Count; i++)
+            {
+                Destroy(currentMaterials[i]);
+                currentMaterials.RemoveAt(i);
+                i--;
+            }
+            populateBaseInventoryMaterials();
+        }
+    }
+
+    public void populateBaseInventoryMaterials()
+    {
+        CraftMaterial[] matInventory = materialManager.GetComponent<MaterialScrollManager>().GetMaterialInventory();
+        CraftMaterial[] totalMatInventory = materialManager.GetComponent<MaterialScrollManager>().GetTotalMaterialInventory();
+
+        if (currentMenuObject != null)
+        {
+            Debug.Log(currentMenuObject);
+            //var container = currentMenuObject.transform.Find("MaterialsLayout");
+            var container = GameObject.Find("MaterialsLayout").GetComponent<GridLayoutGroup>();
+            var totalContainer = GameObject.Find("MaterialsLayout2").GetComponent<GridLayoutGroup>();
+
+            for (int i = 0; i < matInventory.Length; i++)
+            {
+
+                if (matInventory[i] == null)
+                {
+                    break;
+                }
+
+                var depositMaterial = DepositScrollContent.transform.Find("Material Scroll Object").GetComponent<MaterialScrollObject>();
+                depositMaterial.description.text = matInventory[i].materialName;
+                depositMaterial.imageRef.texture = matInventory[i].materialTexture;
+                depositMaterial.quantityInt = matInventory[i].currentAmount;
+                depositMaterial.quantity.text = "x" + depositMaterial.quantityInt.ToString();
+
+                var newScrollMaterial = Instantiate(DepositScrollContent);
+                newScrollMaterial.GetComponent<MaterialDepositObject>().currentMaterialCount = matInventory[i].currentAmount;
+                newScrollMaterial.GetComponent<MaterialDepositObject>().attachedMaterial = matInventory[i];
+                newScrollMaterial.transform.SetParent(container.transform, false);
+                currentMaterials.Add(newScrollMaterial);
+
+            }
+
+            for (int i = 0; i < totalMatInventory.Length; i++)
+            {
+
+                if (totalMatInventory[i] == null)
+                {
+                    break;
+                }
+                Debug.Log("Inside total mat inventory for menu manager");
+                var depositMaterial = WithdrawScrollContent.transform.Find("Material Scroll Object").GetComponent<MaterialScrollObject>();
+                depositMaterial.description.text = totalMatInventory[i].materialName;
+                depositMaterial.imageRef.texture = totalMatInventory[i].materialTexture;
+                depositMaterial.quantityInt = totalMatInventory[i].currentTotalAmount;
+                depositMaterial.quantity.text = "x" + depositMaterial.quantityInt.ToString();
+
+                var newScrollMaterial = Instantiate(WithdrawScrollContent);
+                newScrollMaterial.GetComponent<MaterialDepositObject>().currentMaterialCount = totalMatInventory[i].currentTotalAmount;
+                newScrollMaterial.GetComponent<MaterialDepositObject>().attachedMaterial = totalMatInventory[i];
+                newScrollMaterial.transform.SetParent(totalContainer.transform, false);
+                currentMaterials.Add(newScrollMaterial);
+
+            }
+        }
+    }
+    
+    
 }

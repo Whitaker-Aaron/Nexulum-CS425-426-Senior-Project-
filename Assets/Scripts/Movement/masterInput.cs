@@ -301,7 +301,7 @@ public class masterInput : MonoBehaviour
         move = context.ReadValue<Vector2>();
     }
 
-    
+
 
     //actual player translation for FixedUpdate
     public void movePlayer()
@@ -315,13 +315,11 @@ public class masterInput : MonoBehaviour
         else
             isMoving = true;
 
-        if(currentClass == WeaponBase.weaponClassTypes.Knight && isBlocking)
+        if (currentClass == WeaponBase.weaponClassTypes.Knight && isBlocking)
             player.transform.Translate(movement * blockSpeed * Time.deltaTime, Space.World);
         else
             player.transform.Translate(movement * speed * Time.deltaTime, Space.World);
     }
-
-
 
     public void pausePlayerInput()
     {

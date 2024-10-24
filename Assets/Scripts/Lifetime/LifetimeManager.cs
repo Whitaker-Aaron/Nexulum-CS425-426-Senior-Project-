@@ -22,6 +22,7 @@ public class LifetimeManager : MonoBehaviour
     projectileManager projMan;
 
 
+
     GameObject deathScreen;
 
     private void Awake()
@@ -34,6 +35,7 @@ public class LifetimeManager : MonoBehaviour
         menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         skillTreeMan = GameObject.Find("SkillTreeManager").GetComponent<skillTreeManager>();
         projMan = GameObject.Find("ProjectileManager").GetComponent<projectileManager>();
+
         deathScreen = GameObject.Find("DeathScreen");
         deathScreen.SetActive(false);
         //currentInputRef.SetActive(false);

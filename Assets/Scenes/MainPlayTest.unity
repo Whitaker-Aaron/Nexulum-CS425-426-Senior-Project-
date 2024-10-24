@@ -375,6 +375,7 @@ Transform:
   - {fileID: 1034949053}
   - {fileID: 1251456124}
   - {fileID: 2060762476}
+  - {fileID: 1706393673}
   m_Father: {fileID: 1216165374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6578961
@@ -2135,8 +2136,6 @@ GameObject:
   - component: {fileID: 157967345}
   - component: {fileID: 157967344}
   - component: {fileID: 157967343}
-  - component: {fileID: 157967355}
-  - component: {fileID: 157967354}
   - component: {fileID: 157967353}
   m_Layer: 7
   m_Name: Test Enemy (8)
@@ -2272,9 +2271,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 157967349}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &157967349
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2364,6 +2366,7 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 0}
+  healthRef: {fileID: 0}
   health: 200
   maxHealth: 200
   dmgOverTimeActivated: 0
@@ -2380,33 +2383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
---- !u!114 &157967354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157967341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &157967355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157967341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  enableStateDebugLogs: 0
 --- !u!1001 &177242579
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3813,7 +3790,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &345935345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4227,7 +4204,6 @@ Transform:
   - {fileID: 1457988941}
   - {fileID: 2113887862}
   - {fileID: 8195845}
-  - {fileID: 1652991357}
   m_Father: {fileID: 1399646237}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &372505364
@@ -6755,8 +6731,6 @@ GameObject:
   - component: {fileID: 581683910}
   - component: {fileID: 581683909}
   - component: {fileID: 581683922}
-  - component: {fileID: 581683921}
-  - component: {fileID: 581683920}
   m_Layer: 7
   m_Name: Test Enemy (1)
   m_TagString: Enemy
@@ -6874,9 +6848,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 581683915}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &581683915
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -6966,6 +6943,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 0}
+  healthRef: {fileID: 0}
   health: 200
   maxHealth: 200
   dmgOverTimeActivated: 0
@@ -6986,30 +6964,6 @@ Transform:
   - {fileID: 257268326}
   m_Father: {fileID: 806914971}
   m_LocalEulerAnglesHint: {x: 0, y: 198.588, z: 0}
---- !u!114 &581683920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581683908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &581683921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581683908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &581683922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7023,9 +6977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
+  enableStateDebugLogs: 0
 --- !u!1001 &594923113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8291,6 +8243,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
   enemyReference: {fileID: 0}
+  healthRef: {fileID: 0}
   health: 100
   maxHealth: 100
   dmgOverTimeActivated: 0
@@ -9337,6 +9290,7 @@ Transform:
   - {fileID: 462922013}
   - {fileID: 1214988446}
   - {fileID: 1343447772}
+  - {fileID: 1652991357}
   m_Father: {fileID: 2079344004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &890219199
@@ -9663,9 +9617,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 914834195}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &914834195
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -9755,6 +9712,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
   enemyReference: {fileID: 0}
+  healthRef: {fileID: 0}
   health: 100
   maxHealth: 100
   dmgOverTimeActivated: 0
@@ -10060,8 +10018,6 @@ GameObject:
   - component: {fileID: 937644613}
   - component: {fileID: 937644612}
   - component: {fileID: 937644611}
-  - component: {fileID: 937644623}
-  - component: {fileID: 937644622}
   - component: {fileID: 937644621}
   m_Layer: 7
   m_Name: Test Enemy (3)
@@ -10197,9 +10153,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 937644617}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &937644617
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -10289,6 +10248,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 0}
+  healthRef: {fileID: 0}
   health: 200
   maxHealth: 200
   dmgOverTimeActivated: 0
@@ -10305,33 +10265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
---- !u!114 &937644622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 937644609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &937644623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 937644609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  enableStateDebugLogs: 0
 --- !u!1001 &960271923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13403,7 +13337,54 @@ Transform:
   - {fileID: 2079344004}
   - {fileID: 1399646237}
   - {fileID: 6578960}
-  - {fileID: 1706393673}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1216517997
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1216517999}
+  - component: {fileID: 1216517998}
+  m_Layer: 0
+  m_Name: FloorInformation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1216517998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216517997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bdbfa145f72a4a49927775b9eca6adf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RoomList:
+  - {fileID: 2079344003}
+  - {fileID: 1399646236}
+  - {fileID: 6578959}
+--- !u!4 &1216517999
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216517997}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.6455765, y: -5.47333, z: 39.148438}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1222139859
@@ -18193,7 +18174,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 370419409}
+    m_TransformParent: {fileID: 889779393}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: b30b1fd405bdb984d93ee2c1ba92165f, type: 3}
       propertyPath: m_LocalScale.x
@@ -18209,15 +18190,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b30b1fd405bdb984d93ee2c1ba92165f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.28
+      value: -0.27999878
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b30b1fd405bdb984d93ee2c1ba92165f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.594
+      value: 5.593998
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b30b1fd405bdb984d93ee2c1ba92165f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -37.11
+      value: 16.3266
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b30b1fd405bdb984d93ee2c1ba92165f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -18229,7 +18210,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b30b1fd405bdb984d93ee2c1ba92165f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b30b1fd405bdb984d93ee2c1ba92165f, type: 3}
       propertyPath: m_LocalRotation.z
@@ -18820,11 +18801,11 @@ Transform:
   m_GameObject: {fileID: 1706393672}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 71.93, y: 44.78629, z: -4.74}
+  m_LocalPosition: {x: 27.52, y: 49.715775, z: 1.5599985}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1216165374}
+  m_Father: {fileID: 6578960}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1706393674
 MonoBehaviour:
@@ -20012,8 +19993,6 @@ GameObject:
   - component: {fileID: 1836943728}
   - component: {fileID: 1836943727}
   - component: {fileID: 1836943726}
-  - component: {fileID: 1836943725}
-  - component: {fileID: 1836943724}
   m_Layer: 7
   m_Name: Test Enemy (2)
   m_TagString: Enemy
@@ -20038,30 +20017,6 @@ Transform:
   - {fileID: 9102750}
   m_Father: {fileID: 806914971}
   m_LocalEulerAnglesHint: {x: 0, y: 246.34601, z: 0}
---- !u!114 &1836943724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836943722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1836943725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836943722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1836943726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20075,9 +20030,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
+  enableStateDebugLogs: 0
 --- !u!114 &1836943727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20188,9 +20141,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 1836943733}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &1836943733
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -20280,6 +20236,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 0}
+  healthRef: {fileID: 0}
   health: 200
   maxHealth: 200
   dmgOverTimeActivated: 0
@@ -23671,8 +23628,6 @@ GameObject:
   - component: {fileID: 2107450711}
   - component: {fileID: 2107450710}
   - component: {fileID: 2107450709}
-  - component: {fileID: 2107450721}
-  - component: {fileID: 2107450720}
   - component: {fileID: 2107450719}
   m_Layer: 7
   m_Name: Test Enemy (9)
@@ -23808,9 +23763,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 2107450715}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &2107450715
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -23900,6 +23858,7 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 0}
+  healthRef: {fileID: 0}
   health: 200
   maxHealth: 200
   dmgOverTimeActivated: 0
@@ -23916,33 +23875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
---- !u!114 &2107450720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2107450707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2107450721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2107450707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  enableStateDebugLogs: 0
 --- !u!1001 &2108203030
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24442,6 +24375,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 452706994}
+  - {fileID: 1216517999}
   - {fileID: 963194228}
   - {fileID: 705507995}
   - {fileID: 914834199}

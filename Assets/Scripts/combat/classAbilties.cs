@@ -109,7 +109,7 @@ public class classAbilties : MonoBehaviour
 
 
     //skill tree start
-    skillTreeManager skillTreeManagerObj;
+    SkillTreeManager skillTreeManagerObj;
 
     //-------------------------------------------
 
@@ -624,7 +624,7 @@ public class classAbilties : MonoBehaviour
         teslaNumCount = 0;
         turretNumCount = 0;
 
-        skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<skillTreeManager>();
+        skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<SkillTreeManager>();
     }
 
     // Start is called before the first frame update
@@ -729,13 +729,13 @@ public class classAbilties : MonoBehaviour
         }
 
         //skill tree upgrade testing
-        if(Input.GetKeyDown(KeyCode.T))
-        {
-            Debug.Log("Activating skill upgrade");
-            var temp = bubbleRadius;
-            skillTreeManagerObj.unlockSkill("IncBubRad");
-            print("Bubble rad has been changed from: " + temp + " to: " + bubbleRadius);
-        }
+        //if(Input.GetKeyDown(KeyCode.T))
+        //{
+            //Debug.Log("Activating skill upgrade");
+            //var temp = bubbleRadius;
+            //skillTreeManagerObj.unlockSkill("IncBubRad");
+            //print("Bubble rad has been changed from: " + temp + " to: " + bubbleRadius);
+        //}
     }
 
 
