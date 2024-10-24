@@ -5,26 +5,27 @@ using UnityEngine.AI;
 
 public class EnemyBehavior : MonoBehaviour
 {
-
-    // NavMesh agent and GameObject for target - Aisling
+    // Components
     public NavMeshAgent agent;
     public GameObject target;
+    [HideInInspector] public EnemyStateManager enemyStateManager;
+    private EnemyAnimation enemyAnim; //animation function for getting direction, sends to animation interface - Spencer
+
+    [HideInInspector] public bool isTargetSpotted = false;
 
     // Enemy vision - Aisling
-    public float detectionRange = 7;
-    public float visionAngle = 90;
+    [SerializeField] private float detectionRange = 7;
+    [SerializeField] private float visionAngle = 90;
 
-    // State manager ref, allows state changes to be conducted in EnemyBehavior - Aisling
-    [HideInInspector]
-    public EnemyStateManager enemyStateManager;
+    private Vector3 selfPos;
+    private Vector3 targetPos;
+    [HideInInspector] public Vector3 lastKnownTargetPos;
 
-    //animation function for getting direction, sends to animation interface - Spencer
-    private EnemyAnimation enemyAnim;
+    public float timeToWaitInSearch = 5; // Controls how long the enemy will wait at the last known target position, before switching states
 
     //stop movement implementation for combat, simple bool control - Spencer
     bool isMoving = true;
     bool paused = false;
-
 
     public IEnumerator pauseMovement(float time)
     {
@@ -46,15 +47,15 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
+    void Awake()
+    {
+        target = GameObject.FindWithTag("Player");
+    }
+
     void Start()
     {
         enemyStateManager = GetComponent<EnemyStateManager>();
         enemyAnim = GetComponent<EnemyAnimation>();
-    }
-
-    void Awake()
-    {
-        target = GameObject.FindWithTag("Player");
     }
 
     void Update()
@@ -67,15 +68,27 @@ public class EnemyBehavior : MonoBehaviour
         enemyAnim.updateAnimation(movementDirection);
     }
 
+    public void ChangeTarget(GameObject newTarget)
+    {
+        if (newTarget != null)
+        {
+            target = newTarget;
+        }
+        else
+        {
+            Debug.Log("New target cannot be null");
+        }
+    }
+
     public bool TargetSpotted()
     {
         if (target != null)
         {
-            Vector3 selfpos = transform.position;
-            Vector3 targetpos = target.transform.position;
-            Vector3 headingtotarget = targetpos - selfpos;
+            selfPos = transform.position;
+            targetPos = target.transform.position;
+            Vector3 headingtotarget = targetPos - selfPos;
 
-            float distancetotarget = Vector3.Distance(targetpos, selfpos);
+            float distancetotarget = Vector3.Distance(targetPos, selfPos);
             float targetangle = Vector3.Angle(headingtotarget, transform.forward);
 
             RaycastHit hit;
@@ -84,9 +97,10 @@ public class EnemyBehavior : MonoBehaviour
             {
                 if (targetangle <= visionAngle) // Determine if target is in vision 'cone' (angle)
                 {
-                    Physics.Raycast(origin: selfpos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange);
+                    Physics.Raycast(origin: selfPos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange); // Determine if target is obstructed
                     if (hit.transform == target.transform)
                     {
+                        smoothLook(target.transform);
                         return true;
                     }
                     else
@@ -98,15 +112,25 @@ public class EnemyBehavior : MonoBehaviour
                 {
                     return false;
                 }
-            }
-            else
-            {
-                return false;
-            }
         }
         else
         {
             return false;
         }
+    }
+        else
+        {
+            return false;
+        }
+    }
+
+    // Spencer's smooth LookAt function from drone combat script, slight edit to work with enemies
+    void smoothLook(Transform target)
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
+        direction.y = 0f;  // Keep the y-axis at 0
+        Quaternion targetRot = Quaternion.LookRotation(direction);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime);
     }
 }
