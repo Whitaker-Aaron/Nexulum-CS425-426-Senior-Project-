@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 3831841653790715535}
   - component: {fileID: 3629583855337391466}
   - component: {fileID: 7308934996518735443}
-  - component: {fileID: 7857559452251974638}
   - component: {fileID: 4715066378183491723}
   - component: {fileID: 359637691662371193}
+  - component: {fileID: 8635564962117682814}
   m_Layer: 0
   m_Name: pistol bullet
   m_TagString: Bullet
@@ -30,8 +30,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2530541377710386135}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.179, y: 2.113, z: -2.484}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.209442, y: 2.5821133, z: -2.484}
   m_LocalScale: {x: 0.09402, y: 0.09402, z: 0.09402}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -97,7 +97,7 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -108,29 +108,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7857559452251974638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2530541377710386135}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 812432ec21e92c444acbb1d6c3e876bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  lifeTime: 4
-  damage: 20
-  bossdamageMult: 0
-  enemy:
-    serializedVersion: 2
-    m_Bits: 128
-  boss:
-    serializedVersion: 2
-    m_Bits: 0
-  explosiveRange: 0
 --- !u!96 &4715066378183491723
 TrailRenderer:
   serializedVersion: 3
@@ -152,7 +129,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 228fc1317f61ac4408d84a68ea9822d3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -173,7 +150,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.52
+  m_Time: 0.1
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -183,7 +160,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.17900848
+        value: 0.05847168
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -191,8 +168,8 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.4826674
-        value: 0.0617218
+        time: 0.5130324
+        value: 0.079574585
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -200,8 +177,8 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 1
-        value: 0.16049194
+        time: 0.9924011
+        value: 0.07120514
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -213,8 +190,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 0.3529412}
-      key1: {r: 1, g: 0, b: 0, a: 1}
+      key0: {r: 1, g: 0.6493103, b: 0.05098039, a: 1}
+      key1: {r: 0.9103774, g: 0.44489682, b: 0.37359828, a: 0.3019608}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -275,8 +252,27 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!114 &8635564962117682814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2530541377710386135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2faf14bedbb81b640a79b3d01609bec2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 100
+  damage: 15
+  enemy:
+    serializedVersion: 2
+    m_Bits: 128
+  fireRad: 0.4
+  fireDamage: 5

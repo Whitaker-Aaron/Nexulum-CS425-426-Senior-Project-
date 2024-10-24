@@ -18,7 +18,7 @@ public class LifetimeManager : MonoBehaviour
     MenuManager menuManager;
     CharacterBase characterRef;
     masterInput inputManager;
-    skillTreeManager skillTreeMan;
+    SkillTreeManager skillTreeMan;
     projectileManager projMan;
 
 
@@ -33,7 +33,7 @@ public class LifetimeManager : MonoBehaviour
         characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
         menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
-        skillTreeMan = GameObject.Find("SkillTreeManager").GetComponent<skillTreeManager>();
+        skillTreeMan = GameObject.Find("SkillTreeManager").GetComponent<SkillTreeManager>();
         projMan = GameObject.Find("ProjectileManager").GetComponent<projectileManager>();
 
         deathScreen = GameObject.Find("DeathScreen");

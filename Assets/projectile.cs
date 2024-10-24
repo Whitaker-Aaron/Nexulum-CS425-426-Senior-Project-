@@ -11,6 +11,7 @@ public class projectile : MonoBehaviour
     public int damage;
     Rigidbody rb;
     public LayerMask enemy;
+    masterInput input;
 
     //fire rune vars
     bool gunnerFire = false;
@@ -22,12 +23,29 @@ public class projectile : MonoBehaviour
     private void OnEnable()
     {
         lifeTime = maxLifeTime;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, enemy))
+        {
+            if(hit.collider.gameObject.tag == "Enemy")
+            {
+                hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+                //resetProjectile();
+                //returnToPool();
+            }
+            else
+            {
+                //resetProjectile();
+                //returnToPool();
+            }
+        }
     }
 
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(this);
+        input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
     }
 
     // Start is called before the first frame update
@@ -45,11 +63,12 @@ public class projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        
         if(collision.gameObject.tag == "Enemy")
         {
             if (gunnerFire)
             {
-                collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+                //collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
 
                 Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, fireRad, enemy);
                 foreach(Collider c in enemies)
@@ -72,6 +91,19 @@ public class projectile : MonoBehaviour
             resetProjectile();
             returnToPool();
         }
+        
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        resetProjectile();
+        returnToPool();
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        resetProjectile();
+        returnToPool();
     }
 
     void resetProjectile()
@@ -88,7 +120,12 @@ public class projectile : MonoBehaviour
 
     void returnToPool()
     {
-        projectileManager.Instance.returnProjectile(gameObject);
+        if(input.currentClass == WeaponBase.weaponClassTypes.Gunner)
+            projectileManager.Instance.returnProjectile(gameObject);
+        else if(input.currentClass == WeaponBase.weaponClassTypes.Engineer)
+            projectileManager.Instance.returnProjectile2(gameObject);
+        else
+            projectileManager.Instance.returnProjectile(gameObject);
     }
 
 

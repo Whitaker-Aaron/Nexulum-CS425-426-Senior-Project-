@@ -410,8 +410,8 @@ public class masterInput : MonoBehaviour
         canPistolShoot = false;
         
         pistolBulletCount--;
-        var bullet = Instantiate(pistolBulletObj, pistolBulletSpawn.position, pistolBulletSpawn.rotation);
-        bullet.GetComponent<Rigidbody>().velocity = pistolBulletSpawn.forward * pistolBulletSpeed;
+        GameObject bullet = projectileManager.Instance.getProjectile2(pistolBulletSpawn.position, pistolBulletSpawn.rotation);
+        //bullet.GetComponent<Rigidbody>().velocity = pistolBulletSpawn.forward * pistolBulletSpeed;
         yield return new WaitForSeconds(pistolFireRateTime);
         
         canPistolShoot = true;
