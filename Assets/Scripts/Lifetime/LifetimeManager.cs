@@ -107,6 +107,7 @@ public class LifetimeManager : MonoBehaviour
     {
         
         menuManager.CloseMenu();
+        inputManager.pausePlayerInput();
         StartCoroutine(AnimateDeathScreen());
 
         
@@ -122,7 +123,6 @@ public class LifetimeManager : MonoBehaviour
         reference.color = imgColor;
         Time.timeScale = 1.0f;
         var deathScreenObj = deathScreen.GetComponent<DeathScreen>();
-        characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         deathScreen.SetActive(true);
         StartCoroutine(deathScreenObj.AnimateDeath());
         yield return new WaitForSeconds(12);
@@ -131,8 +131,8 @@ public class LifetimeManager : MonoBehaviour
         yield return new WaitForSeconds(3);
         deathScreenObj.ResetObjScales();
         deathScreen.SetActive(false);
+        inputManager.resumePlayerInput();
         scrollManager.ClearInventory();
-        characterRef.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         yield return null;
     }
 
