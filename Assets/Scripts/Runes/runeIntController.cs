@@ -8,6 +8,7 @@ public class runeIntController : MonoBehaviour, RuneInt
     WeaponBase weapon;
     public WeaponBase.weaponClassTypes currentClass;
     public CharacterBase character;
+    masterInput input;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +19,7 @@ public class runeIntController : MonoBehaviour, RuneInt
     void Awake()
     {
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
         //runeInventory = runeManager.GetComponent<RuneInventory>();
 
         //weaponsInventory = weaponsManager.GetComponent<WeaponsInventory>();
@@ -92,7 +94,7 @@ public class runeIntController : MonoBehaviour, RuneInt
             }
             else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
             {
-
+                input.activateFireRune(true);
             }
             else
             {
@@ -122,15 +124,20 @@ public class runeIntController : MonoBehaviour, RuneInt
 
     }
 
+
     public void removeWeaponRunes(Rune rune)
     {
         if (rune.runeName == "Fire")
         {
             if (currentClass == WeaponBase.weaponClassTypes.Knight)
             {
-                //weapon.weaponMesh.GetComponent<swordCombat>().activateFire(false);
+                weapon.weaponMesh.GetComponent<swordCombat>().activateFire(false);
             }
             else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+            {
+                input.activateFireRune(false);
+            }
+            else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
             {
 
             }

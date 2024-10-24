@@ -113,6 +113,9 @@ public class masterInput : MonoBehaviour
     //grenade
     public bool throwingGrenade = false;
 
+    //RUNE VARS
+    bool fireBullet = false;
+
 
     //Engineer variables
 
@@ -145,6 +148,13 @@ public class masterInput : MonoBehaviour
 
     //abilities
     public bool placing = false;
+
+    //repair
+    public bool canRepair = false;
+    bool repairing = false;
+    public float repairRate = 1f;
+    GameObject repairObj;
+    public int repairVal = 25;
 
 
     //--------------MAIN RUNNING FUNCTIONS--------------
@@ -366,8 +376,10 @@ public class masterInput : MonoBehaviour
         while (Input.GetButton("Fire1") && bulletCount > 0 && isReloading == false)
         {
             bulletCount--;
-            var bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-            bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * bulletSpeed;
+            GameObject bullet = projectileManager.Instance.getProjectile(bulletSpawn.position, bulletSpawn.rotation); //Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+            if (fireBullet)
+                bullet.GetComponent<projectile>().fireGunnerRune();
+            //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * bulletSpeed;
             yield return new WaitForSeconds(fireRateTime);
         }
         canShoot = true;
@@ -424,6 +436,32 @@ public class masterInput : MonoBehaviour
         yield break;
     }
 
+    public void assignRepair(GameObject current)
+    {
+        repairObj = current;
+    }
+
+    void removeRepair()
+    {
+        repairObj = null;
+    }
+
+    IEnumerator repairWait()
+    {
+        if(repairObj != null)
+        {
+            print("repairing!");
+            //repairing = false;
+            repairObj.GetComponent<turretCombat>().repair(repairVal);
+            yield return new WaitForSeconds(repairRate);
+            //repairing = true;
+            yield break;
+        }
+        else
+            yield break;
+    }
+
+    //-----------------------------------------------------------------
 
     private void runLogic()
     {
@@ -573,6 +611,27 @@ public class masterInput : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0 && isAttacking == false)
             {
                 StartCoroutine(pistolShoot());
+            }
+
+            if (canRepair)
+            {
+                if(Input.GetKeyDown(KeyCode.B) && !isAttacking && !pistolReloading)
+                {
+                    Debug.Log("Starting repair");
+                    repairing = true;
+                }
+                if (repairing && Input.GetKeyUp(KeyCode.B))
+                {
+                    Debug.Log("Stop repair");
+                    repairing = false;
+                }
+            }
+            else
+                removeRepair();
+
+            if(repairing)
+            {
+                StartCoroutine(repairWait());
             }
 
             if (Time.time - lastClickedTime > engMaxComboDelay)
@@ -775,6 +834,20 @@ public class masterInput : MonoBehaviour
         Gizmos.DrawWireSphere(swordAttackPoint.position, swordAttackRadius);
         Gizmos.DrawWireSphere(toolAttackPoint.position, toolAttackRadius);
     }
+
+
+
+
+    //-------------------RUNE FUNCTIONS----------------------
+
+    public void activateFireRune(bool choice)
+    {
+        fireBullet = choice;
+    }
+
+    
+
+
 }
 
 

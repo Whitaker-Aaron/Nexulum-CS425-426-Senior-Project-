@@ -5,7 +5,6 @@ using UnityEngine;
 public class swordCombat : MonoBehaviour
 {
     public int damage = 50;
-    bool isAttacking = false;
 
 
     //rune ability combat mechanic
@@ -18,7 +17,6 @@ public class swordCombat : MonoBehaviour
     void Start()
     {
         
-        //isFire = true;
     }
 
     private void Awake()
@@ -47,11 +45,6 @@ public class swordCombat : MonoBehaviour
                 collider.GetComponent<EnemyFrame>().takeDamage(damage);
             }
         }
-        //isAttacking = true;
-        //yield return new WaitForSeconds(time);
-        //print("Deactivating");
-        //isAttacking = false;
-        //yield break;
     }
 
     public void activateFire(bool activate)

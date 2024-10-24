@@ -19,6 +19,7 @@ public class LifetimeManager : MonoBehaviour
     CharacterBase characterRef;
     masterInput inputManager;
     skillTreeManager skillTreeMan;
+    projectileManager projMan;
 
 
     GameObject deathScreen;
@@ -32,6 +33,7 @@ public class LifetimeManager : MonoBehaviour
         inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
         menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         skillTreeMan = GameObject.Find("SkillTreeManager").GetComponent<skillTreeManager>();
+        projMan = GameObject.Find("ProjectileManager").GetComponent<projectileManager>();
         deathScreen = GameObject.Find("DeathScreen");
         deathScreen.SetActive(false);
         //currentInputRef.SetActive(false);
@@ -49,7 +51,6 @@ public class LifetimeManager : MonoBehaviour
         
         yield return StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         SceneManager.LoadSceneAsync(index);
-
         yield break;
 
         //SceneManager.UnloadSceneAsync(currentScene);
@@ -89,12 +90,14 @@ public class LifetimeManager : MonoBehaviour
 
     public void InitializeManagers()
     {
+        projMan.initializePool();
         inputManager.enabled = true;
         weaponsManager.Initialize();
         runeManager.Initialize();
         //skillTreeMan.enabled = true;
         skillTreeMan.Initialize();
-        
+        //projMan.initializePool();
+
         //inputManager.Initialize();
     }
 

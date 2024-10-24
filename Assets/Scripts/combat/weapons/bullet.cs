@@ -25,7 +25,7 @@ public class bullet : MonoBehaviour
         //target = GameObject.FindWithTag("Player");
         //index = index.GetComponent<enemyIndex>();
         //enemyName = index.getEnemyName();
-        Destroy(gameObject, lifeTime);
+        //Destroy(gameObject, lifeTime);
 
     }
 
