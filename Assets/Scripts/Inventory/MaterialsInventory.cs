@@ -110,13 +110,14 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
         if (!itemFound)
         {
             inventory[nextFreeIndex] = materialToAdd;
-            if(inventory[nextFreeIndex].maxMaterialAmount <= amount)
+            if(amount >= inventory[nextFreeIndex].maxMaterialAmount)
             {
-                inventory[nextFreeIndex].currentAmount = amount;
+                inventory[nextFreeIndex].currentAmount = inventory[nextFreeIndex].maxMaterialAmount;
+                
             }
             else
             {
-                inventory[nextFreeIndex].currentAmount = inventory[nextFreeIndex].maxMaterialAmount;
+                inventory[nextFreeIndex].currentAmount = amount;
             }
             Debug.Log(inventory[nextFreeIndex].materialName + " has been added to inventory!");
             nextFreeIndex++;
@@ -137,7 +138,7 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
                     if (!(totalInventory[i].currentTotalAmount + amount > totalInventory[i].maxTotalMaterialAmount))
                     {
                         totalInventory[i].currentTotalAmount += amount;
-                        Debug.Log("Amount of " + materialToAdd.materialName + " inside inventory: " + inventory[i].currentTotalAmount);
+                       
                     }
                     else
                     {
