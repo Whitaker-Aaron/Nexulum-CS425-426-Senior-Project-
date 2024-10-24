@@ -25,7 +25,13 @@ public class turretCombat : MonoBehaviour
     public Transform bulletSpawnLeft, bulletSpawnRight;
 
     //Turret Health
-    public int health = 300;
+    public const int maxHealth = 300;
+    int health = maxHealth;
+
+    //repair vars
+    bool playerInRange = false;
+    public float repairRange = 1f;
+
 
     private void OnDrawGizmos()
     {
@@ -34,16 +40,51 @@ public class turretCombat : MonoBehaviour
 
     public void takeDamage(int damage)
     {
+
         if (health - damage <= 0)
-            destroy();
+        {
+            Destroy(gameObject);
+        }
         else
             health -= damage;
+
+        Debug.Log("turret health is: " + health);
     }
 
-    void destroy()
+    public void repair(int amount)
     {
-        Destroy(gameObject);
+        if (!playerInRange)
+            return;
+
+        if (health + amount >= maxHealth)
+            health = maxHealth;
+        else
+            health += amount;
+
+        Debug.Log("Health is now: " + health);
     }
+
+    void checkPlayerRange()
+    {
+        Collider[] player = Physics.OverlapSphere(gameObject.transform.position, repairRange);
+        foreach (Collider collider in player)
+        {
+            if (collider.gameObject.tag == "Player")
+            {
+                Debug.Log("Player can repair");
+                playerInRange = true;
+                GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>().canRepair = true;
+                GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>().assignRepair(gameObject);
+            }
+            else
+            {
+                playerInRange = false;
+                GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>().canRepair = false;
+            }
+        }
+    }
+
+    
 
     IEnumerator turn(bool left, bool right)
     {
@@ -153,6 +194,12 @@ public class turretCombat : MonoBehaviour
     void Update()
     {
         detectEnemies();
+        checkPlayerRange();
+
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            takeDamage(50);
+        }
     }
 
     // Update is called once per frame

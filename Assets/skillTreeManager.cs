@@ -45,18 +45,7 @@ public class SkillTreeManager : MonoBehaviour
 
     private void Awake()
     {
-        /*
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject); // Persist this object
-            InitializeSkillTree();
-        }
-        else
-        {
-            Destroy(gameObject); // Prevent duplicate instances
-        }
-        */
+        
     }
 
     // Start is called before the first frame update
