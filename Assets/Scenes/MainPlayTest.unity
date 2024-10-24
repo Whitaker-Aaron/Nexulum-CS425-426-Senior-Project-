@@ -2136,8 +2136,6 @@ GameObject:
   - component: {fileID: 157967345}
   - component: {fileID: 157967344}
   - component: {fileID: 157967343}
-  - component: {fileID: 157967355}
-  - component: {fileID: 157967354}
   - component: {fileID: 157967353}
   m_Layer: 7
   m_Name: Test Enemy (8)
@@ -2273,9 +2271,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 157967349}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &157967349
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2382,33 +2383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
---- !u!114 &157967354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157967341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &157967355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157967341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  enableStateDebugLogs: 0
 --- !u!1001 &177242579
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6756,8 +6731,6 @@ GameObject:
   - component: {fileID: 581683910}
   - component: {fileID: 581683909}
   - component: {fileID: 581683922}
-  - component: {fileID: 581683921}
-  - component: {fileID: 581683920}
   m_Layer: 7
   m_Name: Test Enemy (1)
   m_TagString: Enemy
@@ -6875,9 +6848,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 581683915}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &581683915
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -6988,30 +6964,6 @@ Transform:
   - {fileID: 257268326}
   m_Father: {fileID: 806914971}
   m_LocalEulerAnglesHint: {x: 0, y: 198.588, z: 0}
---- !u!114 &581683920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581683908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &581683921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581683908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &581683922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7025,9 +6977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
+  enableStateDebugLogs: 0
 --- !u!1001 &594923113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9667,9 +9617,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 914834195}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &914834195
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -10065,8 +10018,6 @@ GameObject:
   - component: {fileID: 937644613}
   - component: {fileID: 937644612}
   - component: {fileID: 937644611}
-  - component: {fileID: 937644623}
-  - component: {fileID: 937644622}
   - component: {fileID: 937644621}
   m_Layer: 7
   m_Name: Test Enemy (3)
@@ -10202,9 +10153,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 937644617}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &937644617
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -10311,33 +10265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
---- !u!114 &937644622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 937644609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &937644623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 937644609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  enableStateDebugLogs: 0
 --- !u!1001 &960271923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20065,8 +19993,6 @@ GameObject:
   - component: {fileID: 1836943728}
   - component: {fileID: 1836943727}
   - component: {fileID: 1836943726}
-  - component: {fileID: 1836943725}
-  - component: {fileID: 1836943724}
   m_Layer: 7
   m_Name: Test Enemy (2)
   m_TagString: Enemy
@@ -20091,30 +20017,6 @@ Transform:
   - {fileID: 9102750}
   m_Father: {fileID: 806914971}
   m_LocalEulerAnglesHint: {x: 0, y: 246.34601, z: 0}
---- !u!114 &1836943724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836943722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1836943725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836943722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1836943726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20128,9 +20030,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
+  enableStateDebugLogs: 0
 --- !u!114 &1836943727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20241,9 +20141,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 1836943733}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &1836943733
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -23725,8 +23628,6 @@ GameObject:
   - component: {fileID: 2107450711}
   - component: {fileID: 2107450710}
   - component: {fileID: 2107450709}
-  - component: {fileID: 2107450721}
-  - component: {fileID: 2107450720}
   - component: {fileID: 2107450719}
   m_Layer: 7
   m_Name: Test Enemy (9)
@@ -23862,9 +23763,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 2107450715}
   target: {fileID: 0}
+  enemyStateManager: {fileID: 0}
+  isTargetSpotted: 0
   detectionRange: 10
   visionAngle: 90
-  enemyStateManager: {fileID: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+  timeToWaitInSearch: 5
 --- !u!195 &2107450715
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -23971,33 +23875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyBehaviorRef: {fileID: 0}
-  defaultState: {fileID: 0}
-  idleState: {fileID: 0}
-  chaseState: {fileID: 0}
---- !u!114 &2107450720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2107450707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d7f180b3e6d6be449134da48ae1f5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2107450721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2107450707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695fffef57d22b499e2405be7792a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  enableStateDebugLogs: 0
 --- !u!1001 &2108203030
 PrefabInstance:
   m_ObjectHideFlags: 0

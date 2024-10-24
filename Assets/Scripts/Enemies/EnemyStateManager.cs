@@ -6,20 +6,23 @@ using UnityEngine;
 
 public class EnemyStateManager : MonoBehaviour
 {
+    // Reference to EnemyBehavior so individual states can retrieve and send information back to EnemyBehavior
+    // No need to see this in inspector
+    [HideInInspector] public EnemyBehavior enemyBehaviorRef;
 
-    // Reference to EnemyBehavior so individual states have access to behavior variables/functions
-    [HideInInspector]
-    public EnemyBehavior enemyBehaviorRef;
-
-    // Holder of the current state
+    // Current state - actively running state
     private EnemyState currentState;
 
-    // Default state
-    public EnemyState defaultState; // Can be idle, patrol, etc - set in inspector
+    // Initial state - may not be actively running
+    public EnemyState initialState;
 
-    // Holders for specific states (idle, chase) - set in inspector
-    public EnemyIdleState idleState;
-    public EnemyChaseState chaseState;
+    // Concrete states
+    public EnemyIdleState idleState = new EnemyIdleState();
+    public EnemyChaseState chaseState = new EnemyChaseState();
+    public EnemySearchState searchState = new EnemySearchState();
+
+    // Editable bool in editor to enable debug logging for state switching
+    public bool enableStateDebugLogs = false;
 
     // Delay used to slow down state updates, since they don't necessarily need to occur every frame (for performance)
     public IEnumerator updateDelay(float time)
@@ -32,13 +35,9 @@ public class EnemyStateManager : MonoBehaviour
         // Grab reference to EnemyBehavior
         enemyBehaviorRef = GetComponent<EnemyBehavior>();
 
-        idleState = GetComponent<EnemyIdleState>();
-        chaseState = GetComponent<EnemyChaseState>();
+        ChangeInitialState(idleState);
 
-        ChangeDefaultState(idleState);
-
-        ChangeState(defaultState);
-
+        ChangeState(initialState);
     }
 
     public void Update()
@@ -59,8 +58,16 @@ public class EnemyStateManager : MonoBehaviour
         currentState.EnterState(this);
     }
 
-    public void ChangeDefaultState(EnemyState newDefault)
+    public void ChangeInitialState(EnemyState newInitial)
     {
-        defaultState = newDefault;
+        initialState = newInitial;
+    }
+
+    public void CustomDebugLog(string log)
+    {
+        if (enableStateDebugLogs == true)
+        {
+            Debug.Log(log);
+        }
     }
 }
