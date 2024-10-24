@@ -299,14 +299,16 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         StopCoroutine(animateHealth());
         StopCoroutine(animateDelayedHealth());
 
-        playerHealth = maxHealth;
-        healthBar.value = maxHealth;
-        delayedHealthBar.value = maxHealth;
+        
         
     }
 
+
     public void RecoverFromDeath()
     {
+        playerHealth = maxHealth;
+        healthBar.value = maxHealth;
+        delayedHealthBar.value = maxHealth;
         invul = false;
     }
 

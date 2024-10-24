@@ -35,6 +35,8 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
                 saveData = new CraftMaterialSaveData();
                 saveData.materialName = inventory[index].materialName;
                 saveData.currentAmount = inventory[index].currentAmount;
+                saveData.maxTotalMaterialAmount = inventory[index].maxTotalMaterialAmount;
+                saveData.currentTotalAmount = inventory[index].currentTotalAmount;
                 saveData.maxMaterialAmount = inventory[index].maxMaterialAmount;
                 saveData.dropRate = inventory[index].dropRate;
                 saveData.dropAmount = inventory[index].dropAmount;
@@ -44,11 +46,43 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
             {
                 var saveData = new CraftMaterialSaveData();
                 saveData.materialName = "";
+                saveData.currentTotalAmount = 0;
                 saveData.currentAmount = 0;
+                saveData.maxTotalMaterialAmount = 0;
                 saveData.maxMaterialAmount = 0;
                 saveData.dropRate = 0.0f;
                 saveData.dropAmount = 0;
                 data.materialInventory[index] = saveData;
+            }
+
+        }
+
+        for (int index = 0; index < totalInventory.Length; index++)
+        {
+            if (totalInventory[index] != null)
+            {
+                var saveData = data.totalMaterialInventory[index];
+                saveData = new CraftMaterialSaveData();
+                saveData.materialName = totalInventory[index].materialName;
+                saveData.currentTotalAmount = totalInventory[index].currentTotalAmount;
+                saveData.currentAmount = totalInventory[index].currentAmount;
+                saveData.maxMaterialAmount = totalInventory[index].maxMaterialAmount;
+                saveData.maxTotalMaterialAmount = totalInventory[index].maxTotalMaterialAmount;
+                saveData.dropRate = totalInventory[index].dropRate;
+                saveData.dropAmount = totalInventory[index].dropAmount;
+                data.totalMaterialInventory[index] = saveData;
+            }
+            else
+            {
+                var saveData = new CraftMaterialSaveData();
+                saveData.materialName = "";
+                saveData.currentTotalAmount = 0;
+                saveData.currentAmount = 0;
+                saveData.maxTotalMaterialAmount = 0;
+                saveData.maxMaterialAmount = 0;
+                saveData.dropRate = 0.0f;
+                saveData.dropAmount = 0;
+                data.totalMaterialInventory[index] = saveData;
             }
 
         }
@@ -65,12 +99,37 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
                 inventory[index] = new CraftMaterial();
                 inventory[index].materialName = data.materialInventory[index].materialName;
                 inventory[index].currentAmount = data.materialInventory[index].currentAmount;
+                inventory[index].currentTotalAmount = data.materialInventory[index].currentTotalAmount;
                 inventory[index].maxMaterialAmount = data.materialInventory[index].maxMaterialAmount;
+                inventory[index].maxTotalMaterialAmount = data.materialInventory[index].maxTotalMaterialAmount;
                 inventory[index].dropRate = data.materialInventory[index].dropRate;
                 inventory[index].dropAmount = data.materialInventory[index].dropAmount;
                 inventory[index].materialTexture = materialList.ReturnTexture(inventory[index].materialName);
 
                 nextFreeIndex++;
+            }
+            else
+            {
+                break;
+            }
+
+        }
+
+        for (int index = 0; index < totalInventory.Length; index++)
+        {
+            if (data.totalMaterialInventory[index] != null && data.totalMaterialInventory[index].materialName != "")
+            {
+                totalInventory[index] = new CraftMaterial();
+                totalInventory[index].materialName = data.totalMaterialInventory[index].materialName;
+                totalInventory[index].currentTotalAmount = data.totalMaterialInventory[index].currentTotalAmount;
+                totalInventory[index].currentAmount = data.totalMaterialInventory[index].currentAmount;
+                totalInventory[index].maxMaterialAmount = data.totalMaterialInventory[index].maxMaterialAmount;
+                totalInventory[index].maxTotalMaterialAmount = data.totalMaterialInventory[index].maxTotalMaterialAmount;
+                totalInventory[index].dropRate = data.totalMaterialInventory[index].dropRate;
+                totalInventory[index].dropAmount = data.totalMaterialInventory[index].dropAmount;
+                totalInventory[index].materialTexture = materialList.ReturnTexture(totalInventory[index].materialName);
+
+                totalNextFreeIndex++;
             }
             else
             {
