@@ -87,6 +87,9 @@ public class masterInput : MonoBehaviour
 
     public bool shootingSwords = false;
 
+    public GameObject swordSlashPrefab, swordSlash2, swordSlash3;
+    private GameObject SS1, SS2, SS3;
+
 
 
     //Gunner Variables
@@ -182,11 +185,31 @@ public class masterInput : MonoBehaviour
         
 
     }
-    
+
+    private void OnEnable()
+    {
+        
+    }
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+
+        SS1 = Instantiate(swordSlashPrefab);
+        SS2 = Instantiate(swordSlash2);
+        SS3 = Instantiate(swordSlash3);
+        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS1.transform.SetParent(player.transform, false);
+        SS2.transform.SetParent(player.transform, false);
+        SS3.transform.SetParent(player.transform, false);
+        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        DontDestroyOnLoad(SS1);
+        DontDestroyOnLoad(SS2);
+        DontDestroyOnLoad(SS3);
 
         playerControl = new PlayerInputActions();
         animationControl = GetComponent<PlayerAnimation>();
@@ -481,6 +504,7 @@ public class masterInput : MonoBehaviour
                     noOfClicks++;
                     if (noOfClicks == 1)
                     {
+                        
                         if (animationControl.getAnimationInfo().IsName("waitTwo") && animationControl.getAnimationInfo().normalizedTime > .99f)
                         {
                             noOfClicks = 0;
@@ -495,20 +519,24 @@ public class masterInput : MonoBehaviour
                         animationControl.knightAttackOne(animTime);
                         StartCoroutine(waitAttack(animTime * 2));
                         StartCoroutine(wait(animTime));
+                        SS1.GetComponent<ParticleSystem>().Play();
                     }
                     noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
 
                     if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("waitOne"))
                     {
+                        
                         nextAttackTime = animTimeTwo;
                         sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
                         animationControl.knightAttackTwo(animTimeTwo);
                         StartCoroutine(wait(animTimeTwo));
                         StartCoroutine(waitAttack(animTimeTwo * 2));
+                        SS2.GetComponent<ParticleSystem>().Play();
                     }
 
                     if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("waitTwo"))
                     {
+                        
                         nextAttackTime = animTimeThree;
                         noOfClicks = 0;
                         cooldownTime = Time.time + cooldown;
@@ -517,7 +545,7 @@ public class masterInput : MonoBehaviour
                         StartCoroutine(wait(animTimeThree));
                         StartCoroutine(waitAttack(animTimeThree * 2));
                         nextAttackTime = animTime;
-
+                        SS3.GetComponent<ParticleSystem>().Play();
                     }
                     else
                     {

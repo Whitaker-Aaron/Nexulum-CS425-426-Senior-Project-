@@ -20,6 +20,7 @@ public class LifetimeManager : MonoBehaviour
     masterInput inputManager;
     SkillTreeManager skillTreeMan;
     projectileManager projMan;
+    EffectsManager effectsMan;
 
 
 
@@ -35,6 +36,7 @@ public class LifetimeManager : MonoBehaviour
         menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         skillTreeMan = GameObject.Find("SkillTreeManager").GetComponent<SkillTreeManager>();
         projMan = GameObject.Find("ProjectileManager").GetComponent<projectileManager>();
+        effectsMan = GameObject.Find("EffectsManager").GetComponent<EffectsManager>();
 
         deathScreen = GameObject.Find("DeathScreen");
         deathScreen.SetActive(false);
@@ -93,6 +95,7 @@ public class LifetimeManager : MonoBehaviour
     public void InitializeManagers()
     {
         projMan.initializePool();
+        effectsMan.initialize();
         inputManager.enabled = true;
         weaponsManager.Initialize();
         runeManager.Initialize();
