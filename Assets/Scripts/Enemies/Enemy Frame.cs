@@ -20,6 +20,7 @@ public class EnemyFrame : MonoBehaviour
     //PLAYER HEALTH - Spencer
     public int health = 200;
     public int maxHealth = 200;
+    
 
     Vector3 initialPos;
 

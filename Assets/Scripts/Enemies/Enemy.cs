@@ -7,7 +7,7 @@ public class Enemy : ScriptableObject
 {
     public string enemyName;
     public int baseHealth;
-    
+    public int droppedExperience;
     
 }
 
