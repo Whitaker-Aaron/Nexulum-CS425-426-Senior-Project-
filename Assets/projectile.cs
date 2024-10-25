@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class projectile : MonoBehaviour
@@ -19,9 +20,9 @@ public class projectile : MonoBehaviour
     bool stop = false;
 
     //fire rune vars
-    bool gunnerFire = false;
-    public float fireRad = .4f;
-    public int fireDamage = 5;
+    ///bool gunnerFire = false;
+    //public float fireRad = .4f;
+    //public int fireDamage = 5;
     //public GameObject fireEffect;
 
 
@@ -31,14 +32,15 @@ public class projectile : MonoBehaviour
         lifeTime = maxLifeTime;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, enemy))
+        if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
-            if(hit.collider.gameObject.tag == "Enemy")
+            hitPoint = hit.point;
+            if (hit.collider.gameObject.tag == "Enemy")
             {
                 hitEnemy = true;
                 hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
-                hitPoint = hit.point;
             }
+            
         }
     }
 
@@ -96,8 +98,22 @@ public class projectile : MonoBehaviour
 
         if (distanceToHit <= step || distanceToHit <= bufferDistance)
         {
+            EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
             // We've reached the hit point, stop the projectile
             stop = true;
+
+            /*
+            if(gunnerFire)
+            {
+                gunnerFire = false;
+
+                Collider[] enemies = Physics.OverlapSphere(hitPoint, fireRad, enemy);
+                foreach (Collider enemy in enemies)
+                {
+                    enemy.gameObject.GetComponent<EnemyFrame>().takeDamage(fireDamage);
+                }
+            }
+            */
             resetProjectile();
             returnToPool();
         }
@@ -106,8 +122,6 @@ public class projectile : MonoBehaviour
 
     void resetProjectile()
     {
-        
-
         // Reset any other projectile properties
         if (rb != null)
         {
@@ -143,8 +157,10 @@ public class projectile : MonoBehaviour
 
 
     //----------RUNE EFFECTS--------------
+    /*
     public void fireGunnerRune()
     {
         gunnerFire = true;
     }
+    */
 }
