@@ -11,12 +11,14 @@ public class WeaponClass : ScriptableObject
     public WeaponBase.weaponClassTypes classType;
 
     public float totalExp = 0;
+    public float nextLvl = 0;
     public float numSkillPoints = 0;
     public int currentLvl = 1;
 
 
     [SerializedDictionary("Experience", "Level")]
     public SerializedDictionary<float, int> levelUnlocks;
+    public SerializedDictionary<int, float> requiredExpForNextLvl;
 
     public bool updateExperience(float enemyExp)
     {
@@ -35,7 +37,14 @@ public class WeaponClass : ScriptableObject
         }
         return leveledUp;
     }
-    
+    public float getNextLvlExperienceAmount()
+    {
+        return requiredExpForNextLvl[currentLvl+1];
+    }
+    public float getCurrentLvlExperienceAmount()
+    {
+        return requiredExpForNextLvl[currentLvl];
+    }
 
 }
 

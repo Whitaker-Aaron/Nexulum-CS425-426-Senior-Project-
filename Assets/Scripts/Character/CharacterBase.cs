@@ -212,6 +212,9 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         bool leveledUp = weaponClass.updateExperience(enemyExp);
         if (leveledUp) uiManager.UpdateExperienceLevel(weaponClass.classType, weaponClass.currentLvl);
+        else uiManager.UpdateExperienceBar(weaponClass.totalExp);
+
+
     }
 
     public void EquipClass(WeaponBase.weaponClassTypes type)
@@ -260,7 +263,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         masterInput.GetComponent<masterInput>().currentClass = newClass;
         //Debug.Log(weaponClass.currentWeapon);
         weaponsManager.ChangeWeapon(weaponClass.currentWeapon);
-        uiManager.UpdateClass(newClass, weaponClass.currentLvl);
+        uiManager.UpdateClass(newClass, weaponClass.currentLvl, true);
         //UpdateWeapon(weaponClass.currentWeapon);
         runeInt.ChangeClass(newClass);
     }

@@ -15,7 +15,8 @@ MonoBehaviour:
   currentWeapon: {fileID: 11400000, guid: c6b8b453c9eb0e44bb6daf33497239ca, type: 2}
   classType: 0
   totalExp: 0
-  numSkillPoints: 2
+  nextLvl: 0
+  numSkillPoints: 0
   currentLvl: 1
   levelUnlocks:
     _serializedList:
@@ -25,3 +26,25 @@ MonoBehaviour:
       Value: 3
     - Key: 500
       Value: 4
+    - Key: 1000
+      Value: 5
+    - Key: 2000
+      Value: 6
+    - Key: 4000
+      Value: 7
+  requiredExpForNextLvl:
+    _serializedList:
+    - Key: 1
+      Value: 0
+    - Key: 2
+      Value: 100
+    - Key: 3
+      Value: 250
+    - Key: 4
+      Value: 500
+    - Key: 5
+      Value: 1000
+    - Key: 6
+      Value: 2000
+    - Key: 7
+      Value: 4000
