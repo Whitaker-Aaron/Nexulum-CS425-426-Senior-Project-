@@ -292,14 +292,16 @@ public class MenuManager : MonoBehaviour
         int existingIndex = -1;
         bool exists = false;
 
-        scrollObject.description.text = materialToAdd.materialName;
+        scrollObject.descriptionMain.text = materialToAdd.materialName;
+        scrollObject.descriptionSub.text = materialToAdd.materialName;
         scrollObject.imageRef.texture = materialToAdd.materialTexture;
         scrollObject.quantityInt = 1;
-        scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
+        scrollObject.quantityMain.text = "x" + scrollObject.quantityInt.ToString();
+        scrollObject.quantitySub.text = "x" + scrollObject.quantityInt.ToString();
 
         for (int i = 0; i < currentMaterials.Count; i++)
         {
-            if (currentMaterials[i].GetComponent<MaterialScrollObject>().description.text == materialToAdd.materialName)
+            if (currentMaterials[i].GetComponent<MaterialScrollObject>().descriptionMain.text == materialToAdd.materialName)
             {
                 exists = true;
                 existingIndex = i;
@@ -311,7 +313,8 @@ public class MenuManager : MonoBehaviour
             Debug.Log("Current material found");
             var updateMat = currentMaterials[existingIndex].GetComponent<MaterialScrollObject>();
             updateMat.quantityInt += 1;
-            updateMat.quantity.text = "x" + updateMat.quantityInt.ToString();
+            updateMat.quantityMain.text = "x" + updateMat.quantityInt.ToString();
+            updateMat.quantitySub.text = "x" + updateMat.quantityInt.ToString();
         }
         else
         {
@@ -341,10 +344,12 @@ public class MenuManager : MonoBehaviour
                 }
 
                 var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
-                scrollObject.description.text = matInventory[i].materialName;
+                scrollObject.descriptionMain.text = matInventory[i].materialName;
+                scrollObject.descriptionSub.text = matInventory[i].materialName;
                 scrollObject.imageRef.texture = matInventory[i].materialTexture;
                 scrollObject.quantityInt = matInventory[i].currentAmount;
-                scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
+                scrollObject.quantityMain.text = "x" + scrollObject.quantityInt.ToString();
+                scrollObject.quantitySub.text = "x" + scrollObject.quantityInt.ToString();
                 GameObject newScrollMaterial = Instantiate(scrollContent);
                 newScrollMaterial.transform.SetParent(container.transform, false);
                 currentMaterials.Add(newScrollMaterial);
@@ -387,10 +392,12 @@ public class MenuManager : MonoBehaviour
                 }
 
                 var depositMaterial = DepositScrollContent.transform.Find("Material Scroll Object").GetComponent<MaterialScrollObject>();
-                depositMaterial.description.text = matInventory[i].materialName;
+                depositMaterial.descriptionMain.text = matInventory[i].materialName;
+                depositMaterial.descriptionSub.text = matInventory[i].materialName;
                 depositMaterial.imageRef.texture = matInventory[i].materialTexture;
                 depositMaterial.quantityInt = matInventory[i].currentAmount;
-                depositMaterial.quantity.text = "x" + depositMaterial.quantityInt.ToString();
+                depositMaterial.quantityMain.text = "x" + depositMaterial.quantityInt.ToString();
+                depositMaterial.quantitySub.text = "x" + depositMaterial.quantityInt.ToString();
 
                 var newScrollMaterial = Instantiate(DepositScrollContent);
                 newScrollMaterial.GetComponent<MaterialDepositObject>().currentMaterialCount = matInventory[i].currentAmount;
@@ -409,10 +416,12 @@ public class MenuManager : MonoBehaviour
                 }
                 Debug.Log("Inside total mat inventory for menu manager");
                 var depositMaterial = WithdrawScrollContent.transform.Find("Material Scroll Object").GetComponent<MaterialScrollObject>();
-                depositMaterial.description.text = totalMatInventory[i].materialName;
+                depositMaterial.descriptionMain.text = totalMatInventory[i].materialName;
+                depositMaterial.descriptionSub.text = totalMatInventory[i].materialName;
                 depositMaterial.imageRef.texture = totalMatInventory[i].materialTexture;
                 depositMaterial.quantityInt = totalMatInventory[i].currentTotalAmount;
-                depositMaterial.quantity.text = "x" + depositMaterial.quantityInt.ToString();
+                depositMaterial.quantityMain.text = "x" + depositMaterial.quantityInt.ToString();
+                depositMaterial.quantitySub.text = "x" + depositMaterial.quantityInt.ToString();
 
                 var newScrollMaterial = Instantiate(WithdrawScrollContent);
                 newScrollMaterial.GetComponent<MaterialDepositObject>().currentMaterialCount = totalMatInventory[i].currentTotalAmount;

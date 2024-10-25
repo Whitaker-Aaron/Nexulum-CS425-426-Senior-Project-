@@ -18,17 +18,22 @@ public class WeaponClass : ScriptableObject
     [SerializedDictionary("Experience", "Level")]
     public SerializedDictionary<float, int> levelUnlocks;
 
-    public void updateExperience(float enemyExp)
+    public bool updateExperience(float enemyExp)
     {
         totalExp += enemyExp;
+        bool leveledUp = false;
+        Debug.Log(classType + " has gained " + enemyExp + " experience! Class now has " +  totalExp + " total experience."); 
         foreach (var item in levelUnlocks)
         {
             if (totalExp >= item.Key && currentLvl < item.Value)
             {
+                Debug.Log("Player is now level " + item.Value + "!");
+                leveledUp = true;
                 currentLvl = item.Value;
                 numSkillPoints += 1;
             }
         }
+        return leveledUp;
     }
     
 

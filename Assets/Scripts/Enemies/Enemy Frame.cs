@@ -16,10 +16,11 @@ public class EnemyFrame : MonoBehaviour
 
     GameObject enemyUIRef;
     public GameObject healthRef;
+    CharacterBase character;
 
     //PLAYER HEALTH - Spencer
-    public int health = 200;
-    public int maxHealth = 200;
+    private int health;
+    private int maxHealth;
     
 
     Vector3 initialPos;
@@ -37,7 +38,10 @@ public class EnemyFrame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        health = enemyReference.baseHealth;
+        maxHealth = enemyReference.baseHealth;
         initialPos = transform.position;
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         //Slider enemyHealthBar = enemyHealth.GetComponentInChildren<Slider>();
         //Slider delayedEnemyHealthBar = delayedEnemyHealth.GetComponent<Slider>()
         var sliders = enemyHealth.GetComponentsInChildren<Slider>();
@@ -208,10 +212,11 @@ public class EnemyFrame : MonoBehaviour
                     Instantiate(materialList[i], new Vector3(transform.position.x + UnityEngine.Random.Range(-1.0f, 1.0f), transform.position.y + 2.5f, transform.position.z + UnityEngine.Random.Range(-1.0f, 1.0f)), Quaternion.identity);
                 }
             }
-
+            
 
 
         }
+        character.AddExperienceToClass(enemyReference.droppedExperience);
         Destroy(healthRef);
         Destroy(this.gameObject);
     }

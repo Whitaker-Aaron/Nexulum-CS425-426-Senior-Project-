@@ -29,10 +29,12 @@ public class MaterialScrollManager : MonoBehaviour
 
         scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
 
-        scrollObject.description.text = "empty";
+        scrollObject.descriptionMain.text = "empty";
+        scrollObject.descriptionSub.text = "empty";
         scrollObject.imageRef.texture = placeholder;
         scrollObject.quantityInt = 1;
-        scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
+        scrollObject.quantityMain.text = "x" + scrollObject.quantityInt.ToString();
+        scrollObject.quantitySub.text = "x" + scrollObject.quantityInt.ToString();
 
         GameObject newScrollMaterial = Instantiate(scrollContent);
         newScrollMaterial.transform.SetParent(content.transform, false);
@@ -56,11 +58,11 @@ public class MaterialScrollManager : MonoBehaviour
         //Debug.Log(currentMaterials.Count);
         if(currentMaterials.Count <= 0)
         {
-            materialGradient.SetActive(false);
+            //materialGradient.SetActive(false);
         }
         else
         {
-            materialGradient.SetActive(true);
+            //materialGradient.SetActive(true);
         }
     }
 
@@ -71,18 +73,20 @@ public class MaterialScrollManager : MonoBehaviour
         int existingIndex = -1; 
         bool exists = false; 
 
-        scrollObject.description.text = materialName;
+        scrollObject.descriptionMain.text = materialName;
+        scrollObject.descriptionSub.text = materialName;
         scrollObject.imageRef.texture = materialTexture;
         scrollObject.quantityInt = 1;
-        scrollObject.quantity.text = "x" + scrollObject.quantityInt.ToString();
+        scrollObject.quantityMain.text = "x" + scrollObject.quantityInt.ToString();
+        scrollObject.quantitySub.text = "x" + scrollObject.quantityInt.ToString();
         GameObject newScrollMaterial = Instantiate(scrollContent);
         newScrollMaterial.transform.SetParent(content.transform, false);
 
         var existingScroll = newScrollMaterial.GetComponent<MaterialScrollObject>();
 
-        var desc = existingScroll.description;
+        var desc = existingScroll.descriptionMain;
         for (int i = 0; i < currentMaterials.Count; i++) {
-            if (currentMaterials[i].GetComponent<MaterialScrollObject>().description.text == desc.text)
+            if (currentMaterials[i].GetComponent<MaterialScrollObject>().descriptionMain.text == desc.text)
             {
                 exists = true;
                 existingIndex = i;
@@ -93,7 +97,8 @@ public class MaterialScrollManager : MonoBehaviour
             Debug.Log("Current material found");
             
             existingScroll.quantityInt += currentMaterials[existingIndex].GetComponent<MaterialScrollObject>().quantityInt;
-            existingScroll.quantity.text = "x" + existingScroll.quantityInt.ToString();
+            existingScroll.quantityMain.text = "x" + existingScroll.quantityInt.ToString();
+            existingScroll.quantitySub.text = "x" + existingScroll.quantityInt.ToString();
             Destroy(currentMaterials[existingIndex].gameObject);
             currentMaterials.RemoveAt(existingIndex);
         }
@@ -157,8 +162,10 @@ public class MaterialScrollManager : MonoBehaviour
     private void OnDestroy()
     {
         var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
-        scrollObject.description.text = "empty";
-        scrollObject.quantity.text = "x0";
+        scrollObject.descriptionMain.text = "empty";
+        scrollObject.descriptionSub.text = "empty";
+        scrollObject.quantityMain.text = "x0";
+        scrollObject.quantitySub.text = "x0";
     }
 
     public CraftMaterial[] GetMaterialInventory()
@@ -233,13 +240,21 @@ public class MaterialScrollManager : MonoBehaviour
             imgColor.a -= 0.20f * Time.deltaTime;
             reference.imageRef.color = imgColor;
 
-            Color desColor = reference.description.color;
+            Color desColor = reference.descriptionMain.color;
             desColor.a -= 0.20f * Time.deltaTime;
-            reference.description.color = desColor;
+            reference.descriptionMain.color = desColor;
 
-            Color quanColor = reference.quantity.color;
+            Color desColor2 = reference.descriptionSub.color;
+            desColor2.a -= 0.20f * Time.deltaTime;
+            reference.descriptionSub.color = desColor2;
+
+            Color quanColor = reference.quantityMain.color;
             quanColor.a -= 0.20f * Time.deltaTime;
-            reference.quantity.color = quanColor;
+            reference.quantityMain.color = quanColor;
+
+            Color quanColor2 = reference.quantitySub.color;
+            quanColor2.a -= 0.20f * Time.deltaTime;
+            reference.quantitySub.color = quanColor2;
 
             yield return null;
         }

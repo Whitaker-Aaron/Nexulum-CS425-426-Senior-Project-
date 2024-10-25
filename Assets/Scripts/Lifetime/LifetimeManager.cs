@@ -13,6 +13,7 @@ public class LifetimeManager : MonoBehaviour
     GameObject currentInputRef;
 
     WeaponsManager weaponsManager;
+    UIManager uiManager;
     RuneManager runeManager;
     MaterialScrollManager scrollManager;
     MenuManager menuManager;
@@ -35,6 +36,7 @@ public class LifetimeManager : MonoBehaviour
         menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         skillTreeMan = GameObject.Find("SkillTreeManager").GetComponent<SkillTreeManager>();
         projMan = GameObject.Find("ProjectileManager").GetComponent<projectileManager>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         deathScreen = GameObject.Find("DeathScreen");
         deathScreen.SetActive(false);
@@ -98,6 +100,7 @@ public class LifetimeManager : MonoBehaviour
         runeManager.Initialize();
         //skillTreeMan.enabled = true;
         skillTreeMan.Initialize();
+        uiManager.Initialize();
         //projMan.initializePool();
 
         //inputManager.Initialize();
