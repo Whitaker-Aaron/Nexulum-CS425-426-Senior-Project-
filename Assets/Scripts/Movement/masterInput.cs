@@ -398,7 +398,9 @@ public class masterInput : MonoBehaviour
         {
             bulletCount--;
             GameObject bullet = projectileManager.Instance.getProjectile(bulletSpawn.position, bulletSpawn.rotation); //Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-            if (fireBullet)
+
+            //if (fireBullet)
+
                 //bullet.GetComponent<projectile>().fireGunnerRune();
             //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * bulletSpeed;
             yield return new WaitForSeconds(fireRateTime);
