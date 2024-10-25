@@ -13,6 +13,11 @@ public class projectile : MonoBehaviour
     public LayerMask enemy;
     masterInput input;
 
+    bool hitEnemy = false;
+    public float bufferDistance;
+    Vector3 hitPoint = Vector3.zero;
+    bool stop = false;
+
     //fire rune vars
     bool gunnerFire = false;
     public float fireRad = .4f;
@@ -22,6 +27,7 @@ public class projectile : MonoBehaviour
 
     private void OnEnable()
     {
+        stop = false;
         lifeTime = maxLifeTime;
 
         RaycastHit hit;
@@ -29,16 +35,18 @@ public class projectile : MonoBehaviour
         {
             if(hit.collider.gameObject.tag == "Enemy")
             {
+                hitEnemy = true;
                 hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
-                //resetProjectile();
-                //returnToPool();
-            }
-            else
-            {
-                //resetProjectile();
-                //returnToPool();
+                hitPoint = hit.point;
             }
         }
+    }
+
+    private void OnDisable()
+    {
+        stop = true;
+        hitEnemy = false;
+        Vector3 hitPoint = Vector3.zero;
     }
 
     private void Awake()
@@ -57,53 +65,43 @@ public class projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveProj();
-        handleTime();
+        if(!stop)
+        {
+            moveProj();
+            handleTime();
+        }
+
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (hitPoint != Vector3.zero || hitEnemy)
+        {
+            checkDistance();
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        
-        if(collision.gameObject.tag == "Enemy")
-        {
-            if (gunnerFire)
-            {
-                //collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+        stop = true;
+        resetProjectile();
+        returnToPool();
+    }
 
-                Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, fireRad, enemy);
-                foreach(Collider c in enemies)
-                {
-                    print("Fire hit");
-                    c.GetComponent<EnemyFrame>().takeDamage(fireDamage);
-                }
-                resetProjectile();
-                returnToPool();
-            }
-            else
-            {
-                collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
-                resetProjectile();
-                returnToPool();
-            }
-        }
-        else
+    void checkDistance()
+    {
+        float step = speed * Time.fixedDeltaTime;
+        float distanceToHit = Vector3.Distance(transform.position, hitPoint);
+
+        if (distanceToHit <= step || distanceToHit <= bufferDistance)
         {
+            // We've reached the hit point, stop the projectile
+            stop = true;
             resetProjectile();
             returnToPool();
         }
-        
-    }
 
-    private void OnCollisionStay(Collision collision)
-    {
-        resetProjectile();
-        returnToPool();
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        resetProjectile();
-        returnToPool();
     }
 
     void resetProjectile()
