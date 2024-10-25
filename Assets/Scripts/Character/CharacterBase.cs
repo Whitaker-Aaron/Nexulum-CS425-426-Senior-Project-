@@ -28,7 +28,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public CharacterStat characterStats;
 
     LifetimeManager lifetimeManager;
-
+    UIManager uiManager;
+    WeaponsManager weaponsManager;
 
     [SerializeField] GameObject masterInput;
 
@@ -69,6 +70,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     void Start()
     {
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
     }
 
     // Update is called once per frame
@@ -205,6 +208,15 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         return weaponClass;
     }
 
+    public void AddExperienceToClass(float enemyExp)
+    {
+        bool leveledUp = weaponClass.updateExperience(enemyExp);
+        if (leveledUp) uiManager.UpdateExperienceLevel(weaponClass.classType, weaponClass.currentLvl);
+        else uiManager.UpdateExperienceBar(weaponClass.totalExp);
+
+
+    }
+
     public void EquipClass(WeaponBase.weaponClassTypes type)
     {
         switch (type)
@@ -250,7 +262,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         EquipClass(newClass);
         masterInput.GetComponent<masterInput>().currentClass = newClass;
         //Debug.Log(weaponClass.currentWeapon);
-        GameObject.Find("WeaponManager").GetComponent<WeaponsManager>().ChangeWeapon(weaponClass.currentWeapon);
+        weaponsManager.ChangeWeapon(weaponClass.currentWeapon);
+        uiManager.UpdateClass(newClass, weaponClass.currentLvl, true);
         //UpdateWeapon(weaponClass.currentWeapon);
         runeInt.ChangeClass(newClass);
     }

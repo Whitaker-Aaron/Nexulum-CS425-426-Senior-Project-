@@ -2,16 +2,127 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using JetBrains.Annotations;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject CheckpointText;
+    [SerializeField] GameObject mainHUD;
+    [SerializeField] GameObject knightHUD;
+    [SerializeField] GameObject engineerHUD;
+    [SerializeField] GameObject gunnerHUD;
+    [SerializeField] Slider ExperienceBar;
     GameObject currentCheckpointText;
+    CharacterBase character;
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
+    {
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        knightHUD.SetActive(false);
+        gunnerHUD.SetActive(false);
+        engineerHUD.SetActive(false);
+    }
+    public void Initialize()
+    {
+        ExperienceBar.value = character.weaponClass.totalExp;
+        UpdateClass(character.weaponClass.classType, character.weaponClass.currentLvl);
+        //UpdateExperienceBar(character.weaponClass.getCurrentLvlExperienceAmount(), character.weaponClass.getNextLvlExperienceAmount(), character.weaponClass.totalExp);
+    }
+    
+    public void UpdateClass(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)
+    {
+        switch (weaponClass)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                knightHUD.SetActive(true);
+                gunnerHUD.SetActive(false);
+                engineerHUD.SetActive(false);
+                
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                knightHUD.SetActive(false);
+                gunnerHUD.SetActive(true);
+                engineerHUD.SetActive(false);
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                knightHUD.SetActive(false);
+                gunnerHUD.SetActive(false);
+                engineerHUD.SetActive(true);
+                break;
+        }
+        UpdateExperienceLevel(weaponClass, experienceLVL, changingClass);
+        
+    }
+
+    public void UpdateExperienceBar(float current)
     {
         
+        StartCoroutine(AnimateExperienceBar(current));
+        //ExperienceBar.value = current;
+    }
+
+    public IEnumerator AnimateExperienceBar(float current)
+    {
+        while (ExperienceBar.value < current)
+        {
+            ExperienceBar.value = Mathf.Lerp(ExperienceBar.value, current, 1.5f * Time.deltaTime);
+            if (Mathf.Abs(ExperienceBar.value - current) < 0.5) ExperienceBar.value = current;
+            yield return null;
+        }
+        Debug.Log("Bar finished in AnimateExperienceBar");
+        yield break;
+    }
+
+    public void ChangeExperienceLvl(float min, float max)
+    {
+        ExperienceBar.minValue = min;
+        ExperienceBar.maxValue = max;
+    }
+
+    public IEnumerator AnimateExperienceUpdate(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)
+    {
+        if (!changingClass)
+        {
+            yield return StartCoroutine(AnimateExperienceBar(character.weaponClass.getCurrentLvlExperienceAmount()));
+            Debug.Log("Bar finished in AnimateExperienceUpdate");
+        }
+        
+
+        switch (weaponClass)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                knightHUD.transform.Find("KnightLVLTextMain").GetComponent<TMP_Text>().text = experienceLVL.ToString();
+                knightHUD.transform.Find("KnightLVLTextSub").GetComponent<TMP_Text>().text = experienceLVL.ToString();
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                gunnerHUD.transform.Find("GunnerLVLTextMain").GetComponent<TMP_Text>().text = experienceLVL.ToString();
+                gunnerHUD.transform.Find("GunnerLVLTextSub").GetComponent<TMP_Text>().text = experienceLVL.ToString();
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                engineerHUD.transform.Find("EngineerLVLTextMain").GetComponent<TMP_Text>().text = experienceLVL.ToString();
+                engineerHUD.transform.Find("EngineerLVLTextSub").GetComponent<TMP_Text>().text = experienceLVL.ToString();
+                break;
+        }
+        ChangeExperienceLvl(character.weaponClass.getCurrentLvlExperienceAmount(), character.weaponClass.getNextLvlExperienceAmount());
+        if (!changingClass)
+        {
+            yield return StartCoroutine(AnimateExperienceBar(character.weaponClass.totalExp));
+        }
+        else
+        {
+            ExperienceBar.value = character.weaponClass.totalExp;
+        }
+        yield break;
+        //
+        
+    }
+
+    public void UpdateExperienceLevel(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)
+    {
+        StartCoroutine(AnimateExperienceUpdate(weaponClass, experienceLVL, changingClass));
     }
 
     public IEnumerator AnimateCheckpointReached()

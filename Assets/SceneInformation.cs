@@ -54,8 +54,13 @@ public class SceneInformation : MonoBehaviour
 
             StartCoroutine(WaitThenStartCharacterMove(player));
         }
-        
-        if(screenTransition) StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().StartScene());
+        else if(sceneName == "BaseCamp" && !player.GetComponent<CharacterBase>().transitioningRoom & spawnPlayer)
+        {
+            player.transform.position = playerSpawnPos;
+
+        }
+
+        if (screenTransition) StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().StartScene());
     }
 
     public IEnumerator WaitThenStartCharacterMove(GameObject character)
