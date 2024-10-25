@@ -131,7 +131,7 @@ public class runeIntController : MonoBehaviour, RuneInt
         {
             if (currentClass == WeaponBase.weaponClassTypes.Knight)
             {
-                weapon.weaponMesh.GetComponent<swordCombat>().activateFire(false);
+                //weapon.weaponMesh.GetComponent<swordCombat>().activateFire(false);
             }
             else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
             {
