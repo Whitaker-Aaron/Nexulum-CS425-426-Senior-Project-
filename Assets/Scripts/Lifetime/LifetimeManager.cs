@@ -105,10 +105,9 @@ public class LifetimeManager : MonoBehaviour
 
     public void OnDeath()
     {
-        var reference = GameObject.Find("TransitionScreen").GetComponent<Image>();
-        Color imgColor = reference.color;
-        imgColor.a = 1;
-        reference.color = imgColor;
+        
+        menuManager.CloseMenu();
+        inputManager.pausePlayerInput();
         StartCoroutine(AnimateDeathScreen());
 
         
@@ -116,18 +115,24 @@ public class LifetimeManager : MonoBehaviour
 
     public IEnumerator AnimateDeathScreen()
     {
+        Time.timeScale = 0.2f;
+        yield return new WaitForSeconds(0.5f);
+        var reference = GameObject.Find("TransitionScreen").GetComponent<Image>();
+        Color imgColor = reference.color;
+        imgColor.a = 1;
+        reference.color = imgColor;
+        Time.timeScale = 1.0f;
         var deathScreenObj = deathScreen.GetComponent<DeathScreen>();
-        characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         deathScreen.SetActive(true);
         StartCoroutine(deathScreenObj.AnimateDeath());
         yield return new WaitForSeconds(12);
         Load(1);
+        characterRef.RecoverFromDeath();
         yield return new WaitForSeconds(3);
         deathScreenObj.ResetObjScales();
         deathScreen.SetActive(false);
-        characterRef.RecoverFromDeath();
+        inputManager.resumePlayerInput();
         scrollManager.ClearInventory();
-        characterRef.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         yield return null;
     }
 

@@ -174,30 +174,35 @@ public class MenuManager : MonoBehaviour
         else if(menuActive && !pauseMenuActive && !character.transitioningRoom && context.performed)
         {
             //currentMenuObject.SetActive(false);
-            if(GameObject.FindGameObjectWithTag("CraftLists") != null)
-            {
-                Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
-            }
-            if (GameObject.FindGameObjectWithTag("MainMenu") != null)
-            {
-                Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
-                
-            }
-            if (GameObject.FindGameObjectWithTag("EquipMenu") != null)
-            {
-   
-                Destroy(GameObject.FindGameObjectWithTag("EquipMenu"));
-            }
-            if (GameObject.FindGameObjectWithTag("CraftMenu") != null)
-            {
-
-                Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
-            }
-
-            menuActive = false;
+            CloseMenu();
             inputManager.resumePlayerInput();
         }
 
+    }
+
+    public void CloseMenu()
+    {
+        if (GameObject.FindGameObjectWithTag("CraftLists") != null)
+        {
+            Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+        }
+        if (GameObject.FindGameObjectWithTag("MainMenu") != null)
+        {
+            Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
+
+        }
+        if (GameObject.FindGameObjectWithTag("EquipMenu") != null)
+        {
+
+            Destroy(GameObject.FindGameObjectWithTag("EquipMenu"));
+        }
+        if (GameObject.FindGameObjectWithTag("CraftMenu") != null)
+        {
+
+            Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
+        }
+
+        menuActive = false;
     }
 
     public List<CraftRecipe> returnWeaponsCraftList()

@@ -13,6 +13,7 @@ public class SaveData
     public string[] equippedRunes;
 
     public CraftMaterialSaveData[] materialInventory;
+    public CraftMaterialSaveData[] totalMaterialInventory;
     public WeaponClassSaveData[] weaponClasses;
 
     public string[] weaponInventory;
@@ -25,6 +26,7 @@ public class SaveData
         equippedWeapon = "Dagger";
 
         materialInventory = new CraftMaterialSaveData[50];
+        totalMaterialInventory = new CraftMaterialSaveData[150];
         weaponClasses = new WeaponClassSaveData[3];
         weaponClasses[0] = new WeaponClassSaveData();
         weaponClasses[1] = new WeaponClassSaveData();

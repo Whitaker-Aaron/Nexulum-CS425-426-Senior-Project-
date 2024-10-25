@@ -21,6 +21,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     [SerializeField] public WeaponClass gunnerObject;
     [SerializeField] private WeaponClass engineerObject;
 
+    [SerializeField] public GameObject shakeEffect;
+
     //[SerializeField] public RuneInt runeInt;
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
@@ -299,14 +301,16 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         StopCoroutine(animateHealth());
         StopCoroutine(animateDelayedHealth());
 
-        playerHealth = maxHealth;
-        healthBar.value = maxHealth;
-        delayedHealthBar.value = maxHealth;
+        
         
     }
 
+
     public void RecoverFromDeath()
     {
+        playerHealth = maxHealth;
+        healthBar.value = maxHealth;
+        delayedHealthBar.value = maxHealth;
         invul = false;
     }
 
@@ -346,6 +350,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             else
             {
                 healthBar.value += reduceVal * Time.deltaTime;
+            }
+            if(healthBar.value == 0)
+            {
+                GameObject currentShake = Instantiate(shakeEffect, gameObject.transform.position, Quaternion.identity);
+                currentShake.GetComponent<ParticleSystem>().Play();
             }
 
             yield return null;
