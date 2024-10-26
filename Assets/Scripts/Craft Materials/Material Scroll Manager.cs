@@ -219,7 +219,7 @@ public class MaterialScrollManager : MonoBehaviour
       IEnumerator coroutine = ReduceOpacity(scrollObj);
         //StartCoroutine("ReduceOpacity", scrollObj);
       StartCoroutine(coroutine);
-      yield return new WaitForSeconds(5);
+      yield return new WaitForSeconds(10f);
       Debug.Log("Finished coroutine");
       if(currentMaterials.Count == 1)
         {
@@ -237,27 +237,27 @@ public class MaterialScrollManager : MonoBehaviour
         while (true && reference != null)
         {
             Color imgColor = reference.imageRef.color;
-            imgColor.a -= 0.20f * Time.deltaTime;
+            imgColor.a -= 0.10f * Time.deltaTime;
             reference.imageRef.color = imgColor;
 
             Color backColor = reference.background.color;
-            backColor.a -= 0.20f * Time.deltaTime;
+            backColor.a -= 0.10f * Time.deltaTime;
             reference.background.color = backColor;
 
             Color desColor = reference.descriptionMain.color;
-            desColor.a -= 0.20f * Time.deltaTime;
+            desColor.a -= 0.10f * Time.deltaTime;
             reference.descriptionMain.color = desColor;
 
             Color desColor2 = reference.descriptionSub.color;
-            desColor2.a -= 0.20f * Time.deltaTime;
+            desColor2.a -= 0.10f * Time.deltaTime;
             reference.descriptionSub.color = desColor2;
 
             Color quanColor = reference.quantityMain.color;
-            quanColor.a -= 0.20f * Time.deltaTime;
+            quanColor.a -= 0.10f * Time.deltaTime;
             reference.quantityMain.color = quanColor;
 
             Color quanColor2 = reference.quantitySub.color;
-            quanColor2.a -= 0.20f * Time.deltaTime;
+            quanColor2.a -= 0.10f * Time.deltaTime;
             reference.quantitySub.color = quanColor2;
 
             
