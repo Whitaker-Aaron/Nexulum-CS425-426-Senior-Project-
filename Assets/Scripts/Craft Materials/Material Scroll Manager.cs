@@ -240,6 +240,10 @@ public class MaterialScrollManager : MonoBehaviour
             imgColor.a -= 0.20f * Time.deltaTime;
             reference.imageRef.color = imgColor;
 
+            Color backColor = reference.background.color;
+            backColor.a -= 0.20f * Time.deltaTime;
+            reference.background.color = backColor;
+
             Color desColor = reference.descriptionMain.color;
             desColor.a -= 0.20f * Time.deltaTime;
             reference.descriptionMain.color = desColor;
@@ -255,6 +259,8 @@ public class MaterialScrollManager : MonoBehaviour
             Color quanColor2 = reference.quantitySub.color;
             quanColor2.a -= 0.20f * Time.deltaTime;
             reference.quantitySub.color = quanColor2;
+
+            
 
             yield return null;
         }
