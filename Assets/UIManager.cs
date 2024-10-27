@@ -68,7 +68,7 @@ public class UIManager : MonoBehaviour
     {
         while (ExperienceBar.value < current)
         {
-            ExperienceBar.value = Mathf.Lerp(ExperienceBar.value, current, 1.5f * Time.deltaTime);
+            ExperienceBar.value = Mathf.Lerp(ExperienceBar.value, current, 3.0f * Time.deltaTime);
             if (Mathf.Abs(ExperienceBar.value - current) < 0.5) ExperienceBar.value = current;
             if (Mathf.Abs(ExperienceBar.value - ExperienceBar.maxValue) < 0.5) yield break;
             yield return null;

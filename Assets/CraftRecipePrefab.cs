@@ -127,25 +127,25 @@ public class CraftRecipePrefab : MonoBehaviour
         {
             hasEnough = false;
         }
-        currentMaterialObjects[index].GetComponent<materialRequirementsWrapper>().amountHas.GetComponent<Text>().text = "Have: x" + curAmount;
+        currentMaterialObjects[index].GetComponent<materialRequirementsWrapper>().amountHas.GetComponent<TMP_Text>().text =  curAmount.ToString();
         return hasEnough;
     }
 
     public void AddToWeaponsInventory()
     {
         Debug.Log("Adding to weapons inventory");
-        GameObject.Find("WeaponManager").GetComponent<WeaponsManager>().FindWeaponAndAdd(craftRecipeName.GetComponent<Text>().text);
+        GameObject.Find("WeaponManager").GetComponent<WeaponsManager>().FindWeaponAndAdd(craftRecipeName.GetComponent<TMP_Text>().text);
     }
 
     public void AddToItemsInventory()
     {
         Debug.Log("Adding to items inventory");
-        GameObject.Find("ItemManager").GetComponent<ItemManager>().FindItemAndAdd(craftRecipeName.GetComponent<Text>().text);
+        GameObject.Find("ItemManager").GetComponent<ItemManager>().FindItemAndAdd(craftRecipeName.GetComponent<TMP_Text>().text);
     }
 
     public void AddToRunesInventory()
     {
         Debug.Log("Adding to runes inventory");
-        GameObject.Find("RuneManager").GetComponent<RuneManager>().FindRuneAndAdd(craftRecipeName.GetComponent<Text>().text);
+        GameObject.Find("RuneManager").GetComponent<RuneManager>().FindRuneAndAdd(craftRecipeName.GetComponent<TMP_Text>().text);
     }
 }
