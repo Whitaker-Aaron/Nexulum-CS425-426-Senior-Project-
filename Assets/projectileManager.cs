@@ -6,12 +6,15 @@ using UnityEngine.UIElements;
 public class projectileManager : MonoBehaviour
 {
     public static projectileManager Instance;
-    public GameObject projPrefab, projPrefab2, poolObj;
+    public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, poolObj;
     public int poolSize = 25;
     public int poolSize2 = 15;
+    public int turretSize = 15;
 
-    private static Queue<GameObject> pool;
-    private static Queue<GameObject> pool2;
+    protected Dictionary<string, Queue<GameObject>> allPools;
+
+    //private static Queue<GameObject> pool;
+    //private static Queue<GameObject> pool2;
 
 
     private void Awake()
@@ -35,45 +38,68 @@ public class projectileManager : MonoBehaviour
     public void initializePool()
     {
         Instance = this;
-        pool = new Queue<GameObject>();
-        pool2 = new Queue<GameObject>();
+        //pool = new Queue<GameObject>();
+        //pool2 = new Queue<GameObject>();
+        allPools = new Dictionary<string, Queue<GameObject>>();
         DontDestroyOnLoad(this);
         DontDestroyOnLoad(gameObject);
 
         poolObj = Instantiate(new GameObject("poolObjects"));
         poolObj.transform.parent = this.transform;
 
-        for (int i = 0; i < poolSize; i++)
-        {
-            GameObject proj = Instantiate(projPrefab, new Vector3(0, 999, 0), Quaternion.identity);
-            DontDestroyOnLoad (proj);
-            proj.transform.parent = poolObj.transform;
-            pool.Enqueue(proj);
-            proj.SetActive(false);
-            
-        }
-
-        for (int i = 0; i < poolSize2; i++)
-        {
-            GameObject proj = Instantiate(projPrefab2, new Vector3(0, 999, 0), Quaternion.identity);
-            DontDestroyOnLoad(proj);
-            proj.transform.parent = poolObj.transform;
-            pool2.Enqueue(proj);
-            proj.SetActive(false);
-        }
-        //print(pool.Count);
+        createNewPool("bulletPool", projPrefab, poolSize);
+        createNewPool("pistolPool", projPrefab2, poolSize2);
+        createNewPool("turretPool", turretPrefab, turretSize);
+        createNewPool("dronePool", dronePrefab, turretSize);
     }
 
-    public GameObject getProjectile(Vector3 position, Quaternion rotation)
+    public virtual void createNewPool(string poolName, GameObject prefab, int size)
+    {
+        if (!allPools.ContainsKey(poolName))
+        {
+            allPools[poolName] = new Queue<GameObject>();
+
+            for (int i = 0; i < size; i++)
+            {
+                GameObject temp = Instantiate(prefab);
+                temp.transform.parent = poolObj.transform;
+                DontDestroyOnLoad(temp);
+                allPools[poolName].Enqueue(temp);
+                temp.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.Log("pool with name: " + poolName + " already exists");
+        }
+    }
+
+    GameObject checkPoolPrefab(string poolName)
+    {
+        GameObject temp = null;
+        switch (poolName)
+        {
+            case "bulletPool":
+                temp = projPrefab;
+                break;
+            case "pistolPool":
+                temp = projPrefab2; break;
+
+        }
+        return temp;
+    }
+
+    public GameObject getProjectile(string poolName, Vector3 position, Quaternion rotation)
     {
         //print("Getting proj");
         //print(pool.Count);
 
-        if(pool.Count > 0)
+        if(allPools[poolName].Count > 0)
         {
-            GameObject proj = pool.Dequeue();
+            GameObject proj = allPools[poolName].Dequeue();
             //if (proj == null)
               //  print("proj null");
+              proj.GetComponent<projectile>().setName(poolName);
             proj.transform.position = position;
             proj.transform.rotation = rotation;
             proj.SetActive(true);
@@ -86,37 +112,10 @@ public class projectileManager : MonoBehaviour
         }
     }
 
-    public GameObject getProjectile2(Vector3 position, Quaternion rotation)
-    {
-        //print("Getting proj");
-        //print(pool.Count);
-
-        if (pool.Count > 0)
-        {
-            GameObject proj = pool2.Dequeue();
-            //if (proj == null)
-              //  print("proj null");
-            proj.transform.position = position;
-            proj.transform.rotation = rotation;
-            proj.SetActive(true);
-            return proj;
-        }
-        else
-        {
-            GameObject proj = Instantiate(projPrefab2, position, rotation);
-            return proj;
-        }
-    }
-
-    public void returnProjectile(GameObject projectile)
+    public void returnProjectile(string poolName, GameObject projectile)
     {
         projectile.SetActive(false);
-        pool.Enqueue(projectile);
+        allPools[poolName].Enqueue(projectile);
     }
 
-    public void returnProjectile2(GameObject projectile)
-    {
-        projectile.SetActive(false);
-        pool2.Enqueue(projectile);
-    }
 }

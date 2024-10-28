@@ -19,12 +19,19 @@ public class projectile : MonoBehaviour
     Vector3 hitPoint = Vector3.zero;
     bool stop = false;
 
+    public string poolName = null;
+
     //fire rune vars
     ///bool gunnerFire = false;
     //public float fireRad = .4f;
     //public int fireDamage = 5;
     //public GameObject fireEffect;
 
+
+    public void setName(string name)
+    {
+        poolName = name;
+    }
 
     private void OnEnable()
     {
@@ -49,6 +56,7 @@ public class projectile : MonoBehaviour
         stop = true;
         hitEnemy = false;
         Vector3 hitPoint = Vector3.zero;
+        poolName = null;
     }
 
     private void Awake()
@@ -132,12 +140,16 @@ public class projectile : MonoBehaviour
 
     void returnToPool()
     {
-        if(input.currentClass == WeaponBase.weaponClassTypes.Gunner)
-            projectileManager.Instance.returnProjectile(gameObject);
-        else if(input.currentClass == WeaponBase.weaponClassTypes.Engineer)
-            projectileManager.Instance.returnProjectile2(gameObject);
+        if(poolName == "bulletPool")
+            projectileManager.Instance.returnProjectile("bulletPool", gameObject);
+        else if(poolName == "pistolPool")
+            projectileManager.Instance.returnProjectile("pistolPool", gameObject);
+        else if(poolName == "turretPool")
+            projectileManager.Instance.returnProjectile("turretPool", gameObject);
+        else if (poolName == "dronePool")
+            projectileManager.Instance.returnProjectile("turretPool", gameObject);
         else
-            projectileManager.Instance.returnProjectile(gameObject);
+            projectileManager.Instance.returnProjectile("bulletPool", gameObject);
     }
 
 

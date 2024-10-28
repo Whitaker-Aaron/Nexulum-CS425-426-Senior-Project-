@@ -54,8 +54,7 @@ public class droneHeli : MonoBehaviour
     IEnumerator shoot()
     {
         shooting = true;
-        var bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
-        bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * bulletSpeed;
+        GameObject bullet = projectileManager.Instance.getProjectile("dronePool", bulletSpawn.position, bulletSpawn.rotation);
         yield return new WaitForSeconds(fireRate);
         shooting = false;
         yield break;
