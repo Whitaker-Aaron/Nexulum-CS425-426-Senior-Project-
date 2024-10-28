@@ -397,7 +397,7 @@ public class masterInput : MonoBehaviour
         while (Input.GetButton("Fire1") && bulletCount > 0 && isReloading == false)
         {
             bulletCount--;
-            GameObject bullet = projectileManager.Instance.getProjectile(bulletSpawn.position, bulletSpawn.rotation); //Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+            GameObject bullet = projectileManager.Instance.getProjectile("bulletPool", bulletSpawn.position, bulletSpawn.rotation); //Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
             //if (fireBullet)
 
@@ -435,7 +435,7 @@ public class masterInput : MonoBehaviour
         canPistolShoot = false;
         
         pistolBulletCount--;
-        GameObject bullet = projectileManager.Instance.getProjectile2(pistolBulletSpawn.position, pistolBulletSpawn.rotation);
+        GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", pistolBulletSpawn.position, pistolBulletSpawn.rotation);
         //bullet.GetComponent<Rigidbody>().velocity = pistolBulletSpawn.forward * pistolBulletSpeed;
         yield return new WaitForSeconds(pistolFireRateTime);
         

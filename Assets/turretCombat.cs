@@ -104,16 +104,16 @@ public class turretCombat : MonoBehaviour
         switchSpawn = !switchSpawn;
         if(switchSpawn)
         {
-            var bullet = Instantiate(bulletPrefab, bulletSpawnLeft.position, bulletSpawnLeft.rotation);
-            bullet.GetComponent<Rigidbody>().velocity = bulletSpawnLeft.forward * bulletSpeed;
+            GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", bulletSpawnLeft.position, bulletSpawnLeft.rotation);
+            //var bullet = Instantiate(bulletPrefab, bulletSpawnLeft.position, bulletSpawnLeft.rotation);
+            //bullet.GetComponent<Rigidbody>().velocity = bulletSpawnLeft.forward * bulletSpeed;
             yield return new WaitForSeconds(fireRate);
             shooting = false;
             yield break;
         }
         else
         {
-            var bullet = Instantiate(bulletPrefab, bulletSpawnRight.position, bulletSpawnRight.rotation);
-            bullet.GetComponent<Rigidbody>().velocity = bulletSpawnRight.forward * bulletSpeed;
+            GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", bulletSpawnRight.position, bulletSpawnRight.rotation);
             yield return new WaitForSeconds(fireRate);
             shooting = false;
             yield break;
@@ -139,9 +139,11 @@ public class turretCombat : MonoBehaviour
                 angleToEnemy += 360;
             //angleToEnemy = normalizeAngle(angleToEnemy);
             print("angle to enemy: " + angleToEnemy);
-
             if (isEnemyInRange(angleToEnemy))
             {
+                Vector3 temp = new Vector3(enemy.transform.position.x, 0.5f, enemy.transform.position.z);
+                bulletSpawnLeft.LookAt(temp);
+                bulletSpawnRight.LookAt(temp);
                 print("enemy in angle");
                 stopTurn = true;
                 turretGun.transform.LookAt(turretGun.transform.position + directionToEnemy, Vector3.up);

@@ -36,8 +36,7 @@ public class droneCombat : MonoBehaviour
     IEnumerator shoot()
     {
         shooting = true;
-        var bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
-        bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * bulletSpeed;
+        GameObject bullet = projectileManager.Instance.getProjectile("dronePool", bulletSpawn.position, bulletSpawn.rotation);
         yield return new WaitForSeconds(fireRate);
         shooting = false;
         yield break;
@@ -77,7 +76,8 @@ public class droneCombat : MonoBehaviour
             if (closestEnemy != null)
             {
                 print("Looking at enemy");
-                bulletSpawn.transform.LookAt(closestEnemy.transform.position);
+                Vector3 temp = new Vector3(closestEnemy.transform.position.x, 0.5f, closestEnemy.transform.position.z);
+                bulletSpawn.transform.LookAt(temp);
                 smoothLook(closestEnemy.transform);
                 if (!shooting)
                     StartCoroutine(shoot());
