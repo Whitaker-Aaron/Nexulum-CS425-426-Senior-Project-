@@ -740,19 +740,19 @@ public class masterInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1) && !abilityInUse)
         {
-            abilityInUse = true;
+            //abilityInUse = true;
             gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
             StartCoroutine(abilityWait());
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) && !abilityInUse)
         {
-            abilityInUse = true;
+            //abilityInUse = true;
             gameObject.GetComponent<classAbilties>().activateAbilityTwo(currentClass);
             StartCoroutine(abilityWait());
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3) && !abilityInUse)
         {
-            abilityInUse = true;
+            //abilityInUse = true;
             if (currentClass == WeaponBase.weaponClassTypes.Knight)
             {
                 animationControl.knightShootSwords();

@@ -24,6 +24,7 @@ public class classAbilties : MonoBehaviour
 
     GameObject player;
     public LayerMask enemy;
+    UIManager uiManager;
     
 
     //Knight
@@ -123,6 +124,8 @@ public class classAbilties : MonoBehaviour
             return;
         }
         Debug.Log("Activating Ability 1.");
+
+        uiManager.ActivateCooldownOnAbility(1);
         a1cooldown = true;
 
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !bubble)
@@ -156,6 +159,7 @@ public class classAbilties : MonoBehaviour
             return;
         }
         Debug.Log("Activating Ability 2.");
+        uiManager.ActivateCooldownOnAbility(2);
         a2cooldown = true;
 
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !activatedAura)
@@ -189,6 +193,7 @@ public class classAbilties : MonoBehaviour
             return;
         }
         Debug.Log("Activating Ability 3.");
+        uiManager.ActivateCooldownOnAbility(3);
         a3cooldown = true;
 
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !shootingSwords)
@@ -224,6 +229,7 @@ public class classAbilties : MonoBehaviour
 
     IEnumerator abilitiesCooldown(int ability, float time)
     {
+        uiManager.StartCooldownSlider(ability, (0.9f/time));
         yield return new WaitForSeconds(time);
 
         switch (ability)
@@ -233,6 +239,7 @@ public class classAbilties : MonoBehaviour
                 a1cooldown = false;
                 acc1 = null;
                 print("ability 1 done");
+          
                 break;
             case 2:
                 yield return new WaitForSeconds(1f);
@@ -247,7 +254,9 @@ public class classAbilties : MonoBehaviour
                 print("ability 3 done");
                 break;
         }
-            
+        uiManager.DeactivateCooldownOnAbility(ability);
+
+
         yield break;
     }
 
@@ -621,6 +630,7 @@ public class classAbilties : MonoBehaviour
     {
         //currentClass = gameObject.GetComponent<masterInput>().currentClass;
         player = GameObject.FindGameObjectWithTag("Player");
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         teslaNumCount = 0;
         turretNumCount = 0;
 

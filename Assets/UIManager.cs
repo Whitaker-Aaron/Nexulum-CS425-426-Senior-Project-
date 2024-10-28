@@ -14,6 +14,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject knightHUD;
     [SerializeField] GameObject engineerHUD;
     [SerializeField] GameObject gunnerHUD;
+
+    [SerializeField] GameObject ability1;
+    [SerializeField] GameObject ability2;
+    [SerializeField] GameObject ability3;
+
+    Slider currentAbilitySlider;
+
     [SerializeField] Slider ExperienceBar;
     GameObject currentCheckpointText;
     CharacterBase character;
@@ -30,6 +37,107 @@ public class UIManager : MonoBehaviour
         ExperienceBar.value = character.weaponClass.totalExp;
         UpdateClass(character.weaponClass.classType, character.weaponClass.currentLvl);
         //UpdateExperienceBar(character.weaponClass.getCurrentLvlExperienceAmount(), character.weaponClass.getNextLvlExperienceAmount(), character.weaponClass.totalExp);
+    }
+
+    public void ActivateCooldownOnAbility(int abilityNum)
+    {
+        GameObject ability = null;
+        switch (abilityNum)
+        { 
+            case 1:
+                ability = ability1;
+                
+                break;
+            case 2:
+                ability = ability2;
+                break;
+            case 3:
+                ability = ability3;
+                break;
+        }
+        ability.transform.Find("AbilityCooldownFill").gameObject.SetActive(true);
+        ability.transform.Find("AbilityBorderCooldown").gameObject.SetActive(true);
+        ability.transform.Find("AbilityBorderNormal").gameObject.SetActive(false);
+        ability.transform.Find("AbilityCooldownBorder").gameObject.SetActive(false);
+        ability.transform.Find("AbilityCooldownBorderDeactivated").gameObject.SetActive(true);
+
+
+        var reducedAlpha = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
+        reducedAlpha.a = 0.5f;
+        ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = reducedAlpha;
+
+        reducedAlpha = ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color;
+        reducedAlpha.a = 0.5f;
+        ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color = reducedAlpha;
+
+        //reducedAlpha = ability.transform.Find("AbilityCooldownBorderDeactivated").gameObject.GetComponent<Image>().color;
+        //reducedAlpha.a = 0.5f;
+        //ability.transform.Find("AbilityCooldownBorderDeactivated").gameObject.GetComponent<Image>().color = reducedAlpha;
+    }
+
+    public IEnumerator AnimateCooldownSlider(Slider currentAbilitySlider, float rate)
+    {
+        
+        while(currentAbilitySlider != null && currentAbilitySlider.value > 0)
+        {
+            currentAbilitySlider.value -= rate * Time.deltaTime;
+            yield return null;
+        }
+        yield break;
+    }
+
+    public void StartCooldownSlider(int abilityNum, float rate)
+    {
+        Slider currentAbilitySlider = null;
+        switch (abilityNum)
+        {
+            case 1:
+                currentAbilitySlider = ability1.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
+                break;
+            case 2:
+                currentAbilitySlider = ability2.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
+                break;
+            case 3:
+                currentAbilitySlider = ability3.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
+                break;
+        }
+        StartCoroutine(AnimateCooldownSlider(currentAbilitySlider, rate));
+    }
+
+    public void DeactivateCooldownOnAbility(int abilityNum)
+    {
+        GameObject ability = null;
+        switch (abilityNum)
+        {
+            case 1:
+                ability = ability1;
+                break;
+            case 2:
+                ability = ability2;
+                break;
+            case 3:
+                ability = ability3;
+                break;
+        }
+
+        ability.transform.Find("AbilityCooldownFill").gameObject.SetActive(false);
+        ability.transform.Find("AbilityCooldownFill").gameObject.GetComponent<Slider>().value = 1.0f;
+        ability.transform.Find("AbilityBorderCooldown").gameObject.SetActive(false);
+        ability.transform.Find("AbilityBorderNormal").gameObject.SetActive(true);
+        ability.transform.Find("AbilityCooldownBorder").gameObject.SetActive(true);
+        ability.transform.Find("AbilityCooldownBorderDeactivated").gameObject.SetActive(false);
+
+        var increasedAlpha = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
+        increasedAlpha.a = 1.0f;
+        ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = increasedAlpha;
+
+        increasedAlpha = ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color;
+        increasedAlpha.a = 1.0f;
+        ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color = increasedAlpha;
+
+        //increasedAlpha = ability.transform.Find("AbilityCooldownBorder").gameObject.GetComponent<Image>().color;
+        //increasedAlpha.a = 1.0f;
+        //ability.transform.Find("AbilityCooldownBorder").gameObject.GetComponent<Image>().color = increasedAlpha;
     }
     
     public void UpdateClass(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)
