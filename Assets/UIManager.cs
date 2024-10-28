@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -10,6 +9,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject CheckpointText;
+    [SerializeField] GameObject levelUpText;
     [SerializeField] GameObject mainHUD;
     [SerializeField] GameObject knightHUD;
     [SerializeField] GameObject engineerHUD;
@@ -68,8 +68,9 @@ public class UIManager : MonoBehaviour
     {
         while (ExperienceBar.value < current)
         {
-            ExperienceBar.value = Mathf.Lerp(ExperienceBar.value, current, 1.5f * Time.deltaTime);
+            ExperienceBar.value = Mathf.Lerp(ExperienceBar.value, current, 3.0f * Time.deltaTime);
             if (Mathf.Abs(ExperienceBar.value - current) < 0.5) ExperienceBar.value = current;
+            if (Mathf.Abs(ExperienceBar.value - ExperienceBar.maxValue) < 0.5) yield break;
             yield return null;
         }
         Debug.Log("Bar finished in AnimateExperienceBar");
@@ -123,6 +124,38 @@ public class UIManager : MonoBehaviour
     public void UpdateExperienceLevel(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)
     {
         StartCoroutine(AnimateExperienceUpdate(weaponClass, experienceLVL, changingClass));
+       
+    }
+
+    public void StartLevelUpText()
+    {
+        StartCoroutine(AnimateLevelUpText());
+    }
+
+    public IEnumerator AnimateLevelUpText()
+    {
+        Vector3 ogPosition = levelUpText.transform.localPosition;
+        levelUpText.transform.localPosition = new Vector3(levelUpText.transform.localPosition.x - 2000.0f, levelUpText.transform.localPosition.y, levelUpText.transform.localPosition.z);
+        
+        bool increasingOpacity = false;
+        while (levelUpText.transform.localPosition.x < ogPosition.x)
+        {
+             if((levelUpText.transform.localPosition.x > ogPosition.x - 1000.0f) && !increasingOpacity)
+            {
+                StartCoroutine(IncreaseImageOpacity(levelUpText, 4.0f));
+            }
+             if(Mathf.Abs(levelUpText.transform.localPosition.x - ogPosition.x) < 0.3f){
+                levelUpText.transform.localPosition = ogPosition;
+             }
+             else
+             {
+                levelUpText.transform.localPosition = Vector3.Lerp(levelUpText.transform.localPosition, ogPosition, 15.0f*Time.deltaTime);
+             }
+            yield return null;
+        }
+        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(DecreaseImageOpacity(levelUpText, 1.0f));
+        yield break;
     }
 
     public IEnumerator AnimateCheckpointReached()
@@ -153,9 +186,37 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
+    private IEnumerator DecreaseImageOpacity(GameObject image, float rate)
+    {
+        var reference = image.GetComponent<Image>();
+        while (reference.color.a >= 0.0 && reference != null)
+        {
+            Color imgColor = reference.color;
+            imgColor.a -= rate * Time.deltaTime;
+            reference.color = imgColor;
+
+            yield return null;
+        }
+        yield break;
+    }
+
+    private IEnumerator IncreaseImageOpacity(GameObject image, float rate)
+    {
+        var reference = image.GetComponent<Image>();
+        while (reference.color.a < 1.0 && reference != null)
+        {
+            Color imgColor = reference.color;
+            imgColor.a += rate * Time.deltaTime;
+            reference.color = imgColor;
+
+            yield return null;
+        }
+        yield break;
+    }
+
     private IEnumerator ReduceTextOpacity(GameObject text, float rate)
     {
-        var reference = text.GetComponent<Text>();
+        var reference = text.GetComponent<TMP_Text>();
         while (reference.color.a >= 0.0 && reference != null)
         {
             Color imgColor = reference.color;

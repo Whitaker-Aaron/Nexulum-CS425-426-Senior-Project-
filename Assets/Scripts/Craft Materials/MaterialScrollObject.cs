@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class MaterialScrollObject : MonoBehaviour
 {
     [SerializeField] public RawImage imageRef;
+    [SerializeField] public Image background;
     [SerializeField] public TMP_Text descriptionMain;
     [SerializeField] public TMP_Text descriptionSub;
     [SerializeField] public TMP_Text quantityMain;

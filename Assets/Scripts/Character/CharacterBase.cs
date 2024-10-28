@@ -211,7 +211,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public void AddExperienceToClass(float enemyExp)
     {
         bool leveledUp = weaponClass.updateExperience(enemyExp);
-        if (leveledUp) uiManager.UpdateExperienceLevel(weaponClass.classType, weaponClass.currentLvl);
+        if (leveledUp)
+        {
+            uiManager.UpdateExperienceLevel(weaponClass.classType, weaponClass.currentLvl);
+            uiManager.StartLevelUpText();
+        }
         else uiManager.UpdateExperienceBar(weaponClass.totalExp);
 
 
