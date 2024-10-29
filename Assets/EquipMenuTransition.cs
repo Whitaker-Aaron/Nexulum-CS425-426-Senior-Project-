@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 //using static UnityEditor.Progress;
 
 public class EquipMenuTransition : MonoBehaviour
@@ -32,6 +33,8 @@ public class EquipMenuTransition : MonoBehaviour
 
     GameObject classChangeButton;
 
+    GameObject equippedBackdrop;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +59,8 @@ public class EquipMenuTransition : MonoBehaviour
         currentWeaponContent = GameObject.Find("CurrentWeaponPlaceholder");
         currentClassContent = GameObject.Find("CurrentClassPlaceholder");
         currentRuneContainer = GameObject.Find("CurrentRunesList");
+
+        equippedBackdrop = GameObject.Find("EquippedBackdrop");
 
         
         FillEquipment();
@@ -99,6 +104,7 @@ public class EquipMenuTransition : MonoBehaviour
 
         equippedPanel.SetActive(false);
         equippedContainer.SetActive(false);
+        equippedBackdrop.SetActive(false);
 
         populateWeaponsScroll();
         
@@ -113,6 +119,7 @@ public class EquipMenuTransition : MonoBehaviour
 
         equippedPanel.SetActive(false);
         equippedContainer.SetActive(false);
+        equippedBackdrop.SetActive(false);
 
         populateClassScroll();
     }
@@ -126,6 +133,7 @@ public class EquipMenuTransition : MonoBehaviour
 
         equippedPanel.SetActive(false);
         equippedContainer.SetActive(false);
+        equippedBackdrop.SetActive(false);
 
         populateRunesScroll();
     }
@@ -141,6 +149,7 @@ public class EquipMenuTransition : MonoBehaviour
 
         equippedPanel.SetActive(true);
         equippedContainer.SetActive(true);
+        equippedBackdrop.SetActive(true);
 
         classScroll.SetActive(false);
         runesScroll.SetActive(false);
@@ -191,18 +200,18 @@ public class EquipMenuTransition : MonoBehaviour
     public void FillEquipment()
     {
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
-        currentWeaponContent.GetComponent<Text>().text = characterRef.equippedWeapon.weaponName;
+        currentWeaponContent.GetComponent<TMP_Text>().text = characterRef.equippedWeapon.weaponName;
         switch (characterRef.equippedWeapon.weaponClassType)
         {
             case WeaponBase.weaponClassTypes.Knight:
-                currentClassContent.GetComponent<Text>().text = "Knight";
+                currentClassContent.GetComponent<TMP_Text>().text = "Knight";
                 break;
 
             case WeaponBase.weaponClassTypes.Engineer:
-                currentClassContent.GetComponent<Text>().text = "Engineer";
+                currentClassContent.GetComponent<TMP_Text>().text = "Engineer";
                 break;
             case WeaponBase.weaponClassTypes.Gunner:
-                currentClassContent.GetComponent<Text>().text = "Gunner";
+                currentClassContent.GetComponent<TMP_Text>().text = "Gunner";
                 break;
 
         }
@@ -212,23 +221,20 @@ public class EquipMenuTransition : MonoBehaviour
             if (characterRef.equippedRunes[i] != null)
             {
 
-                equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeName.GetComponent<Text>().text = characterRef.equippedRunes[i].runeName;
+                equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeName.GetComponent<TMP_Text>().text = characterRef.equippedRunes[i].runeName;
                 switch (characterRef.equippedRunes[i].runeType)
                 {
                     case Rune.RuneType.Buff:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "[Buff]";
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Buff]";
                         break;
                     case Rune.RuneType.Defense:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "[Defense]";
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Defense]";
                         break;
                     case Rune.RuneType.Health:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "[Health]";
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Health]";
                         break;
                     case Rune.RuneType.Projectile:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "[Projectile]";
-                        break;
-                    case Rune.RuneType.Weapon:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<Text>().text = "[Weapon]";
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Weapon]";
                         break;
                 }
 
@@ -252,7 +258,7 @@ public class EquipMenuTransition : MonoBehaviour
             if (weaponsInventory[i] != null && characterRef.weaponClass.classType == weaponsInventory[i].weaponClassType ) {
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().weapon = weaponsInventory[i];
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Weapon;
-                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<Text>().text = weaponsInventory[i].weaponName;
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = weaponsInventory[i].weaponName;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<Text>().text = weaponsInventory[i].weaponDescription;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<Text>().text = "Attack +" + weaponsInventory[i].weaponAttack;
 
@@ -260,12 +266,12 @@ public class EquipMenuTransition : MonoBehaviour
                 
                 if(characterRef.equippedWeapon.weaponName == weaponsInventory[i].weaponName)
                 {
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<Text>().text = "Equipped";
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equipped";
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = false;
                 }
                 else
                 {
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<Text>().text = "Equip";
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equip";
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = true;
                 }
 
@@ -289,7 +295,7 @@ public class EquipMenuTransition : MonoBehaviour
             {
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().rune = runeInventory[i];
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Rune;
-                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<Text>().text = runeInventory[i].runeName;
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = runeInventory[i].runeName;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<Text>().text = runeInventory[i].runeDescription;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<Text>().text = "Effect +" + runeInventory[i].runeEffect;
 
@@ -311,12 +317,12 @@ public class EquipMenuTransition : MonoBehaviour
                     
                 }
                 if (runeEquipped){
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<Text>().text = "Equipped";
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equipped";
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = false;
                 }
                 else
                 {
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<Text>().text = "Equip";
+                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equip";
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = true;
                 }
 
