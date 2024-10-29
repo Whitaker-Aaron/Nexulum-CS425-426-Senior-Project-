@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5480296063218690851}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: projSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 5717306124435108786}
   - component: {fileID: 1341347469437211832}
   - component: {fileID: 6671722683837383533}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 7034527197625321567}
   - component: {fileID: 3647229902445459145}
   - component: {fileID: 2430648856892442841}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Canon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 1941473894535526496}
   - component: {fileID: 6764870755661960300}
   - component: {fileID: 5822710946822960704}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Chain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,8 @@ GameObject:
   - component: {fileID: 2323876691715462359}
   - component: {fileID: 6704988481332143071}
   - component: {fileID: 7786705695920421609}
-  m_Layer: 0
+  - component: {fileID: 7992219711363194007}
+  m_Layer: 8
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -379,14 +380,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af3b984a005634b459b84b4f9cd1bfe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetRadius: 15
-  turnSpeed: 6.86
+  projectileSpawn: {fileID: 5480296063218690851}
   fireRate: 4
   fireAngleThreshold: 5
-  projectileSpawn: {fileID: 5480296063218690851}
+  turnSpeed: 10.19
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
+  detectionRadius: 15
+--- !u!135 &7992219711363194007
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6892953842705700050}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 84.76
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9142920867926703108
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,7 +421,7 @@ GameObject:
   - component: {fileID: 6954340876011024102}
   - component: {fileID: 1148309489247278284}
   - component: {fileID: 3675726990368758505}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Tank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,7 +458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followRad: 4
-  rotationSpeed: 5
+  rotationSpeed: 2.31
   stopDistance: 1.3
   minDistance: 3
   offset: {x: 1.3, y: 0, z: -2}
