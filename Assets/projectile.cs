@@ -106,7 +106,7 @@ public class projectile : MonoBehaviour
 
         if (distanceToHit <= step || distanceToHit <= bufferDistance)
         {
-            EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+            playEffect();
             // We've reached the hit point, stop the projectile
             stop = true;
 
@@ -135,6 +135,28 @@ public class projectile : MonoBehaviour
         {
             rb.velocity = Vector3.zero;  // Reset velocity
             rb.angularVelocity = Vector3.zero;  // Reset rotation
+        }
+    }
+
+    void playEffect()
+    {
+        switch (poolName)
+        {
+            case "bulletPool":
+                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+                break;
+            case "pistolPool":
+                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+                break;
+            case "turretPool":
+                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+                break;
+            case "dronePool":
+                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+                break;
+            case "tankPool":
+                EffectsManager.instance.getFromPool("tankHitPool", hitPoint);
+                break;
         }
     }
 
