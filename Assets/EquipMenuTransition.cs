@@ -259,8 +259,8 @@ public class EquipMenuTransition : MonoBehaviour
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().weapon = weaponsInventory[i];
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Weapon;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = weaponsInventory[i].weaponName;
-                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<Text>().text = weaponsInventory[i].weaponDescription;
-                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<Text>().text = "Attack +" + weaponsInventory[i].weaponAttack;
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = weaponsInventory[i].weaponDescription;
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<TMP_Text>().text = "Attack +" + weaponsInventory[i].weaponAttack;
 
                 
                 
@@ -296,8 +296,8 @@ public class EquipMenuTransition : MonoBehaviour
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().rune = runeInventory[i];
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Rune;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = runeInventory[i].runeName;
-                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<Text>().text = runeInventory[i].runeDescription;
-                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<Text>().text = "Effect +" + runeInventory[i].runeEffect;
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = runeInventory[i].runeDescription;
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<TMP_Text>().text = "Effect +" + runeInventory[i].runeEffect;
 
                 var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
                 bool runeEquipped = false;
