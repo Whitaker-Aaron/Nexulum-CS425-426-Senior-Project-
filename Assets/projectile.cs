@@ -106,7 +106,7 @@ public class projectile : MonoBehaviour
 
         if (distanceToHit <= step || distanceToHit <= bufferDistance)
         {
-            EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+            playEffect();
             // We've reached the hit point, stop the projectile
             stop = true;
 
@@ -138,6 +138,28 @@ public class projectile : MonoBehaviour
         }
     }
 
+    void playEffect()
+    {
+        switch (poolName)
+        {
+            case "bulletPool":
+                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+                break;
+            case "pistolPool":
+                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+                break;
+            case "turretPool":
+                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+                break;
+            case "dronePool":
+                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
+                break;
+            case "tankPool":
+                EffectsManager.instance.getFromPool("tankHitPool", hitPoint);
+                break;
+        }
+    }
+
     void returnToPool()
     {
         if(poolName == "bulletPool")
@@ -148,6 +170,8 @@ public class projectile : MonoBehaviour
             projectileManager.Instance.returnProjectile("turretPool", gameObject);
         else if (poolName == "dronePool")
             projectileManager.Instance.returnProjectile("turretPool", gameObject);
+        else if (poolName == "tankPool")
+            projectileManager.Instance.returnProjectile("tankPool", gameObject);
         else
             projectileManager.Instance.returnProjectile("bulletPool", gameObject);
     }
