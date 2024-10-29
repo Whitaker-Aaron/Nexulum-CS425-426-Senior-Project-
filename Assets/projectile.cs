@@ -170,6 +170,8 @@ public class projectile : MonoBehaviour
             projectileManager.Instance.returnProjectile("turretPool", gameObject);
         else if (poolName == "dronePool")
             projectileManager.Instance.returnProjectile("turretPool", gameObject);
+        else if (poolName == "tankPool")
+            projectileManager.Instance.returnProjectile("tankPool", gameObject);
         else
             projectileManager.Instance.returnProjectile("bulletPool", gameObject);
     }
