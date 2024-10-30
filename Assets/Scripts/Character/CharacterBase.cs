@@ -44,8 +44,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     public bool inRangeOfTerminal = false;
 
-    
 
+    int collisionCounter = 0;
     private RuneInt runeInt;
 
     //weapon spawn
@@ -70,6 +70,28 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         masterInput.GetComponent<masterInput>().StopDash();
         gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+=======
+
+        if (!masterInput.GetComponent<masterInput>().characterColliding)
+        {
+            collisionCounter += 1;
+            
+        }
+
+
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (masterInput.GetComponent<masterInput>().characterColliding)
+        {
+            if((collisionCounter - 1) > -1)
+            {
+                collisionCounter -= 1;
+            }
+            
+        }
+        
     }
 
 
@@ -85,7 +107,14 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     // Update is called once per frame
     void Update()
     {
-           
+          if(collisionCounter == 0)
+          {
+            masterInput.GetComponent<masterInput>().characterColliding = false;
+          }
+          else
+          {
+            masterInput.GetComponent<masterInput>().characterColliding = true;
+          }
     }
 
     public IEnumerator MoveForward()
