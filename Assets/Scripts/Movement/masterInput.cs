@@ -37,7 +37,8 @@ public class masterInput : MonoBehaviour
     CharacterBase character;
 
     //basic general player movement
-    public PlayerInputActions playerControl;
+    //public PlayerInputActions playerControl;
+    private PlayerInput playerInput; 
     Vector2 move;
     Vector3 lookPos;
     Vector3 dashDistance;
@@ -51,7 +52,7 @@ public class masterInput : MonoBehaviour
 
     bool stopVelocity = true;
 
-    bool abilityInUse = false;
+    public bool abilityInUse = false;
 
     //animation variables
     private PlayerAnimation animationControl;
@@ -190,7 +191,7 @@ public class masterInput : MonoBehaviour
         Vector4 staminaBorderFill = staminaBorder.GetComponent<Image>().color;
         staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
 
-        
+        playerInput = GetComponent<PlayerInput>();
 
     }
 
@@ -202,6 +203,7 @@ public class masterInput : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        //playerControl = gameObject.GetComponent<PlayerInputActions>();
 
         SS1 = Instantiate(swordSlashPrefab);
         SS2 = Instantiate(swordSlash2);
@@ -219,7 +221,7 @@ public class masterInput : MonoBehaviour
         DontDestroyOnLoad(SS2);
         DontDestroyOnLoad(SS3);
 
-        playerControl = new PlayerInputActions();
+        //playerControl = new PlayerInputActions();
         animationControl = GetComponent<PlayerAnimation>();
         camera = Camera.main.transform;
 
@@ -255,7 +257,12 @@ public class masterInput : MonoBehaviour
         if (stopVelocity)
             player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
 
+
+        //Vector2 lookInput = playerControl.player.mouseLook.ReadValue<Vector2>();
+
+        
         //player look at cursor position
+        /*
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
@@ -273,6 +280,9 @@ public class masterInput : MonoBehaviour
             player.transform.LookAt(player.transform.position + lookDir, Vector3.up);
         else
             player.transform.LookAt(player.transform.position, Vector3.up);
+        */
+
+
 
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
             return;
@@ -323,6 +333,75 @@ public class masterInput : MonoBehaviour
 
 
     //--------------------USER DEFINED FUNCTIONS----------------------
+
+    public void OnMouseLook(InputAction.CallbackContext context)
+    {
+        if (inputPaused)
+            return;
+
+        // Read mouse position input
+        Vector2 mousePosition = context.ReadValue<Vector2>();
+
+        // Perform raycast from the mouse position
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        RaycastHit hit;
+
+        // Raycast onto the ground
+        if (Physics.Raycast(ray, out hit, 100, ground))
+        {
+            lookPos = hit.point; // Set look position to where the raycast hit the ground
+        }
+
+        // Calculate the direction to look at
+        Vector3 lookDir = Vector3.zero;
+        if(player != null)
+            lookDir = lookPos - player.transform.position;
+        lookDir.y = 0;
+
+        if (lookDir.magnitude > minLookDistance && !inputPaused)
+        {
+            player.transform.LookAt(player.transform.position + lookDir, Vector3.up); // Rotate towards the look direction
+        }
+    }
+
+    public void OnGamepadLook(InputAction.CallbackContext context)
+    {
+        if (inputPaused)
+            return;
+
+        // Get the right stick input from the gamepad
+        Vector2 rightStickInput = context.ReadValue<Vector2>();
+
+        if (rightStickInput != Vector2.zero)
+        {
+            // Use camera direction to calculate look direction
+            Vector3 cameraForward = Camera.main.transform.forward;
+            Vector3 cameraRight = Camera.main.transform.right;
+
+            // Ignore Y axis to keep player level
+            cameraForward.y = 0;
+            cameraRight.y = 0;
+
+            // Normalize camera directions
+            cameraForward.Normalize();
+            cameraRight.Normalize();
+
+            // Calculate look direction based on right stick input
+            Vector3 lookDirection = (cameraRight * rightStickInput.x) + (cameraForward * rightStickInput.y);
+
+            // Adjust the look position based on the right stick direction
+            lookPos = player.transform.position + lookDirection * 10f; // Adjust distance as needed
+        }
+
+        // Calculate the direction to look at
+        Vector3 lookDir = lookPos - player.transform.position;
+        lookDir.y = 0;
+
+        if (lookDir.magnitude > minLookDistance && !inputPaused)
+        {
+            player.transform.LookAt(player.transform.position + lookDir, Vector3.up); // Rotate towards the look direction
+        }
+    }
 
     //onMove is implemented through InputSystem in unity, context is the input
     public void onMove(InputAction.CallbackContext context)
@@ -437,7 +516,7 @@ public class masterInput : MonoBehaviour
     IEnumerator shoot()
     {
         canShoot = false;
-        while (Input.GetButton("Fire1") && bulletCount > 0 && isReloading == false)
+        while (playerInput.actions["Attack"].IsPressed() && bulletCount > 0 && isReloading == false)
         {
             bulletCount--;
             GameObject bullet = projectileManager.Instance.getProjectile("bulletPool", bulletSpawn.position, bulletSpawn.rotation); //Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
@@ -476,11 +555,13 @@ public class masterInput : MonoBehaviour
     IEnumerator pistolShoot()
     {
         canPistolShoot = false;
-        
-        pistolBulletCount--;
-        GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", pistolBulletSpawn.position, pistolBulletSpawn.rotation);
-        //bullet.GetComponent<Rigidbody>().velocity = pistolBulletSpawn.forward * pistolBulletSpeed;
-        yield return new WaitForSeconds(pistolFireRateTime);
+        while (playerInput.actions["Attack"].IsPressed() && pistolBulletCount > 0 && pistolReloading == false)
+        {
+            pistolBulletCount--;
+            GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", pistolBulletSpawn.position, pistolBulletSpawn.rotation);
+            //bullet.GetComponent<Rigidbody>().velocity = pistolBulletSpawn.forward * pistolBulletSpeed;
+            yield return new WaitForSeconds(pistolFireRateTime);
+        }
         
         canPistolShoot = true;
         yield break;
@@ -540,7 +621,7 @@ public class masterInput : MonoBehaviour
             }
             if (Time.time > lastClickedTime + nextAttackTime && isAttacking == false && !shootingSwords)//Time.time > cooldownTime && isAttacking == false)
             {
-                if (Input.GetMouseButtonDown(0))
+                if (playerInput.actions["attack"].triggered)
                 {
                     print("click: " + noOfClicks);
 
@@ -641,23 +722,40 @@ public class masterInput : MonoBehaviour
                 animationControl.gunnerReload();
             }
 
-            if (Input.GetKeyDown(KeyCode.R) && bulletCount < magSize)
+            // Reload input check
+            if (playerInput.actions["Reload"].triggered && bulletCount < magSize)
             {
                 StartCoroutine(reload());
                 animationControl.gunnerReload();
             }
 
+            // Initialize shooting state
             bool shooting = false;
-            if (Input.GetMouseButtonDown(0))
+
+            // Check mouse input for shooting
+            if (playerInput.actions["attack"].WasPressedThisFrame())
             {
                 shooting = true;
             }
-            if (Input.GetMouseButtonUp(0))
-                shooting = false;
-
-            if (shooting && isReloading == false && bulletCount > 0 && canShoot)
+            else if (playerInput.actions["attack"].WasReleasedThisFrame())
             {
+                shooting = false;
+            }
 
+            // Always check the trigger input regardless of the frame state
+            float triggerValue = playerInput.actions["attack"].ReadValue<float>();
+            //Debug.Log("Trigger Value: " + triggerValue); // Log the trigger value for debugging
+
+            // Check if the trigger is pressed above the threshold
+            if (triggerValue > 0.5f) // Adjust threshold if necessary
+            {
+                shooting = true;
+            }
+
+            // Check for shooting conditions
+            if (shooting && !isReloading && bulletCount > 0 && canShoot)
+            {
+                //Debug.Log("Shooting..."); // Log when the shoot coroutine is called
                 StartCoroutine(shoot());
             }
         }
@@ -665,7 +763,7 @@ public class masterInput : MonoBehaviour
         //Engineer Logic
         if (currentClass == WeaponBase.weaponClassTypes.Engineer && placing == false)
         {
-            if (Input.GetMouseButtonDown(0) && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false)
+            if (playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false)
             {
                 pistolBulletCount = 0;
                 canPistolShoot = false;
@@ -673,16 +771,46 @@ public class masterInput : MonoBehaviour
                 animationControl.engineerReload();
             }
 
-            if (Input.GetKeyDown(KeyCode.R) && pistolBulletCount < pistolMagSize && !pistolReloading && isAttacking == false)
+            if (playerInput.actions["Reload"].triggered && pistolBulletCount < pistolMagSize && !pistolReloading && isAttacking == false)
             {
                 StartCoroutine(pistolReload());
                 animationControl.engineerReload();
             }
 
-            if (Input.GetMouseButtonDown(0) && canPistolShoot && pistolBulletCount > 0 && isAttacking == false)
+
+            bool shooting = false;
+
+            // Check mouse input for shooting
+            if (playerInput.actions["attack"].WasPressedThisFrame())
             {
+                shooting = true;
+            }
+            else if (playerInput.actions["attack"].WasReleasedThisFrame())
+            {
+                shooting = false;
+            }
+
+            // Always check the trigger input regardless of the frame state
+            float triggerValue = playerInput.actions["attack"].ReadValue<float>();
+            //Debug.Log("Trigger Value: " + triggerValue); // Log the trigger value for debugging
+
+            // Check if the trigger is pressed above the threshold
+            if (triggerValue > 0.5f) // Adjust threshold if necessary
+            {
+                shooting = true;
+            }
+
+            // Check for shooting conditions
+            if (shooting && !pistolReloading && pistolBulletCount > 0 && canPistolShoot)
+            {
+                //Debug.Log("Shooting..."); // Log when the shoot coroutine is called
                 StartCoroutine(pistolShoot());
             }
+
+            //if (playerInput.actions["attack"].triggered && canPistolShoot && pistolBulletCount > 0 && isAttacking == false)
+            //{
+                //StartCoroutine(pistolShoot());
+            //}
 
             if (canRepair)
             {
@@ -711,7 +839,7 @@ public class masterInput : MonoBehaviour
             }
             if (Time.time > lastClickedTime + engNextAttackTime && isAttacking == false)// && Time.time > engCooldown)//&& isAttacking == false)
             {
-                if (Input.GetMouseButtonDown(1))
+                if (playerInput.actions["RightClick"].triggered)
                 {
                     print("click: " + noOfClicks);
 
@@ -781,28 +909,40 @@ public class masterInput : MonoBehaviour
 
         //Class ability Logic
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && !abilityInUse)
+        if (playerInput.actions["AbilityOne"].triggered && !abilityInUse)
         {
-            //abilityInUse = true;
+            abilityInUse = true;
             gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
-            StartCoroutine(abilityWait());
+            if(currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+            {
+                StartCoroutine(abilityWait());
+            }
+            //StartCoroutine(abilityWait());
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && !abilityInUse)
+        else if (playerInput.actions["AbilityTwo"].triggered && !abilityInUse)
         {
-            //abilityInUse = true;
+            abilityInUse = true;
             gameObject.GetComponent<classAbilties>().activateAbilityTwo(currentClass);
-            StartCoroutine(abilityWait());
+            //StartCoroutine(abilityWait());
+            if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+            {
+                StartCoroutine(abilityWait());
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha3) && !abilityInUse)
+        else if (playerInput.actions["AbilityThree"].triggered && !abilityInUse)
         {
-            //abilityInUse = true;
+            abilityInUse = true;
             if (currentClass == WeaponBase.weaponClassTypes.Knight)
             {
                 animationControl.knightShootSwords();
                 shootingSwords = true;
             }
             gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
-            StartCoroutine(abilityWait());
+            //StartCoroutine(abilityWait());
+            if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+            {
+                StartCoroutine(abilityWait());
+            }
         }
     }
 

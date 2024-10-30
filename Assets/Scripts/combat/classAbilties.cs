@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class classAbilties : MonoBehaviour
 {
@@ -25,7 +26,10 @@ public class classAbilties : MonoBehaviour
     GameObject player;
     public LayerMask enemy;
     UIManager uiManager;
-    
+
+    private PlayerInput playerInput;
+    private bool usingMouseInput = false;
+
 
     //Knight
     bool bubble = false;
@@ -100,6 +104,9 @@ public class classAbilties : MonoBehaviour
     int teslaNumCount, turretNumCount = 0;
     [SerializeField] private int teslaMaxQuantity, turretMaxQuantity;
 
+    private Dictionary<int, GameObject> placedTowers;
+    private int totalTowerCount;
+
 
     //cooldown rates
     [SerializeField] private float ka1Time, ka2Time, ka3Time;
@@ -132,16 +139,19 @@ public class classAbilties : MonoBehaviour
         {
             StartCoroutine(bubbleShield());
             acc1 = StartCoroutine(abilitiesCooldown(1, ka1Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
         {
             gameObject.GetComponent<masterInput>().shootingRocket = true;
             shootingRocket = true;
             StartCoroutine(abilitiesCooldown(1, ga1Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity)
         {
             turretNumCount += 1;
+            totalTowerCount += 1;
             placing = true;
             instant = true;
             gameObject.GetComponent<masterInput>().placing = true;
@@ -167,16 +177,19 @@ public class classAbilties : MonoBehaviour
             activatedAura = true;
             StartCoroutine(auraWait());
             acc2 = StartCoroutine(abilitiesCooldown(2, ka2Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !throwingGrenade)
         {
             throwingGrenade = true;
             gameObject.GetComponent<masterInput>().throwingGrenade = true;
             StartCoroutine(abilitiesCooldown(2, ga2Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer && teslaNumCount < teslaMaxQuantity)
         {
             teslaNumCount += 1;
+            totalTowerCount += 1;
             placingTesla = true;
             placingOne = true;
             instant = true;
@@ -207,6 +220,7 @@ public class classAbilties : MonoBehaviour
 
             StartCoroutine(stopSword(currentEffect));
             StartCoroutine(abilitiesCooldown(3, ka3Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
         {
@@ -220,10 +234,12 @@ public class classAbilties : MonoBehaviour
             currentLaserEffect.transform.position = pos.position;
             StartCoroutine(laserStop());
             StartCoroutine(abilitiesCooldown(3, ga3Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             StartCoroutine(abilitiesCooldown(3, ea3Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
     }
 
@@ -402,6 +418,28 @@ public class classAbilties : MonoBehaviour
     //Engineer
 
    
+    void removeAllTowers()
+    {
+        for (int i = placedTowers.Count - 1; i >= 0; i--) // Start from the end of the list
+        {
+            GameObject tower = placedTowers[i];
+            if (tower != null)
+            {
+                placedTowers.Remove(i); // Remove by index
+                Destroy(tower); // Destroy the GameObject
+            }
+        }
+    }
+
+    void removeTower(int count)
+    {
+        if (placedTowers.ContainsKey(count))
+        {
+            GameObject temp = placedTowers[count];
+            placedTowers.Remove(count); // Remove the specific tower
+            Destroy(temp); // Destroy the GameObject
+        }
+    }
 
     void activateTesla()
     {
@@ -493,7 +531,7 @@ public class classAbilties : MonoBehaviour
         
 
 
-        if(Input.GetMouseButtonDown(0) && teslaCount == 0 && placingOne && !placingTwo) 
+        if(playerInput.actions["Attack"].triggered && teslaCount == 0 && placingOne && !placingTwo) 
         {
             //print("activate 0");
             teslaCount = 1;
@@ -508,7 +546,7 @@ public class classAbilties : MonoBehaviour
             
 
         }
-        if(Input.GetMouseButtonDown(0) && teslaCount == 1 && !placingOne && placingTwo)
+        if (playerInput.actions["Attack"].triggered && teslaCount == 1 && !placingOne && placingTwo)
         {
             //print("activate 1");
             teslaCount = 0;
@@ -535,7 +573,8 @@ public class classAbilties : MonoBehaviour
             teslaParent.GetComponent<teslaTower>().setParents();
 
             StartCoroutine(playerInputWait());
-
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
+            placedTowers.Add(totalTowerCount, teslaParent);
         }
     }
 
@@ -557,6 +596,126 @@ public class classAbilties : MonoBehaviour
 
     void activateTurret()
     {
+        Vector3 mousePos = Vector3.zero;
+        RaycastHit hit;
+
+        // Determine input type (mouse vs. gamepad)
+        if (playerInput.actions["MouseLook"].triggered)
+        {
+            usingMouseInput = true; // Set flag for mouse input
+        }
+        else if (Mathf.Abs(playerInput.actions["GamePadLook"].ReadValue<Vector2>().magnitude) > 0.1f) // Check for joystick movement
+        {
+            usingMouseInput = false; // Set flag for gamepad input
+        }
+
+        // Handle mouse input
+        if (usingMouseInput)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 100, ground))
+            {
+                mousePos = hit.point;
+            }
+        }
+        else // Handle gamepad input
+        {
+            Vector2 inputLook = playerInput.actions["GamePadLook"].ReadValue<Vector2>(); // Get joystick input
+            Debug.Log($"Gamepad Input: {inputLook}"); // Log the joystick input values
+
+            float distance = Mathf.Clamp(inputLook.magnitude, playerRad, turretPlacementRadius); // Clamp the distance
+
+            if (inputLook != Vector2.zero) // Check for valid input
+            {
+                // Normalize the joystick input to get direction
+                Vector3 directionT = new Vector3(inputLook.x, 0, inputLook.y).normalized;
+
+                // Calculate the desired turret position based on player position and input direction
+                mousePos = player.transform.position + directionT * distance;
+            }
+            else
+            {
+                // Default to player position if no input
+                mousePos = player.transform.position;
+            }
+        }
+
+        // Instantiate the transparent turret if instant is true
+        if (instant)
+        {
+            instant = false;
+            if (turretTransparentPrefab != null) // Check if prefab is assigned
+            {
+                currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position + new Vector3(1,0,0), player.transform.rotation); // Match player's rotation
+            }
+            else
+            {
+                Debug.LogError("turretTransparentPrefab is null");
+                return; // Early exit if prefab is null
+            }
+        }
+
+        // Check if currentTurret is valid
+        if (currentTurret == null)
+        {
+            Debug.LogError("currentTurret is not initialized");
+            return; // Exit if currentTurret is null
+        }
+
+        // Calculate the distance from player to mousePos
+        float distanceFromPlayer = Vector3.Distance(player.transform.position, mousePos);
+        Vector3 direction = (mousePos - player.transform.position).normalized;
+
+        // Position the turret based on distance from player
+        if (distanceFromPlayer <= turretPlacementRadius && distanceFromPlayer > playerRad)
+        {
+            currentTurret.transform.position = mousePos;
+        }
+        else if (distanceFromPlayer <= playerRad)
+        {
+            currentTurret.transform.position = player.transform.position + direction * (playerRad + 0.1f); // Small buffer to avoid overlap
+            currentTurret.transform.position = new Vector3(
+                currentTurret.transform.position.x,
+                Mathf.Max(currentTurret.transform.position.y, player.transform.position.y + 0.03f), // Ensure turret stays above player
+                currentTurret.transform.position.z
+            );
+        }
+        else
+        {
+            currentTurret.transform.position = player.transform.position + direction * turretPlacementRadius;
+        }
+
+        // Ensure turret faces the same direction as the player
+        currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward); // Match turret rotation to player's forward direction
+
+        // Handle the Attack action
+        if (playerInput.actions["Attack"].triggered)
+        {
+            if (currentTurret != null) // Ensure currentTurret is valid
+            {
+                placing = false; // Update placing status
+                Quaternion rot = currentTurret.transform.rotation; // Store current turret rotation
+                Vector3 pos = currentTurret.transform.position; // Store current turret position
+
+                Destroy(currentTurret); // Destroy the temporary turret
+
+                // Instantiate the final turret
+                if (turretPrefab != null) // Check if turretPrefab is assigned
+                {
+                    currentTurret = Instantiate(turretPrefab, pos + new Vector3(0, turretSpawnHeight, 0), rot);
+                    StartCoroutine(playerInputWait()); // Wait for input
+                }
+                else
+                {
+                    Debug.LogError("turretPrefab is null");
+                }
+            }
+            gameObject.GetComponent<masterInput>().abilityInUse = false; // Reset ability in use
+            placedTowers.Add(totalTowerCount, currentTurret); // Add to placed towers
+        }
+
+
+        /*
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hit;
@@ -600,7 +759,7 @@ public class classAbilties : MonoBehaviour
             currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (playerInput.actions["Attack"].triggered)
         {
             if (currentTurret != null)// && distance <= turretPlacementRadius)
             {
@@ -611,8 +770,10 @@ public class classAbilties : MonoBehaviour
                 currentTurret = Instantiate(turretPrefab, pos + new Vector3(0, turretSpawnHeight, 0), rot);
                 StartCoroutine(playerInputWait());
             }
-
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
+            placedTowers.Add(totalTowerCount, currentTurret);
         }
+        */
     }
 
     //-------------------------------------------
@@ -635,6 +796,10 @@ public class classAbilties : MonoBehaviour
         turretNumCount = 0;
 
         skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<SkillTreeManager>();
+
+        placedTowers = new Dictionary<int, GameObject>();
+
+        playerInput = GetComponent<PlayerInput>();
     }
 
     // Start is called before the first frame update
@@ -677,7 +842,7 @@ public class classAbilties : MonoBehaviour
 
         if(shootingSwords)
         {
-            if(Input.GetMouseButtonDown(0) && !shotSword)
+            if(playerInput.actions["Attack"].IsPressed() && !shotSword)
             {
                 StartCoroutine(swordShooting());
             }
@@ -685,13 +850,13 @@ public class classAbilties : MonoBehaviour
 
         if(shootingRocket)
         {
-            if (Input.GetMouseButtonDown(0) && !shotRocket)
+            if (playerInput.actions["Attack"].triggered && !shotRocket)
                 StartCoroutine(shootRocket());
         }
 
         if(shootingLaser)
         {
-            if(Input.GetMouseButtonDown(0) && !shotLaser)
+            if(playerInput.actions["Attack"].IsPressed() && !shotLaser)
             {
                 shotLaser = true;
 
@@ -699,7 +864,7 @@ public class classAbilties : MonoBehaviour
                 currentLaserEffect.GetComponent<ParticleSystem>().Clear(true);
                 currentLaserEffect.GetComponent<ParticleSystem>().Play();
             }
-            if(Input.GetMouseButtonUp(0) && shotLaser)
+            if(playerInput.actions["Attack"].WasReleasedThisFrame() && shotLaser)
             {
                 shotLaser = false;
                 //if (currentLaserEffect != null)
@@ -726,7 +891,7 @@ public class classAbilties : MonoBehaviour
         if(throwingGrenade && !threwGrenade)
         {
             gameObject.GetComponent<masterInput>().throwingGrenade = true;
-            if (Input.GetMouseButtonDown(0))
+            if (playerInput.actions["Attack"].triggered)
             {
                 threwGrenade = true;
                 //gameObject.GetComponent<masterInput>().throwingGrenade = false;
