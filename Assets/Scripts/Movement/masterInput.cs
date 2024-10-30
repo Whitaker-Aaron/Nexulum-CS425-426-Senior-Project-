@@ -44,8 +44,7 @@ public class masterInput : MonoBehaviour
     public float speed = 3f;
     bool isMoving = false;
     bool isDashing = false;
-    bool dashStarted = false;
-    bool dashCollision = false;
+    public bool characterColliding = false;
     public float minLookDistance = 1f;
     public LayerMask ground;
 
@@ -334,7 +333,7 @@ public class masterInput : MonoBehaviour
 
     public void onDash(InputAction.CallbackContext context)
     {
-        if (context.performed && isMoving)
+        if (context.performed && isMoving && !characterColliding)
         {
             //dashStarted = true;
             if (!isDashing)

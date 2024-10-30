@@ -68,6 +68,22 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         Debug.Log("Collision detected on player");
         masterInput.GetComponent<masterInput>().StopDash();
+
+        if (!masterInput.GetComponent<masterInput>().characterColliding)
+        {
+            masterInput.GetComponent<masterInput>().characterColliding = true;
+        }
+
+
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (masterInput.GetComponent<masterInput>().characterColliding)
+        {
+            masterInput.GetComponent<masterInput>().characterColliding = false;
+        }
+        
     }
 
 
