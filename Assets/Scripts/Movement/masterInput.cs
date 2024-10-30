@@ -733,7 +733,7 @@ public class masterInput : MonoBehaviour
                 }
             }
 
-            if (Input.GetMouseButtonDown(1))
+            if (playerInput.actions["RightClick"].triggered)
             {
                 isBlocking = true;
                 character.invul = true;
@@ -750,7 +750,7 @@ public class masterInput : MonoBehaviour
                     StartCoroutine(animationControl.startKnightBlock(blockTime));
                 StartCoroutine(StartStaminaCooldown());
             }
-            if (Input.GetMouseButtonUp(1))
+            if (playerInput.actions["RightClick"].WasReleasedThisFrame())
             {
                 isBlocking = false;
                 character.invul = false;
