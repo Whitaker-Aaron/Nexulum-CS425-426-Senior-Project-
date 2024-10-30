@@ -41,10 +41,13 @@ public class masterInput : MonoBehaviour
     private PlayerInput playerInput; 
     Vector2 move;
     Vector3 lookPos;
+    Vector3 lookDir;
     Vector3 dashDistance;
     public float speed = 3f;
     bool isMoving = false;
     bool isDashing = false;
+    bool isGamepadLooking = false;
+    bool isMouseLooking = false;
     public bool characterColliding = false;
     public float minLookDistance = 1f;
     public LayerMask ground;
@@ -294,9 +297,46 @@ public class masterInput : MonoBehaviour
     }
     private void FixedUpdate()
     {
+
+        player.transform.rotation = Quaternion.Euler(0.0f, player.transform.eulerAngles.y, 0.0f);
+        
+
+
+
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+            return;
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
+        //universal player movement
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        if (direction.magnitude >= 0.1f)
+        {
+            movePlayer();
+        }
+
+
+
+        //animation
+        /*
+        movement = new Vector3(horizontal, 0, vertical);
+        if (camera != null)
+        {
+            camForward = Vector3.Scale(camera.up, new Vector3(1, 0, 1)).normalized;
+            movement = vertical * camForward + horizontal * camera.right;
+        }
+        else
+            movement = vertical * Vector3.forward + horizontal * Vector3.right;
+
+        if (movement.magnitude > 1)
+        {
+            movement.Normalize();
+        }
+
+        animationControl.updatePlayerAnimation(movement);
+        */
         Vector3 movement = new Vector3(horizontal, 0, vertical);
 
         if (Camera.main != null)
@@ -329,41 +369,6 @@ public class masterInput : MonoBehaviour
 
         // Update player animation with the correct movement direction
         animationControl.updatePlayerAnimation(movement);
-
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
-            return;
-
-        
-
-        //universal player movement
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-        if (direction.magnitude >= 0.1f)
-        {
-            movePlayer();
-        }
-
-
-
-        //animation
-        /*
-        movement = new Vector3(horizontal, 0, vertical);
-        if (camera != null)
-        {
-            camForward = Vector3.Scale(camera.up, new Vector3(1, 0, 1)).normalized;
-            movement = vertical * camForward + horizontal * camera.right;
-        }
-        else
-            movement = vertical * Vector3.forward + horizontal * Vector3.right;
-
-        if (movement.magnitude > 1)
-        {
-            movement.Normalize();
-        }
-
-        animationControl.updatePlayerAnimation(movement);
-        */
-        
     }
 
 
@@ -372,9 +377,9 @@ public class masterInput : MonoBehaviour
 
     public void OnMouseLook(InputAction.CallbackContext context)
     {
-        if (inputPaused)
+        if (inputPaused || isGamepadLooking)
             return;
-
+        isMouseLooking = true;
         // Read mouse position input
         Vector2 mousePosition = context.ReadValue<Vector2>();
 
@@ -389,7 +394,7 @@ public class masterInput : MonoBehaviour
         }
 
         // Calculate the direction to look at
-        Vector3 lookDir = Vector3.zero;
+        lookDir = Vector3.zero;
         if(player != null)
             lookDir = lookPos - player.transform.position;
         lookDir.y = 0;
@@ -398,12 +403,14 @@ public class masterInput : MonoBehaviour
         {
             player.transform.LookAt(player.transform.position + lookDir, Vector3.up); // Rotate towards the look direction
         }
+        isMouseLooking = false;
     }
 
     public void OnGamepadLook(InputAction.CallbackContext context)
     {
-        if (inputPaused)
+        if (inputPaused || isMouseLooking)
             return;
+        isGamepadLooking = true;
 
         // Get the right stick input from the gamepad
         Vector2 rightStickInput = context.ReadValue<Vector2>();
@@ -430,13 +437,15 @@ public class masterInput : MonoBehaviour
         }
 
         // Calculate the direction to look at
-        Vector3 lookDir = lookPos - player.transform.position;
+        lookDir = lookPos - player.transform.position;
         lookDir.y = 0;
 
         if (lookDir.magnitude > minLookDistance && !inputPaused)
         {
             player.transform.LookAt(player.transform.position + lookDir, Vector3.up); // Rotate towards the look direction
+            //player.transform.rotation = Quaternion.Euler(lookDir.)
         }
+        isGamepadLooking = false;
     }
 
     //onMove is implemented through InputSystem in unity, context is the input
@@ -503,8 +512,8 @@ public class masterInput : MonoBehaviour
         {
             RaycastHit hit;
             // Does the ray intersect any objects excluding the player layer
-            if (Physics.Raycast(character.transform.position, transform.TransformDirection(Vector3.forward), out hit, 5.0f)){
-                Debug.DrawRay(character.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+            if (Physics.Raycast(player.transform.position, transform.TransformDirection(Vector3.forward), out hit, 5.0f)){
+                Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                 Debug.Log("Collision detected during dash");
                 dashSpeed = 1.0f;
             }

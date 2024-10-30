@@ -350,6 +350,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         invul = true;
         lifetimeManager.OnDeath();
+        masterInput.GetComponent<masterInput>().pausePlayerInput();
 
         StopCoroutine(animateHealth());
         StopCoroutine(animateDelayedHealth());
