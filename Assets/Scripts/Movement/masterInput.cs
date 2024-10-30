@@ -312,7 +312,7 @@ public class masterInput : MonoBehaviour
 
 
         //animation
-
+        /*
         movement = new Vector3(horizontal, 0, vertical);
         if (camera != null)
         {
@@ -327,6 +327,39 @@ public class masterInput : MonoBehaviour
             movement.Normalize();
         }
 
+        animationControl.updatePlayerAnimation(movement);
+        */
+        Vector3 movement = new Vector3(horizontal, 0, vertical);
+
+        if (Camera.main != null)
+        {
+            // Get the camera's forward and right vectors, flattened on the XZ plane
+            Vector3 camForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+            Vector3 camRight = Vector3.Scale(Camera.main.transform.right, new Vector3(1, 0, 1)).normalized;
+
+            // Apply camera-relative movement, with possible offset correction
+            movement = vertical * camForward + horizontal * camRight;
+            if (movement.magnitude > 1)
+            {
+                movement.Normalize();
+            }
+            animationControl.updatePlayerAnimation(movement);
+            // Here we add an offset rotation to correct any small misalignment
+            //Quaternion playerOffset = Quaternion.Euler(0, player.transform.eulerAngles.y - camera.transform.eulerAngles.y, 0);
+            //movement = playerOffset * movement;
+        }
+        else
+        {
+            // Fallback to world space movement if no camera is available
+            movement = vertical * Vector3.forward + horizontal * Vector3.right;
+        }
+
+        if (movement.magnitude > 1)
+        {
+            movement.Normalize(); // Normalize to prevent faster diagonal movement
+        }
+
+        // Update player animation with the correct movement direction
         animationControl.updatePlayerAnimation(movement);
     }
 
@@ -439,6 +472,7 @@ public class masterInput : MonoBehaviour
     {
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused || (isAttacking && currentClass == WeaponBase.weaponClassTypes.Engineer))
             return;
+        /*
         Vector3 movement = new Vector3(move.x, 0, move.y);
 
         if (movement.magnitude == 0)
@@ -451,11 +485,30 @@ public class masterInput : MonoBehaviour
                 player.transform.Translate(movement * blockSpeed * Time.deltaTime, Space.World);
             else
                 player.transform.Translate(movement * speed * dashSpeed * Time.deltaTime, Space.World);
-  
-        
-            
-        
-        
+        */
+        Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
+        Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
+
+        // Use input to move relative to camera's direction
+        Vector3 movement = cameraForward * move.y + cameraRight * move.x;
+
+        if (movement.magnitude == 0)
+            isMoving = false;
+        else
+            isMoving = true;
+
+        // Apply movement based on class and whether the player is blocking
+        if (currentClass == WeaponBase.weaponClassTypes.Knight && isBlocking)
+        {
+            player.transform.Translate(movement * blockSpeed * Time.deltaTime, Space.World);
+        }
+        else
+        {
+            player.transform.Translate(movement * speed * dashSpeed * Time.deltaTime, Space.World);
+        }
+
+
+
     }
     IEnumerator PlayerDash()
     {
