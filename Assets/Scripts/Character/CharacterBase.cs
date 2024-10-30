@@ -70,7 +70,6 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         masterInput.GetComponent<masterInput>().StopDash();
         gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-=======
 
         if (!masterInput.GetComponent<masterInput>().characterColliding)
         {
