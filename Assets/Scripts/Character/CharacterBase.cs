@@ -64,7 +64,13 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         
     }
 
-   
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Collision detected on player");
+        masterInput.GetComponent<masterInput>().StopDash();
+    }
+
+
 
     // Start is called before the first frame update
     void Start()

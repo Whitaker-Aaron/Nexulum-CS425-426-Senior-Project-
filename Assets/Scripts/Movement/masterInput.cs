@@ -40,8 +40,12 @@ public class masterInput : MonoBehaviour
     public PlayerInputActions playerControl;
     Vector2 move;
     Vector3 lookPos;
+    Vector3 dashDistance;
     public float speed = 3f;
     bool isMoving = false;
+    bool isDashing = false;
+    bool dashStarted = false;
+    bool dashCollision = false;
     public float minLookDistance = 1f;
     public LayerMask ground;
 
@@ -164,8 +168,12 @@ public class masterInput : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("Collision detected on player");
         player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //dashCollision = true;
     }
+
+   
     private void Awake()
     {
         
@@ -324,6 +332,27 @@ public class masterInput : MonoBehaviour
         move = context.ReadValue<Vector2>();
     }
 
+    public void onDash(InputAction.CallbackContext context)
+    {
+        if (context.performed && isMoving)
+        {
+            //dashStarted = true;
+            if (!isDashing)
+            {
+                isDashing = true;
+                dashSpeed = 3.0f;
+                StartCoroutine(PlayerDash());
+            }
+
+        }
+    }
+
+    public void StopDash()
+    {
+        dashSpeed = 1.0f;
+        isDashing = false;
+    }
+
 
 
     //actual player translation for FixedUpdate
@@ -338,10 +367,24 @@ public class masterInput : MonoBehaviour
         else
             isMoving = true;
 
-        if (currentClass == WeaponBase.weaponClassTypes.Knight && isBlocking)
-            player.transform.Translate(movement * blockSpeed * Time.deltaTime, Space.World);
-        else
-            player.transform.Translate(movement * speed * Time.deltaTime, Space.World);
+  
+            if (currentClass == WeaponBase.weaponClassTypes.Knight && isBlocking)
+                player.transform.Translate(movement * blockSpeed * Time.deltaTime, Space.World);
+            else
+                player.transform.Translate(movement * speed * dashSpeed * Time.deltaTime, Space.World);
+  
+        
+            
+        
+        
+    }
+    IEnumerator PlayerDash()
+    {
+        yield return new WaitForSeconds(0.2f);
+        dashSpeed = 1;
+        isDashing = false;
+        yield break;
+        
     }
 
     public void pausePlayerInput()
