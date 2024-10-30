@@ -39,6 +39,11 @@ public class grenade : MonoBehaviour
             collision.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         }
+        if(collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            collision.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        }
     }
 
     private void OnDrawGizmos()
