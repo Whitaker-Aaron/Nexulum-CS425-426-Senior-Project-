@@ -47,7 +47,7 @@ public class masterInput : MonoBehaviour
 
     bool stopVelocity = true;
 
-    bool abilityInUse = false;
+    public bool abilityInUse = false;
 
     //animation variables
     private PlayerAnimation animationControl;
@@ -740,26 +740,38 @@ public class masterInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1) && !abilityInUse)
         {
-            //abilityInUse = true;
+            abilityInUse = true;
             gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
-            StartCoroutine(abilityWait());
+            if(currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+            {
+                StartCoroutine(abilityWait());
+            }
+            //StartCoroutine(abilityWait());
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) && !abilityInUse)
         {
-            //abilityInUse = true;
+            abilityInUse = true;
             gameObject.GetComponent<classAbilties>().activateAbilityTwo(currentClass);
-            StartCoroutine(abilityWait());
+            //StartCoroutine(abilityWait());
+            if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+            {
+                StartCoroutine(abilityWait());
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3) && !abilityInUse)
         {
-            //abilityInUse = true;
+            abilityInUse = true;
             if (currentClass == WeaponBase.weaponClassTypes.Knight)
             {
                 animationControl.knightShootSwords();
                 shootingSwords = true;
             }
             gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
-            StartCoroutine(abilityWait());
+            //StartCoroutine(abilityWait());
+            if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+            {
+                StartCoroutine(abilityWait());
+            }
         }
     }
 

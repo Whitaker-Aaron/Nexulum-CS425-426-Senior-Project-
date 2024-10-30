@@ -100,6 +100,9 @@ public class classAbilties : MonoBehaviour
     int teslaNumCount, turretNumCount = 0;
     [SerializeField] private int teslaMaxQuantity, turretMaxQuantity;
 
+    private Dictionary<int, GameObject> placedTowers;
+    private int totalTowerCount;
+
 
     //cooldown rates
     [SerializeField] private float ka1Time, ka2Time, ka3Time;
@@ -132,16 +135,19 @@ public class classAbilties : MonoBehaviour
         {
             StartCoroutine(bubbleShield());
             acc1 = StartCoroutine(abilitiesCooldown(1, ka1Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
         {
             gameObject.GetComponent<masterInput>().shootingRocket = true;
             shootingRocket = true;
             StartCoroutine(abilitiesCooldown(1, ga1Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity)
         {
             turretNumCount += 1;
+            totalTowerCount += 1;
             placing = true;
             instant = true;
             gameObject.GetComponent<masterInput>().placing = true;
@@ -167,16 +173,19 @@ public class classAbilties : MonoBehaviour
             activatedAura = true;
             StartCoroutine(auraWait());
             acc2 = StartCoroutine(abilitiesCooldown(2, ka2Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !throwingGrenade)
         {
             throwingGrenade = true;
             gameObject.GetComponent<masterInput>().throwingGrenade = true;
             StartCoroutine(abilitiesCooldown(2, ga2Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer && teslaNumCount < teslaMaxQuantity)
         {
             teslaNumCount += 1;
+            totalTowerCount += 1;
             placingTesla = true;
             placingOne = true;
             instant = true;
@@ -207,6 +216,7 @@ public class classAbilties : MonoBehaviour
 
             StartCoroutine(stopSword(currentEffect));
             StartCoroutine(abilitiesCooldown(3, ka3Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
         {
@@ -220,10 +230,12 @@ public class classAbilties : MonoBehaviour
             currentLaserEffect.transform.position = pos.position;
             StartCoroutine(laserStop());
             StartCoroutine(abilitiesCooldown(3, ga3Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             StartCoroutine(abilitiesCooldown(3, ea3Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
     }
 
@@ -402,6 +414,28 @@ public class classAbilties : MonoBehaviour
     //Engineer
 
    
+    void removeAllTowers()
+    {
+        for (int i = placedTowers.Count - 1; i >= 0; i--) // Start from the end of the list
+        {
+            GameObject tower = placedTowers[i];
+            if (tower != null)
+            {
+                placedTowers.Remove(i); // Remove by index
+                Destroy(tower); // Destroy the GameObject
+            }
+        }
+    }
+
+    void removeTower(int count)
+    {
+        if (placedTowers.ContainsKey(count))
+        {
+            GameObject temp = placedTowers[count];
+            placedTowers.Remove(count); // Remove the specific tower
+            Destroy(temp); // Destroy the GameObject
+        }
+    }
 
     void activateTesla()
     {
@@ -535,7 +569,8 @@ public class classAbilties : MonoBehaviour
             teslaParent.GetComponent<teslaTower>().setParents();
 
             StartCoroutine(playerInputWait());
-
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
+            placedTowers.Add(totalTowerCount, teslaParent);
         }
     }
 
@@ -611,7 +646,8 @@ public class classAbilties : MonoBehaviour
                 currentTurret = Instantiate(turretPrefab, pos + new Vector3(0, turretSpawnHeight, 0), rot);
                 StartCoroutine(playerInputWait());
             }
-
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
+            placedTowers.Add(totalTowerCount, currentTurret);
         }
     }
 
@@ -635,6 +671,8 @@ public class classAbilties : MonoBehaviour
         turretNumCount = 0;
 
         skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<SkillTreeManager>();
+
+        placedTowers = new Dictionary<int, GameObject>();
     }
 
     // Start is called before the first frame update
