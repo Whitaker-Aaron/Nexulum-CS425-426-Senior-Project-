@@ -28,15 +28,22 @@ public class enemyMinionCombat : MonoBehaviour
             sword.activateAttack(true, attackDamage);
             anim.minionAttack();
             enemy.pauseMovement(anim.getAnimationTime());
-            StartCoroutine(wait(anim.getAnimationTime()));
+            StartCoroutine(wait(anim.getAnimationTime(), anim));
         }
     }
 
-    IEnumerator wait(float time)
+    IEnumerator disableAttack(float time)
     {
-        yield return new WaitForSeconds(time);
-        canAttack = true;
+        yield return new WaitForSeconds(time / 1.1f);
         sword.activateAttack(false, attackDamage);
+    }
+
+    IEnumerator wait(float time, EnemyAnimation anim)
+    {
+        StartCoroutine(disableAttack(time));
+        //anim.Stop();
+        yield return new WaitForSeconds(0.5f);
+        canAttack = true;
         yield break;
     }
 
@@ -52,6 +59,11 @@ public class enemyMinionCombat : MonoBehaviour
     {
         if (canAttack)
             attackPlayer();
+        else
+        {
+            //sword.isAttacking = false;
+        }
+        
     }
 
     private void OnDrawGizmos()
