@@ -10,11 +10,51 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     Vector3 moveInput, camForward, movement;
     float forwardAmount, turnAmount;
     GameObject player;
-    
+
 
 
     //General movement functions---------------
 
+
+    public void updatePlayerAnimation(Vector3 movementDirection)
+    {
+        Move(movementDirection);
+    }
+
+    private void Move(Vector3 moving)
+    {
+        if (moving.magnitude > 1)
+        {
+            moving.Normalize();
+        }
+
+        this.moveInput = moving;
+
+        // Convert world movement into local movement
+        convertMoveInput();
+        // Update the animator with the converted local movement
+        updateAnimator();
+    }
+
+    void convertMoveInput()
+    {
+        // Convert the camera-relative movement (moveInput) to the player's local space
+        Vector3 localMove = player.transform.InverseTransformDirection(moveInput);
+
+        // Local Z-axis for forward-backward movement (positive Z = forward, negative Z = backward)
+        forwardAmount = localMove.x;
+
+        // Local X-axis for left-right movement (positive X = right, negative X = left)
+        turnAmount = localMove.z;
+    }
+
+    void updateAnimator()
+    {
+        // Update the animation parameters based on the converted local movement
+        animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
+        animator.SetFloat("Turn", turnAmount, 0.1f, Time.deltaTime);
+    }
+    /*
     public void updatePlayerAnimation(Vector3 movementDirection)
     {
         Move(movementDirection);
@@ -32,7 +72,8 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         convertMoveInput();
         updateAnimator();
     }
-
+    */
+    /*
     void convertMoveInput()
     {
         Vector3 localMove = player.transform.InverseTransformDirection(moveInput);
@@ -45,6 +86,7 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
         animator.SetFloat("Turn", turnAmount, 0.1f, Time.deltaTime);
     }
+    */
     //-------------------------------------------------------
 
     //Knight Functions---------------------------------------
