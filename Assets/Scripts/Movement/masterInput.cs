@@ -48,7 +48,6 @@ public class masterInput : MonoBehaviour
     public bool characterColliding = false;
     public float minLookDistance = 1f;
     public LayerMask ground;
-    Vector3 lookDir = Vector3.zero;
 
     bool stopVelocity = true;
 
@@ -331,10 +330,6 @@ public class masterInput : MonoBehaviour
         // Update player animation with the correct movement direction
         animationControl.updatePlayerAnimation(movement);
 
-        if (player != null)
-            lookDir = lookPos - player.transform.position;
-        lookDir.y = 0;
-
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
             return;
 
@@ -394,10 +389,15 @@ public class masterInput : MonoBehaviour
         }
 
         // Calculate the direction to look at
-        
-        
+        Vector3 lookDir = Vector3.zero;
+        if(player != null)
+            lookDir = lookPos - player.transform.position;
+        lookDir.y = 0;
 
-        
+        if (lookDir.magnitude > minLookDistance && !inputPaused)
+        {
+            player.transform.LookAt(player.transform.position + lookDir, Vector3.up); // Rotate towards the look direction
+        }
     }
 
     public void OnGamepadLook(InputAction.CallbackContext context)
