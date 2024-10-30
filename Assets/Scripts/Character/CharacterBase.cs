@@ -108,11 +108,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
           if(collisionCounter == 0)
           {
-            masterInput.GetComponent<masterInput>().characterColliding = false;
+            //masterInput.GetComponent<masterInput>().characterColliding = false;
           }
           else
           {
-            masterInput.GetComponent<masterInput>().characterColliding = true;
+            //masterInput.GetComponent<masterInput>().characterColliding = true;
           }
     }
 

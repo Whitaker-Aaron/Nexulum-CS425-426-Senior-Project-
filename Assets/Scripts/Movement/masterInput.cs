@@ -48,6 +48,7 @@ public class masterInput : MonoBehaviour
     public bool characterColliding = false;
     public float minLookDistance = 1f;
     public LayerMask ground;
+    Vector3 lookDir = Vector3.zero;
 
     bool stopVelocity = true;
 
@@ -294,40 +295,9 @@ public class masterInput : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
-            return;
-
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        //universal player movement
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-        if (direction.magnitude >= 0.1f)
-        {
-            movePlayer();
-        }
-
-
-
-        //animation
-        /*
-        movement = new Vector3(horizontal, 0, vertical);
-        if (camera != null)
-        {
-            camForward = Vector3.Scale(camera.up, new Vector3(1, 0, 1)).normalized;
-            movement = vertical * camForward + horizontal * camera.right;
-        }
-        else
-            movement = vertical * Vector3.forward + horizontal * Vector3.right;
-
-        if (movement.magnitude > 1)
-        {
-            movement.Normalize();
-        }
-
-        animationControl.updatePlayerAnimation(movement);
-        */
         Vector3 movement = new Vector3(horizontal, 0, vertical);
 
         if (Camera.main != null)
@@ -360,6 +330,45 @@ public class masterInput : MonoBehaviour
 
         // Update player animation with the correct movement direction
         animationControl.updatePlayerAnimation(movement);
+
+        if (player != null)
+            lookDir = lookPos - player.transform.position;
+        lookDir.y = 0;
+
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+            return;
+
+        
+
+        //universal player movement
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        if (direction.magnitude >= 0.1f)
+        {
+            movePlayer();
+        }
+
+
+
+        //animation
+        /*
+        movement = new Vector3(horizontal, 0, vertical);
+        if (camera != null)
+        {
+            camForward = Vector3.Scale(camera.up, new Vector3(1, 0, 1)).normalized;
+            movement = vertical * camForward + horizontal * camera.right;
+        }
+        else
+            movement = vertical * Vector3.forward + horizontal * Vector3.right;
+
+        if (movement.magnitude > 1)
+        {
+            movement.Normalize();
+        }
+
+        animationControl.updatePlayerAnimation(movement);
+        */
+        
     }
 
 
@@ -385,15 +394,10 @@ public class masterInput : MonoBehaviour
         }
 
         // Calculate the direction to look at
-        Vector3 lookDir = Vector3.zero;
-        if(player != null)
-            lookDir = lookPos - player.transform.position;
-        lookDir.y = 0;
+        
+        
 
-        if (lookDir.magnitude > minLookDistance && !inputPaused)
-        {
-            player.transform.LookAt(player.transform.position + lookDir, Vector3.up); // Rotate towards the look direction
-        }
+        
     }
 
     public void OnGamepadLook(InputAction.CallbackContext context)
@@ -495,6 +499,16 @@ public class masterInput : MonoBehaviour
             isMoving = false;
         else
             isMoving = true;
+        if (isDashing)
+        {
+            RaycastHit hit;
+            // Does the ray intersect any objects excluding the player layer
+            if (Physics.Raycast(character.transform.position, transform.TransformDirection(Vector3.forward), out hit, 5.0f)){
+                Debug.DrawRay(character.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                Debug.Log("Collision detected during dash");
+                dashSpeed = 1.0f;
+            }
+        }
 
         // Apply movement based on class and whether the player is blocking
         if (currentClass == WeaponBase.weaponClassTypes.Knight && isBlocking)

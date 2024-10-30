@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class TitleScreen : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class TitleScreen : MonoBehaviour
     public void NavigateToNewLoad()
     {
         newPanel.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(newGameButton.gameObject);
         loadPanel.SetActive(true);
         startPanel.SetActive(false);
     }
