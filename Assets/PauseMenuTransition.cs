@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 
 public class PauseMenuTransition : MonoBehaviour
@@ -20,6 +21,8 @@ public class PauseMenuTransition : MonoBehaviour
     [SerializeField] WeaponClass knightRef;
     [SerializeField] WeaponClass gunnerRef;
     [SerializeField] WeaponClass engineerRef;
+
+    [SerializeField] GameObject MapButton;
 
     
 
@@ -40,24 +43,33 @@ public class PauseMenuTransition : MonoBehaviour
         ReturnToBaseButton = GameObject.Find("ReturnToBaseButton");
         SaveButton = GameObject.Find("SaveButton");
 
-        
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(MapButton);
+
+
 
         if (GameObject.Find("RoomManager").GetComponent<RoomManager>().IsCheckpoint())
         {
             SaveButton.GetComponent<Button>().interactable = true;
+            SaveButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(false);
             if (GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
             {
                 ReturnToBaseButton.GetComponent<Button>().interactable = true;
+                ReturnToBaseButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(false);
             }
             else
             {
                 ReturnToBaseButton.GetComponent<Button>().interactable = false;
+                ReturnToBaseButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
             }
         }
         else
         {
             SaveButton.GetComponent<Button>().interactable = false;
+            SaveButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
             ReturnToBaseButton.GetComponent<Button>().interactable = false;
+            ReturnToBaseButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
         }
     }
 
