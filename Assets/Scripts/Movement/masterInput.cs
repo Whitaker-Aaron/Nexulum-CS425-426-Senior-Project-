@@ -126,6 +126,9 @@ public class masterInput : MonoBehaviour
     //RUNE VARS
     bool fireBullet = false;
 
+    //line render
+    private LineRenderer laserLine;
+
 
     //Engineer variables
 
@@ -195,6 +198,9 @@ public class masterInput : MonoBehaviour
 
         playerInput = GetComponent<PlayerInput>();
 
+        laserLine = gameObject.GetComponent<LineRenderer>();
+        //laserLineRenderer.enabled = true;
+
     }
 
     private void OnEnable()
@@ -219,9 +225,9 @@ public class masterInput : MonoBehaviour
         SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
         SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
         SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        DontDestroyOnLoad(SS1);
-        DontDestroyOnLoad(SS2);
-        DontDestroyOnLoad(SS3);
+        //DontDestroyOnLoad(SS1);
+        //DontDestroyOnLoad(SS2);
+        //DontDestroyOnLoad(SS3);
 
         //playerControl = new PlayerInputActions();
         animationControl = GetComponent<PlayerAnimation>();
@@ -588,6 +594,44 @@ public class masterInput : MonoBehaviour
 
     //--------------------Gunner functions-------------------
 
+    void renderLine()
+    {
+        if(currentClass == WeaponBase.weaponClassTypes.Knight)
+        {
+            if(laserLine.enabled)
+                laserLine.enabled = false;
+            return;
+        }
+        else
+        {
+            if (!laserLine.enabled)
+                laserLine.enabled = true;
+
+            laserLine.SetPosition(0, bulletSpawn.position);
+            //Debug.Log("rendering line with position: " + bulletSpawn);
+
+            Ray ray = new Ray(bulletSpawn.position, bulletSpawn.forward);
+            RaycastHit hit;
+
+
+
+            if (Physics.Raycast(ray, out hit, 25f))
+            {
+                if (hit.point != null)
+                    laserLine.SetPosition(1, hit.point);
+
+            }
+            else
+            {
+                laserLine.SetPosition(1, bulletSpawn.position + bulletSpawn.forward * 25f);
+            }
+            laserLine.startColor = Color.green;
+            laserLine.endColor = Color.green;
+        }
+        
+
+    }
+
     IEnumerator shoot()
     {
         canShoot = false;
@@ -789,6 +833,9 @@ public class masterInput : MonoBehaviour
         //GUNNER LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket && !shootingLaser && !throwingGrenade)
         {
+            if(bulletSpawn != null && laserLine.enabled)
+                renderLine();
+
             if (bulletCount <= 0 && !isReloading && bulletCount < magSize)
             {
                 bulletCount = 0;
@@ -838,6 +885,9 @@ public class masterInput : MonoBehaviour
         //Engineer Logic
         if (currentClass == WeaponBase.weaponClassTypes.Engineer && placing == false)
         {
+            if (bulletSpawn != null && laserLine.enabled)
+                renderLine();
+
             if (playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false)
             {
                 pistolBulletCount = 0;

@@ -44,7 +44,7 @@ public class projectileManager : MonoBehaviour
         //pool = new Queue<GameObject>();
         //pool2 = new Queue<GameObject>();
         allPools = new Dictionary<string, Queue<GameObject>>();
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
         DontDestroyOnLoad(gameObject);
 
         poolObj = Instantiate(new GameObject("poolObjects"));
@@ -68,7 +68,7 @@ public class projectileManager : MonoBehaviour
             {
                 GameObject temp = Instantiate(prefab);
                 temp.transform.parent = poolObj.transform;
-                DontDestroyOnLoad(temp);
+                //DontDestroyOnLoad(temp);
                 allPools[poolName].Enqueue(temp);
                 temp.SetActive(false);
             }
