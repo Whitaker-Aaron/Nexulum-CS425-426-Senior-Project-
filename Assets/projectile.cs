@@ -15,11 +15,13 @@ public class projectile : MonoBehaviour
     masterInput input;
 
     bool hitEnemy = false;
+    bool hitPlayer = false;
     public float bufferDistance;
     Vector3 hitPoint = Vector3.zero;
     bool stop = false;
 
     public string poolName = null;
+
 
     //fire rune vars
     ///bool gunnerFire = false;
@@ -33,22 +35,38 @@ public class projectile : MonoBehaviour
         poolName = name;
     }
 
+
     private void OnEnable()
     {
         stop = false;
         lifeTime = maxLifeTime;
 
+        gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        if (Physics.Raycast(transform.position, transform.forward, out hit) && poolName != "enemyMagePoolOne")
         {
             hitPoint = hit.point;
-            if (hit.collider.gameObject.tag == "Enemy")
+
+            //player projectile conditions
+            if (hit.collider.gameObject.tag == "Enemy" && poolName != "enemyMagePoolOne")
             {
                 hitEnemy = true;
                 hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
             }
+
+            //enemy mage projectile conditions
+            if(hit.collider.gameObject.tag == "Enemy" && poolName == "enemyMagePoolOne")
+            {
+                //hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+            }
+            else if(hit.collider.gameObject.tag == "Player" && poolName == "enemyMagePoolOne")
+            {
+                //hit.collider.gameObject
+            }
             
         }
+
     }
 
     private void OnDisable()
@@ -86,7 +104,7 @@ public class projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (hitPoint != Vector3.zero || hitEnemy)
+        if ((hitPoint != Vector3.zero || hitEnemy) && poolName != "enemyMagePoolOne")
         {
             checkDistance();
         }
@@ -94,6 +112,19 @@ public class projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (poolName != "enemyMagePoolOne")
+            return;
+
+        if (collision.gameObject.tag == "Player" && poolName == "enemyMagePoolOne")
+        {
+            collision.gameObject.GetComponent<CharacterBase>().takeDamage(damage);
+        }
+        if (collision.gameObject.tag == "Enemy" && poolName == "enemyMagePoolOne")
+        {
+            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+        }
+
+        playEffect(gameObject.transform.position);
         stop = true;
         resetProjectile();
         returnToPool();
@@ -106,7 +137,7 @@ public class projectile : MonoBehaviour
 
         if (distanceToHit <= step || distanceToHit <= bufferDistance)
         {
-            playEffect();
+            playEffect(hitPoint);
             // We've reached the hit point, stop the projectile
             stop = true;
 
@@ -138,26 +169,42 @@ public class projectile : MonoBehaviour
         }
     }
 
-    void playEffect()
+    void playEffect(Vector3 position)
     {
-        switch (poolName)
+        if((position != null || position != Vector3.zero) && poolName != "enemyMagePoolOne")
         {
-            case "bulletPool":
-                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
-                break;
-            case "pistolPool":
-                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
-                break;
-            case "turretPool":
-                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
-                break;
-            case "dronePool":
-                EffectsManager.instance.getFromPool("bulletHitPool", hitPoint);
-                break;
-            case "tankPool":
-                EffectsManager.instance.getFromPool("tankHitPool", hitPoint);
-                break;
+            print("First if running");
+            switch (poolName)
+            {
+                case "bulletPool":
+                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    break;
+                case "pistolPool":
+                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    break;
+                case "turretPool":
+                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    break;
+                case "dronePool":
+                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    break;
+                case "tankPool":
+                    EffectsManager.instance.getFromPool("tankHitPool", position);
+                    break;
+            }
         }
+        else
+        {
+            print("else ran");
+            switch (poolName)
+            {
+                case "enemyMagePoolOne":
+                    print("Playing mage hit");
+                    EffectsManager.instance.getFromPool("mageHitOne", position);
+                    break;
+            }
+        }
+        
     }
 
     void returnToPool()
@@ -172,6 +219,8 @@ public class projectile : MonoBehaviour
             projectileManager.Instance.returnProjectile("turretPool", gameObject);
         else if (poolName == "tankPool")
             projectileManager.Instance.returnProjectile("tankPool", gameObject);
+        else if (poolName == "enemyMagePoolOne")
+            projectileManager.Instance.returnProjectile("enemyMagePoolOne", gameObject);
         else
             projectileManager.Instance.returnProjectile("bulletPool", gameObject);
     }
