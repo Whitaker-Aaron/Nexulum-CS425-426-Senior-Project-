@@ -5,7 +5,7 @@ using UnityEngine;
 public class enemySword : MonoBehaviour
 {
     int damage;
-    bool isAttacking = false;
+    public bool isAttacking = false;
     // Start is called before the first frame update
     void Start()
     {
