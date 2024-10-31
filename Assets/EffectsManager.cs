@@ -7,10 +7,11 @@ public class EffectsManager : MonoBehaviour
     public static EffectsManager instance;
 
     //private static Queue<GameObject> bulletHitPool;
-    public GameObject bulletHitPrefab, tankHitPrefab;
+    public GameObject bulletHitPrefab, tankHitPrefab, mageHitPrefab;
     private GameObject poolObj;
     public int bulletPoolSize = 10;
     public int tankPoolSize = 3;
+    public int magePoolSize = 4;
     //string poolName = null;
 
 
@@ -43,6 +44,7 @@ public class EffectsManager : MonoBehaviour
 
         createNewPool("bulletHitPool", bulletHitPrefab, bulletPoolSize);
         createNewPool("tankHitPool", tankHitPrefab, tankPoolSize);
+        createNewPool("mageHitOne", mageHitPrefab, magePoolSize);
     }
 
 
