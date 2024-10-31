@@ -17,6 +17,8 @@ public class CraftMenuTransition : MonoBehaviour
     [SerializeField] GameObject runesScrollBar;
     [SerializeField] GameObject itemsScrollBar;
 
+    GameObject previousSelectedObjected;
+
 
     List<GameObject> currentWeaponScrollObjects = new List<GameObject>();
     List<GameObject> currentRuneScrollObjects = new List<GameObject>();
@@ -72,6 +74,7 @@ public class CraftMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(EventSystem.current.currentSelectedGameObject.name);
         
     }
 
@@ -102,7 +105,7 @@ public class CraftMenuTransition : MonoBehaviour
         //EventSystem.current.enabled = true;
         //Debug.Log(EventSystem.current.currentSelectedGameObject);
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(weaponsScrollBar);
+        EventSystem.current.SetSelectedGameObject(backButtonWeapons);
         
 
         foreach (var item in weaponCraftRecipes)
@@ -128,7 +131,7 @@ public class CraftMenuTransition : MonoBehaviour
     public void populateRunesScroll()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(weaponsScrollBar);
+        EventSystem.current.SetSelectedGameObject(backButtonRunes);
         var runesCraftRecipes = GameObject.Find("MenuManager").GetComponent<MenuManager>().returnRunesCraftList();
         bool eventSystemSelected = false;
         foreach(var item in runesCraftRecipes)
@@ -153,7 +156,7 @@ public class CraftMenuTransition : MonoBehaviour
     public void populateItemsScroll()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(itemsScrollBar);
+        EventSystem.current.SetSelectedGameObject(backButtonItems);
         var itemsCraftRecipes = GameObject.Find("MenuManager").GetComponent<MenuManager>().returnItemsCraftList();
         var eventSystemSelected = false;
         foreach (var item in itemsCraftRecipes)
@@ -183,6 +186,11 @@ public class CraftMenuTransition : MonoBehaviour
     {
         Debug.Log("Weapon Button pressed");
         mainButtons.SetActive(false);
+        Navigation navigation = new Navigation();
+        navigation.mode = Navigation.Mode.None;
+        mainSelection.transform.Find("WeaponsPanel").Find("WeaponsButton").GetComponent<Button>().navigation = navigation;
+        mainSelection.transform.Find("RunesPanel").Find("RunesButton").GetComponent<Button>().navigation = navigation;
+        mainSelection.transform.Find("ItemsPanel").Find("ItemsButton").GetComponent<Button>().navigation = navigation;
         mainSelection.SetActive(false);
         weaponsScroll.SetActive(true);
 
@@ -195,6 +203,11 @@ public class CraftMenuTransition : MonoBehaviour
     {
         Debug.Log("Rune Button pressed");
         mainButtons.SetActive(false);
+        Navigation navigation = new Navigation();
+        navigation.mode = Navigation.Mode.None;
+        mainSelection.transform.Find("WeaponsPanel").Find("WeaponsButton").GetComponent<Button>().navigation = navigation;
+        mainSelection.transform.Find("RunesPanel").Find("RunesButton").GetComponent<Button>().navigation = navigation;
+        mainSelection.transform.Find("ItemsPanel").Find("ItemsButton").GetComponent<Button>().navigation = navigation;
         mainSelection.SetActive(false);
         runesScroll.SetActive(true);
 
@@ -207,6 +220,11 @@ public class CraftMenuTransition : MonoBehaviour
     {
         Debug.Log("Items Button pressed");
         mainButtons.SetActive(false);
+        Navigation navigation = new Navigation();
+        navigation.mode = Navigation.Mode.None;
+        mainSelection.transform.Find("WeaponsPanel").Find("WeaponsButton").GetComponent<Button>().navigation = navigation;
+        mainSelection.transform.Find("RunesPanel").Find("RunesButton").GetComponent<Button>().navigation = navigation;
+        mainSelection.transform.Find("ItemsPanel").Find("ItemsButton").GetComponent<Button>().navigation = navigation;
         mainSelection.SetActive(false);
         itemsScroll.SetActive(true);
 
