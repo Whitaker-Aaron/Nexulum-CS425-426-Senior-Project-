@@ -10,6 +10,9 @@ public class CraftMenuTransition : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] GameObject craftRecipePrefab;
     [SerializeField] GameObject backButton;
+    [SerializeField] GameObject backButtonWeapons;
+    [SerializeField] GameObject backButtonRunes;
+    [SerializeField] GameObject backButtonItems;
     [SerializeField] GameObject weaponsScrollBar;
     [SerializeField] GameObject runesScrollBar;
     [SerializeField] GameObject itemsScrollBar;
@@ -56,6 +59,10 @@ public class CraftMenuTransition : MonoBehaviour
         weaponsScroll.SetActive(false);
         runesScroll.SetActive(false);
         itemsScroll.SetActive(false);
+
+        backButtonWeapons.SetActive(false);
+        backButtonRunes.SetActive(false);
+        backButtonItems.SetActive(false);
 
         EventSystem.current.SetSelectedGameObject(null);
         //EventSystem.current.SetSelectedGameObject(mainButtons.transform.GetChild(0).gameObject);
@@ -178,6 +185,9 @@ public class CraftMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         weaponsScroll.SetActive(true);
+
+        backButton.SetActive(false);
+        backButtonWeapons.SetActive(true);
         populateWeaponsScroll();
     }
 
@@ -187,6 +197,9 @@ public class CraftMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         runesScroll.SetActive(true);
+
+        backButton.SetActive(false);
+        backButtonRunes.SetActive(true);
         populateRunesScroll();
     }
 
@@ -196,6 +209,9 @@ public class CraftMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         itemsScroll.SetActive(true);
+
+        backButton.SetActive(false);
+        backButtonItems.SetActive(true);
         populateItemsScroll();
     }
 
