@@ -2,11 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class CraftMenuTransition : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] GameObject craftRecipePrefab;
+    [SerializeField] GameObject backButton;
+    [SerializeField] GameObject weaponsScrollBar;
+    [SerializeField] GameObject runesScrollBar;
+    [SerializeField] GameObject itemsScrollBar;
+
+
     List<GameObject> currentWeaponScrollObjects = new List<GameObject>();
     List<GameObject> currentRuneScrollObjects = new List<GameObject>();
     List<GameObject> currentItemScrollObjects = new List<GameObject>();
@@ -37,17 +45,21 @@ public class CraftMenuTransition : MonoBehaviour
         itemsScrollContent = GameObject.Find("ItemsScrollContent");
         runesScrollContent = GameObject.Find("RunesScrollContent");
 
-        populateWeaponsScroll();
-        populateItemsScroll();
-        populateRunesScroll();
+        
+        //populateItemsScroll();
+        //populateRunesScroll();
 
-        weaponsScroll.SetActive(true);
-        runesScroll.SetActive(true);
-        itemsScroll.SetActive(true);
+        //weaponsScroll.SetActive(true);
+        //runesScroll.SetActive(true);
+        //itemsScroll.SetActive(true);
 
         weaponsScroll.SetActive(false);
         runesScroll.SetActive(false);
         itemsScroll.SetActive(false);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        //EventSystem.current.SetSelectedGameObject(mainButtons.transform.GetChild(0).gameObject);
+        EventSystem.current.SetSelectedGameObject(backButton);
     }
 
     // Update is called once per frame
@@ -56,16 +68,51 @@ public class CraftMenuTransition : MonoBehaviour
         
     }
 
+    public void ResetWeaponCraftSelection()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(weaponsScrollBar);
+        //EventSystem.current.SetSelectedGameObject(currentWeaponScrollObjects[currentWeaponScrollObjects.Count - 1].GetComponent<CraftRecipePrefab>().craftButton);
+    }
+
+    public void ResetRuneCraftSelection()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(runesScrollBar);
+        //EventSystem.current.SetSelectedGameObject(currentRuneScrollObjects[currentRuneScrollObjects.Count - 1].GetComponent<CraftRecipePrefab>().craftButton);
+    }
+
+    public void ResetItemsCraftSelection()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(currentItemScrollObjects[currentItemScrollObjects.Count - 1].GetComponent<CraftRecipePrefab>().craftButton);
+    }
+
     public void populateWeaponsScroll()
     {
         var weaponCraftRecipes = GameObject.Find("MenuManager").GetComponent<MenuManager>().returnWeaponsCraftList();
+        bool eventSystemSelected = false;
+        //EventSystem.current.enabled = true;
+        //Debug.Log(EventSystem.current.currentSelectedGameObject);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(weaponsScrollBar);
+        
+
         foreach (var item in weaponCraftRecipes)
         {
             if(item.hasCrafted != true)
             {
                 craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
                 var craftRec = Instantiate(craftRecipePrefab);
-                craftRec.transform.SetParent(weaponsScrollContent.transform);
+                craftRec.transform.SetParent(weaponsScrollContent.transform, false);
+                if (!eventSystemSelected)
+                {
+                    eventSystemSelected = true;
+                    //EventSystem.current.SetSelectedGameObject(null);
+                    //EventSystem.current.SetSelectedGameObject(craftRec.GetComponent<CraftRecipePrefab>().craftButton);
+                    //craftRec.GetComponent<CraftRecipePrefab>().craftButton.GetComponent<Button>().Select();
+                    //craftRec.GetComponent<CraftRecipePrefab>().craftButton.GetComponent<Button>().OnSelect(null);
+                }
                 currentWeaponScrollObjects.Add(craftRec);
             }
         }
@@ -73,14 +120,23 @@ public class CraftMenuTransition : MonoBehaviour
 
     public void populateRunesScroll()
     {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(weaponsScrollBar);
         var runesCraftRecipes = GameObject.Find("MenuManager").GetComponent<MenuManager>().returnRunesCraftList();
+        bool eventSystemSelected = false;
         foreach(var item in runesCraftRecipes)
         {
             if(item.hasCrafted != true)
             {
                 craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
                 var craftRec = Instantiate(craftRecipePrefab);
-                craftRec.transform.SetParent(runesScrollContent.transform);
+                craftRec.transform.SetParent(runesScrollContent.transform, false);
+                if (!eventSystemSelected)
+                {
+                    eventSystemSelected = true;
+                    //EventSystem.current.SetSelectedGameObject(null);
+                    //EventSystem.current.SetSelectedGameObject(craftRec.GetComponent<CraftRecipePrefab>().craftButton);
+                }
                 currentRuneScrollObjects.Add(craftRec);
             }
             
@@ -89,12 +145,21 @@ public class CraftMenuTransition : MonoBehaviour
 
     public void populateItemsScroll()
     {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(itemsScrollBar);
         var itemsCraftRecipes = GameObject.Find("MenuManager").GetComponent<MenuManager>().returnItemsCraftList();
+        var eventSystemSelected = false;
         foreach (var item in itemsCraftRecipes)
         {
             craftRecipePrefab.GetComponent<CraftRecipePrefab>().craftRecipe = item;
             var craftRec = Instantiate(craftRecipePrefab);
-            craftRec.transform.SetParent(itemsScrollContent.transform);
+            craftRec.transform.SetParent(itemsScrollContent.transform, false);
+            if (!eventSystemSelected)
+            {
+                eventSystemSelected = true;
+                //EventSystem.current.SetSelectedGameObject(null);
+                //EventSystem.current.SetSelectedGameObject(craftRec.GetComponent<CraftRecipePrefab>().craftButton);
+            }
             currentItemScrollObjects.Add(craftRec);
         }
     }
@@ -113,7 +178,7 @@ public class CraftMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         weaponsScroll.SetActive(true);
-        //populateWeaponsScroll();
+        populateWeaponsScroll();
     }
 
     public void NavigateToRunesCraftMenu()
@@ -122,7 +187,7 @@ public class CraftMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         runesScroll.SetActive(true);
-        //populateRunesScroll();
+        populateRunesScroll();
     }
 
     public void NavigateToItemsCraftMenu()
@@ -131,7 +196,7 @@ public class CraftMenuTransition : MonoBehaviour
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
         itemsScroll.SetActive(true);
-        //populateItemsScroll();
+        populateItemsScroll();
     }
 
     public void DestroyRecipe(CraftRecipe recipe, CraftRecipe.CraftTypes type)
