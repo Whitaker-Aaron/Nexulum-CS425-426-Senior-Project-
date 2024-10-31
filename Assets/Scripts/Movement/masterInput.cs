@@ -514,6 +514,7 @@ public class masterInput : MonoBehaviour
         if (isDashing)
         {
             RaycastHit hit;
+       
 
             projectedPlayer.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z);
             projectedPlayer.transform.Translate(movement * speed * dashSpeed * Time.deltaTime, Space.World);
@@ -521,7 +522,7 @@ public class masterInput : MonoBehaviour
             if(Physics.Linecast(player.transform.position, projectedPlayer.transform.position)){
                 //Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                 Debug.Log("Collision detected during dash");
-                dashSpeed = 1.0f;
+                dashSpeed = 0.0f;
             }
         }
 
@@ -541,8 +542,8 @@ public class masterInput : MonoBehaviour
     IEnumerator PlayerDash()
     {
         yield return new WaitForSeconds(0.2f);
-        dashSpeed = 1;
         isDashing = false;
+        dashSpeed = 1; 
         yield break;
         
     }
