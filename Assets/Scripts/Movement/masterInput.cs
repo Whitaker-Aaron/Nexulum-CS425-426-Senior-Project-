@@ -22,6 +22,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+
 //using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class masterInput : MonoBehaviour
@@ -35,6 +36,7 @@ public class masterInput : MonoBehaviour
 
     //player
     CharacterBase character;
+    GameObject projectedPlayer;
 
     //basic general player movement
     //public PlayerInputActions playerControl;
@@ -228,6 +230,7 @@ public class masterInput : MonoBehaviour
         camera = Camera.main.transform;
 
         character = player.GetComponent<CharacterBase>();
+        projectedPlayer = player.transform.Find("ProjectedPlayer").gameObject;
         Debug.Log("Character: " + character.equippedWeapon.weaponClassType);
         currentClass = character.equippedWeapon.weaponClassType;
         Debug.Log("Character's current class from master input: " + currentClass);
@@ -511,9 +514,12 @@ public class masterInput : MonoBehaviour
         if (isDashing)
         {
             RaycastHit hit;
+
+            projectedPlayer.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z);
+            projectedPlayer.transform.Translate(movement * speed * dashSpeed * Time.deltaTime, Space.World);
             // Does the ray intersect any objects excluding the player layer
-            if (Physics.Raycast(player.transform.position, transform.TransformDirection(Vector3.forward), out hit, 5.0f)){
-                Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+            if(Physics.Linecast(player.transform.position, projectedPlayer.transform.position)){
+                //Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                 Debug.Log("Collision detected during dash");
                 dashSpeed = 1.0f;
             }
