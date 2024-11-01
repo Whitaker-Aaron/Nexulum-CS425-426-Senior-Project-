@@ -361,6 +361,7 @@ public class MenuManager : MonoBehaviour
     {
         if (currentMenuObject != null)
         {
+            currentMenuObject.GetComponent<BaseMaterialTransition>().ResetSelection();
             for(int i =0; i < currentMaterials.Count; i++)
             {
                 Destroy(currentMaterials[i]);

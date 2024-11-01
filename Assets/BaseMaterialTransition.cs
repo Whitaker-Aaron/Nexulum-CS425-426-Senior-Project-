@@ -16,6 +16,12 @@ public class BaseMaterialTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+       
+    }
+
+    public void ResetSelection()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(backButton);
     }
 }
