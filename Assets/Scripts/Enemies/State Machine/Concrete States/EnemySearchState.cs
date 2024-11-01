@@ -10,16 +10,15 @@ public class EnemySearchState : EnemyState
     }
     public override void RunState(EnemyStateManager stateContext)
     {
-        if (stateContext.enemyBehaviorRef.TargetSpotted())
+        if (stateContext.enemyAgent.enemyLOS.TargetSpotted())
         {
             stateContext.ChangeState(stateContext.chaseState);
         }
         else
         {
-            stateContext.enemyBehaviorRef.agent.SetDestination(stateContext.enemyBehaviorRef.lastKnownTargetPos);
-            if (stateContext.enemyBehaviorRef.transform.position == stateContext.enemyBehaviorRef.lastKnownTargetPos)
+            stateContext.enemyAgent.agent.SetDestination(stateContext.enemyAgent.enemyLOS.lastKnownTargetPos);
+            if (stateContext.enemyAgent.transform.position == stateContext.enemyAgent.enemyLOS.lastKnownTargetPos)
             {
-                stateContext.updateDelay(stateContext.enemyBehaviorRef.timeToWaitInSearch);
                 stateContext.ChangeState(stateContext.idleState);
             }
         }

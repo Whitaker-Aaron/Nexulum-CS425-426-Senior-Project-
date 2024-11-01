@@ -3,17 +3,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyStateManager : MonoBehaviour
 {
-    // Reference to EnemyBehavior so individual states can retrieve and send information back to EnemyBehavior
-    // No need to see this in inspector
-    [HideInInspector] public EnemyBehavior enemyBehaviorRef;
+    public EnemyMovementAgent enemyAgent;
 
     // Current state - actively running state
     private EnemyState currentState;
 
-    // Initial state - may not be actively running
+    // Initial state
     public EnemyState initialState;
 
     // Concrete states
@@ -24,16 +23,9 @@ public class EnemyStateManager : MonoBehaviour
     // Editable bool in editor to enable debug logging for state switching
     public bool enableStateDebugLogs = false;
 
-    // Delay used to slow down state updates, since they don't necessarily need to occur every frame (for performance)
-    public IEnumerator updateDelay(float time)
-    {
-        yield return new WaitForSeconds(time);
-    }
-
     public void Start()
     {
-        // Grab reference to EnemyBehavior
-        enemyBehaviorRef = GetComponent<EnemyBehavior>();
+        enemyAgent = GetComponent<EnemyMovementAgent>();
 
         ChangeInitialState(idleState);
 
@@ -42,8 +34,6 @@ public class EnemyStateManager : MonoBehaviour
 
     public void Update()
     {
-        updateDelay(0.2f);
-
         // Runs the RunState() function of the current state
         currentState.RunState(this);
     }
