@@ -5,12 +5,12 @@ public class EnemyIdleState : EnemyState
     public override void EnterState(EnemyStateManager stateContext) {
         stateContext.CustomDebugLog("Entered idle state");
         // Enemy should be stationary while idling
-        stateContext.enemyAgent.agent.isStopped = true;
+        stateContext.agent.isStopped = true;
     }
 
     public override void RunState(EnemyStateManager stateContext)
     {
-        if (stateContext.enemyAgent.enemyLOS.TargetSpotted())
+        if (stateContext.enemyLOS.TargetSpotted())
         {
             // Changes to chase state if the target is spotted - Aisling
             stateContext.ChangeState(stateContext.chaseState);

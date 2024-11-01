@@ -10,14 +10,14 @@ public class EnemySearchState : EnemyState
     }
     public override void RunState(EnemyStateManager stateContext)
     {
-        if (stateContext.enemyAgent.enemyLOS.TargetSpotted())
+        if (stateContext.enemyLOS.TargetSpotted())
         {
             stateContext.ChangeState(stateContext.chaseState);
         }
         else
         {
-            stateContext.enemyAgent.agent.SetDestination(stateContext.enemyAgent.enemyLOS.lastKnownTargetPos);
-            if (stateContext.enemyAgent.transform.position == stateContext.enemyAgent.enemyLOS.lastKnownTargetPos)
+            stateContext.MoveTo(stateContext.enemyLOS.lastKnownTargetPos, true, false);
+            if (stateContext.transform.position == stateContext.enemyLOS.lastKnownTargetPos)
             {
                 stateContext.ChangeState(stateContext.idleState);
             }

@@ -11,10 +11,10 @@ public class EnemyChaseState : EnemyState
 
     public override void RunState(EnemyStateManager stateContext)
     {
-        if (stateContext.enemyAgent.enemyLOS.TargetSpotted())
+        if (stateContext.enemyLOS.TargetSpotted())
         {
             // Chases the target as long as they are spotted
-            stateContext.enemyAgent.SetDestination(stateContext.enemyAgent.enemyLOS.TargetPos);
+            stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, true, false);
         }
         else
         {
@@ -23,8 +23,7 @@ public class EnemyChaseState : EnemyState
     }
 
     public override void ExitState(EnemyStateManager stateContext) {
-        stateContext.enemyAgent.enemyLOS.isTargetSpotted = false;
-        stateContext.lastKnownTargetPos = stateContext.enemyAgent.enemyLOS.TargetPos;
-        stateContext.CustomDebugLog("Exited chase state with last known target position at " + stateContext.enemyAgent.enemyLOS.lastKnownTargetPos);
+        stateContext.enemyLOS.lastKnownTargetPos = stateContext.enemyLOS.targetPos;
+        stateContext.CustomDebugLog("Exited chase state with last known target position at " + stateContext.enemyLOS.lastKnownTargetPos);
     }
 }

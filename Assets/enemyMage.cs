@@ -63,7 +63,6 @@ public class enemyMage : MonoBehaviour, mageInterface
         {
             if (col.gameObject.tag == "Player")
             {
-                Debug.Log("Player detected");
                 player = col.gameObject;
             }
             else if (col.gameObject.tag == "Enemy" && col.gameObject != gameObject)

@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class EnemyLOS : MonoBehaviour
 {
+    // ----------------------------------------------
+    // Targeting
+    // ----------------------------------------------
     private GameObject currentTarget;
 
     public GameObject CurrentTarget
@@ -18,23 +21,32 @@ public class EnemyLOS : MonoBehaviour
 
     public bool isTargetSpotted = false;
 
+    // ----------------------------------------------
+    // Visual field variables (configurable in-editor)
+    // ----------------------------------------------
+
+    // Scope of visual field
     [SerializeField] private float detectionRange = 7;
     [SerializeField] private float visionAngle = 90;
 
-    private Vector3 selfPos;
-    private Vector3 targetPos;
+    // Enable xray vision
+    [SerializeField] private bool canSeeThroughWalls = false;
 
-    public Vector3 TargetPos
+    // ----------------------------------------------
+    // Positions
+    // ----------------------------------------------
+    public Vector3 selfPos
     {
-        get
-        {
-            return targetPos;
-        }
+        get;
+        set;
     }
-
+    public Vector3 targetPos;
     public Vector3 lastKnownTargetPos;
 
-    // Start is called before the first frame update
+    // ----------------------------------------------
+    // Methods
+    // ----------------------------------------------
+
     void Start()
     {
         ChangeTarget(GameObject.FindWithTag("Player"));
@@ -74,34 +86,43 @@ public class EnemyLOS : MonoBehaviour
 
             RaycastHit hit;
 
-            if ((distancetotarget <= detectionRange)) // Determine if target is within detection range
+            if ((distancetotarget <= detectionRange) && (targetangle <= visionAngle) && canSeeThroughWalls)
             {
-                if (targetangle <= visionAngle) // Determine if target is in vision 'cone' (angle)
+                isTargetSpotted = true;
+                return true;
+            }
+            else if ((distancetotarget <= detectionRange) && (targetangle <= visionAngle) && !canSeeThroughWalls)
+            {
+                Physics.Raycast(origin: selfPos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange); // Determine if target is obstructed
+                if (hit.transform == currentTarget.transform)
                 {
-                    Physics.Raycast(origin: selfPos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange); // Determine if target is obstructed
-                    if (hit.transform == currentTarget.transform)
-                    {
-                        isTargetSpotted = true;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    isTargetSpotted = true;
+                    return true;
                 }
                 else
                 {
+                    isTargetSpotted = false;
                     return false;
                 }
             }
             else
             {
+                isTargetSpotted = false;
                 return false;
             }
         }
         else
         {
+            isTargetSpotted = false;
             return false;
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (isTargetSpotted)
+        {
+            Gizmos.DrawLine(selfPos, targetPos);
         }
     }
 }

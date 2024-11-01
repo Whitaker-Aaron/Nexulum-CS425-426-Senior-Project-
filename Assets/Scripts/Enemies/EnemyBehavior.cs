@@ -52,8 +52,6 @@ public class EnemyBehavior : MonoBehaviour
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
-        enemyStateManager = GetComponent<EnemyStateManager>();
         enemyAnim = GetComponent<EnemyAnimation>();
     }
 
