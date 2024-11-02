@@ -517,7 +517,7 @@ public class masterInput : MonoBehaviour
        
 
             projectedPlayer.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z);
-            projectedPlayer.transform.Translate(movement * speed * dashSpeed * Time.deltaTime, Space.World);
+            projectedPlayer.transform.Translate(movement * speed * 1.5f * dashSpeed * Time.deltaTime, Space.World);
             // Does the ray intersect any objects excluding the player layer
             if(Physics.Linecast(player.transform.position, projectedPlayer.transform.position)){
                 //Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);

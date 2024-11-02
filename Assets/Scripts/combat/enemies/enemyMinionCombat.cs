@@ -42,7 +42,7 @@ public class enemyMinionCombat : MonoBehaviour
     {
         StartCoroutine(disableAttack(time));
         //anim.Stop();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2.5f);
         canAttack = true;
         yield break;
     }
