@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 //using static UnityEditor.Progress;
 
 public class CraftRecipePrefab : MonoBehaviour
@@ -14,7 +15,7 @@ public class CraftRecipePrefab : MonoBehaviour
     [SerializeField] GameObject materialContainer;
     [SerializeField] GameObject craftRecipeName;
     [SerializeField] GameObject craftRecipeShadow;
-    [SerializeField] GameObject craftButton;
+    [SerializeField] public GameObject craftButton;
     List<GameObject> currentMaterialObjects = new List<GameObject>();
 
 
@@ -73,7 +74,9 @@ public class CraftRecipePrefab : MonoBehaviour
         if (isCraftable)
         {
             craftButton.GetComponent<Button>().interactable = true;
+
         }
+
     }
     public void AddToInventory()
     {
@@ -105,12 +108,14 @@ public class CraftRecipePrefab : MonoBehaviour
                 AddToWeaponsInventory();
                 craftRecipe.hasCrafted = true;
                 GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().DestroyRecipe(craftRecipe, craftRecipe.type);
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetWeaponCraftSelection();
 
                 break;
             case CraftRecipe.CraftTypes.Rune:
                 AddToRunesInventory();
                 craftRecipe.hasCrafted = true;
                 GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().DestroyRecipe(craftRecipe, craftRecipe.type);
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetRuneCraftSelection();
                 break;
             case CraftRecipe.CraftTypes.Item:
                 AddToItemsInventory();

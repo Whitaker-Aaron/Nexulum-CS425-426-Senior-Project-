@@ -66,8 +66,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision detected on player");
-        masterInput.GetComponent<masterInput>().StopDash();
+        //Debug.Log("Collision detected on player");
+        //masterInput.GetComponent<masterInput>().StopDash();
         gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 

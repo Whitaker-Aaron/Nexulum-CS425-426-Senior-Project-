@@ -6,22 +6,20 @@ using UnityEngine.AI;
 public class EnemyBehavior : MonoBehaviour
 {
     // Components
-    public NavMeshAgent agent;
+    //public NavMeshAgent agent;
     public GameObject target;
-    [HideInInspector] public EnemyStateManager enemyStateManager;
+    //[HideInInspector] public EnemyStateManager enemyStateManager;
     private EnemyAnimation enemyAnim; //animation function for getting direction, sends to animation interface - Spencer
 
-    [HideInInspector] public bool isTargetSpotted = false;
+    //[HideInInspector] public bool isTargetSpotted = false;
 
-    // Enemy vision - Aisling
-    [SerializeField] private float detectionRange = 7;
-    [SerializeField] private float visionAngle = 90;
+    //// Enemy vision - Aisling
+    //[SerializeField] private float detectionRange = 7;
+    //[SerializeField] private float visionAngle = 90;
 
-    private Vector3 selfPos;
-    private Vector3 targetPos;
-    [HideInInspector] public Vector3 lastKnownTargetPos;
-
-    public float timeToWaitInSearch = 5; // Controls how long the enemy will wait at the last known target position, before switching states
+    //private Vector3 selfPos;
+    //private Vector3 targetPos;
+    //[HideInInspector] public Vector3 lastKnownTargetPos;
 
     //stop movement implementation for combat, simple bool control - Spencer
     bool isMoving = true;
@@ -54,7 +52,6 @@ public class EnemyBehavior : MonoBehaviour
 
     void Start()
     {
-        enemyStateManager = GetComponent<EnemyStateManager>();
         enemyAnim = GetComponent<EnemyAnimation>();
     }
 
@@ -68,69 +65,69 @@ public class EnemyBehavior : MonoBehaviour
         enemyAnim.updateAnimation(movementDirection);
     }
 
-    public void ChangeTarget(GameObject newTarget)
-    {
-        if (newTarget != null)
-        {
-            target = newTarget;
-        }
-        else
-        {
-            Debug.Log("New target cannot be null");
-        }
-    }
+    //    public void ChangeTarget(GameObject newTarget)
+    //    {
+    //        if (newTarget != null)
+    //        {
+    //            target = newTarget;
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("New target cannot be null");
+    //        }
+    //    }
 
-    public bool TargetSpotted()
-    {
-        if (target != null)
-        {
-            selfPos = transform.position;
-            targetPos = target.transform.position;
-            Vector3 headingtotarget = targetPos - selfPos;
+    //    public bool TargetSpotted()
+    //    {
+    //        if (target != null)
+    //        {
+    //            selfPos = transform.position;
+    //            targetPos = target.transform.position;
+    //            Vector3 headingtotarget = targetPos - selfPos;
 
-            float distancetotarget = Vector3.Distance(targetPos, selfPos);
-            float targetangle = Vector3.Angle(headingtotarget, transform.forward);
+    //            float distancetotarget = Vector3.Distance(targetPos, selfPos);
+    //            float targetangle = Vector3.Angle(headingtotarget, transform.forward);
 
-            RaycastHit hit;
+    //            RaycastHit hit;
 
-            if ((distancetotarget <= detectionRange)) // Determine if target is within detection range
-            {
-                if (targetangle <= visionAngle) // Determine if target is in vision 'cone' (angle)
-                {
-                    Physics.Raycast(origin: selfPos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange); // Determine if target is obstructed
-                    if (hit.transform == target.transform)
-                    {
-                        smoothLook(target.transform);
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-        }
-        else
-        {
-            return false;
-        }
-    }
-        else
-        {
-            return false;
-        }
-    }
+    //            if ((distancetotarget <= detectionRange)) // Determine if target is within detection range
+    //            {
+    //                if (targetangle <= visionAngle) // Determine if target is in vision 'cone' (angle)
+    //                {
+    //                    Physics.Raycast(origin: selfPos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange); // Determine if target is obstructed
+    //                    if (hit.transform == target.transform)
+    //                    {
+    //                        // smoothLook(target.transform);
+    //                        return true;
+    //                    }
+    //                    else
+    //                    {
+    //                        return false;
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    return false;
+    //                }
+    //        }
+    //        else
+    //        {
+    //            return false;
+    //        }
+    //    }
+    //        else
+    //        {
+    //            return false;
+    //        }
+    //    }
 
-    // Spencer's smooth LookAt function from drone combat script, slight edit to work with enemies
-    void smoothLook(Transform target)
-    {
-        Vector3 direction = (target.position - transform.position).normalized;
-        direction.y = 0f;  // Keep the y-axis at 0
-        Quaternion targetRot = Quaternion.LookRotation(direction);
+    //    // Spencer's smooth LookAt function from drone combat script, slight edit to work with enemies
+    //    void smoothLook(Transform target)
+    //    {
+    //        Vector3 direction = (target.position - transform.position).normalized;
+    //        direction.y = 0f;  // Keep the y-axis at 0
+    //        Quaternion targetRot = Quaternion.LookRotation(direction);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime);
-    }
+    //        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime);
+    //    }
 }
