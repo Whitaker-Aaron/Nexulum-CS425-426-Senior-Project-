@@ -19,7 +19,6 @@ public class EnemyStateManager : MonoBehaviour
     // ----------------------------------------------
 
     public NavMeshAgent agent;
-
     public EnemyLOS enemyLOS;
 
     // ----------------------------------------------
@@ -106,13 +105,13 @@ public class EnemyStateManager : MonoBehaviour
             if (distanceToPos < engagementRange) // Enemy is too close
             {
                 Vector3 awayDirection = (enemyLOS.selfPos - position).normalized; // Get direction away from player
-                Vector3 awayPos = (enemyLOS.selfPos + awayDirection);
+                Vector3 awayPos = (enemyLOS.selfPos + awayDirection); // Get the position, away from the player, to go to
                 agent.SetDestination(awayPos);
             }
-            else // Enemy is too far away
-            {
-                agent.SetDestination(position);
-            }
+            //else // Enemy is too far away
+            //{
+            //    agent.SetDestination(position);
+            //}
         }
         else
         {
