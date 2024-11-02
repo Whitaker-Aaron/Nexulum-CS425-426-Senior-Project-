@@ -128,6 +128,10 @@ public class masterInput : MonoBehaviour
     //RUNE VARS
     bool fireBullet = false;
 
+    //line render
+    private LineRenderer laserLine;
+    bool pauseLaser = false;
+
 
     //Engineer variables
 
@@ -197,6 +201,10 @@ public class masterInput : MonoBehaviour
 
         playerInput = GetComponent<PlayerInput>();
 
+        laserLine = gameObject.GetComponent<LineRenderer>();
+        laserLine.enabled = false;
+        //laserLineRenderer.enabled = true;
+
     }
 
     private void OnEnable()
@@ -221,9 +229,9 @@ public class masterInput : MonoBehaviour
         SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
         SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
         SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        DontDestroyOnLoad(SS1);
-        DontDestroyOnLoad(SS2);
-        DontDestroyOnLoad(SS3);
+        //DontDestroyOnLoad(SS1);
+        //DontDestroyOnLoad(SS2);
+        //DontDestroyOnLoad(SS3);
 
         //playerControl = new PlayerInputActions();
         animationControl = GetComponent<PlayerAnimation>();
@@ -243,14 +251,14 @@ public class masterInput : MonoBehaviour
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-
+            laserLine.enabled = true;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             pistol = character.equippedWeapon.weaponMesh;
             tool = character.engineerTool.weaponMesh;
             toolAttackPoint = character.toolAttackPoint;
-
+            laserLine.enabled = true;
         }
 
     }
@@ -595,6 +603,46 @@ public class masterInput : MonoBehaviour
 
     //--------------------Gunner functions-------------------
 
+    void renderLine()
+    {
+        if(currentClass == WeaponBase.weaponClassTypes.Knight)
+        {
+            //if(laserLine.enabled)
+            laserLine.enabled = false;
+            return;
+        }
+        else
+        {
+            if (!laserLine.enabled && pauseLaser == false)
+                laserLine.enabled = true;
+
+            //if(laserLine.enabled)
+                laserLine.SetPosition(0, bulletSpawn.position);
+            //Debug.Log("rendering line with position: " + bulletSpawn);
+
+            Ray ray = new Ray(bulletSpawn.position, bulletSpawn.forward);
+            RaycastHit hit;
+
+
+
+            if (Physics.Raycast(ray, out hit, 25f))
+            {
+                //if (hit.point != null && laserLine.enabled)
+                    laserLine.SetPosition(1, hit.point);
+
+            }
+            else
+            {
+                //if(laserLine.enabled)
+                    laserLine.SetPosition(1, bulletSpawn.position + bulletSpawn.forward * 25f);
+            }
+            //laserLine.startColor = Color.green;
+            //laserLine.endColor = Color.green;
+        }
+        
+
+    }
+
     IEnumerator shoot()
     {
         canShoot = false;
@@ -619,10 +667,14 @@ public class masterInput : MonoBehaviour
             yield break;
 
         isReloading = true;
+        laserLine.enabled = false;
+        pauseLaser = true;
         yield return new WaitForSeconds(reloadTime);
         bulletCount = magSize;
         isReloading = false;
         canShoot = true;
+        laserLine.enabled = true;
+        pauseLaser = false;
         yield break;
     }
 
@@ -657,10 +709,14 @@ public class masterInput : MonoBehaviour
         {
             canPistolShoot = false;
             pistolReloading = true;
+            laserLine.enabled = false;
+            pauseLaser = true;
             yield return new WaitForSeconds(pistolReloadTime);
             pistolBulletCount = pistolMagSize;
             pistolReloading = false;
             canPistolShoot = true;
+            laserLine.enabled = true;
+            pauseLaser = false;
         }
         yield break;
     }
@@ -694,6 +750,8 @@ public class masterInput : MonoBehaviour
 
     private void runLogic()
     {
+        if (bulletSpawn != null)
+            renderLine();
         //KNIGHT LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
@@ -796,6 +854,8 @@ public class masterInput : MonoBehaviour
         //GUNNER LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket && !shootingLaser && !throwingGrenade)
         {
+            
+
             if (bulletCount <= 0 && !isReloading && bulletCount < magSize)
             {
                 bulletCount = 0;
@@ -845,6 +905,8 @@ public class masterInput : MonoBehaviour
         //Engineer Logic
         if (currentClass == WeaponBase.weaponClassTypes.Engineer && placing == false)
         {
+            
+
             if (playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false)
             {
                 pistolBulletCount = 0;
