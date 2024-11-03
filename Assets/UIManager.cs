@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour
     {
         var currentSmear = Instantiate(dashSmear);
         currentSmear.transform.SetParent(GameObject.Find("SplashCanvas").transform, false);
-        currentSmear.transform.position = new Vector3(character.transform.position.x, character.transform.position.y, character.transform.position.z);
+        currentSmear.transform.position = new Vector3(character.transform.position.x, character.transform.position.y + 0.15f, character.transform.position.z);
         currentSmear.transform.rotation = Quaternion.Euler(currentSmear.transform.eulerAngles.x, currentSmear.transform.eulerAngles.y, -angle);
         currentSmears.Add(currentSmear);
     }

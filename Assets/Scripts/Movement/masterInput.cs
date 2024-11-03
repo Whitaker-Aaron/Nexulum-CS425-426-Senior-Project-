@@ -173,6 +173,7 @@ public class masterInput : MonoBehaviour
     public int repairVal = 25;
 
     UIManager uiManager;
+    LifetimeManager lifetimeManager;
 
 
     //--------------MAIN RUNNING FUNCTIONS--------------
@@ -207,6 +208,7 @@ public class masterInput : MonoBehaviour
         laserLine.enabled = false;
 
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
         //laserLineRenderer.enabled = true;
 
     }
@@ -489,7 +491,15 @@ public class masterInput : MonoBehaviour
                 projectedPlayer.transform.Translate(movement * speed * 1.5f * dashSpeed * Time.deltaTime, Space.World);
                 Vector3 targetDir = projectedPlayer.transform.position - player.transform.position;
                 Debug.Log(targetDir);
-                float angle = Vector3.Angle(targetDir, cameraForward);
+                float angle = 0.0f;
+                if (lifetimeManager.currentScene == "BaseCamp")
+                {
+                    angle = Vector3.Angle(targetDir, cameraForward + cameraRight);
+                }
+                else
+                {
+                    angle = Vector3.Angle(targetDir, cameraForward);
+                }
                 Debug.Log(angle);
                 if (targetDir.x < 0) angle = -angle;
                 uiManager.InstantiateSmear(angle);
@@ -542,7 +552,7 @@ public class masterInput : MonoBehaviour
        
 
             projectedPlayer.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z);
-            projectedPlayer.transform.Translate(movement * speed * 1.5f * dashSpeed * Time.deltaTime, Space.World);
+            projectedPlayer.transform.Translate(movement * speed * 1.2f * dashSpeed * Time.deltaTime, Space.World);
             // Does the ray intersect any objects excluding the player layer
             if(Physics.Linecast(player.transform.position, projectedPlayer.transform.position)){
                 //Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
