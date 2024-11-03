@@ -42,14 +42,15 @@ public class projectile : MonoBehaviour
         stop = false;
         lifeTime = maxLifeTime;
 
-        
+        int layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
 
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit) && poolName != "enemyMagePoolOne")
+        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity, layerMask) && poolName != "enemyMagePoolOne")
         {
             hitPoint = hit.point;
+
 
             //player projectile conditions
             if (hit.collider.gameObject.tag == "Enemy" && poolName != "enemyMagePoolOne")
