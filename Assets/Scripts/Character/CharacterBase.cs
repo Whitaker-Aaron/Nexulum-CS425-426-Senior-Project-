@@ -19,7 +19,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     [SerializeField] public WeaponClass knightObject;
     [SerializeField] public WeaponClass gunnerObject;
-    [SerializeField] private WeaponClass engineerObject;
+    [SerializeField] public WeaponClass engineerObject;
 
     [SerializeField] public GameObject shakeEffect;
 
@@ -289,10 +289,13 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             Debug.Log("Newly equipped weapon is of type Engineer");
             masterInput.GetComponent<masterInput>().changeTool(newWeapon);
             equippedWeapon = newWeapon;
+            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("pistolPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
         }
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             equippedWeapon = newWeapon;
+            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("bulletPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
+            
         }
         
     }
@@ -303,6 +306,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         masterInput.GetComponent<masterInput>().currentClass = newClass;
         //Debug.Log(weaponClass.currentWeapon);
         weaponsManager.ChangeWeapon(weaponClass.currentWeapon);
+        
         uiManager.UpdateClass(newClass, weaponClass.currentLvl, true);
         //UpdateWeapon(weaponClass.currentWeapon);
         runeInt.ChangeClass(newClass);

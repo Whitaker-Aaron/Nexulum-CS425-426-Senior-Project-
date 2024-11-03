@@ -14,6 +14,7 @@ public class WeaponClass : ScriptableObject
     public float nextLvl = 0;
     public float numSkillPoints = 0;
     public int currentLvl = 1;
+    public int baseAttack = 0;
 
 
     [SerializedDictionary("Experience", "Level")]
