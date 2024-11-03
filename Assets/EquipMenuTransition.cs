@@ -92,14 +92,14 @@ public class EquipMenuTransition : MonoBehaviour
         classChangeButton = GameObject.Find("ClassButton");
         if (GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
         {
-            classChangeButton.GetComponent<Button>().interactable = false;
+            //classChangeButton.GetComponent<Button>().interactable = false;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log(classChangeButton.GetComponent<Button>().interactable);
     }
 
     public void ResetWeaponCraftSelection()
