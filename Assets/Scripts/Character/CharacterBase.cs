@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
@@ -282,6 +283,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             Debug.Log("Newly equipped weapon is of type Knight");
             masterInput.GetComponent<masterInput>().changeSword(newWeapon);
             equippedWeapon = newWeapon;
+            equippedWeapon.weaponMesh.GetComponent<swordCombat>().updateDamage(knightObject.baseAttack + equippedWeapon.weaponAttack);
         }
         //Need to update for both his weapon pistol and his tool
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)

@@ -36,6 +36,7 @@ public class WeaponsManager : MonoBehaviour
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
+            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("bulletPool", characterReference.gunnerObject.baseAttack + characterReference.equippedWeapon.weaponAttack);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 1);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 1);
         }
@@ -45,14 +46,16 @@ public class WeaponsManager : MonoBehaviour
             toolPrefab = characterReference.engineerTool.weaponMesh;
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
             currentTool = Instantiate(toolPrefab, characterReference.leftHand);
+            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("pistolPool", characterReference.gunnerObject.baseAttack + characterReference.equippedWeapon.weaponAttack);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 2);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 2);
         }
         else if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
-            Debug.Log(inputManager);
+            //Debug.Log(inputManager);
             currentWeapon = Instantiate(weaponPrefab, characterReference.hand);
             currentShield = Instantiate(shieldPrefab, characterReference.leftForearm);
+            characterReference.equippedWeapon.weaponMesh.GetComponent<swordCombat>().updateDamage(characterReference.knightObject.baseAttack + characterReference.equippedWeapon.weaponAttack);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 0);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 0);
         }

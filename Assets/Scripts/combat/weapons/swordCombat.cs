@@ -47,6 +47,12 @@ public class swordCombat : MonoBehaviour
         }
     }
 
+    public void updateDamage(int dmg)
+    {
+        Debug.Log("Sword damaged updated to: " + dmg);
+        damage = dmg;
+    }
+
     public void activateFire(bool activate)
     {
         //isFire = activate;
