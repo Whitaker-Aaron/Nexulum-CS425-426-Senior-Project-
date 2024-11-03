@@ -19,7 +19,7 @@ public class EffectsManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
     // Start is called before the first frame update
     void Start()
@@ -41,6 +41,7 @@ public class EffectsManager : MonoBehaviour
         //bulletHitPool = new Queue<GameObject>();
         poolObj = Instantiate(new GameObject("EffectsPool"));
         poolObj.transform.parent = gameObject.transform;
+        
 
         createNewPool("bulletHitPool", bulletHitPrefab, bulletPoolSize);
         createNewPool("tankHitPool", tankHitPrefab, tankPoolSize);
@@ -58,7 +59,7 @@ public class EffectsManager : MonoBehaviour
             {
                 GameObject temp = Instantiate(prefab);
                 temp.transform.parent = poolObj.transform;
-                DontDestroyOnLoad(temp);
+                //DontDestroyOnLoad(temp.gameObject);
                 allPools[poolName].Enqueue(temp);
                 temp.SetActive(false);
             }
