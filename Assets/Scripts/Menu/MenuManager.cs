@@ -50,43 +50,17 @@ public class MenuManager : MonoBehaviour
 
     public void openTerminalMenu()
     {
-        if (!menuActive && !pauseMenuActive)
+        if (menuActive)
         {
-            currentMenuObject = Instantiate(materialsMenuReference);
-            Debug.Log("activating main menu");
-            currentMenuObject.transform.SetParent(canvas.transform, false);
-            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
-            populateInventoryMaterials();
-            inputManager.pausePlayerInput();
-            menuActive = true;
+            Destroy(currentMenuObject);  
         }
-        else if (menuActive && !pauseMenuActive && !character.transitioningRoom)
-        {
-            //currentMenuObject.SetActive(false);
-            if (GameObject.FindGameObjectWithTag("CraftLists") != null)
-            {
-                Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
-            }
-            if (GameObject.FindGameObjectWithTag("MainMenu") != null)
-            {
-                Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
+        currentMenuObject = Instantiate(terminalMenuReference);
+        currentMenuObject.transform.SetParent(canvas.transform, false);
 
-            }
-            if (GameObject.FindGameObjectWithTag("EquipMenu") != null)
-            {
-
-                Destroy(GameObject.FindGameObjectWithTag("EquipMenu"));
-            }
-            if (GameObject.FindGameObjectWithTag("CraftMenu") != null)
-            {
-
-                Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
-            }
-
-            menuActive = false;
-            inputManager.resumePlayerInput();
-        }
+        inputManager.pausePlayerInput();
+        menuActive = true;
     }
+
 
     public void openPauseMenu(InputAction.CallbackContext context)
     {

@@ -16,6 +16,9 @@ public class EquipMenuTransition : MonoBehaviour
     [SerializeField] GameObject runesScrollBar;
     [SerializeField] GameObject itemsScrollBar;
 
+    [SerializeField] GameObject backButton;
+    [SerializeField] GameObject backButton2;
+
 
     List<GameObject> currentEquipmentObjects = new List<GameObject>();
     List<GameObject> currentScrollObjects = new List<GameObject>();
@@ -79,7 +82,7 @@ public class EquipMenuTransition : MonoBehaviour
         classScroll.SetActive(false);
 
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(classChangeButton);
+        EventSystem.current.SetSelectedGameObject(backButton);
 
 
     }
@@ -130,6 +133,12 @@ public class EquipMenuTransition : MonoBehaviour
         equippedContainer.SetActive(false);
         equippedBackdrop.SetActive(false);
 
+        backButton.SetActive(false);
+        backButton2.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(backButton2);
+
+
         populateWeaponsScroll();
         
     }
@@ -145,8 +154,10 @@ public class EquipMenuTransition : MonoBehaviour
         equippedContainer.SetActive(false);
         equippedBackdrop.SetActive(false);
 
+        backButton.SetActive(false);
+        backButton2.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(knightEquipButton);
+        EventSystem.current.SetSelectedGameObject(backButton2);
 
         populateClassScroll();
     }
@@ -161,6 +172,11 @@ public class EquipMenuTransition : MonoBehaviour
         equippedPanel.SetActive(false);
         equippedContainer.SetActive(false);
         equippedBackdrop.SetActive(false);
+
+        backButton.SetActive(false);
+        backButton2.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(backButton2);
 
         populateRunesScroll();
     }
@@ -182,8 +198,12 @@ public class EquipMenuTransition : MonoBehaviour
         runesScroll.SetActive(false);
         weaponsScroll.SetActive(false);
 
+        backButton2.SetActive(false);
+        backButton.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(classChangeButton);
+        EventSystem.current.SetSelectedGameObject(backButton);
+
+        
 
         CleanScroll();
 
@@ -282,8 +302,7 @@ public class EquipMenuTransition : MonoBehaviour
         var weaponsInventory = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>().GetWeaponsInventory();
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         bool eventSystemSelected = false;
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(weaponsScrollBar);
+
         for (int i = 0; i < weaponsInventory.Length; i++)
         {
             
@@ -313,8 +332,8 @@ public class EquipMenuTransition : MonoBehaviour
                 if (!eventSystemSelected)
                 {
                     eventSystemSelected = true;
-                    EventSystem.current.SetSelectedGameObject(null);
-                    EventSystem.current.SetSelectedGameObject(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton);
+                    //EventSystem.current.SetSelectedGameObject(null);
+                    //EventSystem.current.SetSelectedGameObject(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton);
                 }
                 currentScrollObjects.Add(equipRec);
             }
@@ -329,8 +348,6 @@ public class EquipMenuTransition : MonoBehaviour
     {
         var runeInventory = GameObject.Find("RuneManager").GetComponent<RuneManager>().GetRuneInventory();
         bool eventSystemSelected = false;
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(runesScrollBar);
         for (int i = 0; i < runeInventory.Length; i++)
         {
             if (runeInventory[i] != null)
@@ -376,8 +393,8 @@ public class EquipMenuTransition : MonoBehaviour
                 if (!eventSystemSelected)
                 {
                     eventSystemSelected = true;
-                    EventSystem.current.SetSelectedGameObject(null);
-                    EventSystem.current.SetSelectedGameObject(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton);
+                    //EventSystem.current.SetSelectedGameObject(null);
+                    //EventSystem.current.SetSelectedGameObject(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton);
                 }
                 currentScrollObjects.Add(equipRec);
             }

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,11 +19,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
     [SerializeField] GameObject ability3;
+    [SerializeField] GameObject dashSmear;
 
     Slider currentAbilitySlider;
 
     [SerializeField] Slider ExperienceBar;
     GameObject currentCheckpointText;
+    List<GameObject> currentSmears = new List<GameObject>();
     CharacterBase character;
     // Start is called before the first frame update
     private void Awake()
@@ -38,6 +41,27 @@ public class UIManager : MonoBehaviour
         UpdateClass(character.weaponClass.classType, character.weaponClass.currentLvl);
         //UpdateExperienceBar(character.weaponClass.getCurrentLvlExperienceAmount(), character.weaponClass.getNextLvlExperienceAmount(), character.weaponClass.totalExp);
     }
+
+    public void InstantiateSmear(float angle)
+    {
+        var currentSmear = Instantiate(dashSmear);
+        currentSmear.transform.SetParent(GameObject.Find("SplashCanvas").transform, false);
+        currentSmear.transform.position = new Vector3(character.transform.position.x, character.transform.position.y + 0.15f, character.transform.position.z);
+        currentSmear.transform.rotation = Quaternion.Euler(currentSmear.transform.eulerAngles.x, currentSmear.transform.eulerAngles.y, -angle);
+        currentSmears.Add(currentSmear);
+    }
+
+    public void DestroyOldestSmear()
+    {
+        if(currentSmears.Count > 0)
+        {
+            Destroy(currentSmears[0]);
+            currentSmears.RemoveAt(0);
+        }
+        
+    }
+
+
 
     public void ActivateCooldownOnAbility(int abilityNum)
     {
