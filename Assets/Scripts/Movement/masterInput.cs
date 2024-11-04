@@ -579,7 +579,7 @@ public class masterInput : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         isDashing = false;
         dashSpeed = 1;
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.15f);
         uiManager.DestroyOldestSmear();
         yield break;
         
