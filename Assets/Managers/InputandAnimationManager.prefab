@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1175182273367415644}
   - component: {fileID: 632471240116872652}
   - component: {fileID: 5258961968933099944}
+  - component: {fileID: 6763437158165733489}
   m_Layer: 0
   m_Name: InputandAnimationManager
   m_TagString: inputManager
@@ -289,6 +290,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 4a06af09-d331-4553-af8f-575e133ac80c
     m_ActionName: player/AbilityThree[/Keyboard/3,/XInputControllerWindows/dpad/right,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6763437158165733489}
+        m_TargetAssemblyTypeName: Interactor, Assembly-CSharp
+        m_MethodName: OnInteractInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 7060a75b-c932-42ba-bdf5-16fcc807c1ce
+    m_ActionName: player/Interact[/Keyboard/f]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: player
@@ -514,3 +531,20 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &6763437158165733489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413812686469576019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ba2ffc38df22664d97305bcad4653cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionPoint: {fileID: 0}
+  interactionRadius: 2
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 0
