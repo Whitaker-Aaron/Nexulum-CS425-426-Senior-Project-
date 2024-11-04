@@ -15,10 +15,14 @@ public class Interactor : MonoBehaviour
     private void Update()
     {
         int num = Physics.OverlapSphereNonAlloc(interactionPoint.position, interactionRadius, colliders, interactableMask);
-
+        //Debug.Log(transform.gameObject);
+        //Debug.Log(currentInteractable);
+        //Debug.Log(num);
         if (num > 0)
         {
             i_Interactable interactable = colliders[0].GetComponent<i_Interactable>();
+            //Debug.Log(interactable);
+            
             if (interactable != null)
             {
                 if (interactable != currentInteractable)
@@ -40,9 +44,10 @@ public class Interactor : MonoBehaviour
     }
     public void OnInteractInput(InputAction.CallbackContext context)
     {
+        Debug.Log("Input detected");
+        Debug.Log(currentInteractable);
         if (context.performed && currentInteractable != null)
         {
-            Debug.Log("Input detected");
             currentInteractable.Interact(this);
         }
     }
