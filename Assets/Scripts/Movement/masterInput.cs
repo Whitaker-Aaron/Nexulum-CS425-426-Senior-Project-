@@ -652,9 +652,9 @@ public class masterInput : MonoBehaviour
             Ray ray = new Ray(bulletSpawn.position, bulletSpawn.forward);
             RaycastHit hit;
 
+            int layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
 
-
-            if (Physics.Raycast(ray, out hit, 25f))
+            if (Physics.Raycast(ray, out hit, 25f, layerMask))
             {
                 //if (hit.point != null && laserLine.enabled)
                     laserLine.SetPosition(1, hit.point);

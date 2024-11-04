@@ -13,6 +13,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -23,8 +24,11 @@ public class classAbilties : MonoBehaviour
 
     //----------------Variables------------------
 
+    public static classAbilties instance;
+
     GameObject player;
     public LayerMask enemy;
+    public LayerMask playerLayer;
     UIManager uiManager;
 
     private PlayerInput playerInput;
@@ -52,7 +56,7 @@ public class classAbilties : MonoBehaviour
     private Vector3 currentAura;
     bool buffingPlayer = false;
     public float buffRate = .5f;
-    public int auraHealthBuff = 25;
+    public int auraAttackBuff = 25;
     
 
 
@@ -118,6 +122,17 @@ public class classAbilties : MonoBehaviour
 
     //skill tree start
     SkillTreeManager skillTreeManagerObj;
+
+
+    //------------------Runes--------------------
+
+    bool fireBool, iceBool, earthBool, windBool, electricBool, waterBool = false;
+
+    //knight
+
+
+    [SerializeField] private float krFireTime, krFireRate;
+    [SerializeField] private int krFireDmg;
 
     //-------------------------------------------
 
@@ -311,7 +326,31 @@ public class classAbilties : MonoBehaviour
     {
         checkingAura = true;
         currentAura = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
-        GameObject tempEffect = Instantiate(combatAuraEffectStart, currentAura, Quaternion.identity);
+        //GameObject tempEffect = Instantiate(combatAuraEffectStart, currentAura, Quaternion.identity);
+        if(!fireBool)
+        {
+            EffectsManager.instance.getFromPool("caPool", currentAura);
+            yield return new WaitForSeconds(.3f);
+            EffectsManager.instance.getFromPool("caPool", currentAura);
+            yield return new WaitForSeconds(auraTime);
+            EffectsManager.instance.getFromPool("caPool", currentAura);
+            checkingAura = false;
+            activatedAura = false;
+            currentAura = Vector3.zero;
+        }
+        else
+        {
+            EffectsManager.instance.getFromPool("faPool", currentAura);
+            yield return new WaitForSeconds(.3f);
+            EffectsManager.instance.getFromPool("faPool", currentAura);
+            yield return new WaitForSeconds(auraTime);
+            EffectsManager.instance.getFromPool("faPool", currentAura);
+            checkingAura = false;
+            activatedAura = false;
+            currentAura = Vector3.zero;
+        }
+        
+        /*
         tempEffect.GetComponent<ParticleSystem>().Play();
         yield return new WaitForSeconds(.3f);
         tempEffect.GetComponent<ParticleSystem>().Stop();
@@ -330,15 +369,52 @@ public class classAbilties : MonoBehaviour
         Destroy(tempEffect);
         Destroy(tempEffect2);
         currentAura = Vector3.zero;
+        */
         yield break;
     }
 
-    IEnumerator buffWait(Collider c)
+    void buff(bool choice, string name, GameObject c)
     {
-        c.gameObject.GetComponent<CharacterBase>().buffPlayer(auraHealthBuff);
-        yield return new WaitForSeconds(buffRate);
-        buffingPlayer = false;
-        yield break;
+        
+        if (name == "attack")
+        {
+            
+            if (choice)
+            {
+                switch (gameObject.GetComponent<masterInput>().currentClass)
+                {
+                    case WeaponBase.weaponClassTypes.Knight:
+                        //int temp = c.gameObject.GetComponent<CharacterBase>().knightObject.baseAttack;
+                        c.GetComponent<CharacterBase>().buffPlayer(choice, "attack", auraAttackBuff);
+                        break;
+                    case WeaponBase.weaponClassTypes.Gunner:
+
+                        break;
+                    case WeaponBase.weaponClassTypes.Engineer:
+
+                        break;
+                }
+                //buffingPlayer = false;
+            }
+            else
+            {
+                switch (gameObject.GetComponent<masterInput>().currentClass)
+                {
+                    case WeaponBase.weaponClassTypes.Knight:
+                        //int temp = c.gameObject.GetComponent<CharacterBase>().knightObject.baseAttack;
+                        c.GetComponent<CharacterBase>().buffPlayer(choice, "attack", auraAttackBuff);
+                        break;
+                    case WeaponBase.weaponClassTypes.Gunner:
+
+                        break;
+                    case WeaponBase.weaponClassTypes.Engineer:
+
+                        break;
+                }
+            }
+            
+        }
+        
     }
 
     IEnumerator swordShooting()
@@ -789,6 +865,7 @@ public class classAbilties : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         //currentClass = gameObject.GetComponent<masterInput>().currentClass;
         player = GameObject.FindGameObjectWithTag("Player");
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
@@ -817,21 +894,48 @@ public class classAbilties : MonoBehaviour
     {
         if(checkingAura && currentAura != null)
         {
-            Collider[] colliders = Physics.OverlapSphere(currentAura, comatAuraRadius);
+            Collider[] colliders = Physics.OverlapSphere(currentAura, comatAuraRadius, playerLayer);
 
-            foreach(Collider c in colliders)
+            if(colliders.Length > 0 && colliders.Length < 2) 
             {
-                if(c.gameObject.tag == "Player" && buffingPlayer == false)
+                if (colliders[0].gameObject.tag == "Player" && buffingPlayer == false)
                 {
                     buffingPlayer = true;
                     //player.GetComponent<CharacterBase>().buffPlayer();
-                    StartCoroutine(buffWait(c));
+                    buff(true, "attack", colliders[0].gameObject);
+                }
+                
+            }
+            else
+            {
+                buffingPlayer = false;
+                buff(false, "attack", player.gameObject);
+            }
+
+            Collider[] collidersE = Physics.OverlapSphere(currentAura, comatAuraRadius, enemy);
+
+            foreach (Collider c in collidersE)
+            {
+                if (c.gameObject.tag == "Enemy" && fireBool)
+                {
+                    if (!c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated)
+                    {
+                        c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated = true;
+                        StartCoroutine(c.gameObject.GetComponent<EnemyFrame>().dmgOverTime(krFireDmg, krFireTime, krFireRate));
+                    }
+
                 }
             }
-        }
-        
 
-        if(placing)
+        }
+        else if(!checkingAura && buffingPlayer)
+        {
+            buffingPlayer = false;
+            buff(false, "attack", player.gameObject);
+        }
+
+
+        if (placing)
         {
             activateTurret();
         }
@@ -914,11 +1018,54 @@ public class classAbilties : MonoBehaviour
     }
 
 
-    //modify functions
+    //-----------------modify functions---------------------
+
+
+    //-----------------Rune modifiers-----------------------
+
+
+    public void activateFireRune(bool choice)
+    {
+        if (choice)
+        {
+            switch(gameObject.GetComponent<masterInput>().currentClass)
+            {
+                case WeaponBase.weaponClassTypes.Knight:
+                    fireBool = true;
+                    break;
+                case WeaponBase.weaponClassTypes.Gunner:
+
+                    break;
+                case WeaponBase.weaponClassTypes.Engineer:
+
+                    break;
+            }
+        }
+        else
+        {
+            switch (gameObject.GetComponent<masterInput>().currentClass)
+            {
+                case WeaponBase.weaponClassTypes.Knight:
+                    fireBool = false;
+                    break;
+                case WeaponBase.weaponClassTypes.Gunner:
+
+                    break;
+                case WeaponBase.weaponClassTypes.Engineer:
+
+                    break;
+            }
+        }
+    }
+
+
+    //-------------------skill tree-------------------------
 
     public void modifyBubbleRad(float amount)
     {
         Debug.Log("Modified bubble radius by: " + amount);
         bubbleRadius += amount;
     }
+
+
 }

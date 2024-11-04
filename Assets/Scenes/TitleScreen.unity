@@ -951,6 +951,12 @@ MonoBehaviour:
   bulletHitPrefab: {fileID: 2193456159803961, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
   tankHitPrefab: {fileID: 2193456159803961, guid: a0b633f7157d64b42aec3570e75c0e53, type: 3}
   mageHitPrefab: {fileID: 7251999113603520393, guid: 8bdeea356302cb0499eb7b739bf26d84, type: 3}
+  caStart: {fileID: 6902723416898335439, guid: e71d4ea2a918ec14ba7c00f5a3508383, type: 3}
+  caLoop: {fileID: 7164483913228334462, guid: 60510703ff1a0294e91061c87f1feaef, type: 3}
+  caEnd: {fileID: 1163315792658964826, guid: 4c4d17413b3b43a41988c7049c0608cf, type: 3}
+  faStart: {fileID: 8665149055098433584, guid: 9e8afb447e1ce674da2edfcb7d04b440, type: 3}
+  faLoop: {fileID: 7082147421886730936, guid: ac61649ef93078141a9f5137e8802dcd, type: 3}
+  faEnd: {fileID: 1269808448133580099, guid: cb9ed7710bc418e498f0b5a89b0ff98c, type: 3}
   bulletPoolSize: 10
   tankPoolSize: 3
   magePoolSize: 4
@@ -3830,17 +3836,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 917577960630622221, guid: 2121826842b90ce47926846314379b94, type: 3}
   m_PrefabInstance: {fileID: 975298789}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &905795142 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-  m_PrefabInstance: {fileID: 975298789}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905795136}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a0617892be226a48bf051109d121355, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &921285034
 GameObject:
   m_ObjectHideFlags: 0
@@ -4047,44 +4042,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ea1Time
-      value: 6
+      propertyPath: krFireDmg
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ea2Time
-      value: 6
+      propertyPath: krFireRate
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ea3Time
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ga1Time
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ga2Time
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ga3Time
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ka1Time
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ka2Time
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ka3Time
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: bubbleTime
-      value: 4
+      propertyPath: krFireTime
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: swordSpawn
@@ -4095,57 +4062,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1967732340}
     - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: teslaMaxQuantity
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: turretMaxQuantity
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: speed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: animTime
-      value: 0.16
-      objectReference: {fileID: 0}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: dashSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: blockSpeed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: animTimeTwo
-      value: 0.17
+      propertyPath: playerLayer.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: bulletSpawn
       value: 
       objectReference: {fileID: 1475089394}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: swordSlash2
-      value: 
-      objectReference: {fileID: 3851184705781900346, guid: 93dac9c60f55d534b99fdadda1072626, type: 3}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: swordSlash3
-      value: 
-      objectReference: {fileID: 1647583005151186869, guid: 40d463b356d8f954cb690c53b3e6e23d, type: 3}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: animTimeThree
-      value: 0.26
-      objectReference: {fileID: 0}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: ground.m_Bits
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: toolAttackPoint
       value: 
@@ -4155,10 +4078,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 728395287}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: swordSlashPrefab
-      value: 
-      objectReference: {fileID: 2386312260957815023, guid: 6631afa82ef502f438564320066ed8c5, type: 3}
-    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: pistolBulletSpawn
       value: 
       objectReference: {fileID: 533342840}
@@ -4166,137 +4085,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: InputandAnimationManager
       objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.size
-      value: 16
+    - target: {fileID: 5258961968933099944, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.a
+      value: 0.5176471
       objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[9].m_ActionId
-      value: 27a5bb3b-72d2-4fd0-a488-adc35627072f
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_ActionId
-      value: 3f0f93cd-04a7-4f57-b30e-7259b602d8c0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[11].m_ActionId
-      value: 5549c403-6448-43b6-a6d5-b6e4376b5d43
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[12].m_ActionId
-      value: b93cb392-5f35-4517-a326-0d4a35e7d800
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[13].m_ActionId
-      value: c730c0ad-3e0c-43a1-a7d6-1a9a5b743929
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[14].m_ActionId
-      value: d46d94aa-a704-4abf-9dc7-3c0d4a9d3cd1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[15].m_ActionId
-      value: 4a06af09-d331-4553-af8f-575e133ac80c
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[9].m_ActionName
-      value: player/Dash[/Keyboard/shift]
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_ActionName
-      value: player/GamePadLook[/XInputControllerWindows/rightStick]
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[11].m_ActionName
-      value: player/Reload[/Keyboard/r,/XInputControllerWindows/buttonWest]
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[12].m_ActionName
-      value: player/RightClick[/Mouse/rightButton,/XInputControllerWindows/leftTrigger]
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[13].m_ActionName
-      value: player/AbilityOne[/Keyboard/1,/XInputControllerWindows/dpad/left,/XInputControllerWindows/buttonWest]
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[14].m_ActionName
-      value: player/AbilityTwo[/Keyboard/2,/XInputControllerWindows/dpad/up,/XInputControllerWindows/buttonNorth]
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[15].m_ActionName
-      value: player/AbilityThree[/Keyboard/3,/XInputControllerWindows/dpad/right,/XInputControllerWindows/buttonEast]
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[9].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 905795142}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[9].m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 905795142}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 905795142}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[9].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnMouseLook
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[9].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: onDash
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnGamepadLook
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: masterInput, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[9].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: masterInput, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: masterInput, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[9].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+    - target: {fileID: 5258961968933099944, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
+      value: 0.012408923
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13589,6 +13384,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8997919328978458071, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
+    - {fileID: 9087067210057263537, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
+    - {fileID: 8463496048661023940, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1155763487187829673, guid: 78fd45d3351501742a1e0548a25ac195, type: 3}
@@ -16363,7 +16160,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: RuneManager
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 3549569541524537481, guid: 5308bf5d137bb3a4392da9b0a2a8efd2, type: 3}
+      propertyPath: m_TagString
+      value: runeManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1665655428038292652, guid: 5308bf5d137bb3a4392da9b0a2a8efd2, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

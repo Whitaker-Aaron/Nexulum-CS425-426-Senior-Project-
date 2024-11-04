@@ -14,10 +14,8 @@ public class Rune : ScriptableObject
     
     //more variables needed for type of rune and effect
     public enum RuneType {
-        Weapon,
-        Health,
-        Defense,
         Buff,
-        Projectile
+        Class,
+        Spell
     }
 }

@@ -61,6 +61,7 @@ public class RuneInventory : MonoBehaviour, SaveSystemInterface
             }
 
         }
+        GameObject.FindGameObjectWithTag("runeManager").GetComponent<runeIntController>().ResetRunes();
     }
 
 }
