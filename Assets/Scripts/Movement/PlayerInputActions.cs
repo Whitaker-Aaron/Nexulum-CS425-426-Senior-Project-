@@ -143,6 +143,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""7060a75b-c932-42ba-bdf5-16fcc807c1ce"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -464,6 +473,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""AbilityThree"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""003929ca-66e4-4880-80d3-615ff1c221d0"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -575,6 +595,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_player_AbilityOne = m_player.FindAction("AbilityOne", throwIfNotFound: true);
         m_player_AbilityTwo = m_player.FindAction("AbilityTwo", throwIfNotFound: true);
         m_player_AbilityThree = m_player.FindAction("AbilityThree", throwIfNotFound: true);
+        m_player_Interact = m_player.FindAction("Interact", throwIfNotFound: true);
         // MenuControl
         m_MenuControl = asset.FindActionMap("MenuControl", throwIfNotFound: true);
         m_MenuControl_Pause = m_MenuControl.FindAction("Pause", throwIfNotFound: true);
@@ -654,6 +675,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_AbilityOne;
     private readonly InputAction m_player_AbilityTwo;
     private readonly InputAction m_player_AbilityThree;
+    private readonly InputAction m_player_Interact;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -671,6 +693,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @AbilityOne => m_Wrapper.m_player_AbilityOne;
         public InputAction @AbilityTwo => m_Wrapper.m_player_AbilityTwo;
         public InputAction @AbilityThree => m_Wrapper.m_player_AbilityThree;
+        public InputAction @Interact => m_Wrapper.m_player_Interact;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -719,6 +742,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @AbilityThree.started += instance.OnAbilityThree;
             @AbilityThree.performed += instance.OnAbilityThree;
             @AbilityThree.canceled += instance.OnAbilityThree;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -762,6 +788,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @AbilityThree.started -= instance.OnAbilityThree;
             @AbilityThree.performed -= instance.OnAbilityThree;
             @AbilityThree.canceled -= instance.OnAbilityThree;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -856,6 +885,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnAbilityOne(InputAction.CallbackContext context);
         void OnAbilityTwo(InputAction.CallbackContext context);
         void OnAbilityThree(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
     public interface IMenuControlActions
     {
