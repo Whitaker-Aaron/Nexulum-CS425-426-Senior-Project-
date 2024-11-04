@@ -21,22 +21,52 @@ public class Chest : MonoBehaviour, i_Interactable
     public List<ItemList> itemsToAdd;
     public string interactionPrompt => prompt;
 
+    public void Awake()
+    {
+        // Ensure the materialManager is assigned to avoid null reference
+        materialManager = FindObjectOfType<MaterialScrollManager>();
+
+        if (materialManager == null)
+        {
+            Debug.LogError("MaterialScrollManager not found in the scene.");
+        }
+    }
+
     public void Start()
     {
         isOpen = false;
+
+        // Check if itemsToAdd is initialized
+        if (itemsToAdd == null)
+        {
+            itemsToAdd = new List<ItemList>();
+        }
     }
 
     public bool Interact(Interactor interactor)
     {
+        if (materialManager == null)
+        {
+            Debug.LogError("Material Manager is not assigned.");
+            return false;
+        }
+
         if (!isLocked)
         {
-            if (isOpen == false)
+            if (!isOpen)
             {
                 Debug.Log("Opening the Chest");
 
                 foreach (var itemPair in itemsToAdd)
                 {
-                    materialManager.AddToMaterialsInventory(itemPair.material, itemPair.amount);
+                    if (itemPair != null)
+                    {
+                        materialManager.AddToMaterialsInventory(itemPair.material, itemPair.amount);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("ItemPair in itemsToAdd is null.");
+                    }
                 }
 
                 isOpen = true;
@@ -49,12 +79,7 @@ public class Chest : MonoBehaviour, i_Interactable
         else
         {
             Debug.Log("Chest is locked");
-
-
-            //if (chestID == keyID)
-            //{
-
-            //}
+            // Further logic for locked chest can be added here
         }
 
         return true;
@@ -66,12 +91,21 @@ public class Chest : MonoBehaviour, i_Interactable
         {
             chestUI.SetActive(true);
         }
+        else
+        {
+            Debug.LogWarning("Chest UI is not assigned.");
+        }
     }
+
     public void HideUi()
     {
         if (chestUI != null)
         {
             chestUI.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning("Chest UI is not assigned.");
         }
     }
 }
