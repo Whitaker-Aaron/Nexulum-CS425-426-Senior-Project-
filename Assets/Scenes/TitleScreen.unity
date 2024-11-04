@@ -3841,6 +3841,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0617892be226a48bf051109d121355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &905795143 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6763437158165733489, guid: 2121826842b90ce47926846314379b94, type: 3}
+  m_PrefabInstance: {fileID: 975298789}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905795136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ba2ffc38df22664d97305bcad4653cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &921285034
 GameObject:
   m_ObjectHideFlags: 0
@@ -4252,7 +4263,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_ActionEvents.Array.data[16].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -4269,7 +4280,7 @@ PrefabInstance:
     - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_ActionEvents.Array.data[16].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 905795143}
     - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -4297,6 +4308,10 @@ PrefabInstance:
     - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnGamepadLook
+      objectReference: {fileID: 0}
+    - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: m_ActionEvents.Array.data[16].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnInteractInput
       objectReference: {fileID: 0}
     - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
