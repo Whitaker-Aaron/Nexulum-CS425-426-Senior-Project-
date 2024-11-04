@@ -40,15 +40,20 @@ public class DungeonEntrance : MonoBehaviour
     {
         if (other.name == "Player")
         {
-            var character = other.GetComponent<CharacterBase>();
-            if (character.transitioningRoom && character.transitionedRoom)
-            {
-                character.transitioningRoom = false;
-                character.transitionedRoom = false;
-                GameObject.Find("Main Camera").GetComponent<CameraFollow>().UnpauseFollow();  
-                character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
-            }
+            StartCoroutine(AnimateDungeonExit(other));
+        }
+    }
 
+    public IEnumerator AnimateDungeonExit(Collider other)
+    {
+        yield return new WaitForSeconds(1.5f);
+        var character = other.GetComponent<CharacterBase>();
+        if (character.transitioningRoom && character.transitionedRoom)
+        {
+            character.transitioningRoom = false;
+            character.transitionedRoom = false;
+            GameObject.Find("Main Camera").GetComponent<CameraFollow>().UnpauseFollow();
+            character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         }
     }
 
