@@ -122,7 +122,6 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         var changeAmount = new Vector3(0.0f, 0.0f, 2.5f);
         while (transitioningRoom)
         {
-            Debug.Log("Moving forward");
             transform.position += changeAmount * Time.deltaTime;
             yield return null;
         }
@@ -134,7 +133,6 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         var changeAmount = new Vector3(0.0f, 0.0f, -2.5f);
         while (transitioningRoom)
         {
-            Debug.Log("Moving backward");
             transform.position += changeAmount * Time.deltaTime;
             yield return null;
         }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4093513021990057122}
   - component: {fileID: 3956897036691001245}
   m_Layer: 0
-  m_Name: EastBackgroundBlock
+  m_Name: WestBackgroundBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 7878442112638142294}
   - component: {fileID: 4333268009126759189}
   m_Layer: 0
-  m_Name: EastStart
+  m_Name: WestStart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 9120871926654339622}
   - component: {fileID: 6282365049415433979}
   m_Layer: 0
-  m_Name: EastTransitionPoint
+  m_Name: WestTransitionPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -195,8 +195,8 @@ Transform:
   m_GameObject: {fileID: 2520807415279193746}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.870003, y: 47.559498, z: -2.9299994}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalPosition: {x: 11.870003, y: 47.559498, z: -2.9645}
+  m_LocalScale: {x: 5, y: 5, z: 4.518039}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2365307691110646713}
@@ -287,9 +287,9 @@ MonoBehaviour:
   targetRoom: {fileID: 0}
   currentRoom: {fileID: 0}
   targetLoad: {fileID: 0}
-  exitDirection: 2
-  enterDirection: 3
---- !u!1 &5450219702933781951
+  exitDirection: 3
+  enterDirection: 2
+--- !u!1 &2930812521378324848
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -297,44 +297,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2365307691110646713}
-  m_Layer: 0
-  m_Name: EastTransition
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2365307691110646713
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5450219702933781951}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5160033413825578924}
-  - {fileID: 531659985255989554}
-  - {fileID: 8000915285810356338}
-  - {fileID: 6349770531147599540}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6663604021215186849
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5160033413825578924}
-  - component: {fileID: 1717756222514724658}
-  - component: {fileID: 5366023556619885115}
+  - component: {fileID: 3626954184107929782}
+  - component: {fileID: 8794218589493163814}
+  - component: {fileID: 78639445729458620}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -342,28 +307,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5160033413825578924
+--- !u!4 &3626954184107929782
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6663604021215186849}
+  m_GameObject: {fileID: 2930812521378324848}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.06261807, y: 0.7043288, z: -0.06261807, w: -0.7043288}
+  m_LocalRotation: {x: 0.06261807, y: 0.7043288, z: -0.06261807, w: 0.7043288}
   m_LocalPosition: {x: 8.620003, y: 47.09577, z: -2.8899984}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2365307691110646713}
-  m_LocalEulerAnglesHint: {x: 10.161, y: 270, z: 0}
---- !u!108 &1717756222514724658
+  m_LocalEulerAnglesHint: {x: 10.161, y: 90, z: 0}
+--- !u!108 &8794218589493163814
 Light:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6663604021215186849}
+  m_GameObject: {fileID: 2930812521378324848}
   m_Enabled: 1
   serializedVersion: 10
   m_Type: 0
@@ -419,13 +384,13 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &5366023556619885115
+--- !u!114 &78639445729458620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6663604021215186849}
+  m_GameObject: {fileID: 2930812521378324848}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
@@ -442,3 +407,38 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &5450219702933781951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2365307691110646713}
+  m_Layer: 0
+  m_Name: WestTransition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2365307691110646713
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5450219702933781951}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3626954184107929782}
+  - {fileID: 531659985255989554}
+  - {fileID: 8000915285810356338}
+  - {fileID: 6349770531147599540}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

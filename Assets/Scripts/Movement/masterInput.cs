@@ -475,10 +475,10 @@ public class masterInput : MonoBehaviour
 
     public void onDash(InputAction.CallbackContext context)
     {
-        if (context.performed && isMoving && !characterColliding)
+        if (context.performed && isMoving && !characterColliding && !inputPaused)
         {
             //dashStarted = true;
-            if (!isDashing && isMoving)
+            if (!isDashing)
             {
                 isDashing = true;
                 dashSpeed = 4.5f;
