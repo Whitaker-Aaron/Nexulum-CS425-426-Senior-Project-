@@ -478,10 +478,10 @@ public class masterInput : MonoBehaviour
         if (context.performed && isMoving && !characterColliding)
         {
             //dashStarted = true;
-            if (!isDashing)
+            if (!isDashing && isMoving)
             {
                 isDashing = true;
-                dashSpeed = 3.0f;
+                dashSpeed = 4.5f;
                 Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
                 Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
 
@@ -540,7 +540,11 @@ public class masterInput : MonoBehaviour
         Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
 
         // Use input to move relative to camera's direction
-        Vector3 movement = cameraForward * move.y + cameraRight * move.x;
+        if (!isDashing)
+        {
+            movement = cameraForward * move.y + cameraRight * move.x;
+        }
+        
 
         if (movement.magnitude == 0)
             isMoving = false;
@@ -579,7 +583,7 @@ public class masterInput : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         isDashing = false;
         dashSpeed = 1;
-        yield return new WaitForSeconds(0.15f);
+        //yield return new WaitForSeconds(0.15f);
         uiManager.DestroyOldestSmear();
         yield break;
         

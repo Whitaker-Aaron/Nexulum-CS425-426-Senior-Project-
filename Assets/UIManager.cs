@@ -219,6 +219,7 @@ public class UIManager : MonoBehaviour
         ExperienceBar.minValue = min;
         ExperienceBar.maxValue = max;
     }
+    
 
     public IEnumerator AnimateExperienceUpdate(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)
     {
