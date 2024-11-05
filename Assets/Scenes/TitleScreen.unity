@@ -951,12 +951,6 @@ MonoBehaviour:
   bulletHitPrefab: {fileID: 2193456159803961, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
   tankHitPrefab: {fileID: 2193456159803961, guid: a0b633f7157d64b42aec3570e75c0e53, type: 3}
   mageHitPrefab: {fileID: 7251999113603520393, guid: 8bdeea356302cb0499eb7b739bf26d84, type: 3}
-  caStart: {fileID: 6902723416898335439, guid: e71d4ea2a918ec14ba7c00f5a3508383, type: 3}
-  caLoop: {fileID: 7164483913228334462, guid: 60510703ff1a0294e91061c87f1feaef, type: 3}
-  caEnd: {fileID: 1163315792658964826, guid: 4c4d17413b3b43a41988c7049c0608cf, type: 3}
-  faStart: {fileID: 8665149055098433584, guid: 9e8afb447e1ce674da2edfcb7d04b440, type: 3}
-  faLoop: {fileID: 7082147421886730936, guid: ac61649ef93078141a9f5137e8802dcd, type: 3}
-  faEnd: {fileID: 1269808448133580099, guid: cb9ed7710bc418e498f0b5a89b0ff98c, type: 3}
   bulletPoolSize: 10
   tankPoolSize: 3
   magePoolSize: 4
@@ -3847,6 +3841,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0617892be226a48bf051109d121355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &905795143 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6763437158165733489, guid: 2121826842b90ce47926846314379b94, type: 3}
+  m_PrefabInstance: {fileID: 975298789}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905795136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ba2ffc38df22664d97305bcad4653cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &921285034
 GameObject:
   m_ObjectHideFlags: 0
@@ -4275,7 +4280,7 @@ PrefabInstance:
     - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_ActionEvents.Array.data[16].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 905795143}
     - target: {fileID: 4686861000923934690, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -13812,6 +13817,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba2ffc38df22664d97305bcad4653cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactionPoint: {fileID: 1076074831}
+  interactionRadius: 2
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!1 &1736449638
 GameObject:
   m_ObjectHideFlags: 0
@@ -16537,10 +16547,6 @@ PrefabInstance:
     - target: {fileID: 3549569541524537481, guid: 5308bf5d137bb3a4392da9b0a2a8efd2, type: 3}
       propertyPath: m_Name
       value: RuneManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 3549569541524537481, guid: 5308bf5d137bb3a4392da9b0a2a8efd2, type: 3}
-      propertyPath: m_TagString
-      value: runeManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
