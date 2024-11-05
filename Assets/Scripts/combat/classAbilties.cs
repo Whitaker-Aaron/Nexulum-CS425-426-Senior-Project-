@@ -329,22 +329,22 @@ public class classAbilties : MonoBehaviour
         //GameObject tempEffect = Instantiate(combatAuraEffectStart, currentAura, Quaternion.identity);
         if(!fireBool)
         {
-            EffectsManager.instance.getFromPool("caPool", currentAura);
+            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0));
             yield return new WaitForSeconds(.3f);
-            EffectsManager.instance.getFromPool("caPool", currentAura);
+            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0));
             yield return new WaitForSeconds(auraTime);
-            EffectsManager.instance.getFromPool("caPool", currentAura);
+            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0));
             checkingAura = false;
             activatedAura = false;
             currentAura = Vector3.zero;
         }
         else
         {
-            EffectsManager.instance.getFromPool("faPool", currentAura);
+            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0));
             yield return new WaitForSeconds(.3f);
-            EffectsManager.instance.getFromPool("faPool", currentAura);
+            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0));
             yield return new WaitForSeconds(auraTime);
-            EffectsManager.instance.getFromPool("faPool", currentAura);
+            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0));
             checkingAura = false;
             activatedAura = false;
             currentAura = Vector3.zero;
