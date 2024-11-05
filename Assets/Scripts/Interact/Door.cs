@@ -20,7 +20,7 @@ public class Door : MonoBehaviour, i_Interactable
             doorUI.SetActive(true);
         }
     }
-    public void HideUi()
+    public void HideUI()
     {
         if (doorUI != null)
         {

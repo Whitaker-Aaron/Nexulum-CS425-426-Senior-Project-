@@ -27,7 +27,7 @@ public class Interactor : MonoBehaviour
             {
                 if (interactable != currentInteractable)
                 {
-                    currentInteractable?.HideUi();
+                    currentInteractable?.HideUI();
                     currentInteractable = interactable;
                     currentInteractable.ShowUI();
                 }
@@ -37,7 +37,7 @@ public class Interactor : MonoBehaviour
         {
             if (currentInteractable != null)
             {
-                currentInteractable.HideUi();
+                currentInteractable.HideUI();
                 currentInteractable = null;
             }
         }

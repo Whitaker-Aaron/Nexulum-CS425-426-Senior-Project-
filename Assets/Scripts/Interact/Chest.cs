@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI; 
 public class Chest : MonoBehaviour, i_Interactable
 {
     [SerializeField] private string prompt;
@@ -23,7 +23,6 @@ public class Chest : MonoBehaviour, i_Interactable
 
     public void Awake()
     {
-        // Ensure the materialManager is assigned to avoid null reference
         materialManager = FindObjectOfType<MaterialScrollManager>();
 
         if (materialManager == null)
@@ -36,7 +35,6 @@ public class Chest : MonoBehaviour, i_Interactable
     {
         isOpen = false;
 
-        // Check if itemsToAdd is initialized
         if (itemsToAdd == null)
         {
             itemsToAdd = new List<ItemList>();
@@ -55,21 +53,9 @@ public class Chest : MonoBehaviour, i_Interactable
         {
             if (!isOpen)
             {
-                Debug.Log("Opening the Chest");
-
-                foreach (var itemPair in itemsToAdd)
-                {
-                    if (itemPair != null)
-                    {
-                        materialManager.AddToMaterialsInventory(itemPair.material, itemPair.amount);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("ItemPair in itemsToAdd is null.");
-                    }
-                }
-
                 isOpen = true;
+                ShowUI();
+                Debug.Log("Opening the Chest");
             }
             else
             {
@@ -79,7 +65,6 @@ public class Chest : MonoBehaviour, i_Interactable
         else
         {
             Debug.Log("Chest is locked");
-            // Further logic for locked chest can be added here
         }
 
         return true;
@@ -97,7 +82,7 @@ public class Chest : MonoBehaviour, i_Interactable
         }
     }
 
-    public void HideUi()
+    public void HideUI()
     {
         if (chestUI != null)
         {
@@ -106,6 +91,25 @@ public class Chest : MonoBehaviour, i_Interactable
         else
         {
             Debug.LogWarning("Chest UI is not assigned.");
+        }
+    }
+    private void AddItemToInventory(ItemList item)
+    {
+        if (materialManager != null)
+        {
+            materialManager.AddToMaterialsInventory(item.material, item.amount);
+            Debug.Log($"Added {item.material.name} (x{item.amount}) to inventory");
+        }
+    }
+
+    private void AddAllItemsToInventory()
+    {
+        foreach (var item in itemsToAdd)
+        {
+            if (item != null)
+            {
+                AddItemToInventory(item);
+            }
         }
     }
 }
