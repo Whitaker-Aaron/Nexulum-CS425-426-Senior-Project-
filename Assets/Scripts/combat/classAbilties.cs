@@ -906,7 +906,7 @@ public class classAbilties : MonoBehaviour
                 }
                 
             }
-            else
+            if(colliders.Length == 0 && buffingPlayer == true)
             {
                 buffingPlayer = false;
                 buff(false, "attack", player.gameObject);
@@ -928,7 +928,7 @@ public class classAbilties : MonoBehaviour
             }
 
         }
-        else if(!checkingAura && buffingPlayer)
+        if(!checkingAura && buffingPlayer == true)
         {
             buffingPlayer = false;
             buff(false, "attack", player.gameObject);

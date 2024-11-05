@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4568924791873831729
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8909748071404107538}
+  - component: {fileID: 4464057387250256910}
+  m_Layer: 0
+  m_Name: ProjectileManager
+  m_TagString: projectileManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8909748071404107538
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4568924791873831729}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4464057387250256910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4568924791873831729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bf187676268b3349b725206ee40cd33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projPrefab: {fileID: 2530541377710386135, guid: cf50334aaeef15d4599ac9b2c477d0e3, type: 3}
+  projPrefab2: {fileID: 2530541377710386135, guid: e87bcbfff9c07e24b88e976b1e94e497, type: 3}
+  turretPrefab: {fileID: 2530541377710386135, guid: 754a04853ae07b94ebb1b21562a4df2d, type: 3}
+  dronePrefab: {fileID: 2530541377710386135, guid: 64fa92e2002083747a87acd59c09a406, type: 3}
+  tankPrefab: {fileID: 2530541377710386135, guid: fcb71dbafaa601546aaaafe5bcf2f16b, type: 3}
+  mageProjOne: {fileID: 2530541377710386135, guid: 3fac994265ef34f49977b7efb0306dea, type: 3}
+  poolSize: 25
+  poolSize2: 15
+  turretSize: 15
+  tankSize: 4
+  mageSizeOne: 5
