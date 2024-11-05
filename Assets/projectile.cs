@@ -39,6 +39,7 @@ public class projectile : MonoBehaviour
 
     private void OnEnable()
     {
+        
         stop = false;
         lifeTime = maxLifeTime;
 
@@ -130,8 +131,10 @@ public class projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.gameObject.name);
         if (poolName != "enemyMagePoolOne")
             return;
+        if (collision.gameObject.tag == "material") return;
 
         if (collision.gameObject.tag == "Player" && poolName == "enemyMagePoolOne")
         {

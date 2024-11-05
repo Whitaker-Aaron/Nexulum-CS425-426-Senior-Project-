@@ -25,7 +25,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Slider ExperienceBar;
     GameObject currentCheckpointText;
-    List<GameObject> currentSmears = new List<GameObject>();
+    Queue<GameObject> currentSmears = new Queue<GameObject>();
     CharacterBase character;
     // Start is called before the first frame update
     private void Awake()
@@ -48,16 +48,21 @@ public class UIManager : MonoBehaviour
         currentSmear.transform.SetParent(GameObject.Find("SplashCanvas").transform, false);
         currentSmear.transform.position = new Vector3(character.transform.position.x, character.transform.position.y + 0.15f, character.transform.position.z);
         currentSmear.transform.rotation = Quaternion.Euler(currentSmear.transform.eulerAngles.x, currentSmear.transform.eulerAngles.y, -angle);
-        currentSmears.Add(currentSmear);
+        StartCoroutine(IncreaseImageOpacity(currentSmear, 4f));
+        currentSmears.Enqueue(currentSmear);
     }
 
     public void DestroyOldestSmear()
     {
         if(currentSmears.Count > 0)
         {
-            Destroy(currentSmears[0]);
-            currentSmears.RemoveAt(0);
-        }
+            StartCoroutine(AnimateDestroyOldestSmear(currentSmears.Dequeue()));
+        }   
+    }
+    public IEnumerator AnimateDestroyOldestSmear(GameObject smear)
+    {
+        yield return StartCoroutine(DecreaseImageOpacity(smear, 3.0f));
+        Destroy(smear);
         
     }
 
@@ -214,6 +219,7 @@ public class UIManager : MonoBehaviour
         ExperienceBar.minValue = min;
         ExperienceBar.maxValue = max;
     }
+    
 
     public IEnumerator AnimateExperienceUpdate(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)
     {
