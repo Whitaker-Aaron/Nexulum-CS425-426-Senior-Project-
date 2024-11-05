@@ -9,6 +9,7 @@ public class runeIntController : MonoBehaviour, RuneInt
     public WeaponBase.weaponClassTypes currentClass;
     public CharacterBase character;
     masterInput input;
+    classAbilties abilities;
 
     // Start is called before the first frame update
     void Start()
@@ -20,11 +21,17 @@ public class runeIntController : MonoBehaviour, RuneInt
     {
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
+        abilities = classAbilties.instance;
         //runeInventory = runeManager.GetComponent<RuneInventory>();
 
         //weaponsInventory = weaponsManager.GetComponent<WeaponsInventory>();
         //weapon = character.equippedWeapon;
-
+        ResetRunes();
+        foreach(var rune in character.equippedRunes)
+        {
+            print("Equipped Runes: " + rune);
+        }
+        
     }
 
     public void ResetRunes()
@@ -54,24 +61,14 @@ public class runeIntController : MonoBehaviour, RuneInt
                         applyBuffRunes(character.equippedRunes[i]);
                         break;
 
-                    case Rune.RuneType.Defense:
-
-                        applyDefenseRunes(character.equippedRunes[i]);
+                    case Rune.RuneType.Class:
+                        print("class rune detected");
+                        applyClassRunes(character.equippedRunes[i]);
                         break;
 
-                    case Rune.RuneType.Health:
+                    case Rune.RuneType.Spell:
 
-                        applyHealthRunes(character.equippedRunes[i]);
-                        break;
-
-                    case Rune.RuneType.Projectile:
-
-                        applyProjectileRunes(character.equippedRunes[i]);
-                        break;
-
-                    case Rune.RuneType.Weapon:
-
-                        applyWeaponRunes(character.equippedRunes[i]);
+                        applySpellRunes(character.equippedRunes[i]);
                         break;
 
                 }
@@ -84,24 +81,6 @@ public class runeIntController : MonoBehaviour, RuneInt
 
     }
 
-    public void applyWeaponRunes(Rune rune)
-    {
-        if (rune.runeName == "Fire")
-        {
-            if (currentClass == WeaponBase.weaponClassTypes.Knight)
-            {
-                character.equippedWeapon.weaponMesh.GetComponent<swordCombat>().activateFire(true);
-            }
-            else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
-            {
-                input.activateFireRune(true);
-            }
-            else
-            {
-                Debug.Log("Error, no playertype found, cant apply rune");
-            }
-        }
-    }
     public void applyHealthRunes(Rune rune)
     {
         if (rune.runeName == "Regen")
@@ -119,34 +98,20 @@ public class runeIntController : MonoBehaviour, RuneInt
     {
 
     }
-    public void applyProjectileRunes(Rune rune)
+    public void applyClassRunes(Rune rune)
     {
-
-    }
-
-
-    public void removeWeaponRunes(Rune rune)
-    {
-        if (rune.runeName == "Fire")
+        if(rune.runeName == "Fire")
         {
-            if (currentClass == WeaponBase.weaponClassTypes.Knight)
-            {
-                //weapon.weaponMesh.GetComponent<swordCombat>().activateFire(false);
-            }
-            else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
-            {
-                input.activateFireRune(false);
-            }
-            else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
-            {
-
-            }
-            else
-            {
-                Debug.Log("Error, no playertype found, cant apply rune");
-            }
+            Debug.Log("activating Fire rune for knight");
+            abilities.activateFireRune(true);
         }
     }
+
+    public void applySpellRunes(Rune rune)
+    {
+
+    }
+
 
     public void removeBuffRunes(Rune rune)
     {
@@ -158,7 +123,15 @@ public class runeIntController : MonoBehaviour, RuneInt
 
     }
 
-    public void removeProjectileRunes(Rune rune)
+    public void removeClassRunes(Rune rune)
+    {
+        if(rune.name == "Fire")
+        {
+            abilities.activateFireRune(false);
+        }
+    }
+
+    public void removeSpellRunes(Rune rune)
     {
 
     }
@@ -186,24 +159,14 @@ public class runeIntController : MonoBehaviour, RuneInt
                         removeBuffRunes(character.equippedRunes[i]);
                         break;
 
-                    case Rune.RuneType.Defense:
+                    case Rune.RuneType.Class:
 
-                        removeDefenseRunes(character.equippedRunes[i]);
+                        removeClassRunes(character.equippedRunes[i]);
                         break;
 
-                    case Rune.RuneType.Health:
+                    case Rune.RuneType.Spell:
 
-                        removeHealthRunes(character.equippedRunes[i]);
-                        break;
-
-                    case Rune.RuneType.Projectile:
-
-                        removeProjectileRunes(character.equippedRunes[i]);
-                        break;
-
-                    case Rune.RuneType.Weapon:
-
-                        removeWeaponRunes(character.equippedRunes[i]);
+                        removeSpellRunes(character.equippedRunes[i]);
                         break;
 
                 }

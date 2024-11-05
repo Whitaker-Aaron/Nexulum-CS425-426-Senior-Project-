@@ -8,6 +8,7 @@ public class EffectsManager : MonoBehaviour
 
     //private static Queue<GameObject> bulletHitPool;
     public GameObject bulletHitPrefab, tankHitPrefab, mageHitPrefab;
+    public GameObject caStart, caLoop, caEnd, faStart, faLoop, faEnd;
     private GameObject poolObj;
     public int bulletPoolSize = 10;
     public int tankPoolSize = 3;
@@ -46,11 +47,70 @@ public class EffectsManager : MonoBehaviour
         createNewPool("bulletHitPool", bulletHitPrefab, bulletPoolSize);
         createNewPool("tankHitPool", tankHitPrefab, tankPoolSize);
         createNewPool("mageHitOne", mageHitPrefab, magePoolSize);
+        createNewPool("caPool", caStart, 3);
+        createNewPool("faPool", faStart, 3);
     }
 
 
     public virtual void createNewPool(string poolName, GameObject prefab, int size)
     {
+        if(poolName == "caPool" || poolName == "faPool")
+        {
+            allPools[poolName] = new Queue<GameObject>();
+
+            for(int i = 0; i < size; i++)
+            {
+                if(i==0)
+                {
+                    GameObject temp = Instantiate(prefab);
+                    temp.transform.parent = poolObj.transform;
+                    //DontDestroyOnLoad(temp.gameObject);
+                    allPools[poolName].Enqueue(temp);
+                    temp.SetActive(false);
+                }
+                else if(i==1)
+                {
+                    if (poolName == "caPool")
+                    {
+                        GameObject temp = Instantiate(caLoop);
+                        temp.transform.parent = poolObj.transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                    }
+                    else
+                    {
+                        GameObject temp = Instantiate(faLoop);
+                        temp.transform.parent = poolObj.transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                    }
+                }
+                else
+                {
+                    if(poolName == "caPool")
+                    {
+                        GameObject temp = Instantiate(caEnd);
+                        temp.transform.parent = poolObj.transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                    }
+                    else
+                    {
+                        GameObject temp = Instantiate(faEnd);
+                        temp.transform.parent = poolObj.transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                    }
+                    
+                }
+            }
+            return;
+        }
+
         if(!allPools.ContainsKey(poolName))
         {
             allPools[poolName] = new Queue<GameObject>();
