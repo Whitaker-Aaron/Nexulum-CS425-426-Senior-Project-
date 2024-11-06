@@ -62,7 +62,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     private void Awake()
     {
-        
+        runeInt = GameObject.FindGameObjectWithTag("runeManager").GetComponent<runeIntController>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -230,7 +230,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         EquipClass(equippedWeapon.weaponClassType);
         weaponClass.currentWeapon = equippedWeapon;
 
-        runeInt = GetComponent<RuneInt>();
+        //runeInt = GetComponent<RuneInt>();
         runeInt.ChangeClass(equippedWeapon.weaponClassType);
 
         InitializeHealth();
@@ -385,10 +385,45 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     }
 
-    public void buffPlayer(int amount)
+    public void buffPlayer(bool choice, string name, int amount)
     {
-        
-        restoreHealth(amount);
+        if(name == "attack")
+        {
+            if(choice)
+            {
+                switch(equippedWeapon.weaponClassType)
+                {
+                    case WeaponBase.weaponClassTypes.Knight:
+                        knightObject.baseAttack += amount;
+                        Debug.Log("attack buffed to: " +  knightObject.baseAttack);
+                        equippedWeapon.weaponMesh.GetComponent<swordCombat>().updateDamage(knightObject.baseAttack + equippedWeapon.weaponAttack);
+                        break;
+                    case WeaponBase.weaponClassTypes.Gunner:
+
+                        break;
+                    case WeaponBase.weaponClassTypes.Engineer:
+
+                        break;
+                }
+            }
+            else
+            {
+                switch (equippedWeapon.weaponClassType)
+                {
+                    case WeaponBase.weaponClassTypes.Knight:
+                        knightObject.baseAttack -= amount;
+                        Debug.Log("attack de-buffed to: " + knightObject.baseAttack);
+                        equippedWeapon.weaponMesh.GetComponent<swordCombat>().updateDamage(knightObject.baseAttack + equippedWeapon.weaponAttack);
+                        break;
+                    case WeaponBase.weaponClassTypes.Gunner:
+
+                        break;
+                    case WeaponBase.weaponClassTypes.Engineer:
+
+                        break;
+                }
+            }
+        }
     }
 
     public IEnumerator animateHealth()

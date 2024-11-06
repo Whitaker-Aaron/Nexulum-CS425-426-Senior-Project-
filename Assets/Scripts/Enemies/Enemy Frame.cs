@@ -33,6 +33,8 @@ public class EnemyFrame : MonoBehaviour
     Slider enemyHealthBar;
     Slider delayedEnemyHealthBar;
 
+    
+
 
 
     // Start is called before the first frame update
@@ -105,12 +107,15 @@ public class EnemyFrame : MonoBehaviour
 
     public IEnumerator dmgOverTime(int dmg, float statusTime, float dmgTime)
     {
+        Debug.Log("Starting dmg over time");
         float currentTime = Time.time;
         while (currentTime + statusTime > Time.time)
         {
+            Debug.Log("dmg taken: " + dmg);
             takeDamage(dmg);
             yield return new WaitForSeconds(dmgTime);
         }
+        dmgOverTimeActivated = false;
         yield break;
     }
 

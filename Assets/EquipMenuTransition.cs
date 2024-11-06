@@ -286,14 +286,11 @@ public class EquipMenuTransition : MonoBehaviour
                     case Rune.RuneType.Buff:
                         equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Buff]";
                         break;
-                    case Rune.RuneType.Defense:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Defense]";
+                    case Rune.RuneType.Class:
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Class]";
                         break;
-                    case Rune.RuneType.Health:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Health]";
-                        break;
-                    case Rune.RuneType.Projectile:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Weapon]";
+                    case Rune.RuneType.Spell:
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Spell]";
                         break;
                 }
 
