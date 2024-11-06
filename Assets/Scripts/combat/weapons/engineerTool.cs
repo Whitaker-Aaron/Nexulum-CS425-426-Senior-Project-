@@ -16,7 +16,7 @@ public class engineerTool : MonoBehaviour
         {
             if (collider.gameObject.tag == "Enemy")
             {
-                collider.GetComponent<EnemyFrame>().takeDamage(damage);
+                collider.GetComponent<EnemyFrame>().takeDamage(damage, this.transform.forward);
             }
         }
         //isAttacking = true;

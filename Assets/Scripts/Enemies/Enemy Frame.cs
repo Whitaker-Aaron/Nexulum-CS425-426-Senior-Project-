@@ -30,6 +30,7 @@ public class EnemyFrame : MonoBehaviour
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
+    Vector3 zeroDir;
     Slider enemyHealthBar;
     Slider delayedEnemyHealthBar;
 
@@ -40,6 +41,7 @@ public class EnemyFrame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        zeroDir = Vector3.zero;
         health = enemyReference.baseHealth;
         maxHealth = enemyReference.baseHealth;
         initialPos = transform.position;
@@ -75,8 +77,14 @@ public class EnemyFrame : MonoBehaviour
     }
 
     //take damage function with given damage paramater - Spencer
-    public void takeDamage(int damage)
+    public void takeDamage(int damage, Vector3 forwardDir)
     {
+        Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
+        if(forwardDir != Vector3.zero)
+        {
+            transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized)*10, ForceMode.VelocityChange);
+            StartCoroutine(StopVelocity(0.15f));
+        }
         anim.takeHit();
         print("Health is: " + health + " Dmg taken is: " + damage);
         if (health - damage <= 0 && !dying)
@@ -98,6 +106,12 @@ public class EnemyFrame : MonoBehaviour
 
     }
 
+    public IEnumerator StopVelocity(float time)
+    {
+        yield return new WaitForSeconds(time);
+        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+
     public void resetPosition()
     {
         transform.position = initialPos;
@@ -112,7 +126,7 @@ public class EnemyFrame : MonoBehaviour
         while (currentTime + statusTime > Time.time)
         {
             Debug.Log("dmg taken: " + dmg);
-            takeDamage(dmg);
+            takeDamage(dmg, Vector3.zero);
             yield return new WaitForSeconds(dmgTime);
         }
         dmgOverTimeActivated = false;
@@ -137,7 +151,7 @@ public class EnemyFrame : MonoBehaviour
     public IEnumerator animateHealth()
     {
         Debug.Log("Inside animate health");
-        float reduceVal = 150f;
+        float reduceVal = 250f;
         while (enemyHealthBar.value != health)
         {
             if (Mathf.Abs(enemyHealthBar.value - health) <= 1)
@@ -160,7 +174,7 @@ public class EnemyFrame : MonoBehaviour
 
     public IEnumerator animateDelayedHealth()
     {
-        float reduceVal = 150f;
+        float reduceVal = 250f;
         while (delayedEnemyHealthBar.value != health)
         {
             if (Mathf.Abs(delayedEnemyHealthBar.value - health) <= 1)

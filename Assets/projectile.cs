@@ -57,7 +57,7 @@ public class projectile : MonoBehaviour
             if (hit.collider.gameObject.tag == "Enemy" && poolName != "enemyMagePoolOne")
             {
                 hitEnemy = true;
-                hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+                hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
             }
 
             //enemy mage projectile conditions
@@ -142,7 +142,7 @@ public class projectile : MonoBehaviour
         }
         if (collision.gameObject.tag == "Enemy" && poolName == "enemyMagePoolOne")
         {
-            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
         }
 
         playEffect(gameObject.transform.position);

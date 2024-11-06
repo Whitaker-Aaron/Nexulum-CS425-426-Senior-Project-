@@ -32,7 +32,7 @@ public class rocket : MonoBehaviour
         {
             if(collider.gameObject.tag == "Enemy")
             {
-                collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+                collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
             }
         }
         Destroy(currentExplosion, 2f);
@@ -48,7 +48,7 @@ public class rocket : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(directHitDamage);
+            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(directHitDamage, Vector3.zero);
             explode();
         }
         else

@@ -28,6 +28,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
 
+    Vector3 lastGroundLocation;
+
     LifetimeManager lifetimeManager;
     UIManager uiManager;
     WeaponsManager weaponsManager;
@@ -69,29 +71,43 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         //Debug.Log("Collision detected on player");
         //masterInput.GetComponent<masterInput>().StopDash();
-        gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
-        if (!masterInput.GetComponent<masterInput>().characterColliding)
+        if(collision.gameObject.tag == "ground")
         {
-            collisionCounter += 1;
-            
+            Debug.Log("touching ground");
         }
+
 
 
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (masterInput.GetComponent<masterInput>().characterColliding)
+        //if (masterInput.GetComponent<masterInput>().characterColliding)
+        //{
+        //    if((collisionCounter - 1) > -1)
+        //    {
+        //        collisionCounter -= 1;
+        //    }
+        //    
+        //}
+        if (collision.gameObject.tag == "RestorePoint")
         {
-            if((collisionCounter - 1) > -1)
-            {
-                collisionCounter -= 1;
-            }
-            
+            Debug.Log("No longer touching ground");
+            lastGroundLocation = gameObject.transform.position;
         }
-        
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "RestorePoint")
+        {
+            Debug.Log("No longer restore point");
+            lastGroundLocation = gameObject.transform.position;
+        }
     }
 
 
@@ -115,6 +131,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
           {
             //masterInput.GetComponent<masterInput>().characterColliding = true;
           }
+    }
+
+    public void ResetToGround()
+    {
+        transform.position = lastGroundLocation;
     }
 
     public IEnumerator MoveForward()

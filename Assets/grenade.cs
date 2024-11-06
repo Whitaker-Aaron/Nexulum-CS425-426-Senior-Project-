@@ -24,7 +24,7 @@ public class grenade : MonoBehaviour
         {
             if (c.gameObject.tag == "Enemy")
             {
-                c.GetComponent<EnemyFrame>().takeDamage(damage);
+                c.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
             }
         }
 
