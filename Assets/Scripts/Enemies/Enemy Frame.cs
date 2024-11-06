@@ -12,6 +12,9 @@ public class EnemyFrame : MonoBehaviour
     //List that takes prefabs of Craft Material objects to spawn on enemy death.
     [SerializeField] GameObject[] materialList;
     [SerializeField] GameObject enemyHealth;
+
+    //TODO: NEED TO INTERFACE ENEMY TYPE 
+    enemyMinionCombat enemyType;
     [SerializeField] Enemy enemyReference;
 
     GameObject enemyUIRef;
@@ -34,8 +37,11 @@ public class EnemyFrame : MonoBehaviour
     Slider enemyHealthBar;
     Slider delayedEnemyHealthBar;
 
-    
 
+    private void Awake()
+    {
+        enemyType = transform.GetComponent<enemyMinionCombat>();
+    }
 
 
     // Start is called before the first frame update
@@ -79,31 +85,32 @@ public class EnemyFrame : MonoBehaviour
     //take damage function with given damage paramater - Spencer
     public void takeDamage(int damage, Vector3 forwardDir)
     {
-        Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
-        if(forwardDir != Vector3.zero)
+        if (!enemyType.isAttacking)
         {
-            transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized)*10, ForceMode.VelocityChange);
-            StartCoroutine(StopVelocity(0.15f));
-        }
-        anim.takeHit();
-        print("Health is: " + health + " Dmg taken is: " + damage);
-        if (health - damage <= 0 && !dying)
-        {
-            health = 0;
-            dying = true;
-            //StartCoroutine(updateHealthBarsNegative());
-            StartCoroutine(death());
+            Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
+            if (forwardDir != Vector3.zero)
+            {
+                transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 10, ForceMode.VelocityChange);
+                StartCoroutine(StopVelocity(0.15f));
+            }
 
-        }
+            anim.takeHit();
+            print("Health is: " + health + " Dmg taken is: " + damage);
+            if (health - damage <= 0 && !dying)
+            {
+                health = 0;
+                dying = true;
+                //StartCoroutine(updateHealthBarsNegative());
+                StartCoroutine(death());
 
-        else if(!dying)
-        {
-            health -= damage;
-            StartCoroutine(updateHealthBarsNegative());
-        }
-            
-        
+            }
 
+            else if (!dying)
+            {
+                health -= damage;
+                StartCoroutine(updateHealthBarsNegative());
+            }
+        }
     }
 
     public IEnumerator StopVelocity(float time)

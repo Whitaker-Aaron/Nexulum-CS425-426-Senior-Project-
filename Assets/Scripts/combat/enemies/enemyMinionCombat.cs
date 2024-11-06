@@ -8,6 +8,7 @@ public class enemyMinionCombat : MonoBehaviour
     bool canAttack = true;
     public Transform attackPoint;
     public float attackRange = .5f;
+    public bool isAttacking = false;
     public LayerMask Player;
     public enemySword sword;
     EnemyAnimation anim;
@@ -26,6 +27,7 @@ public class enemyMinionCombat : MonoBehaviour
             //attack player commands
             canAttack = false;
             sword.activateAttack(true, attackDamage);
+            //isAttacking = true;
             anim.minionAttack();
             enemy.pauseMovement(anim.getAnimationTime());
             StartCoroutine(wait(anim.getAnimationTime(), anim));
@@ -34,7 +36,8 @@ public class enemyMinionCombat : MonoBehaviour
 
     IEnumerator disableAttack(float time)
     {
-        yield return new WaitForSeconds(time / 1.1f);
+        yield return new WaitForSeconds(time);
+        //isAttacking = false;
         sword.activateAttack(false, attackDamage);
     }
 
@@ -42,7 +45,7 @@ public class enemyMinionCombat : MonoBehaviour
     {
         StartCoroutine(disableAttack(time));
         //anim.Stop();
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(time + 1.5f);
         canAttack = true;
         yield break;
     }
