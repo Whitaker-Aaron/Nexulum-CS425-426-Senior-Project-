@@ -6,4 +6,5 @@ public class Key
 {
     public int keyID;
     public Texture texture;
+    public enum keyType { door , chest };
 }
