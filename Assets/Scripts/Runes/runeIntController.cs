@@ -15,13 +15,14 @@ public class runeIntController : MonoBehaviour, RuneInt
     void Start()
     {
         //ResetRunes();
+        abilities = classAbilties.instance;
     }
 
     void Awake()
     {
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
-        abilities = classAbilties.instance;
+        
         //runeInventory = runeManager.GetComponent<RuneInventory>();
 
         //weaponsInventory = weaponsManager.GetComponent<WeaponsInventory>();
@@ -31,8 +32,9 @@ public class runeIntController : MonoBehaviour, RuneInt
         {
             print("Equipped Runes: " + rune);
         }
-        
     }
+
+
 
     public void ResetRunes()
     {
@@ -102,7 +104,7 @@ public class runeIntController : MonoBehaviour, RuneInt
     {
         if(rune.runeName == "Fire")
         {
-            Debug.Log("activating Fire rune for knight");
+            Debug.Log(abilities);
             abilities.activateFireRune(true);
         }
     }
