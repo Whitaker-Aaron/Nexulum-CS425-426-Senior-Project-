@@ -479,7 +479,7 @@ public class classAbilties : MonoBehaviour
         if (Physics.Raycast(masterInput.instance.bulletSpawn.transform.position, masterInput.instance.bulletSpawn.transform.forward, out hit, maxLaserDistance, enemy))
         {
             print("Hitting enemy");
-            hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserDamage, Vector3.zero);
+            hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserDamage, Vector3.zero, EnemyFrame.DamageSource.Player);
         }
         yield return new WaitForSeconds(laserHitRate);
         checkHit = false;
