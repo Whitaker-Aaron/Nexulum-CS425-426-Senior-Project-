@@ -247,6 +247,7 @@ public class classAbilties : MonoBehaviour
             currentLaserEffect.transform.SetParent(player.transform, false);
             pos = gameObject.GetComponent<masterInput>().bulletSpawn;
             currentLaserEffect.transform.position = pos.position;
+            currentLaserEffect.transform.forward = masterInput.instance.bulletSpawn.forward;
             StartCoroutine(laserStop());
             StartCoroutine(abilitiesCooldown(3, ga3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
@@ -475,7 +476,7 @@ public class classAbilties : MonoBehaviour
         checkHit = true;
         RaycastHit hit;
 
-        if (Physics.Raycast(currentLaserEffect.transform.position, currentLaserEffect.transform.forward, out hit, maxLaserDistance, enemy))
+        if (Physics.Raycast(masterInput.instance.bulletSpawn.transform.position, masterInput.instance.bulletSpawn.transform.forward, out hit, maxLaserDistance, enemy))
         {
             print("Hitting enemy");
             hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserDamage, Vector3.zero);

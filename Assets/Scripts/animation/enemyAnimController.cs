@@ -60,6 +60,11 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
         StartCoroutine(wait(animator.GetCurrentAnimatorStateInfo(0).normalizedTime));
     }
 
+    public void mageAttack()
+    {
+        isAttacking = true;
+    }
+
     public float getAnimationTime()
     {
         float time = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;

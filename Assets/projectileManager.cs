@@ -7,13 +7,14 @@ using UnityEngine.UIElements;
 public class projectileManager : MonoBehaviour
 {
     public static projectileManager Instance;
-    public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, tankPrefab, mageProjOne;
+    public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, tankPrefab, mageProjOne, swordShotPrefab, swordShotIcePrefab;
     private GameObject poolObj;
     public int poolSize = 25;
     public int poolSize2 = 15;
     public int turretSize = 15;
     public int tankSize = 4;
     public int mageSizeOne = 5;
+    public int swordShotSize = 15;
 
     protected Dictionary<string, Queue<GameObject>> allPools;
 
@@ -54,6 +55,8 @@ public class projectileManager : MonoBehaviour
         createNewPool("dronePool", dronePrefab, turretSize);
         createNewPool("tankPool", tankPrefab, tankSize);
         createNewPool("enemyMagePoolOne", mageProjOne, mageSizeOne);
+        createNewPool("swordShotPool", swordShotPrefab, swordShotSize);
+        createNewPool("swordShotIcePool", swordShotIcePrefab, swordShotSize);
     }
 
     public virtual void createNewPool(string poolName, GameObject prefab, int size)
