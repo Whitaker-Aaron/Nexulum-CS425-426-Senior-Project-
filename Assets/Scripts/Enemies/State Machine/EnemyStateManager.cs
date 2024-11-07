@@ -108,10 +108,6 @@ public class EnemyStateManager : MonoBehaviour
                 Vector3 awayPos = (enemyLOS.selfPos + awayDirection); // Get the position, away from the player, to go to
                 agent.SetDestination(awayPos);
             }
-            //else // Enemy is too far away
-            //{
-            //    agent.SetDestination(position);
-            //}
         }
         else
         {
