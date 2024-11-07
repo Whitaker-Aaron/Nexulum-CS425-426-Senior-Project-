@@ -195,7 +195,6 @@ public class LifetimeManager : MonoBehaviour
         var reference = transition.GetComponent<Image>();
         while (reference.color.a < 1.0f)
         {
-            Debug.Log(reference.color.a);
             if(Mathf.Abs(reference.color.a - 1.0f) <= 0.05)
             {
                 Color imgColor = reference.color;

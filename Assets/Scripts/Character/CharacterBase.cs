@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
@@ -19,13 +20,15 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     [SerializeField] public WeaponClass knightObject;
     [SerializeField] public WeaponClass gunnerObject;
-    [SerializeField] private WeaponClass engineerObject;
+    [SerializeField] public WeaponClass engineerObject;
 
     [SerializeField] public GameObject shakeEffect;
 
     //[SerializeField] public RuneInt runeInt;
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
+
+    Vector3 lastGroundLocation;
 
     LifetimeManager lifetimeManager;
     UIManager uiManager;
@@ -61,36 +64,50 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     private void Awake()
     {
-        
+        runeInt = GameObject.FindGameObjectWithTag("runeManager").GetComponent<runeIntController>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         //Debug.Log("Collision detected on player");
         //masterInput.GetComponent<masterInput>().StopDash();
-        gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
-        if (!masterInput.GetComponent<masterInput>().characterColliding)
+        if(collision.gameObject.tag == "ground")
         {
-            collisionCounter += 1;
-            
+            Debug.Log("touching ground");
         }
+
 
 
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (masterInput.GetComponent<masterInput>().characterColliding)
+        //if (masterInput.GetComponent<masterInput>().characterColliding)
+        //{
+        //    if((collisionCounter - 1) > -1)
+        //    {
+        //        collisionCounter -= 1;
+        //    }
+        //    
+        //}
+        if (collision.gameObject.tag == "RestorePoint")
         {
-            if((collisionCounter - 1) > -1)
-            {
-                collisionCounter -= 1;
-            }
-            
+            Debug.Log("No longer touching ground");
+            lastGroundLocation = gameObject.transform.position;
         }
-        
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "RestorePoint")
+        {
+            Debug.Log("No longer restore point");
+            lastGroundLocation = gameObject.transform.position;
+        }
     }
 
 
@@ -116,12 +133,16 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
           }
     }
 
+    public void ResetToGround()
+    {
+        transform.position = lastGroundLocation;
+    }
+
     public IEnumerator MoveForward()
     {
         var changeAmount = new Vector3(0.0f, 0.0f, 2.5f);
         while (transitioningRoom)
         {
-            Debug.Log("Moving forward");
             transform.position += changeAmount * Time.deltaTime;
             yield return null;
         }
@@ -133,7 +154,6 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         var changeAmount = new Vector3(0.0f, 0.0f, -2.5f);
         while (transitioningRoom)
         {
-            Debug.Log("Moving backward");
             transform.position += changeAmount * Time.deltaTime;
             yield return null;
         }
@@ -231,7 +251,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         EquipClass(equippedWeapon.weaponClassType);
         weaponClass.currentWeapon = equippedWeapon;
 
-        runeInt = GetComponent<RuneInt>();
+        //runeInt = GetComponent<RuneInt>();
         runeInt.ChangeClass(equippedWeapon.weaponClassType);
 
         InitializeHealth();
@@ -282,6 +302,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             Debug.Log("Newly equipped weapon is of type Knight");
             masterInput.GetComponent<masterInput>().changeSword(newWeapon);
             equippedWeapon = newWeapon;
+            equippedWeapon.weaponMesh.GetComponent<swordCombat>().updateDamage(knightObject.baseAttack + equippedWeapon.weaponAttack);
         }
         //Need to update for both his weapon pistol and his tool
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
@@ -289,10 +310,13 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             Debug.Log("Newly equipped weapon is of type Engineer");
             masterInput.GetComponent<masterInput>().changeTool(newWeapon);
             equippedWeapon = newWeapon;
+            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("pistolPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
         }
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             equippedWeapon = newWeapon;
+            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("bulletPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
+            
         }
         
     }
@@ -303,6 +327,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         masterInput.GetComponent<masterInput>().currentClass = newClass;
         //Debug.Log(weaponClass.currentWeapon);
         weaponsManager.ChangeWeapon(weaponClass.currentWeapon);
+        
         uiManager.UpdateClass(newClass, weaponClass.currentLvl, true);
         //UpdateWeapon(weaponClass.currentWeapon);
         runeInt.ChangeClass(newClass);
@@ -381,10 +406,45 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     }
 
-    public void buffPlayer(int amount)
+    public void buffPlayer(bool choice, string name, int amount)
     {
-        
-        restoreHealth(amount);
+        if(name == "attack")
+        {
+            if(choice)
+            {
+                switch(equippedWeapon.weaponClassType)
+                {
+                    case WeaponBase.weaponClassTypes.Knight:
+                        knightObject.baseAttack += amount;
+                        Debug.Log("attack buffed to: " +  knightObject.baseAttack);
+                        equippedWeapon.weaponMesh.GetComponent<swordCombat>().updateDamage(knightObject.baseAttack + equippedWeapon.weaponAttack);
+                        break;
+                    case WeaponBase.weaponClassTypes.Gunner:
+
+                        break;
+                    case WeaponBase.weaponClassTypes.Engineer:
+
+                        break;
+                }
+            }
+            else
+            {
+                switch (equippedWeapon.weaponClassType)
+                {
+                    case WeaponBase.weaponClassTypes.Knight:
+                        knightObject.baseAttack -= amount;
+                        Debug.Log("attack de-buffed to: " + knightObject.baseAttack);
+                        equippedWeapon.weaponMesh.GetComponent<swordCombat>().updateDamage(knightObject.baseAttack + equippedWeapon.weaponAttack);
+                        break;
+                    case WeaponBase.weaponClassTypes.Gunner:
+
+                        break;
+                    case WeaponBase.weaponClassTypes.Engineer:
+
+                        break;
+                }
+            }
+        }
     }
 
     public IEnumerator animateHealth()

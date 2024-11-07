@@ -28,6 +28,7 @@ using UnityEngine.UI;
 public class masterInput : MonoBehaviour
 {
     //-------------VARIABLES------------
+    public static masterInput instance;
 
     private GameObject player;
     public WeaponBase.weaponClassTypes currentClass;
@@ -115,6 +116,8 @@ public class masterInput : MonoBehaviour
     bool canShoot = true;
     int bulletCount;
     public int magSize = 25;
+    public float damageDropOffDistance = 5f;
+    public int gunnerDmgMod;
 
     //rocket
     public bool shootingRocket = false;
@@ -128,6 +131,11 @@ public class masterInput : MonoBehaviour
     //RUNE VARS
     bool fireBullet = false;
 
+    //line render
+    private LineRenderer laserLine;
+    bool pauseLaser = false;
+    Color laserStartColor;
+
 
     //Engineer variables
 
@@ -135,6 +143,8 @@ public class masterInput : MonoBehaviour
     public Transform pistolBulletSpawn;
     public GameObject pistolBulletObj;
     public float pistolBulletSpeed;
+    public int engrDmgMod;
+    public float damageDropOffDistanceEngr = 8f;
 
 
     //pistol combat
@@ -168,6 +178,9 @@ public class masterInput : MonoBehaviour
     GameObject repairObj;
     public int repairVal = 25;
 
+    UIManager uiManager;
+    LifetimeManager lifetimeManager;
+
 
     //--------------MAIN RUNNING FUNCTIONS--------------
 
@@ -181,7 +194,7 @@ public class masterInput : MonoBehaviour
    
     private void Awake()
     {
-        
+        instance = this;
 
         staminaBar = GameObject.Find("StaminaBar");
         staminaFill = GameObject.Find("StaminaFill");
@@ -196,6 +209,14 @@ public class masterInput : MonoBehaviour
         staminaBorder.GetComponent<Image>().color = new Vector4(staminaBorderFill.x, staminaBorderFill.y, staminaBorderFill.z, 0.0f);
 
         playerInput = GetComponent<PlayerInput>();
+
+        laserLine = gameObject.GetComponent<LineRenderer>();
+        laserLine.enabled = false;
+        laserStartColor = laserLine.startColor;
+
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
+        //laserLineRenderer.enabled = true;
 
     }
 
@@ -221,9 +242,9 @@ public class masterInput : MonoBehaviour
         SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
         SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
         SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        DontDestroyOnLoad(SS1);
-        DontDestroyOnLoad(SS2);
-        DontDestroyOnLoad(SS3);
+        //DontDestroyOnLoad(SS1);
+        //DontDestroyOnLoad(SS2);
+        //DontDestroyOnLoad(SS3);
 
         //playerControl = new PlayerInputActions();
         animationControl = GetComponent<PlayerAnimation>();
@@ -243,14 +264,14 @@ public class masterInput : MonoBehaviour
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-
+            laserLine.enabled = true;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             pistol = character.equippedWeapon.weaponMesh;
             tool = character.engineerTool.weaponMesh;
             toolAttackPoint = character.toolAttackPoint;
-
+            laserLine.enabled = true;
         }
 
     }
@@ -461,13 +482,34 @@ public class masterInput : MonoBehaviour
 
     public void onDash(InputAction.CallbackContext context)
     {
-        if (context.performed && isMoving && !characterColliding)
+        if (context.performed && isMoving && !characterColliding && !inputPaused)
         {
             //dashStarted = true;
             if (!isDashing)
             {
                 isDashing = true;
-                dashSpeed = 3.0f;
+                dashSpeed = 4.5f;
+                Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
+                Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
+
+                // Use input to move relative to camera's direction
+                Vector3 movement = cameraForward * move.y + cameraRight * move.x;
+                projectedPlayer.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
+                projectedPlayer.transform.Translate(movement * speed * 1.5f * dashSpeed * Time.deltaTime, Space.World);
+                Vector3 targetDir = projectedPlayer.transform.position - player.transform.position;
+                Debug.Log(targetDir);
+                float angle = 0.0f;
+                if (lifetimeManager.currentScene == "BaseCamp")
+                {
+                    angle = Vector3.Angle(targetDir, cameraForward + cameraRight);
+                }
+                else
+                {
+                    angle = Vector3.Angle(targetDir, cameraForward);
+                }
+                Debug.Log(angle);
+                if (targetDir.x < 0) angle = -angle;
+                uiManager.InstantiateSmear(angle);
                 StartCoroutine(PlayerDash());
             }
 
@@ -505,7 +547,11 @@ public class masterInput : MonoBehaviour
         Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
 
         // Use input to move relative to camera's direction
-        Vector3 movement = cameraForward * move.y + cameraRight * move.x;
+        if (!isDashing)
+        {
+            movement = cameraForward * move.y + cameraRight * move.x;
+        }
+        
 
         if (movement.magnitude == 0)
             isMoving = false;
@@ -517,7 +563,7 @@ public class masterInput : MonoBehaviour
        
 
             projectedPlayer.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z);
-            projectedPlayer.transform.Translate(movement * speed * dashSpeed * Time.deltaTime, Space.World);
+            projectedPlayer.transform.Translate(movement * speed * 1.2f * dashSpeed * Time.deltaTime, Space.World);
             // Does the ray intersect any objects excluding the player layer
             if(Physics.Linecast(player.transform.position, projectedPlayer.transform.position)){
                 //Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
@@ -543,7 +589,9 @@ public class masterInput : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
         isDashing = false;
-        dashSpeed = 1; 
+        dashSpeed = 1;
+        //yield return new WaitForSeconds(0.15f);
+        uiManager.DestroyOldestSmear();
         yield break;
         
     }
@@ -595,6 +643,61 @@ public class masterInput : MonoBehaviour
 
     //--------------------Gunner functions-------------------
 
+    void renderLine()
+    {
+        if(currentClass == WeaponBase.weaponClassTypes.Knight)
+        {
+            //if(laserLine.enabled)
+            laserLine.enabled = false;
+            return;
+        }
+        else
+        {
+            if (!laserLine.enabled && pauseLaser == false)
+                laserLine.enabled = true;
+
+            //if(laserLine.enabled)
+                laserLine.SetPosition(0, bulletSpawn.position);
+            //Debug.Log("rendering line with position: " + bulletSpawn);
+
+            Ray ray = new Ray(bulletSpawn.position, bulletSpawn.forward);
+            RaycastHit hit;
+
+            int layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
+
+            if (Physics.Raycast(ray, out hit, 25f, layerMask))
+            {
+                //if (hit.point != null && laserLine.enabled)
+
+                    laserLine.SetPosition(1, hit.point);
+
+
+                if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) > damageDropOffDistance)
+                {
+                    laserLine.startColor = Color.red;
+                }
+                else if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) < damageDropOffDistance)
+                {
+                    laserLine.startColor = Color.green;
+                }
+                else
+                {
+                    laserLine.startColor = laserStartColor;
+                }
+            }
+            else
+            {
+                //if(laserLine.enabled)
+                laserLine.startColor = laserStartColor;
+                laserLine.SetPosition(1, bulletSpawn.position + bulletSpawn.forward * 25f);
+            }
+            //laserLine.startColor = Color.green;
+            //laserLine.endColor = Color.green;
+        }
+        
+
+    }
+
     IEnumerator shoot()
     {
         canShoot = false;
@@ -619,10 +722,14 @@ public class masterInput : MonoBehaviour
             yield break;
 
         isReloading = true;
+        laserLine.enabled = false;
+        pauseLaser = true;
         yield return new WaitForSeconds(reloadTime);
         bulletCount = magSize;
         isReloading = false;
         canShoot = true;
+        laserLine.enabled = true;
+        pauseLaser = false;
         yield break;
     }
 
@@ -657,10 +764,14 @@ public class masterInput : MonoBehaviour
         {
             canPistolShoot = false;
             pistolReloading = true;
+            laserLine.enabled = false;
+            pauseLaser = true;
             yield return new WaitForSeconds(pistolReloadTime);
             pistolBulletCount = pistolMagSize;
             pistolReloading = false;
             canPistolShoot = true;
+            laserLine.enabled = true;
+            pauseLaser = false;
         }
         yield break;
     }
@@ -694,6 +805,8 @@ public class masterInput : MonoBehaviour
 
     private void runLogic()
     {
+        if (bulletSpawn != null)
+            renderLine();
         //KNIGHT LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
@@ -796,6 +909,8 @@ public class masterInput : MonoBehaviour
         //GUNNER LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket && !shootingLaser && !throwingGrenade)
         {
+            
+
             if (bulletCount <= 0 && !isReloading && bulletCount < magSize)
             {
                 bulletCount = 0;
@@ -845,6 +960,8 @@ public class masterInput : MonoBehaviour
         //Engineer Logic
         if (currentClass == WeaponBase.weaponClassTypes.Engineer && placing == false)
         {
+            
+
             if (playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false)
             {
                 pistolBulletCount = 0;

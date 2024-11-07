@@ -7,11 +7,13 @@ public class EffectsManager : MonoBehaviour
     public static EffectsManager instance;
 
     //private static Queue<GameObject> bulletHitPool;
-    public GameObject bulletHitPrefab, tankHitPrefab, mageHitPrefab;
+    public GameObject bulletHitPrefab, tankHitPrefab, mageHitPrefab, rocketHitPrefab, rocketFirePrefab;
+    public GameObject caStart, caLoop, caEnd, faStart, faLoop, faEnd;
     private GameObject poolObj;
     public int bulletPoolSize = 10;
     public int tankPoolSize = 3;
     public int magePoolSize = 4;
+    public int rocketFireSize = 3;
     //string poolName = null;
 
 
@@ -19,7 +21,7 @@ public class EffectsManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
     // Start is called before the first frame update
     void Start()
@@ -41,15 +43,77 @@ public class EffectsManager : MonoBehaviour
         //bulletHitPool = new Queue<GameObject>();
         poolObj = Instantiate(new GameObject("EffectsPool"));
         poolObj.transform.parent = gameObject.transform;
+        
 
         createNewPool("bulletHitPool", bulletHitPrefab, bulletPoolSize);
         createNewPool("tankHitPool", tankHitPrefab, tankPoolSize);
         createNewPool("mageHitOne", mageHitPrefab, magePoolSize);
+        createNewPool("caPool", caStart, 3);
+        createNewPool("faPool", faStart, 3);
+        createNewPool("rocketHit", rocketHitPrefab, 3);
+        createNewPool("rocketFireCircle", rocketFirePrefab, rocketFireSize);
     }
 
 
     public virtual void createNewPool(string poolName, GameObject prefab, int size)
     {
+        if(poolName == "caPool" || poolName == "faPool")
+        {
+            allPools[poolName] = new Queue<GameObject>();
+
+            for(int i = 0; i < size; i++)
+            {
+                if(i==0)
+                {
+                    GameObject temp = Instantiate(prefab);
+                    temp.transform.parent = poolObj.transform;
+                    //DontDestroyOnLoad(temp.gameObject);
+                    allPools[poolName].Enqueue(temp);
+                    temp.SetActive(false);
+                }
+                else if(i==1)
+                {
+                    if (poolName == "caPool")
+                    {
+                        GameObject temp = Instantiate(caLoop);
+                        temp.transform.parent = poolObj.transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                    }
+                    else
+                    {
+                        GameObject temp = Instantiate(faLoop);
+                        temp.transform.parent = poolObj.transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                    }
+                }
+                else
+                {
+                    if(poolName == "caPool")
+                    {
+                        GameObject temp = Instantiate(caEnd);
+                        temp.transform.parent = poolObj.transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                    }
+                    else
+                    {
+                        GameObject temp = Instantiate(faEnd);
+                        temp.transform.parent = poolObj.transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                    }
+                    
+                }
+            }
+            return;
+        }
+
         if(!allPools.ContainsKey(poolName))
         {
             allPools[poolName] = new Queue<GameObject>();
@@ -58,7 +122,7 @@ public class EffectsManager : MonoBehaviour
             {
                 GameObject temp = Instantiate(prefab);
                 temp.transform.parent = poolObj.transform;
-                DontDestroyOnLoad(temp);
+                //DontDestroyOnLoad(temp.gameObject);
                 allPools[poolName].Enqueue(temp);
                 temp.SetActive(false);
             }

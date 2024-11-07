@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 4844636328721397856}
   - component: {fileID: 4686861000923934690}
   - component: {fileID: 1175182273367415644}
+  - component: {fileID: 632471240116872652}
+  - component: {fileID: 5258961968933099944}
+  - component: {fileID: 6763437158165733489}
   m_Layer: 0
   m_Name: InputandAnimationManager
   m_TagString: inputManager
@@ -43,41 +46,54 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4413812686469576019}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a0617892be226a48bf051109d121355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   currentClass: 0
-  speed: 3
+  speed: 5
+  characterColliding: 0
+  minLookDistance: 1
+  ground:
+    serializedVersion: 2
+    m_Bits: 8
+  abilityInUse: 0
   cooldownTime: 2
   nextAttackTime: 0.19
   maxComboDelay: 0.55
-  animTime: 0.18
-  animTimeTwo: 0.18
-  animTimeThree: 0.4
+  animTime: 0.16
+  animTimeTwo: 0.17
+  animTimeThree: 0.26
   blockTime: 0.3
-  blockSpeed: 1.5
+  blockSpeed: 3
   swordAttackPoint: {fileID: 0}
   swordAttackRadius: 1.09
   layer:
     serializedVersion: 2
     m_Bits: 128
-  dashSpeed: 3
+  dashSpeed: 1
   dashTime: 0.2
   shootingSwords: 0
+  swordSlashPrefab: {fileID: 2386312260957815023, guid: 6631afa82ef502f438564320066ed8c5, type: 3}
+  swordSlash2: {fileID: 3851184705781900346, guid: 93dac9c60f55d534b99fdadda1072626, type: 3}
+  swordSlash3: {fileID: 1647583005151186869, guid: 40d463b356d8f954cb690c53b3e6e23d, type: 3}
   bulletSpawn: {fileID: 0}
   bulletPrefab: {fileID: 2530541377710386135, guid: cf50334aaeef15d4599ac9b2c477d0e3, type: 3}
   bulletSpeed: 15
   reloadTime: 2
   fireRateTime: 0.15
   magSize: 25
+  damageDropOffDistance: 12
+  gunnerDmgMod: 7
   shootingRocket: 0
   shootingLaser: 0
   throwingGrenade: 0
   pistolBulletSpawn: {fileID: 0}
   pistolBulletObj: {fileID: 2530541377710386135, guid: e87bcbfff9c07e24b88e976b1e94e497, type: 3}
   pistolBulletSpeed: 25
+  engrDmgMod: 4
+  damageDropOffDistanceEngr: 8
   pistolReloadTime: 2
   pistolFireRateTime: 0.3
   pistolMagSize: 10
@@ -90,6 +106,9 @@ MonoBehaviour:
   toolAttackPoint: {fileID: 0}
   toolAttackRadius: 1.05
   placing: 0
+  canRepair: 0
+  repairRate: 1
+  repairVal: 25
 --- !u!114 &359548601331966702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,7 +175,19 @@ MonoBehaviour:
     m_ActionId: 839cf2d8-56d1-4ca6-8018-69db1328744c
     m_ActionName: player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1761969504540647581}
+        m_TargetAssemblyTypeName: masterInput, Assembly-CSharp
+        m_MethodName: OnMouseLook
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 16398076-98b5-4769-a96c-a0c11b9e57b6
     m_ActionName: player/mouseLook[/Mouse/position]
   - m_PersistentCalls:
@@ -211,6 +242,74 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 21ef7375-5d47-4590-b429-608d4f19f240
     m_ActionName: player/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1761969504540647581}
+        m_TargetAssemblyTypeName: masterInput, Assembly-CSharp
+        m_MethodName: onDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 27a5bb3b-72d2-4fd0-a488-adc35627072f
+    m_ActionName: player/Dash[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1761969504540647581}
+        m_TargetAssemblyTypeName: masterInput, Assembly-CSharp
+        m_MethodName: OnGamepadLook
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3f0f93cd-04a7-4f57-b30e-7259b602d8c0
+    m_ActionName: player/GamePadLook[/XInputControllerWindows/rightStick]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5549c403-6448-43b6-a6d5-b6e4376b5d43
+    m_ActionName: player/Reload[/Keyboard/r,/XInputControllerWindows/buttonWest]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b93cb392-5f35-4517-a326-0d4a35e7d800
+    m_ActionName: player/RightClick[/Mouse/rightButton,/XInputControllerWindows/leftTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c730c0ad-3e0c-43a1-a7d6-1a9a5b743929
+    m_ActionName: player/AbilityOne[/Keyboard/1,/XInputControllerWindows/dpad/left,/XInputControllerWindows/buttonWest]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d46d94aa-a704-4abf-9dc7-3c0d4a9d3cd1
+    m_ActionName: player/AbilityTwo[/Keyboard/2,/XInputControllerWindows/dpad/up,/XInputControllerWindows/buttonNorth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4a06af09-d331-4553-af8f-575e133ac80c
+    m_ActionName: player/AbilityThree[/Keyboard/3,/XInputControllerWindows/dpad/right,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6763437158165733489}
+        m_TargetAssemblyTypeName: Interactor, Assembly-CSharp
+        m_MethodName: OnInteractInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 7060a75b-c932-42ba-bdf5-16fcc807c1ce
+    m_ActionName: player/Interact[/Keyboard/f]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: player
@@ -231,7 +330,10 @@ MonoBehaviour:
   enemy:
     serializedVersion: 2
     m_Bits: 128
-  bubbleTime: 5
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  bubbleTime: 4
   knightBubblePrefab: {fileID: 8794403981587612343, guid: 80e7c7ca7cedf4640a3e960df9217b56, type: 3}
   bubbleRadius: 1.6
   knightBubbleEffect: {fileID: 1289543790355709915, guid: b99922c2f59b1a542bdd06ae8bee47ae, type: 3}
@@ -240,6 +342,7 @@ MonoBehaviour:
   swordSpeed: 15
   swordTime: 0.5
   swordAbilityTime: 5
+  swordShotDamage: 15
   swordShotEffect: {fileID: 5286141860564934149, guid: a7126204363f8c342b6068eaa754243d, type: 3}
   combatAuraEffectStart: {fileID: 6902723416898335439, guid: e71d4ea2a918ec14ba7c00f5a3508383, type: 3}
   combatAuraEffectEnd: {fileID: 1163315792658964826, guid: 4c4d17413b3b43a41988c7049c0608cf, type: 3}
@@ -247,6 +350,7 @@ MonoBehaviour:
   comatAuraRadius: 4
   auraTime: 5
   buffRate: 0.5
+  auraAttackBuff: 25
   rocketPrefab: {fileID: 1253698358172851007, guid: cf9c0abd714474349a3471a391096aa1, type: 3}
   rocketSpeed: 25
   rocketTime: 0.64
@@ -275,3 +379,182 @@ MonoBehaviour:
   teslaMinPlacementRad: 2.5
   teslaWall: {fileID: 1175084382555679053, guid: 9063764d61cb9bc429868fca1dafc1b9, type: 3}
   teslaParent: {fileID: 0}
+  teslaMaxQuantity: 2
+  turretMaxQuantity: 3
+  ka1Time: 6
+  ka2Time: 6
+  ka3Time: 6
+  ga1Time: 6
+  ga2Time: 6
+  ga3Time: 6
+  ea1Time: 6
+  ea2Time: 6
+  ea3Time: 6
+  krFireTime: 5
+  krFireRate: 1
+  krFireDmg: 5
+--- !u!114 &632471240116872652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413812686469576019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NotificationBehavior: 0
+  m_MaxPlayerCount: -1
+  m_AllowJoining: 1
+  m_JoinBehavior: 0
+  m_PlayerJoinedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_PlayerLeftEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_JoinAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: 
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 5270bfb5-391f-44ec-b311-374dcba08085
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_PlayerPrefab: {fileID: 0}
+  m_SplitScreen: 0
+  m_MaintainAspectRatioInSplitScreen: 0
+  m_FixedNumberOfSplitScreens: -1
+  m_SplitScreenRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!120 &5258961968933099944
+LineRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413812686469576019}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: d2e32673805f8974a888782e19aa2bbf, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 5.2167764, y: 1.1235937, z: -12.794867}
+  - {x: 5.668086, y: 1.1235937, z: -37.790802}
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.016076274
+        value: 0.037758425
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 0, g: 0.5130582, b: 1, a: 0.5176471}
+      key1: {r: 0.9873357, g: 0.9997924, b: 0.99702424, a: 0}
+      key2: {r: 1, g: 1, b: 1, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 64379
+      ctime2: 65535
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 129
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: 0
+      m_NumColorKeys: 3
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_MaskInteraction: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
+  m_ApplyActiveColorSpace: 1
+--- !u!114 &6763437158165733489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413812686469576019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ba2ffc38df22664d97305bcad4653cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionPoint: {fileID: 0}
+  interactionRadius: 2
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 1024

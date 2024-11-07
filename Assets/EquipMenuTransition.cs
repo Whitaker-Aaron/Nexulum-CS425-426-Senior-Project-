@@ -16,6 +16,11 @@ public class EquipMenuTransition : MonoBehaviour
     [SerializeField] GameObject runesScrollBar;
     [SerializeField] GameObject itemsScrollBar;
 
+    [SerializeField] GameObject backButton;
+    [SerializeField] GameObject backButton2;
+
+    [SerializeField] GameObject disabledPanel;
+
 
     List<GameObject> currentEquipmentObjects = new List<GameObject>();
     List<GameObject> currentScrollObjects = new List<GameObject>();
@@ -79,7 +84,7 @@ public class EquipMenuTransition : MonoBehaviour
         classScroll.SetActive(false);
 
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(classChangeButton);
+        EventSystem.current.SetSelectedGameObject(backButton);
 
 
     }
@@ -89,7 +94,14 @@ public class EquipMenuTransition : MonoBehaviour
         classChangeButton = GameObject.Find("ClassButton");
         if (GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
         {
-            classChangeButton.GetComponent<Button>().interactable = false;
+            //classChangeButton.GetComponent<Button>().interactable = false;
+            classChangeButton.SetActive(false);
+            disabledPanel.SetActive(true);
+        }
+        else
+        {
+            classChangeButton.SetActive(true);
+            disabledPanel.SetActive(false);
         }
     }
 
@@ -130,6 +142,12 @@ public class EquipMenuTransition : MonoBehaviour
         equippedContainer.SetActive(false);
         equippedBackdrop.SetActive(false);
 
+        backButton.SetActive(false);
+        backButton2.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(backButton2);
+
+
         populateWeaponsScroll();
         
     }
@@ -145,8 +163,10 @@ public class EquipMenuTransition : MonoBehaviour
         equippedContainer.SetActive(false);
         equippedBackdrop.SetActive(false);
 
+        backButton.SetActive(false);
+        backButton2.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(knightEquipButton);
+        EventSystem.current.SetSelectedGameObject(backButton2);
 
         populateClassScroll();
     }
@@ -161,6 +181,11 @@ public class EquipMenuTransition : MonoBehaviour
         equippedPanel.SetActive(false);
         equippedContainer.SetActive(false);
         equippedBackdrop.SetActive(false);
+
+        backButton.SetActive(false);
+        backButton2.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(backButton2);
 
         populateRunesScroll();
     }
@@ -182,8 +207,12 @@ public class EquipMenuTransition : MonoBehaviour
         runesScroll.SetActive(false);
         weaponsScroll.SetActive(false);
 
+        backButton2.SetActive(false);
+        backButton.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(classChangeButton);
+        EventSystem.current.SetSelectedGameObject(backButton);
+
+        
 
         CleanScroll();
 
@@ -257,14 +286,11 @@ public class EquipMenuTransition : MonoBehaviour
                     case Rune.RuneType.Buff:
                         equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Buff]";
                         break;
-                    case Rune.RuneType.Defense:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Defense]";
+                    case Rune.RuneType.Class:
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Class]";
                         break;
-                    case Rune.RuneType.Health:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Health]";
-                        break;
-                    case Rune.RuneType.Projectile:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Weapon]";
+                    case Rune.RuneType.Spell:
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Spell]";
                         break;
                 }
 
@@ -282,8 +308,7 @@ public class EquipMenuTransition : MonoBehaviour
         var weaponsInventory = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>().GetWeaponsInventory();
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         bool eventSystemSelected = false;
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(weaponsScrollBar);
+
         for (int i = 0; i < weaponsInventory.Length; i++)
         {
             
@@ -295,26 +320,36 @@ public class EquipMenuTransition : MonoBehaviour
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = weaponsInventory[i].weaponDescription;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<TMP_Text>().text = "Attack +" + weaponsInventory[i].weaponAttack;
 
-                
-                
+
+                bool equipped = false;
                 if(characterRef.equippedWeapon.weaponName == weaponsInventory[i].weaponName)
                 {
+                    equipped = true;
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equipped";
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = false;
+                    
                 }
                 else
                 {
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equip";
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = true;
                 }
 
                 var equipRec = Instantiate(equipOptionPrefab);
                 equipRec.transform.SetParent(weaponsScrollContent.transform, false);
+                if (equipped)
+                {
+                    equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(false);
+                    equipRec.GetComponent<EquipOptionPrefab>().disabledPanel.SetActive(true);
+                }
+                else
+                {
+                    equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(true);
+                    equipRec.GetComponent<EquipOptionPrefab>().disabledPanel.SetActive(false);
+                }
                 if (!eventSystemSelected)
                 {
                     eventSystemSelected = true;
-                    EventSystem.current.SetSelectedGameObject(null);
-                    EventSystem.current.SetSelectedGameObject(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton);
+                    //EventSystem.current.SetSelectedGameObject(null);
+                    //EventSystem.current.SetSelectedGameObject(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton);
                 }
                 currentScrollObjects.Add(equipRec);
             }
@@ -329,8 +364,6 @@ public class EquipMenuTransition : MonoBehaviour
     {
         var runeInventory = GameObject.Find("RuneManager").GetComponent<RuneManager>().GetRuneInventory();
         bool eventSystemSelected = false;
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(runesScrollBar);
         for (int i = 0; i < runeInventory.Length; i++)
         {
             if (runeInventory[i] != null)
@@ -358,26 +391,37 @@ public class EquipMenuTransition : MonoBehaviour
                     }
                     
                 }
+                bool equipped = false;
                 if (runeEquipped){
+                    equipped = true;
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equipped";
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = false;
                 }
                 else
                 {
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equip";
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = true;
-                    
+
                 }
                 
                
 
                 var equipRec = Instantiate(equipOptionPrefab); 
                 equipRec.transform.SetParent(runesScrollContent.transform, false);
+                if (equipped)
+                {
+                    equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(false);
+                    equipRec.GetComponent<EquipOptionPrefab>().disabledPanel.SetActive(true);
+                }
+                else
+                {
+                    equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(true);
+                    equipRec.GetComponent<EquipOptionPrefab>().disabledPanel.SetActive(false);
+                }
+                Debug.Log(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.activeSelf);
                 if (!eventSystemSelected)
                 {
                     eventSystemSelected = true;
-                    EventSystem.current.SetSelectedGameObject(null);
-                    EventSystem.current.SetSelectedGameObject(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton);
+                    //EventSystem.current.SetSelectedGameObject(null);
+                    //EventSystem.current.SetSelectedGameObject(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton);
                 }
                 currentScrollObjects.Add(equipRec);
             }

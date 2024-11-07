@@ -19,6 +19,11 @@ public class BaseMaterialTransition : MonoBehaviour
        
     }
 
+    public void ReturnToTerminal()
+    {
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().openTerminalMenu();
+    }
+
     public void ResetSelection()
     {
         EventSystem.current.SetSelectedGameObject(null);

@@ -51,24 +51,30 @@ public class PauseMenuTransition : MonoBehaviour
 
         if (GameObject.Find("RoomManager").GetComponent<RoomManager>().IsCheckpoint())
         {
-            SaveButton.GetComponent<Button>().interactable = true;
+            //SaveButton.GetComponent<Button>().navigation = 
+            SaveButton.SetActive(true);
+            //SaveButton.GetComponent<Button>().interactable = true;
             SaveButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(false);
             if (GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
             {
-                ReturnToBaseButton.GetComponent<Button>().interactable = true;
+                ReturnToBaseButton.SetActive(true);
+                //ReturnToBaseButton.GetComponent<Button>().interactable = true;
                 ReturnToBaseButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(false);
             }
             else
             {
-                ReturnToBaseButton.GetComponent<Button>().interactable = false;
+                ReturnToBaseButton.SetActive(false);
+                //ReturnToBaseButton.GetComponent<Button>().interactable = false;
                 ReturnToBaseButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
             }
         }
         else
         {
-            SaveButton.GetComponent<Button>().interactable = false;
+            SaveButton.SetActive(false);
+            //SaveButton.GetComponent<Button>().interactable = false;
             SaveButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
-            ReturnToBaseButton.GetComponent<Button>().interactable = false;
+            //ReturnToBaseButton.GetComponent<Button>().interactable = false;
+            ReturnToBaseButton.SetActive(false);
             ReturnToBaseButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
         }
     }

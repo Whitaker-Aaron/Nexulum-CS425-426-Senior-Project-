@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -41,10 +42,7 @@ public class projectileManager : MonoBehaviour
     public void initializePool()
     {
         Instance = this;
-        //pool = new Queue<GameObject>();
-        //pool2 = new Queue<GameObject>();
         allPools = new Dictionary<string, Queue<GameObject>>();
-        DontDestroyOnLoad(this);
         DontDestroyOnLoad(gameObject);
 
         poolObj = Instantiate(new GameObject("poolObjects"));
@@ -68,7 +66,7 @@ public class projectileManager : MonoBehaviour
             {
                 GameObject temp = Instantiate(prefab);
                 temp.transform.parent = poolObj.transform;
-                DontDestroyOnLoad(temp);
+                //DontDestroyOnLoad(temp);
                 allPools[poolName].Enqueue(temp);
                 temp.SetActive(false);
             }
@@ -114,6 +112,21 @@ public class projectileManager : MonoBehaviour
         {
             GameObject proj = Instantiate(projPrefab, position, rotation);
             return proj;
+        }
+    }
+
+    public void updateProjectileDamage(string pool, int damageInc)
+    {
+        Debug.Log("Updating projectiles in pool: " + pool + " for damage: " + damageInc);
+        Queue<GameObject> bulletQ;
+        if(!allPools.ContainsKey(pool))
+        {
+            return;
+        }
+        allPools.TryGetValue(pool, out bulletQ);// [pool];
+        foreach(GameObject bullet in bulletQ)
+        {
+            bullet.GetComponent<projectile>().damage = damageInc;
         }
     }
 

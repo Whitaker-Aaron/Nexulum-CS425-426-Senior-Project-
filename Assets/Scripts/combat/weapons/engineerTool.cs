@@ -5,7 +5,7 @@ using UnityEngine;
 public class engineerTool : MonoBehaviour
 {
     public int damage;
-    bool isAttacking = false;
+    //bool isAttacking = false;
 
 
     public IEnumerator activateAttack(float time, Transform attackPoint, float radius, LayerMask layer)
@@ -16,13 +16,13 @@ public class engineerTool : MonoBehaviour
         {
             if (collider.gameObject.tag == "Enemy")
             {
-                collider.GetComponent<EnemyFrame>().takeDamage(damage);
+                collider.GetComponent<EnemyFrame>().takeDamage(damage, this.transform.forward);
             }
         }
-        isAttacking = true;
+        //isAttacking = true;
         yield return new WaitForSeconds(time);
         print("Deactivating");
-        isAttacking = false;
+        //isAttacking = false;
         yield break;
     }
 

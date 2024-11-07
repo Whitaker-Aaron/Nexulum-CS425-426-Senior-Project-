@@ -16,6 +16,7 @@ public class CraftRecipePrefab : MonoBehaviour
     [SerializeField] GameObject craftRecipeName;
     [SerializeField] GameObject craftRecipeShadow;
     [SerializeField] public GameObject craftButton;
+    [SerializeField] GameObject disabledPanel;
     List<GameObject> currentMaterialObjects = new List<GameObject>();
 
 
@@ -28,7 +29,9 @@ public class CraftRecipePrefab : MonoBehaviour
 
     private void Awake()
     {
-        craftButton.GetComponent<Button>().interactable = false;
+        //craftButton.GetComponent<Button>().interactable = false;
+        craftButton.SetActive(false);
+        disabledPanel.SetActive(true);
         craftRecipeName.GetComponent<TMP_Text>().text = craftRecipe.recipeName;
         craftRecipeShadow.GetComponent<TMP_Text>().text = craftRecipe.recipeName;
         populateMaterialsList();
@@ -73,7 +76,9 @@ public class CraftRecipePrefab : MonoBehaviour
         }
         if (isCraftable)
         {
-            craftButton.GetComponent<Button>().interactable = true;
+            //craftButton.GetComponent<Button>().interactable = true;
+            craftButton.SetActive(true);
+            disabledPanel.SetActive(false);
 
         }
 
@@ -94,11 +99,15 @@ public class CraftRecipePrefab : MonoBehaviour
         }
         if(hasEnoughMat)
         {
-            craftButton.GetComponent<Button>().interactable = true;
+            //craftButton.GetComponent<Button>().interactable = true;
+            craftButton.SetActive(true);
+            disabledPanel.SetActive(false);
         }
         else
         {
-            craftButton.GetComponent<Button>().interactable = false;
+            //craftButton.GetComponent<Button>().interactable = false;
+            craftButton.SetActive(false);
+            disabledPanel.SetActive(true);
         }
         
 

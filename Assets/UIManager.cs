@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,11 +19,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
     [SerializeField] GameObject ability3;
+    [SerializeField] GameObject dashSmear;
 
     Slider currentAbilitySlider;
 
     [SerializeField] Slider ExperienceBar;
     GameObject currentCheckpointText;
+    Queue<GameObject> currentSmears = new Queue<GameObject>();
     CharacterBase character;
     // Start is called before the first frame update
     private void Awake()
@@ -38,6 +41,32 @@ public class UIManager : MonoBehaviour
         UpdateClass(character.weaponClass.classType, character.weaponClass.currentLvl);
         //UpdateExperienceBar(character.weaponClass.getCurrentLvlExperienceAmount(), character.weaponClass.getNextLvlExperienceAmount(), character.weaponClass.totalExp);
     }
+
+    public void InstantiateSmear(float angle)
+    {
+        var currentSmear = Instantiate(dashSmear);
+        currentSmear.transform.SetParent(GameObject.Find("SplashCanvas").transform, false);
+        currentSmear.transform.position = new Vector3(character.transform.position.x, character.transform.position.y + 0.15f, character.transform.position.z);
+        currentSmear.transform.rotation = Quaternion.Euler(currentSmear.transform.eulerAngles.x, currentSmear.transform.eulerAngles.y, -angle);
+        StartCoroutine(IncreaseImageOpacity(currentSmear, 4f));
+        currentSmears.Enqueue(currentSmear);
+    }
+
+    public void DestroyOldestSmear()
+    {
+        if(currentSmears.Count > 0)
+        {
+            StartCoroutine(AnimateDestroyOldestSmear(currentSmears.Dequeue()));
+        }   
+    }
+    public IEnumerator AnimateDestroyOldestSmear(GameObject smear)
+    {
+        yield return StartCoroutine(DecreaseImageOpacity(smear, 3.0f));
+        Destroy(smear);
+        
+    }
+
+
 
     public void ActivateCooldownOnAbility(int abilityNum)
     {
@@ -190,6 +219,7 @@ public class UIManager : MonoBehaviour
         ExperienceBar.minValue = min;
         ExperienceBar.maxValue = max;
     }
+    
 
     public IEnumerator AnimateExperienceUpdate(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)
     {

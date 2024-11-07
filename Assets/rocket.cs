@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class rocket : MonoBehaviour
 {
-    public GameObject explosionEffect;
+    public GameObject rocketFireAura;
 
     public float explosionRadius = 3f;
     public int damage, directHitDamage;
-    public 
+    public int fireDmg;
+    public float fireT, fireR, fireRadius, abilityTime;
+
+    public bool fireB = false;
 
 
     // Start is called before the first frame update
@@ -25,17 +28,30 @@ public class rocket : MonoBehaviour
 
     void explode()
     {
-        GameObject currentExplosion = Instantiate(explosionEffect, gameObject.transform.position, Quaternion.identity);
-        currentExplosion.GetComponent<ParticleSystem>().Play();
+        //GameObject currentExplosion = Instantiate(explosionEffect, gameObject.transform.position, Quaternion.identity);
+        //currentExplosion.GetComponent<ParticleSystem>().Play();
+
+        if(fireB)
+        {
+            EffectsManager.instance.getFromPool("rocketFireCircle", gameObject.transform.position);
+            GameObject tempAura = Instantiate(rocketFireAura, gameObject.transform.position, Quaternion.identity);
+            tempAura.GetComponent<areaOfEffect>().startCheck(gameObject.transform.position, fireRadius, fireDmg, fireT, fireR, abilityTime);
+        }
+        else
+        {
+            EffectsManager.instance.getFromPool("rocketHit", gameObject.transform.position);
+        }
+        
+        
         Collider[] hitEnemies = Physics.OverlapSphere(gameObject.transform.position, explosionRadius);
         foreach (Collider collider in hitEnemies)
         {
             if(collider.gameObject.tag == "Enemy")
             {
-                collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+                collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
             }
         }
-        Destroy(currentExplosion, 2f);
+        //Destroy(currentExplosion, 2f);
         Destroy(gameObject);
     }
 
@@ -48,7 +64,7 @@ public class rocket : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(directHitDamage);
+            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(directHitDamage, Vector3.zero);
             explode();
         }
         else

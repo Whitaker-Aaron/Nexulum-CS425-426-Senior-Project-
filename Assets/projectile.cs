@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class projectile : MonoBehaviour
 {
+    private CharacterBase playerBase;
+    private masterInput masterInput;
 
     public float speed = 10f;
     public const float maxLifeTime = 3f;
     private float lifeTime;
-    public int damage;
+    public int damage = 0;
     Rigidbody rb;
     public LayerMask enemy;
     masterInput input;
@@ -38,21 +40,37 @@ public class projectile : MonoBehaviour
 
     private void OnEnable()
     {
+        
         stop = false;
         lifeTime = maxLifeTime;
+
+        int layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
 
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit) && poolName != "enemyMagePoolOne")
+        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity, layerMask) && poolName != "enemyMagePoolOne")
         {
             hitPoint = hit.point;
+
 
             //player projectile conditions
             if (hit.collider.gameObject.tag == "Enemy" && poolName != "enemyMagePoolOne")
             {
                 hitEnemy = true;
-                hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+                if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistance)
+                {
+                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.gunnerDmgMod, Vector3.zero);
+                }
+                else if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistanceEngr)
+                {
+                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.engrDmgMod, Vector3.zero);
+                }
+                else
+                {
+                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
+                }
+                
             }
 
             //enemy mage projectile conditions
@@ -82,6 +100,20 @@ public class projectile : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(this);
         input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
+        playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+
+        switch(playerBase.equippedWeapon.weaponClassType)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                damage = playerBase.gunnerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                damage = playerBase.engineerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
+                break;
+        }
+        
     }
 
     // Start is called before the first frame update
@@ -112,8 +144,10 @@ public class projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.gameObject.name);
         if (poolName != "enemyMagePoolOne")
             return;
+        if (collision.gameObject.tag == "material") return;
 
         if (collision.gameObject.tag == "Player" && poolName == "enemyMagePoolOne")
         {
@@ -121,7 +155,7 @@ public class projectile : MonoBehaviour
         }
         if (collision.gameObject.tag == "Enemy" && poolName == "enemyMagePoolOne")
         {
-            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
         }
 
         playEffect(gameObject.transform.position);

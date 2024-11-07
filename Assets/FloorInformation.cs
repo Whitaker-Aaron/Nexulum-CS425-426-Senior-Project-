@@ -13,13 +13,19 @@ public class FloorInformation : MonoBehaviour
         
     }
 
-    private void Start()
+    private void Awake()
     {
         
     }
 
+    private void Start()
+    {
+        StartCoroutine(DeactivateRooms());
+    }
+
     public IEnumerator DeactivateRooms()
     {
+        Debug.Log("Deactivating rooms");
         yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < RoomList.Length; i++)
         {

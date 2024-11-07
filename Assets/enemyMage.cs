@@ -102,6 +102,7 @@ public class enemyMage : MonoBehaviour, mageInterface
             Vector3 temp = (player.transform.position - gameObject.transform.position).normalized;
             Gizmos.DrawRay(transform.position + new Vector3(0, 0.75f, 0), temp * detectionRadius);
         }
+        Gizmos.DrawWireSphere(gameObject.transform.position + new Vector3(0, 1, 0), detectionRadius);
     }
 
 }
