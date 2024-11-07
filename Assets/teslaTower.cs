@@ -25,7 +25,7 @@ public class teslaTower : MonoBehaviour
     public void attackEnemy(Collider enemy)
     {
         EnemyFrame temp = enemy.gameObject.GetComponent<EnemyFrame>();
-        temp.takeDamage(damage, Vector3.zero);
+        temp.takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player);
     }
 
     public void takeDamage1(float damage)

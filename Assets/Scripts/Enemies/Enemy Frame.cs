@@ -85,7 +85,7 @@ public class EnemyFrame : MonoBehaviour
     }
 
     //take damage function with given damage paramater - Spencer
-    public void takeDamage(int damage, Vector3 forwardDir)
+    public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource)
     {
         Debug.Log("Enemy was attacked");
         Debug.Log("Enemy attacking?" + enemyType.isAttacking);
@@ -142,7 +142,7 @@ public class EnemyFrame : MonoBehaviour
         while (Time.time < endTime)
         {
             // Apply damage once per dmgTime interval
-            takeDamage(dmg, Vector3.zero);
+            takeDamage(dmg, Vector3.zero, EnemyFrame.DamageSource.AOE);
             Debug.Log("Damage taken: " + dmg + " at time: " + Time.time);
 
             // Wait for the next damage tick
@@ -292,6 +292,13 @@ public class EnemyFrame : MonoBehaviour
 
         }
         */
+    }
+
+    public enum DamageSource
+    {
+        Player,
+        Enemy,
+        AOE,
     }
 
 }
