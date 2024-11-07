@@ -108,7 +108,7 @@ public class EquipMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(classChangeButton.GetComponent<Button>().interactable);
+        
     }
 
     public void ResetWeaponCraftSelection()

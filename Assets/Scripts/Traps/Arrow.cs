@@ -12,7 +12,6 @@ public class Arrow : MonoBehaviour , i_Trap
     [Header("Arrow Lifetime")]
     public float arrowLife = 5f;
    
-    // Initialize the arrow with direction, speed, and damage
     public void Initialize(Vector3 direction, float speed, int damage, int distance)
     {
         
@@ -28,7 +27,6 @@ public class Arrow : MonoBehaviour , i_Trap
 
     private void Update()
     {
-        // Move the arrow in the specified direction
         transform.position += moveDirection * speed * Time.deltaTime;
     }
 
@@ -46,7 +44,6 @@ public class Arrow : MonoBehaviour , i_Trap
     }
     private void AlignWithDirection()
     {
-        // Point the arrow forward (z-axis) along the movement direction
         if (moveDirection != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(moveDirection);
