@@ -98,6 +98,7 @@ public class EnemyFrame : MonoBehaviour
             }
 
             anim.takeHit();
+        }
             print("Health is: " + health + " Dmg taken is: " + damage);
             if (health - damage <= 0 && !dying)
             {
@@ -114,7 +115,7 @@ public class EnemyFrame : MonoBehaviour
                 StartCoroutine(updateHealthBarsNegative());
             }
         }
-    }
+    
 
     public IEnumerator StopVelocity(float time)
     {
