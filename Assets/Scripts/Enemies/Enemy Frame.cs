@@ -26,6 +26,7 @@ public class EnemyFrame : MonoBehaviour
     Vector3 initialPos;
 
     public bool dmgOverTimeActivated = false;
+    bool takingDmgOT = false;
     bool dying = false;
 
     //Enemy animation for taking hits
@@ -112,8 +113,13 @@ public class EnemyFrame : MonoBehaviour
         while (currentTime + statusTime > Time.time)
         {
             Debug.Log("dmg taken: " + dmg);
-            takeDamage(dmg);
+            if (takingDmgOT == false)
+            {
+                takingDmgOT = true;
+                takeDamage(dmg);
+            }
             yield return new WaitForSeconds(dmgTime);
+            takingDmgOT = false;
         }
         dmgOverTimeActivated = false;
         yield break;
