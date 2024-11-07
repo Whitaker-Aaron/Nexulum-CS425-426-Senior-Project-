@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections.Editor.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -132,21 +133,29 @@ public class EnemyFrame : MonoBehaviour
 
     public IEnumerator dmgOverTime(int dmg, float statusTime, float dmgTime)
     {
-        Debug.Log("Starting dmg over time");
-        float currentTime = Time.time;
-        while (currentTime + statusTime > Time.time)
+
+        float endTime = Time.time + statusTime;
+
+        Debug.Log("Starting dmg over time at: " + Time.time + " Until: " + endTime);
+
+        // Continue applying damage over time until the statusTime expires
+        while (Time.time < endTime)
         {
-            Debug.Log("dmg taken: " + dmg);
-            if (takingDmgOT == false)
-            {
-                takingDmgOT = true;
-                takeDamage(dmg, Vector3.zero);
-            }
+            // Apply damage once per dmgTime interval
+            takeDamage(dmg, Vector3.zero);
+            Debug.Log("Damage taken: " + dmg + " at time: " + Time.time);
+
+            // Wait for the next damage tick
             yield return new WaitForSeconds(dmgTime);
-            takingDmgOT = false;
         }
+
+        // Once the effect duration ends, reset flags and exit the coroutine
+        Debug.Log("Finished dmgOverTime at: " + Time.time);
         dmgOverTimeActivated = false;
+        takingDmgOT = false;
+
         yield break;
+        
     }
 
 
