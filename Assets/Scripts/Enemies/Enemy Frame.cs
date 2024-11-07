@@ -14,7 +14,7 @@ public class EnemyFrame : MonoBehaviour
     [SerializeField] GameObject enemyHealth;
 
     //TODO: NEED TO INTERFACE ENEMY TYPE 
-    enemyMinionCombat enemyType;
+    [SerializeField] enemyMinionCombat enemyType;
     [SerializeField] Enemy enemyReference;
 
     GameObject enemyUIRef;
@@ -29,6 +29,7 @@ public class EnemyFrame : MonoBehaviour
     Vector3 initialPos;
 
     public bool dmgOverTimeActivated = false;
+    bool takingDmgOT = false;
     bool dying = false;
 
     //Enemy animation for taking hits
@@ -40,7 +41,7 @@ public class EnemyFrame : MonoBehaviour
 
     private void Awake()
     {
-        enemyType = transform.GetComponent<enemyMinionCombat>();
+        //enemyType = transform.GetComponent<enemyMinionCombat>();
     }
 
 
@@ -85,6 +86,8 @@ public class EnemyFrame : MonoBehaviour
     //take damage function with given damage paramater - Spencer
     public void takeDamage(int damage, Vector3 forwardDir)
     {
+        Debug.Log("Enemy was attacked");
+        Debug.Log("Enemy attacking?" + enemyType.isAttacking);
         if (!enemyType.isAttacking)
         {
             Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
@@ -133,8 +136,13 @@ public class EnemyFrame : MonoBehaviour
         while (currentTime + statusTime > Time.time)
         {
             Debug.Log("dmg taken: " + dmg);
-            takeDamage(dmg, Vector3.zero);
+            if (takingDmgOT == false)
+            {
+                takingDmgOT = true;
+                takeDamage(dmg, Vector3.zero);
+            }
             yield return new WaitForSeconds(dmgTime);
+            takingDmgOT = false;
         }
         dmgOverTimeActivated = false;
         yield break;
@@ -161,7 +169,7 @@ public class EnemyFrame : MonoBehaviour
         float reduceVal = 250f;
         while (enemyHealthBar.value != health)
         {
-            if (Mathf.Abs(enemyHealthBar.value - health) <= 1)
+            if (Mathf.Abs(enemyHealthBar.value - health) <= 5)
             {
                 enemyHealthBar.value = health;
             }
@@ -184,7 +192,7 @@ public class EnemyFrame : MonoBehaviour
         float reduceVal = 250f;
         while (delayedEnemyHealthBar.value != health)
         {
-            if (Mathf.Abs(delayedEnemyHealthBar.value - health) <= 1)
+            if (Mathf.Abs(delayedEnemyHealthBar.value - health) <= 5)
             {
                 delayedEnemyHealthBar.value = health;
             }
@@ -205,10 +213,10 @@ public class EnemyFrame : MonoBehaviour
 
     public IEnumerator updateHealthBarsNegative()
     {
-        StopCoroutine(animateHealth());
+        //StopCoroutine(animateHealth());
         yield return animateHealth();
         yield return new WaitForSeconds(0.2f);
-        StopCoroutine(animateDelayedHealth());
+        //StopCoroutine(animateDelayedHealth());
         yield return animateDelayedHealth();
     }
 

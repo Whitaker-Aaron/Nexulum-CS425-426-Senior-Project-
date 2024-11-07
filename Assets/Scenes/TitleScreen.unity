@@ -4015,9 +4015,17 @@ PrefabInstance:
       value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: engrDmgMod
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: bulletSpawn
       value: 
       objectReference: {fileID: 1475089394}
+    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: gunnerDmgMod
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: toolAttackPoint
       value: 
@@ -4030,6 +4038,10 @@ PrefabInstance:
       propertyPath: pistolBulletSpawn
       value: 
       objectReference: {fileID: 533342840}
+    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: damageDropOffDistance
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 4413812686469576019, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_Name
       value: InputandAnimationManager
@@ -4048,15 +4060,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5258961968933099944, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
-      value: 0.83137256
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5258961968933099944, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.g
-      value: 0.9882353
+      value: 0.5130582
       objectReference: {fileID: 0}
     - target: {fileID: 5258961968933099944, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.r
-      value: 0.28235295
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5258961968933099944, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.a
@@ -16214,6 +16226,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 65834296}
     m_Modifications:
+    - target: {fileID: 763625934519067024, guid: 1baf33cc85cd31d48b9e2c91be3ae857, type: 3}
+      propertyPath: rocketHitPrefab
+      value: 
+      objectReference: {fileID: 8981701232570226320, guid: 654f006e92c465840a1efd223ffb1d13, type: 3}
+    - target: {fileID: 763625934519067024, guid: 1baf33cc85cd31d48b9e2c91be3ae857, type: 3}
+      propertyPath: rocketFirePrefab
+      value: 
+      objectReference: {fileID: 1587226948476453297, guid: c63ba80e0ca362c4fbff79aa3543d6f8, type: 3}
     - target: {fileID: 1955037192678842614, guid: 1baf33cc85cd31d48b9e2c91be3ae857, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
