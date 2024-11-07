@@ -38,7 +38,7 @@ public class enemyMinionCombat : MonoBehaviour
     IEnumerator disableAttack(float time)
     {
         Debug.Log("Animation time: " + time);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2.5f);
         Debug.Log("isAttacking disabled");
         isAttacking = false;
         sword.activateAttack(false, attackDamage);

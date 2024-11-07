@@ -1,11 +1,10 @@
 using UnityEngine;
 
-public class Spikes : MonoBehaviour
+public class Spikes : MonoBehaviour , i_Trap
 {
     [SerializeField] private int damageAmount = 10;
-    private CharacterBase character;
 
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         CharacterBase playerHealth = other.GetComponent<CharacterBase>();
 
