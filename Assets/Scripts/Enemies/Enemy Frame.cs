@@ -163,7 +163,7 @@ public class EnemyFrame : MonoBehaviour
         float reduceVal = 250f;
         while (enemyHealthBar.value != health)
         {
-            if (Mathf.Abs(enemyHealthBar.value - health) <= 1)
+            if (Mathf.Abs(enemyHealthBar.value - health) <= 5)
             {
                 enemyHealthBar.value = health;
             }
@@ -186,7 +186,7 @@ public class EnemyFrame : MonoBehaviour
         float reduceVal = 250f;
         while (delayedEnemyHealthBar.value != health)
         {
-            if (Mathf.Abs(delayedEnemyHealthBar.value - health) <= 1)
+            if (Mathf.Abs(delayedEnemyHealthBar.value - health) <= 5)
             {
                 delayedEnemyHealthBar.value = health;
             }
@@ -207,10 +207,10 @@ public class EnemyFrame : MonoBehaviour
 
     public IEnumerator updateHealthBarsNegative()
     {
-        StopCoroutine(animateHealth());
+        //StopCoroutine(animateHealth());
         yield return animateHealth();
         yield return new WaitForSeconds(0.2f);
-        StopCoroutine(animateDelayedHealth());
+        //StopCoroutine(animateDelayedHealth());
         yield return animateDelayedHealth();
     }
 
