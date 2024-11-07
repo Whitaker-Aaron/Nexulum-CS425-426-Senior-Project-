@@ -308,4 +308,14 @@ public class EnemyFrame : MonoBehaviour
         AOE,
     }
 
+    public enum DamageType
+    {
+        Sword,
+        Projectile,
+        Fire,
+        Ice,
+        Electric,
+        Wind
+    }
+
 }
