@@ -445,6 +445,10 @@ public class classAbilties : MonoBehaviour
     {
         shotRocket = true;
         var rocket = Instantiate(rocketPrefab, swordSpawn.position, swordSpawn.rotation);
+
+        if(fireBool)
+            rocket.GetComponent<rocket>().fireB = true;
+
         rocket.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * rocketSpeed;
         gameObject.GetComponent<masterInput>().shootingRocket = true;
         yield return new WaitForSeconds(rocketTime);
@@ -1028,6 +1032,7 @@ public class classAbilties : MonoBehaviour
     {
         if (choice)
         {
+            /*
             switch(gameObject.GetComponent<masterInput>().currentClass)
             {
                 case WeaponBase.weaponClassTypes.Knight:
@@ -1040,9 +1045,12 @@ public class classAbilties : MonoBehaviour
 
                     break;
             }
+            */
+            fireBool = true;
         }
         else
         {
+            /*
             switch (gameObject.GetComponent<masterInput>().currentClass)
             {
                 case WeaponBase.weaponClassTypes.Knight:
@@ -1055,6 +1063,8 @@ public class classAbilties : MonoBehaviour
 
                     break;
             }
+            */
+            fireBool = false;
         }
     }
 

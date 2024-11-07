@@ -6,6 +6,7 @@ using UnityEngine;
 public class projectile : MonoBehaviour
 {
     private CharacterBase playerBase;
+    private masterInput masterInput;
 
     public float speed = 10f;
     public const float maxLifeTime = 3f;
@@ -57,7 +58,19 @@ public class projectile : MonoBehaviour
             if (hit.collider.gameObject.tag == "Enemy" && poolName != "enemyMagePoolOne")
             {
                 hitEnemy = true;
-                hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
+                if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistance)
+                {
+                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.gunnerDmgMod, Vector3.zero);
+                }
+                else if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistanceEngr)
+                {
+                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.engrDmgMod, Vector3.zero);
+                }
+                else
+                {
+                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
+                }
+                
             }
 
             //enemy mage projectile conditions

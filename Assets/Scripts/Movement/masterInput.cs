@@ -28,6 +28,7 @@ using UnityEngine.UI;
 public class masterInput : MonoBehaviour
 {
     //-------------VARIABLES------------
+    public static masterInput instance;
 
     private GameObject player;
     public WeaponBase.weaponClassTypes currentClass;
@@ -115,6 +116,8 @@ public class masterInput : MonoBehaviour
     bool canShoot = true;
     int bulletCount;
     public int magSize = 25;
+    public float damageDropOffDistance = 5f;
+    public int gunnerDmgMod;
 
     //rocket
     public bool shootingRocket = false;
@@ -131,6 +134,7 @@ public class masterInput : MonoBehaviour
     //line render
     private LineRenderer laserLine;
     bool pauseLaser = false;
+    Color laserStartColor;
 
 
     //Engineer variables
@@ -139,6 +143,8 @@ public class masterInput : MonoBehaviour
     public Transform pistolBulletSpawn;
     public GameObject pistolBulletObj;
     public float pistolBulletSpeed;
+    public int engrDmgMod;
+    public float damageDropOffDistanceEngr = 8f;
 
 
     //pistol combat
@@ -188,7 +194,7 @@ public class masterInput : MonoBehaviour
    
     private void Awake()
     {
-        
+        instance = this;
 
         staminaBar = GameObject.Find("StaminaBar");
         staminaFill = GameObject.Find("StaminaFill");
@@ -206,6 +212,7 @@ public class masterInput : MonoBehaviour
 
         laserLine = gameObject.GetComponent<LineRenderer>();
         laserLine.enabled = false;
+        laserStartColor = laserLine.startColor;
 
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
@@ -661,13 +668,28 @@ public class masterInput : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 25f, layerMask))
             {
                 //if (hit.point != null && laserLine.enabled)
+
                     laserLine.SetPosition(1, hit.point);
 
+
+                if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) > damageDropOffDistance)
+                {
+                    laserLine.startColor = Color.red;
+                }
+                else if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) < damageDropOffDistance)
+                {
+                    laserLine.startColor = Color.green;
+                }
+                else
+                {
+                    laserLine.startColor = laserStartColor;
+                }
             }
             else
             {
                 //if(laserLine.enabled)
-                    laserLine.SetPosition(1, bulletSpawn.position + bulletSpawn.forward * 25f);
+                laserLine.startColor = laserStartColor;
+                laserLine.SetPosition(1, bulletSpawn.position + bulletSpawn.forward * 25f);
             }
             //laserLine.startColor = Color.green;
             //laserLine.endColor = Color.green;
