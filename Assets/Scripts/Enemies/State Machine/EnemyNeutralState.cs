@@ -1,4 +1,4 @@
-// Super class for more common functionalities of certain states - Aisling
+// Super state for more common functionalities of child states - Aisling
 
 public abstract class EnemyNeutralState : EnemyState
 {
@@ -6,11 +6,30 @@ public abstract class EnemyNeutralState : EnemyState
     {
         if (stateContext.enemyFrame.onDamaged)
         {
-            // Chase target (typically player) on damage taken
-            // Future update: get what hit the enemy
             stateContext.enemyFrame.onDamaged = false; // Reset onDamaged
-            stateContext.LookAt(stateContext.enemyLOS.currentTarget);
-            stateContext.ChangeState(stateContext.chaseState);
+
+            stateContext.CustomDebugLog("Enemy damaged by " + stateContext.enemyFrame.source);
+            switch (stateContext.enemyFrame.source)
+            {
+                case EnemyFrame.DamageSource.Player:
+                    // Target player
+                    stateContext.enemyLOS.ChangeTarget(stateContext.enemyLOS.player);
+
+                    // Look at, change state
+                    stateContext.LookAt(stateContext.enemyLOS.currentTarget);
+                    stateContext.ChangeState(stateContext.chaseState);
+                    break;
+            }
         }
+    }
+
+    protected virtual void OnFrozen()
+    {
+        //
+    }
+
+    protected virtual void OnParalyzed()
+    {
+        //
     }
 }

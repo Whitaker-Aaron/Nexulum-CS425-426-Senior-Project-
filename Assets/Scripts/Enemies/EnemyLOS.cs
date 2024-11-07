@@ -15,6 +15,12 @@ public class EnemyLOS : MonoBehaviour
     public bool isTargetSpotted = false;
 
     // ----------------------------------------------
+    // Concrete targets
+    // ----------------------------------------------
+
+    public GameObject player;
+
+    // ----------------------------------------------
     // Visual field variables
     // ----------------------------------------------
 
@@ -48,7 +54,8 @@ public class EnemyLOS : MonoBehaviour
 
     void Start()
     {
-        ChangeTarget(GameObject.FindWithTag("Player"));
+        player = GameObject.FindWithTag("Player");
+        ChangeTarget(player);
     }
 
     //// Update is called once per frame

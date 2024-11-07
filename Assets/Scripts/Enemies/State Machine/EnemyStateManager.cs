@@ -78,7 +78,7 @@ public class EnemyStateManager : MonoBehaviour
     {
         if (enableStateDebugLogs == true)
         {
-            Debug.Log(log);
+            Debug.Log("SM Debug: " + log);
         }
     }
 
