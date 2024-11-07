@@ -84,12 +84,16 @@ MonoBehaviour:
   reloadTime: 2
   fireRateTime: 0.15
   magSize: 25
+  damageDropOffDistance: 12
+  gunnerDmgMod: 7
   shootingRocket: 0
   shootingLaser: 0
   throwingGrenade: 0
   pistolBulletSpawn: {fileID: 0}
   pistolBulletObj: {fileID: 2530541377710386135, guid: e87bcbfff9c07e24b88e976b1e94e497, type: 3}
   pistolBulletSpeed: 25
+  engrDmgMod: 4
+  damageDropOffDistanceEngr: 8
   pistolReloadTime: 2
   pistolFireRateTime: 0.3
   pistolMagSize: 10
@@ -498,7 +502,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.28235295, g: 0.9882353, b: 0.83137256, a: 0.5176471}
+      key0: {r: 0, g: 0.5130582, b: 1, a: 0.5176471}
       key1: {r: 0.9873357, g: 0.9997924, b: 0.99702424, a: 0}
       key2: {r: 1, g: 1, b: 1, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
