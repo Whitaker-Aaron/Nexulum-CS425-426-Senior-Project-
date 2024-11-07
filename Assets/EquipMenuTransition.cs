@@ -19,6 +19,8 @@ public class EquipMenuTransition : MonoBehaviour
     [SerializeField] GameObject backButton;
     [SerializeField] GameObject backButton2;
 
+    [SerializeField] GameObject disabledPanel;
+
 
     List<GameObject> currentEquipmentObjects = new List<GameObject>();
     List<GameObject> currentScrollObjects = new List<GameObject>();
@@ -93,11 +95,13 @@ public class EquipMenuTransition : MonoBehaviour
         if (GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().currentScene != "BaseCamp")
         {
             //classChangeButton.GetComponent<Button>().interactable = false;
-            GameObject.Find("DisabledPanel").SetActive(true);
+            classChangeButton.SetActive(false);
+            disabledPanel.SetActive(true);
         }
         else
         {
-            GameObject.Find("DisabledPanel").SetActive(false);
+            classChangeButton.SetActive(true);
+            disabledPanel.SetActive(false);
         }
     }
 
@@ -316,21 +320,31 @@ public class EquipMenuTransition : MonoBehaviour
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = weaponsInventory[i].weaponDescription;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<TMP_Text>().text = "Attack +" + weaponsInventory[i].weaponAttack;
 
-                
-                
+
+                bool equipped = false;
                 if(characterRef.equippedWeapon.weaponName == weaponsInventory[i].weaponName)
                 {
+                    equipped = true;
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equipped";
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = false;
+                    
                 }
                 else
                 {
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equip";
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = true;
                 }
 
                 var equipRec = Instantiate(equipOptionPrefab);
                 equipRec.transform.SetParent(weaponsScrollContent.transform, false);
+                if (equipped)
+                {
+                    equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(false);
+                    equipRec.GetComponent<EquipOptionPrefab>().disabledPanel.SetActive(true);
+                }
+                else
+                {
+                    equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(true);
+                    equipRec.GetComponent<EquipOptionPrefab>().disabledPanel.SetActive(false);
+                }
                 if (!eventSystemSelected)
                 {
                     eventSystemSelected = true;
@@ -377,21 +391,32 @@ public class EquipMenuTransition : MonoBehaviour
                     }
                     
                 }
+                bool equipped = false;
                 if (runeEquipped){
+                    equipped = true;
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equipped";
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = false;
                 }
                 else
                 {
                     equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.GetComponent<TMP_Text>().text = "Equip";
-                    equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.GetComponent<Button>().interactable = true;
-                    
+
                 }
                 
                
 
                 var equipRec = Instantiate(equipOptionPrefab); 
                 equipRec.transform.SetParent(runesScrollContent.transform, false);
+                if (equipped)
+                {
+                    equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(false);
+                    equipRec.GetComponent<EquipOptionPrefab>().disabledPanel.SetActive(true);
+                }
+                else
+                {
+                    equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(true);
+                    equipRec.GetComponent<EquipOptionPrefab>().disabledPanel.SetActive(false);
+                }
+                Debug.Log(equipRec.GetComponent<EquipOptionPrefab>().equipOptionButton.activeSelf);
                 if (!eventSystemSelected)
                 {
                     eventSystemSelected = true;

@@ -8,6 +8,7 @@ public class RoomInformation : MonoBehaviour
     [SerializeField] public bool isCheckpoint;
     [SerializeField] public string roomName;
     [SerializeField] GameObject enemies;
+    [SerializeField] bool lockYAxis = false;
     GameObject[] allEnemies;
     public bool firstVisit = true;
     public bool floorEntrance = false;
@@ -17,6 +18,7 @@ public class RoomInformation : MonoBehaviour
 
     private void Awake()
     {
+        
         character = GameObject.FindGameObjectWithTag("Player");
         
 
@@ -25,6 +27,20 @@ public class RoomInformation : MonoBehaviour
         for(int i =0; i <  allEnemies.Length; i++)
         {
             allEnemies[i] = enemies.transform.GetChild(i).gameObject;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (lockYAxis)
+        {
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().yAxisLocked = true;
+            Debug.Log("Locking camera y-axis");
+        }
+        else
+        {
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().yAxisLocked = false;
+            Debug.Log("Unlocking camera y-axis");
         }
     }
 

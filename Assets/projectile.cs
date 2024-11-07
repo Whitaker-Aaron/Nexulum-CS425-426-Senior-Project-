@@ -60,15 +60,15 @@ public class projectile : MonoBehaviour
                 hitEnemy = true;
                 if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistance)
                 {
-                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.gunnerDmgMod);
+                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.gunnerDmgMod, Vector3.zero);
                 }
                 else if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistanceEngr)
                 {
-                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.engrDmgMod);
+                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.engrDmgMod, Vector3.zero);
                 }
                 else
                 {
-                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
                 }
                 
             }
@@ -155,7 +155,7 @@ public class projectile : MonoBehaviour
         }
         if (collision.gameObject.tag == "Enemy" && poolName == "enemyMagePoolOne")
         {
-            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage);
+            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero);
         }
 
         playEffect(gameObject.transform.position);

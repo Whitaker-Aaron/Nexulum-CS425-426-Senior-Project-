@@ -14,6 +14,7 @@ public class EquipOptionPrefab : MonoBehaviour
     [SerializeField] public GameObject equipOptionDescription;
     [SerializeField] public GameObject equipOptionButton;
     [SerializeField] public GameObject equipOptionEffect;
+    [SerializeField] public GameObject disabledPanel;
 
     // Start is called before the first frame update
     void Start()

@@ -12,6 +12,9 @@ public class EnemyFrame : MonoBehaviour
     //List that takes prefabs of Craft Material objects to spawn on enemy death.
     [SerializeField] GameObject[] materialList;
     [SerializeField] GameObject enemyHealth;
+
+    //TODO: NEED TO INTERFACE ENEMY TYPE 
+    [SerializeField] enemyMinionCombat enemyType;
     [SerializeField] Enemy enemyReference;
 
     GameObject enemyUIRef;
@@ -31,16 +34,21 @@ public class EnemyFrame : MonoBehaviour
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
+    Vector3 zeroDir;
     Slider enemyHealthBar;
     Slider delayedEnemyHealthBar;
 
-    
 
+    private void Awake()
+    {
+        //enemyType = transform.GetComponent<enemyMinionCombat>();
+    }
 
 
     // Start is called before the first frame update
     void Start()
     {
+        zeroDir = Vector3.zero;
         health = enemyReference.baseHealth;
         maxHealth = enemyReference.baseHealth;
         initialPos = transform.position;
@@ -76,27 +84,42 @@ public class EnemyFrame : MonoBehaviour
     }
 
     //take damage function with given damage paramater - Spencer
-    public void takeDamage(int damage)
+    public void takeDamage(int damage, Vector3 forwardDir)
     {
-        anim.takeHit();
-        print("Health is: " + health + " Dmg taken is: " + damage);
-        if (health - damage <= 0 && !dying)
+        Debug.Log("Enemy was attacked");
+        Debug.Log("Enemy attacking?" + enemyType.isAttacking);
+        if (!enemyType.isAttacking)
         {
-            health = 0;
-            dying = true;
-            //StartCoroutine(updateHealthBarsNegative());
-            StartCoroutine(death());
+            Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
+            if (forwardDir != Vector3.zero)
+            {
+                transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 10, ForceMode.VelocityChange);
+                StartCoroutine(StopVelocity(0.15f));
+            }
 
+            anim.takeHit();
+            print("Health is: " + health + " Dmg taken is: " + damage);
+            if (health - damage <= 0 && !dying)
+            {
+                health = 0;
+                dying = true;
+                //StartCoroutine(updateHealthBarsNegative());
+                StartCoroutine(death());
+
+            }
+
+            else if (!dying)
+            {
+                health -= damage;
+                StartCoroutine(updateHealthBarsNegative());
+            }
         }
+    }
 
-        else if(!dying)
-        {
-            health -= damage;
-            StartCoroutine(updateHealthBarsNegative());
-        }
-            
-        
-
+    public IEnumerator StopVelocity(float time)
+    {
+        yield return new WaitForSeconds(time);
+        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
     }
 
     public void resetPosition()
@@ -116,7 +139,7 @@ public class EnemyFrame : MonoBehaviour
             if (takingDmgOT == false)
             {
                 takingDmgOT = true;
-                takeDamage(dmg);
+                takeDamage(dmg, Vector3.zero);
             }
             yield return new WaitForSeconds(dmgTime);
             takingDmgOT = false;
@@ -143,7 +166,7 @@ public class EnemyFrame : MonoBehaviour
     public IEnumerator animateHealth()
     {
         Debug.Log("Inside animate health");
-        float reduceVal = 150f;
+        float reduceVal = 250f;
         while (enemyHealthBar.value != health)
         {
             if (Mathf.Abs(enemyHealthBar.value - health) <= 1)
@@ -166,7 +189,7 @@ public class EnemyFrame : MonoBehaviour
 
     public IEnumerator animateDelayedHealth()
     {
-        float reduceVal = 150f;
+        float reduceVal = 250f;
         while (delayedEnemyHealthBar.value != health)
         {
             if (Mathf.Abs(delayedEnemyHealthBar.value - health) <= 1)
