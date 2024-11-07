@@ -10,15 +10,7 @@ public class EnemyLOS : MonoBehaviour
     // Targeting
     // ----------------------------------------------
 
-    private GameObject currentTarget;
-
-    public GameObject CurrentTarget
-    {
-        get
-        {
-            return currentTarget;
-        }
-    }
+    public GameObject currentTarget { get; set; }
 
     public bool isTargetSpotted = false;
 
@@ -36,6 +28,7 @@ public class EnemyLOS : MonoBehaviour
     // Debugging
     [SerializeField] private float distancetotarget;
     [SerializeField] private Vector3 headingtotarget;
+    public Vector3 myHeading;
 
     // ----------------------------------------------
     // Positions
@@ -120,6 +113,30 @@ public class EnemyLOS : MonoBehaviour
         else
         {
             isTargetSpotted = false;
+            return false;
+        }
+    }
+
+    public bool TargetInRange()
+    {
+        selfPos = transform.position;
+        targetPos = currentTarget.transform.position;
+
+        distancetotarget = Vector3.Distance(targetPos, selfPos);
+
+        if (currentTarget != null)
+        {
+            if (distancetotarget <= detectionRange)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
             return false;
         }
     }

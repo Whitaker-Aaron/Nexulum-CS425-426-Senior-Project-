@@ -1,29 +1,26 @@
-using UnityEngine;
-
-public class EnemyChaseState : EnemyState
+public class EnemyChaseState : EnemyNeutralState
 {
     public override void EnterState(EnemyStateManager stateContext)
     {
-        stateContext.CustomDebugLog("Entered chase state");
-        // Enemy is going to be moving in order to chase the target
+        this.stateContext = stateContext;
+        this.stateName = "Chase";
+
+        stateContext.CustomDebugLog("Entered " + stateName + " state");
+
         stateContext.agent.isStopped = false;
     }
 
-    public override void RunState(EnemyStateManager stateContext)
+    public override void RunState()
     {
-        if (stateContext.enemyLOS.TargetSpotted())
-        {
-            // Chases the target as long as they are spotted
-            stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, true, false);
-        }
-        else
-        {
+        stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, true, false);
+
+        if (!stateContext.enemyLOS.TargetSpotted()) {
             stateContext.ChangeState(stateContext.searchState);
         }
     }
 
-    public override void ExitState(EnemyStateManager stateContext) {
+    public override void ExitState() {
         stateContext.enemyLOS.lastKnownTargetPos = stateContext.enemyLOS.targetPos;
-        stateContext.CustomDebugLog("Exited chase state with last known target position at " + stateContext.enemyLOS.lastKnownTargetPos);
+        stateContext.CustomDebugLog("Exited " + stateName + " state with last known target position at " + stateContext.enemyLOS.lastKnownTargetPos);
     }
 }

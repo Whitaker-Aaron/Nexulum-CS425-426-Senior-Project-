@@ -1,15 +1,20 @@
-using UnityEngine;
-
-public class EnemyIdleState : EnemyState
+public class EnemyIdleState : EnemyNeutralState
 {
-    public override void EnterState(EnemyStateManager stateContext) {
-        stateContext.CustomDebugLog("Entered idle state");
+    public override void EnterState(EnemyStateManager stateContext)
+    {
+        this.stateContext = stateContext;
+        this.stateName = "Idle";
+
+        stateContext.CustomDebugLog("Entered " + stateName + " state");
+
         // Enemy should be stationary while idling
         stateContext.agent.isStopped = true;
     }
 
-    public override void RunState(EnemyStateManager stateContext)
+    public override void RunState()
     {
+        base.OnDamaged();
+
         if (stateContext.enemyLOS.TargetSpotted())
         {
             // Changes to chase state if the target is spotted - Aisling
@@ -17,7 +22,8 @@ public class EnemyIdleState : EnemyState
         }
     }
 
-    public override void ExitState(EnemyStateManager stateContext) {
-        stateContext.CustomDebugLog("Exited idle state");
+    public override void ExitState()
+    {
+        stateContext.CustomDebugLog("Exited " + stateName + " state");
     }
 }
