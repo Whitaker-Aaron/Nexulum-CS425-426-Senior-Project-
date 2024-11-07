@@ -9,6 +9,7 @@ public class EnemyLOS : MonoBehaviour
     // ----------------------------------------------
     // Targeting
     // ----------------------------------------------
+
     private GameObject currentTarget;
 
     public GameObject CurrentTarget
@@ -22,19 +23,24 @@ public class EnemyLOS : MonoBehaviour
     public bool isTargetSpotted = false;
 
     // ----------------------------------------------
-    // Visual field variables (configurable in-editor)
+    // Visual field variables
     // ----------------------------------------------
 
-    // Scope of visual field
+    // Scope of visual field (in-editor configurable)
     [SerializeField] private float detectionRange = 7;
     [SerializeField] private float visionAngle = 90;
 
     // Enable xray vision
     [SerializeField] private bool canSeeThroughWalls = false;
 
+    // Debugging
+    [SerializeField] private float distancetotarget;
+    [SerializeField] private Vector3 headingtotarget;
+
     // ----------------------------------------------
     // Positions
     // ----------------------------------------------
+
     public Vector3 selfPos
     {
         get;
@@ -79,9 +85,9 @@ public class EnemyLOS : MonoBehaviour
         {
             selfPos = transform.position;
             targetPos = currentTarget.transform.position;
-            Vector3 headingtotarget = targetPos - selfPos;
+            headingtotarget = targetPos - selfPos;
 
-            float distancetotarget = Vector3.Distance(targetPos, selfPos);
+            distancetotarget = Vector3.Distance(targetPos, selfPos);
             float targetangle = Vector3.Angle(headingtotarget, transform.forward);
 
             RaycastHit hit;
