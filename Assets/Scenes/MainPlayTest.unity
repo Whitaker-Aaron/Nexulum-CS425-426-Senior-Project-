@@ -4096,6 +4096,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 615926881}
   attackRange: 1.76
+  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -4279,6 +4280,7 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 4a615bd0a41e4bf4a98b6dc62df78af0, type: 3}
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
+  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -12326,6 +12328,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2122617763535812972, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 547943535}
     - target: {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: visionAngle
       value: 360
@@ -12344,6 +12350,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 211885768989169333, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 547943533}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &547943535 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 547943533}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &548695553
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13111,6 +13128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 257268326}
   attackRange: 1.76
+  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -13294,6 +13312,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
+  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -16509,6 +16528,7 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 4a615bd0a41e4bf4a98b6dc62df78af0, type: 3}
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
+  enemyType: {fileID: 0}
   enemyReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -18143,6 +18163,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2122617763535812972, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 809249618}
     - target: {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: visionAngle
       value: 360
@@ -18161,6 +18185,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 211885768989169333, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 809249616}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &809249618 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 809249616}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &809549980
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20269,6 +20304,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2122617763535812972, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 892925314}
     - target: {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: visionAngle
       value: 360
@@ -20287,6 +20326,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 211885768989169333, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 892925312}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &892925314 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 892925312}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &894093078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20793,6 +20843,7 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 4a615bd0a41e4bf4a98b6dc62df78af0, type: 3}
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
+  enemyType: {fileID: 0}
   enemyReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -21620,6 +21671,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 1826010261}
   attackRange: 1.76
+  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -21803,6 +21855,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
+  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -25346,6 +25399,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2122617763535812972, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 1040852320}
     - target: {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: visionAngle
       value: 360
@@ -25364,6 +25421,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 211885768989169333, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 1040852318}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1040852320 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 1040852318}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1041238373
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45953,6 +46021,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 9102750}
   attackRange: 1.76
+  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -46136,6 +46205,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
+  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -46836,6 +46906,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2122617763535812972, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 1857721166}
     - target: {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: visionAngle
       value: 360
@@ -46854,6 +46928,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 211885768989169333, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 1857721164}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1857721166 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 1857721164}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1864451841
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52524,6 +52609,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 552750813}
   attackRange: 1.76
+  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -52707,6 +52793,7 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 4a615bd0a41e4bf4a98b6dc62df78af0, type: 3}
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
+  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -53762,6 +53849,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2122617763535812972, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 5173493912916497546}
     - target: {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: visionAngle
       value: 360
@@ -53775,6 +53866,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+--- !u!114 &5173493912916497546 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 5173493912916497545}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7631631515254071988
 PrefabInstance:
   m_ObjectHideFlags: 0

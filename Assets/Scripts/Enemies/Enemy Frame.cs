@@ -14,7 +14,7 @@ public class EnemyFrame : MonoBehaviour
     [SerializeField] GameObject enemyHealth;
 
     //TODO: NEED TO INTERFACE ENEMY TYPE 
-    enemyMinionCombat enemyType;
+    [SerializeField] enemyMinionCombat enemyType;
     [SerializeField] Enemy enemyReference;
 
     GameObject enemyUIRef;
@@ -40,7 +40,7 @@ public class EnemyFrame : MonoBehaviour
 
     private void Awake()
     {
-        enemyType = transform.GetComponent<enemyMinionCombat>();
+        //enemyType = transform.GetComponent<enemyMinionCombat>();
     }
 
 
@@ -85,6 +85,8 @@ public class EnemyFrame : MonoBehaviour
     //take damage function with given damage paramater - Spencer
     public void takeDamage(int damage, Vector3 forwardDir)
     {
+        Debug.Log("Enemy was attacked");
+        Debug.Log("Enemy attacking?" + enemyType.isAttacking);
         if (!enemyType.isAttacking)
         {
             Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);

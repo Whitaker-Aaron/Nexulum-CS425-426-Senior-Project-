@@ -25,9 +25,10 @@ public class enemyMinionCombat : MonoBehaviour
         foreach(Collider player in playerInRange)
         {
             //attack player commands
+            Debug.Log("Starting attack");
             canAttack = false;
             sword.activateAttack(true, attackDamage);
-            //isAttacking = true;
+            isAttacking = true;
             anim.minionAttack();
             enemy.pauseMovement(anim.getAnimationTime());
             StartCoroutine(wait(anim.getAnimationTime(), anim));
@@ -36,16 +37,19 @@ public class enemyMinionCombat : MonoBehaviour
 
     IEnumerator disableAttack(float time)
     {
-        yield return new WaitForSeconds(time);
-        //isAttacking = false;
+        Debug.Log("Animation time: " + time);
+        yield return new WaitForSeconds(3.25f);
+        Debug.Log("isAttacking disabled");
+        isAttacking = false;
         sword.activateAttack(false, attackDamage);
     }
 
     IEnumerator wait(float time, EnemyAnimation anim)
     {
-        StartCoroutine(disableAttack(time));
+        yield return StartCoroutine(disableAttack(time));
         //anim.Stop();
-        yield return new WaitForSeconds(time + 1.5f);
+        yield return new WaitForSeconds(5.0f);
+        Debug.Log("Able to attack again");
         canAttack = true;
         yield break;
     }
