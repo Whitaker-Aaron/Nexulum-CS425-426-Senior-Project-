@@ -11,13 +11,20 @@ public class SceneInformation : MonoBehaviour
     [SerializeField] public bool spawnPlayer;
     [SerializeField] public bool screenTransition;
     [SerializeField] RoomInformation beginningRoom;
+    [SerializeField] SceneAudio sceneAudio;
+    [SerializeField] string beginningTrack;
+    AudioManager audioManager;
     [SerializeField] public Vector3 playerSpawnPos;
     [SerializeField] public GameObject initialSpawnLocation;
     void Start()
     {
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        //audioManager.StopLoop();
+        if(beginningTrack != "" && beginningTrack != null)
+        {
+            audioManager.ChangeTrack(beginningTrack);
+        }
         
-        
-
     }
 
     private void Awake()

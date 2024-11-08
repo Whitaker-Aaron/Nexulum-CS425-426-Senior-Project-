@@ -180,6 +180,7 @@ public class masterInput : MonoBehaviour
 
     UIManager uiManager;
     LifetimeManager lifetimeManager;
+    AudioManager audioManager;
 
 
     //--------------MAIN RUNNING FUNCTIONS--------------
@@ -228,6 +229,7 @@ public class masterInput : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         //playerControl = gameObject.GetComponent<PlayerInputActions>();
 
         SS1 = Instantiate(swordSlashPrefab);
@@ -487,6 +489,7 @@ public class masterInput : MonoBehaviour
             //dashStarted = true;
             if (!isDashing)
             {
+                audioManager.PlaySFX("Dash");
                 isDashing = true;
                 dashSpeed = 4.5f;
                 Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
@@ -818,6 +821,7 @@ public class masterInput : MonoBehaviour
             {
                 if (playerInput.actions["attack"].triggered)
                 {
+                    audioManager.PlaySFX("SwordWoosh");
                     print("click: " + noOfClicks);
 
                     lastClickedTime = Time.time;
