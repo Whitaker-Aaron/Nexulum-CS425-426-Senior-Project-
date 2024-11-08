@@ -88,8 +88,16 @@ public class EnemyFrame : MonoBehaviour
     }
 
     //take damage function with given damage paramater - Spencer
-    public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource)
+    public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource, DamageType damageType)
     {
+
+        switch(damageType)
+        {
+            case DamageType.Ice:
+                print("slow enemy");
+                break;
+        }
+
         // Damage info for state - Aisling
         onDamaged = true;
         source = targetSource;
@@ -107,22 +115,25 @@ public class EnemyFrame : MonoBehaviour
 
             anim.takeHit();
         }
-            print("Health is: " + health + " Dmg taken is: " + damage);
-            if (health - damage <= 0 && !dying)
-            {
-                health = 0;
-                dying = true;
-                //StartCoroutine(updateHealthBarsNegative());
-                StartCoroutine(death());
+        print("Health is: " + health + " Dmg taken is: " + damage);
+        if (health - damage <= 0 && !dying)
+        {
+            health = 0;
+            dying = true;
+            //StartCoroutine(updateHealthBarsNegative());
+            StartCoroutine(death());
 
-            }
-
-            else if (!dying)
-            {
-                health -= damage;
-                StartCoroutine(updateHealthBarsNegative());
-            }
         }
+
+        else if (!dying)
+        {
+            health -= damage;
+            StartCoroutine(updateHealthBarsNegative());
+        }
+
+        
+
+    }
     
 
     public IEnumerator StopVelocity(float time)
@@ -138,7 +149,7 @@ public class EnemyFrame : MonoBehaviour
 
     
 
-    public IEnumerator dmgOverTime(int dmg, float statusTime, float dmgTime)
+    public IEnumerator dmgOverTime(int dmg, float statusTime, float dmgTime, DamageType dmgType)
     {
 
         float endTime = Time.time + statusTime;
@@ -149,7 +160,7 @@ public class EnemyFrame : MonoBehaviour
         while (Time.time < endTime)
         {
             // Apply damage once per dmgTime interval
-            takeDamage(dmg, Vector3.zero, EnemyFrame.DamageSource.AOE);
+            takeDamage(dmg, Vector3.zero, EnemyFrame.DamageSource.AOE, dmgType);
             Debug.Log("Damage taken: " + dmg + " at time: " + Time.time);
 
             // Wait for the next damage tick
@@ -312,6 +323,7 @@ public class EnemyFrame : MonoBehaviour
     {
         Sword,
         Projectile,
+        Explosion,
         Fire,
         Ice,
         Electric,

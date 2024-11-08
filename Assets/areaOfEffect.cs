@@ -105,7 +105,7 @@ public class areaOfEffect : MonoBehaviour
         if (enemyFrame != null && !enemyFrame.dmgOverTimeActivated)
         {
             enemyFrame.dmgOverTimeActivated = true;
-            yield return enemyFrame.StartCoroutine(enemyFrame.dmgOverTime(fireDamage, damageT, damageR));
+            yield return enemyFrame.StartCoroutine(enemyFrame.dmgOverTime(fireDamage, damageT, damageR, EnemyFrame.DamageType.Fire));
 
             // Ensure that the burning effect ends after the duration
             enemyFrame.dmgOverTimeActivated = false;

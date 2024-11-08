@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 440679870324621579}
   - component: {fileID: 3581003357316337326}
   - component: {fileID: 1609668382049876580}
-  - component: {fileID: 5927153293446501436}
   - component: {fileID: 1134897602685610899}
   m_Layer: 8
   m_Name: dagger
@@ -85,27 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5927153293446501436
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 961039877492513713}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.25929752, y: 1.44, z: 0.15174131}
-  m_Center: {x: -0.00948291, y: 0.42, z: -0.0000004536337}
 --- !u!114 &1134897602685610899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,8 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f933716d9615f349b98da9e73aa25e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
-  isFire: 0
-  fireDmg: 10
-  fireTime: 5
-  fireDmgInterval: 1
+  damage: 35
