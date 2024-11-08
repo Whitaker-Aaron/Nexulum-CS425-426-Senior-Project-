@@ -7,6 +7,7 @@ public interface EnemyAnimation
 {
     void updateAnimation(Vector3 movementDirection);
     void minionAttack();
+    void mageAttack();
     float getAnimationTime();
     void takeHit();
     AnimatorStateInfo getAnimationInfo();

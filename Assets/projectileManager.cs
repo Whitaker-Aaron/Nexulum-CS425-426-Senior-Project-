@@ -7,13 +7,14 @@ using UnityEngine.UIElements;
 public class projectileManager : MonoBehaviour
 {
     public static projectileManager Instance;
-    public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, tankPrefab, mageProjOne;
+    public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, tankPrefab, mageProjOne, swordShotPrefab, swordShotIcePrefab;
     private GameObject poolObj;
     public int poolSize = 25;
     public int poolSize2 = 15;
     public int turretSize = 15;
     public int tankSize = 4;
     public int mageSizeOne = 5;
+    public int swordShotSize = 15;
 
     protected Dictionary<string, Queue<GameObject>> allPools;
 
@@ -29,7 +30,7 @@ public class projectileManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Instance = this;
     }
 
     // Update is called once per frame
@@ -41,7 +42,7 @@ public class projectileManager : MonoBehaviour
 
     public void initializePool()
     {
-        Instance = this;
+        
         allPools = new Dictionary<string, Queue<GameObject>>();
         DontDestroyOnLoad(gameObject);
 
@@ -54,6 +55,8 @@ public class projectileManager : MonoBehaviour
         createNewPool("dronePool", dronePrefab, turretSize);
         createNewPool("tankPool", tankPrefab, tankSize);
         createNewPool("enemyMagePoolOne", mageProjOne, mageSizeOne);
+        createNewPool("swordShotPool", swordShotPrefab, swordShotSize);
+        createNewPool("swordShotIcePool", swordShotIcePrefab, swordShotSize);
     }
 
     public virtual void createNewPool(string poolName, GameObject prefab, int size)
@@ -97,12 +100,17 @@ public class projectileManager : MonoBehaviour
         //print("Getting proj");
         //print(pool.Count);
 
+        print("getting proj from" + poolName);
+
         if(allPools[poolName].Count > 0)
         {
             GameObject proj = allPools[poolName].Dequeue();
             //if (proj == null)
               //  print("proj null");
-              proj.GetComponent<projectile>().setName(poolName);
+            if(poolName != "swordShotPool" && poolName != "swordShotIcePool")
+                proj.GetComponent<projectile>().setName(poolName);
+            else
+                proj.GetComponent<swordShot>().setName(poolName);
             proj.transform.position = position;
             proj.transform.rotation = rotation;
             proj.SetActive(true);
