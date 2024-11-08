@@ -6,6 +6,7 @@ public class enemySword : MonoBehaviour
 {
     int damage;
     public bool isAttacking = false;
+    [SerializeField] Transform mainSkeletonTransform;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +29,8 @@ public class enemySword : MonoBehaviour
     {
         if(other.tag == "Player" && isAttacking)
         {
-            other.GetComponent<CharacterBase>().takeDamage(damage);
+            Vector3 knockBackDir = other.transform.position - mainSkeletonTransform.position;
+            other.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
         }
     }
 }

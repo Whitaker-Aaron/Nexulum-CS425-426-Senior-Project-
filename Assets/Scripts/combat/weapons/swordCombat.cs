@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class swordCombat : MonoBehaviour
 {
-    public int damage = 50;
+    public int damage = 0;
+    AudioManager audioManager;
 
 
     //rune ability combat mechanic
@@ -21,7 +22,7 @@ public class swordCombat : MonoBehaviour
 
     private void Awake()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -40,8 +41,13 @@ public class swordCombat : MonoBehaviour
             {
                 //if (isFire && collider.GetComponent<EnemyFrame>().dmgOverTimeActivated != true)
                 //{
-                   // collider.GetComponent<EnemyFrame>().StartCoroutine(collider.GetComponent<EnemyFrame>().dmgOverTime(fireDmg, fireTime, fireDmgInterval));
+                // collider.GetComponent<EnemyFrame>().StartCoroutine(collider.GetComponent<EnemyFrame>().dmgOverTime(fireDmg, fireTime, fireDmgInterval));
                 //}
+                if(audioManager == null)
+                {
+                    audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+                }
+                audioManager.PlaySFX("SwordCollide");
                 Vector3 knockBackDir = collider.transform.position - GameObject.FindGameObjectWithTag("Player").transform.position;
                 collider.GetComponent<EnemyFrame>().takeDamage(damage, knockBackDir, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }

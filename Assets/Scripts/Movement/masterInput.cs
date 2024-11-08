@@ -188,7 +188,7 @@ public class masterInput : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collision detected on player");
-        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         //dashCollision = true;
     }
 
@@ -283,7 +283,7 @@ public class masterInput : MonoBehaviour
     {
 
         if (stopVelocity)
-            player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
+            //player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
 
 
         //Vector2 lookInput = playerControl.player.mouseLook.ReadValue<Vector2>();

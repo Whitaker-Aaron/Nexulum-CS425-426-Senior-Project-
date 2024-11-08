@@ -92,9 +92,12 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
+  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
+  onDamaged: 0
+  source: 0
 --- !u!54 &7312136641156335363
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -271,6 +274,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 6782279903350017760}
   attackRange: 1.76
+  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -292,6 +296,7 @@ MonoBehaviour:
   engagementRange: 1
   agent: {fileID: 4928959221387099164}
   enemyLOS: {fileID: 2426181664314988161}
+  enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
 --- !u!114 &2426181664314988161
 MonoBehaviour:
@@ -306,9 +311,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  player: {fileID: 0}
   detectionRange: 7
   visionAngle: 90
   canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &3124172747385768879
@@ -668,3 +677,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isAttacking: 0
+  mainSkeletonTransform: {fileID: 211885768989169333}

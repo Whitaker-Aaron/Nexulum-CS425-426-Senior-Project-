@@ -37,7 +37,7 @@ public class AudioManager : MonoBehaviour
         {
             item.Value.source = gameObject.AddComponent<AudioSource>();
             item.Value.source.clip = item.Value.clip;
-            item.Value.source.volume = 0.15f;
+            item.Value.source.volume = item.Value.volume;
         }
     }
 

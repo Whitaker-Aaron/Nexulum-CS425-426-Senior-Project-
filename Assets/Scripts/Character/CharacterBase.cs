@@ -27,12 +27,15 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     //[SerializeField] public RuneInt runeInt;
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
+    public Coroutine curStopVel;
 
     Vector3 lastGroundLocation;
 
+    //MANAGERS
     LifetimeManager lifetimeManager;
     UIManager uiManager;
     WeaponsManager weaponsManager;
+    AudioManager audioManager;
 
     [SerializeField] GameObject masterInput;
 
@@ -72,7 +75,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         //Debug.Log("Collision detected on player");
         //masterInput.GetComponent<masterInput>().StopDash();
         //gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        //gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         if(collision.gameObject.tag == "ground")
         {
@@ -118,6 +121,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
@@ -347,13 +351,30 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         return masterInput;
     }
 
-    public void takeDamage(int damage)
+    public IEnumerator StopVelocity(float time)
+    {
+        
+        yield return new WaitForSeconds(time);
+        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+
+    public void takeDamage(int damage, Vector3 forwardDir)
     {
         if (bubbleShield)
             return;
         if (!invul)
         {
-            if(playerHealth - damage <= 0)
+            audioManager.PlaySFX("DamageTaken");
+            if (forwardDir != Vector3.zero)
+            {
+                transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15f, ForceMode.VelocityChange);
+                if (curStopVel != null)
+                {
+                    StopCoroutine(curStopVel);
+                }
+                curStopVel = StartCoroutine(StopVelocity(0.25f));
+            }
+            if (playerHealth - damage <= 0)
             {
                 playerHealth = 0;
             }

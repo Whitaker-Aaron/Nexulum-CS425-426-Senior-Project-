@@ -37,7 +37,8 @@ public class Arrow : MonoBehaviour , i_Trap
             CharacterBase playerHealth = other.GetComponent<CharacterBase>();
             if (playerHealth != null)
             {
-                playerHealth.takeDamage(damage);
+                Vector3 knockBackDir = other.transform.position - transform.position;
+                playerHealth.takeDamage(damage, knockBackDir);
                 Destroy(gameObject);
             }
         }

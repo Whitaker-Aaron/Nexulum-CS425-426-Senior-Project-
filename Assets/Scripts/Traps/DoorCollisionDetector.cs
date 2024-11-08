@@ -11,7 +11,7 @@ public class DoorCollisionDetector : MonoBehaviour , i_Trap
             CharacterBase playerHealth = other.GetComponent<CharacterBase>();
             if (playerHealth != null)
             {
-                playerHealth.takeDamage(damageAmount);
+                playerHealth.takeDamage(damageAmount, Vector3.zero);
             }
         }
     }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class SFX : ScriptableObject
 {
     [SerializeField] public string sfxName;
+    [SerializeField] public float volume;
     [SerializeField] public AudioClip clip;
     public AudioSource source;
 
