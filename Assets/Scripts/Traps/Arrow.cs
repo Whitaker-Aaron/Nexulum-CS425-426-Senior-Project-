@@ -49,6 +49,4 @@ public class Arrow : MonoBehaviour , i_Trap
             transform.rotation = Quaternion.LookRotation(moveDirection);
         }
     }
-
-
 }
