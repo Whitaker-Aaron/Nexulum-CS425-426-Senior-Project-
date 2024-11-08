@@ -11,8 +11,8 @@ public class EnemyStateManager : MonoBehaviour
     // Adjustable in-editor settings for behaviors
     // ----------------------------------------------
 
-    public float movementSpeed = 2; // Movement speed of enemy
-    public float engagementRange = 1; // How close, from target, the enemy will get to the target (radius)
+    public float movementSpeed = 2f; // Movement speed of enemy
+    public float engagementRange = 1f; // How close, from target, the enemy will get to the target (radius). Set with SetEngagementRange(float range)
 
     // ----------------------------------------------
     // Components
@@ -20,6 +20,7 @@ public class EnemyStateManager : MonoBehaviour
 
     public NavMeshAgent agent;
     public EnemyLOS enemyLOS;
+    public EnemyFrame enemyFrame;
 
     // ----------------------------------------------
     // State objects and state-related variables
@@ -33,7 +34,7 @@ public class EnemyStateManager : MonoBehaviour
     public EnemyChaseState chaseState = new EnemyChaseState();
     public EnemySearchState searchState = new EnemySearchState();
 
-    // Toggleable bool in editor to enable debug logging for state switching
+    // In-editor, enable debug logging
     public bool enableStateDebugLogs = false;
 
     // ----------------------------------------------
@@ -44,9 +45,9 @@ public class EnemyStateManager : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         enemyLOS = GetComponent<EnemyLOS>();
+        enemyFrame = GetComponent<EnemyFrame>();
 
         agent.speed = movementSpeed;
-        //agent.stoppingDistance = engagementRange;
 
         ChangeState(idleState);
     }
@@ -55,7 +56,7 @@ public class EnemyStateManager : MonoBehaviour
     {
         if (currentState != null)
         {
-            currentState.RunState(this);
+            currentState.RunState();
         }
         else
         {
@@ -67,7 +68,7 @@ public class EnemyStateManager : MonoBehaviour
     {
         if (currentState != null)
         {
-            currentState.ExitState(this);
+            currentState.ExitState();
         }
         currentState = newState;
         currentState.EnterState(this);
@@ -77,7 +78,7 @@ public class EnemyStateManager : MonoBehaviour
     {
         if (enableStateDebugLogs == true)
         {
-            Debug.Log(log);
+            Debug.Log("SM Debug: " + log);
         }
     }
 
@@ -95,7 +96,7 @@ public class EnemyStateManager : MonoBehaviour
         }
     }
 
-    // Overloaded MoveTo, allows stoppingDist
+    // Overloaded MoveTo, enforces engagement range from point
     public void MoveTo(Vector3 position, float stoppingDist, bool enablePathfinding = false, bool enablePrediction = false)
     {
         float distanceToPos = Vector3.Distance(enemyLOS.selfPos, position);
@@ -113,5 +114,19 @@ public class EnemyStateManager : MonoBehaviour
         {
             CustomDebugLog("Movement without pathfinding not supported yet--please toggle 'enablePathfinding' to true");
         }
+    }
+
+    public void SetEngagementRange(float range)
+    {
+        engagementRange = range;
+    }
+
+    public void LookAt(GameObject lookat)
+    {
+        float rotationSpeed = 4f;
+        Vector3 headingtolookat = lookat.transform.position - transform.position;
+
+        var rotationtolookat = Quaternion.LookRotation(headingtolookat);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotationtolookat, rotationSpeed * Time.deltaTime);
     }
 }

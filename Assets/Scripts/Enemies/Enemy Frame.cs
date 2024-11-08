@@ -33,6 +33,9 @@ public class EnemyFrame : MonoBehaviour
     bool takingDmgOT = false;
     bool dying = false;
 
+    public bool onDamaged = false; // True on hit, used for state machine logic to aggro enemies on hit - Aisling
+    public DamageSource source;
+
     //Enemy animation for taking hits
     EnemyAnimation anim;
     Vector3 zeroDir;
@@ -95,6 +98,9 @@ public class EnemyFrame : MonoBehaviour
                 break;
         }
 
+        // Damage info for state - Aisling
+        onDamaged = true;
+        source = targetSource;
 
         Debug.Log("Enemy was attacked");
         Debug.Log("Enemy attacking?" + enemyType.isAttacking);

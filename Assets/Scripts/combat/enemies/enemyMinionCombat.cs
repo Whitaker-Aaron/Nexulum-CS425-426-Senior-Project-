@@ -13,6 +13,7 @@ public class enemyMinionCombat : MonoBehaviour
     public enemySword sword;
     EnemyAnimation anim;
     EnemyBehavior enemy;
+    EnemyLOS los;
     public int attackDamage = 20;
 
 
@@ -59,12 +60,13 @@ public class enemyMinionCombat : MonoBehaviour
     {
         anim = GetComponent<EnemyAnimation>();
         enemy = GetComponent<EnemyBehavior>();
+        los = GetComponent<EnemyLOS>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (canAttack)
+        if (canAttack && los.isTargetSpotted)
             attackPlayer();
         else
         {

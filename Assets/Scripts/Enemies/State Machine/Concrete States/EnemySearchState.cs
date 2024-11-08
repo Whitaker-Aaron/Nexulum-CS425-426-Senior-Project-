@@ -1,30 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class EnemySearchState : EnemyState
+public class EnemySearchState : EnemyNeutralState
 {
     public override void EnterState(EnemyStateManager stateContext)
     {
-        stateContext.CustomDebugLog("Entered search state");
+        this.stateContext = stateContext;
+        this.stateName = "Search";
+
+        stateContext.CustomDebugLog("Entered " + stateName + " state");
     }
-    public override void RunState(EnemyStateManager stateContext)
+
+    public override void RunState()
     {
+        base.OnDamaged();
+
+        stateContext.MoveTo(stateContext.enemyLOS.lastKnownTargetPos, true, false);
+
         if (stateContext.enemyLOS.TargetSpotted())
         {
             stateContext.ChangeState(stateContext.chaseState);
         }
         else
         {
-            stateContext.MoveTo(stateContext.enemyLOS.lastKnownTargetPos, true, false);
             if (stateContext.transform.position == stateContext.enemyLOS.lastKnownTargetPos)
             {
                 stateContext.ChangeState(stateContext.idleState);
             }
         }
     }
-    public override void ExitState(EnemyStateManager stateContext)
+
+    public override void ExitState()
     {
-        stateContext.CustomDebugLog("Exited search state");
+        stateContext.CustomDebugLog("Exited " + stateName + " state");
     }
 }
