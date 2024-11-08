@@ -80,6 +80,10 @@ GameObject:
   - component: {fileID: 7577603099258791836}
   - component: {fileID: 1338135627320106673}
   - component: {fileID: 5103467214646993893}
+  - component: {fileID: 2308236968832514611}
+  - component: {fileID: 7464291956255054942}
+  - component: {fileID: 8936712590779668305}
+  - component: {fileID: 9008085553438004295}
   m_Layer: 7
   m_Name: skeletonMage
   m_TagString: Enemy
@@ -178,6 +182,8 @@ MonoBehaviour:
   detectionRange: 15
   visionAngle: 90
   canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!195 &1338135627320106673
@@ -229,6 +235,65 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &2308236968832514611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360348837581451513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06766f528e3d77848bcb9dc8b961c29a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+--- !u!95 &7464291956255054942
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360348837581451513}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: a63a211a13a2fe442b9d600ae1ea4959, type: 3}
+  m_Controller: {fileID: 9100000, guid: 73549ac25620c6346b3d688199b8cb7d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8936712590779668305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360348837581451513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c2d7ad163f4d845a8e0859625ae1b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  takeHitTime: 0.8
+--- !u!114 &9008085553438004295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360348837581451513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4b6246c5c719ad4da0fa394e86a2128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &454605158800309426
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,7 +716,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254451467323615238}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: a63a211a13a2fe442b9d600ae1ea4959, type: 3}
   m_Controller: {fileID: 9100000, guid: 73549ac25620c6346b3d688199b8cb7d, type: 2}
   m_CullingMode: 0
@@ -671,7 +736,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254451467323615238}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40c2d7ad163f4d845a8e0859625ae1b0, type: 3}
   m_Name: 
@@ -684,7 +749,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254451467323615238}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4b6246c5c719ad4da0fa394e86a2128, type: 3}
   m_Name: 
