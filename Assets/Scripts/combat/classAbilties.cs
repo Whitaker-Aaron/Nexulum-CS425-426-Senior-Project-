@@ -49,6 +49,7 @@ public class classAbilties : MonoBehaviour
     bool shootingSwords, shotSword = false;
     public int swordShotDamage = 15;
     [SerializeField] private GameObject swordShotEffect;
+    [SerializeField] private GameObject swordShotIceEffect;
     [SerializeField] private GameObject combatAuraEffectStart, combatAuraEffectEnd, combatAuraEffectLoop;
     public float comatAuraRadius = 4f;
     private bool activatedAura, checkingAura = false;
@@ -68,10 +69,12 @@ public class classAbilties : MonoBehaviour
 
     bool shootingLaser, shotLaser, checkHit = false;
     [SerializeField] private GameObject laserPrefab;
+    [SerializeField] private GameObject laserIcePrefab;
     public float laserCooldown = 4f;
     GameObject currentLaserEffect = null;
     public float maxLaserDistance = 10f;
     public int laserDamage = 2;
+    public int laserIceDamage = 0;
     public float laserHitRate = .4f;
 
     bool throwingGrenade, threwGrenade = false;
@@ -228,12 +231,24 @@ public class classAbilties : MonoBehaviour
         {
             shootingSwords = true;
             
-            GameObject currentEffect = Instantiate(swordShotEffect, player.transform.position, Quaternion.identity);
-            currentEffect.transform.SetParent(player.transform);
-            currentEffect.transform.position = player.transform.position;
-            currentEffect.GetComponent<ParticleSystem>().Play();
+            if(iceBool)
+            {
+                GameObject currentEffect = Instantiate(swordShotIceEffect, player.transform.position, Quaternion.identity);
+                currentEffect.transform.SetParent(player.transform);
+                currentEffect.transform.position = player.transform.position;
+                currentEffect.GetComponent<ParticleSystem>().Play();
+                StartCoroutine(stopSword(currentEffect));
+            }
+            else
+            {
+                GameObject currentEffect = Instantiate(swordShotEffect, player.transform.position, Quaternion.identity);
+                currentEffect.transform.SetParent(player.transform);
+                currentEffect.transform.position = player.transform.position;
+                currentEffect.GetComponent<ParticleSystem>().Play();
+                StartCoroutine(stopSword(currentEffect));
+            }
 
-            StartCoroutine(stopSword(currentEffect));
+            
             StartCoroutine(abilitiesCooldown(3, ka3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
@@ -242,13 +257,27 @@ public class classAbilties : MonoBehaviour
             shootingLaser = true;
             gameObject.GetComponent<masterInput>().shootingLaser = true;
             Transform pos = gameObject.GetComponent<masterInput>().bulletSpawn;
-            currentLaserEffect = Instantiate(laserPrefab, pos.position, Quaternion.identity);
-            currentLaserEffect.GetComponent<ParticleSystem>().Stop();
-            currentLaserEffect.transform.SetParent(player.transform, false);
-            pos = gameObject.GetComponent<masterInput>().bulletSpawn;
-            currentLaserEffect.transform.position = pos.position;
-            currentLaserEffect.transform.forward = masterInput.instance.bulletSpawn.forward;
-            StartCoroutine(laserStop());
+            if(iceBool)
+            {
+                currentLaserEffect = Instantiate(laserIcePrefab, pos.position, Quaternion.identity);
+                currentLaserEffect.GetComponent<ParticleSystem>().Stop();
+                currentLaserEffect.transform.SetParent(player.transform, false);
+                pos = gameObject.GetComponent<masterInput>().bulletSpawn;
+                currentLaserEffect.transform.position = pos.position;
+                currentLaserEffect.transform.forward = masterInput.instance.bulletSpawn.forward;
+                StartCoroutine(laserStop());
+            }
+            else
+            {
+                currentLaserEffect = Instantiate(laserPrefab, pos.position, Quaternion.identity);
+                currentLaserEffect.GetComponent<ParticleSystem>().Stop();
+                currentLaserEffect.transform.SetParent(player.transform, false);
+                pos = gameObject.GetComponent<masterInput>().bulletSpawn;
+                currentLaserEffect.transform.position = pos.position;
+                currentLaserEffect.transform.forward = masterInput.instance.bulletSpawn.forward;
+                StartCoroutine(laserStop());
+            }
+            
             StartCoroutine(abilitiesCooldown(3, ga3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
@@ -421,9 +450,25 @@ public class classAbilties : MonoBehaviour
     IEnumerator swordShooting()
     {
         shotSword = true;
-        var sword = Instantiate(swordShot, swordSpawn.position, swordSpawn.rotation);
-        sword.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * swordSpeed;
-        sword.GetComponent<swordShot>().damage = swordShotDamage;
+
+        if(iceBool)
+        {
+            print(projectileManager.Instance);
+            GameObject sword = projectileManager.Instance.getProjectile("swordShotIcePool", swordSpawn.position, swordSpawn.rotation);
+            sword.GetComponent<swordShot>().isIce = true;
+            sword.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * swordSpeed;
+            sword.GetComponent<swordShot>().damage = swordShotDamage;
+        }
+        else
+        {
+            print(projectileManager.Instance);
+            GameObject sword = projectileManager.Instance.getProjectile("swordShotPool", swordSpawn.position, swordSpawn.rotation);
+            sword.GetComponent<Rigidbody>().velocity = swordSpawn.forward * swordSpeed;
+            sword.GetComponent<swordShot>().damage = swordShotDamage;
+        }
+            
+
+        
         yield return new WaitForSeconds(swordTime);
         shotSword = false;
         yield break;
@@ -479,7 +524,11 @@ public class classAbilties : MonoBehaviour
         if (Physics.Raycast(masterInput.instance.bulletSpawn.transform.position, masterInput.instance.bulletSpawn.transform.forward, out hit, maxLaserDistance, enemy))
         {
             print("Hitting enemy");
-            hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserDamage, Vector3.zero, EnemyFrame.DamageSource.Player);
+            hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+            if(iceBool)
+            {
+                hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserIceDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+            }
         }
         yield return new WaitForSeconds(laserHitRate);
         checkHit = false;
@@ -926,7 +975,7 @@ public class classAbilties : MonoBehaviour
                     if (!c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated)
                     {
                         c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated = true;
-                        StartCoroutine(c.gameObject.GetComponent<EnemyFrame>().dmgOverTime(krFireDmg, krFireTime, krFireRate));
+                        StartCoroutine(c.gameObject.GetComponent<EnemyFrame>().dmgOverTime(krFireDmg, krFireTime, krFireRate, EnemyFrame.DamageType.Fire));
                     }
 
                 }
@@ -1066,6 +1115,18 @@ public class classAbilties : MonoBehaviour
             }
             */
             fireBool = false;
+        }
+    }
+
+    public void activateIceRune(bool choice)
+    {
+        if(choice)
+        {
+            iceBool = true;
+        }
+        else
+        {
+            iceBool = false;
         }
     }
 

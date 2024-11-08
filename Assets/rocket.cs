@@ -48,7 +48,7 @@ public class rocket : MonoBehaviour
         {
             if(collider.gameObject.tag == "Enemy")
             {
-                collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player);
+                collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Explosion);
             }
         }
         //Destroy(currentExplosion, 2f);
@@ -64,7 +64,7 @@ public class rocket : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(directHitDamage, Vector3.zero, EnemyFrame.DamageSource.Player);
+            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(directHitDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
             explode();
         }
         else

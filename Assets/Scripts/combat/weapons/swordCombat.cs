@@ -43,7 +43,7 @@ public class swordCombat : MonoBehaviour
                    // collider.GetComponent<EnemyFrame>().StartCoroutine(collider.GetComponent<EnemyFrame>().dmgOverTime(fireDmg, fireTime, fireDmgInterval));
                 //}
                 Vector3 knockBackDir = collider.transform.position - GameObject.FindGameObjectWithTag("Player").transform.position;
-                collider.GetComponent<EnemyFrame>().takeDamage(damage, knockBackDir, EnemyFrame.DamageSource.Player);
+                collider.GetComponent<EnemyFrame>().takeDamage(damage, knockBackDir, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }
         }
     }

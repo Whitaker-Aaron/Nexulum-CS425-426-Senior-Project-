@@ -107,6 +107,10 @@ public class runeIntController : MonoBehaviour, RuneInt
             Debug.Log(abilities);
             abilities.activateFireRune(true);
         }
+        if(rune.runeName == "Ice")
+        {
+            abilities.activateIceRune(true);
+        }
     }
 
     public void applySpellRunes(Rune rune)
@@ -130,6 +134,10 @@ public class runeIntController : MonoBehaviour, RuneInt
         if(rune.name == "Fire")
         {
             abilities.activateFireRune(false);
+        }
+        if (rune.runeName == "Ice")
+        {
+            abilities.activateIceRune(false);
         }
     }
 
