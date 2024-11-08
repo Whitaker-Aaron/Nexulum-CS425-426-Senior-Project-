@@ -1,9 +1,20 @@
+// Base class for states in an EnemyStateManager state machine - Aisling
+
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EnemyState
+public class EnemyState
 {
-    // Reference the state manager is needed so the state can switch to another state within itself
-    public abstract void EnterState(EnemyStateManager stateContext);
-    public abstract void RunState(EnemyStateManager stateContext);
-    public abstract void ExitState(EnemyStateManager stateContext);
+    protected EnemyStateManager stateContext;
+    public string stateName;
+
+    public EnemyState()
+    {
+        this.stateName = "";
+    }
+
+    public virtual void EnterState(EnemyStateManager stateContext) { }
+    public virtual void RunState() { }
+    public virtual void ExitState() { }
 }
