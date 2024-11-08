@@ -4464,6 +4464,8 @@ MonoBehaviour:
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
+  onDamaged: 0
+  source: 0
 --- !u!114 &157967353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4480,6 +4482,7 @@ MonoBehaviour:
   engagementRange: 1
   agent: {fileID: 157967349}
   enemyLOS: {fileID: 157967354}
+  enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
 --- !u!114 &157967354
 MonoBehaviour:
@@ -4494,9 +4497,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  player: {fileID: 0}
   detectionRange: 7
   visionAngle: 90
   canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1 &159531912
@@ -13739,6 +13746,8 @@ MonoBehaviour:
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
+  onDamaged: 0
+  source: 0
 --- !u!4 &581683919
 Transform:
   m_ObjectHideFlags: 0
@@ -13772,6 +13781,7 @@ MonoBehaviour:
   engagementRange: 1
   agent: {fileID: 581683915}
   enemyLOS: {fileID: 581683923}
+  enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
 --- !u!114 &581683923
 MonoBehaviour:
@@ -13786,9 +13796,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  player: {fileID: 0}
   detectionRange: 7
   visionAngle: 90
   canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &591135600
@@ -16963,6 +16977,8 @@ MonoBehaviour:
   enemyReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
+  onDamaged: 0
+  source: 0
 --- !u!4 &728695370
 Transform:
   m_ObjectHideFlags: 0
@@ -21306,6 +21322,8 @@ MonoBehaviour:
   enemyReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
+  onDamaged: 0
+  source: 0
 --- !u!4 &914834199
 Transform:
   m_ObjectHideFlags: 0
@@ -22318,6 +22336,8 @@ MonoBehaviour:
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
+  onDamaged: 0
+  source: 0
 --- !u!114 &937644621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22334,6 +22354,7 @@ MonoBehaviour:
   engagementRange: 1
   agent: {fileID: 937644617}
   enemyLOS: {fileID: 937644622}
+  enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
 --- !u!114 &937644622
 MonoBehaviour:
@@ -22348,9 +22369,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  player: {fileID: 0}
   detectionRange: 7
   visionAngle: 90
   canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &939174231
@@ -34784,9 +34809,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  player: {fileID: 0}
   detectionRange: 15
   visionAngle: 90
   canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!114 &1359352205
@@ -34805,6 +34834,7 @@ MonoBehaviour:
   engagementRange: 10
   agent: {fileID: 1359352203}
   enemyLOS: {fileID: 1359352204}
+  enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
 --- !u!114 &1359352206
 MonoBehaviour:
@@ -46969,6 +46999,7 @@ MonoBehaviour:
   engagementRange: 1
   agent: {fileID: 1836943733}
   enemyLOS: {fileID: 1836943737}
+  enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
 --- !u!114 &1836943727
 MonoBehaviour:
@@ -47172,6 +47203,8 @@ MonoBehaviour:
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
+  onDamaged: 0
+  source: 0
 --- !u!114 &1836943737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47185,9 +47218,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  player: {fileID: 0}
   detectionRange: 7
   visionAngle: 90
   canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &1837460450
@@ -53816,6 +53853,8 @@ MonoBehaviour:
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
+  onDamaged: 0
+  source: 0
 --- !u!114 &2107450719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53832,6 +53871,7 @@ MonoBehaviour:
   engagementRange: 1
   agent: {fileID: 2107450715}
   enemyLOS: {fileID: 2107450720}
+  enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
 --- !u!114 &2107450720
 MonoBehaviour:
@@ -53846,9 +53886,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  player: {fileID: 0}
   detectionRange: 7
   visionAngle: 90
   canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &2108203030
