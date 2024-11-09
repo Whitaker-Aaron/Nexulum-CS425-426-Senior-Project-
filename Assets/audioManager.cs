@@ -15,6 +15,9 @@ public class AudioManager : MonoBehaviour
 
     [SerializedDictionary("LoopName", "Loop")]
     public SerializedDictionary<string, MusicLoop> loopSources;
+
+    [SerializedDictionary("FootstepName", "Footsteps")]
+    public SerializedDictionary<string, Footsteps> footstepSources;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +25,7 @@ public class AudioManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         LoadSFX();
         LoadLoops();
+        LoadFootsteps();
 
     }
 
@@ -47,9 +51,30 @@ public class AudioManager : MonoBehaviour
         {
             item.Value.source = gameObject.AddComponent<AudioSource>();
             item.Value.source.clip = item.Value.clip;
-            item.Value.source.volume = loopAudio;
+            item.Value.source.volume = item.Value.volume;
             item.Value.PlayBackground();
         }
+    }
+
+    public void LoadFootsteps()
+    {
+        foreach (var item in footstepSources)
+        {
+            item.Value.source = gameObject.AddComponent<AudioSource>();
+            item.Value.source.clip = item.Value.clip;
+            item.Value.source.volume = item.Value.volume;
+            item.Value.PlayBackground();
+        }
+    }
+
+    public void PlayFootsteps(string footstepName)
+    {
+        footstepSources[footstepName].Resume();
+    }
+
+    public void PauseFootsteps(string footstepName)
+    {
+        footstepSources[footstepName].Pause();
     }
 
     public void PlaySFX(string sfx)
@@ -109,12 +134,12 @@ public class AudioManager : MonoBehaviour
 
     public IEnumerator IncreaseVolOnLoop(float rate)
     {
-        while (loopSources[currentLoop].source.volume < loopAudio)
+        while (loopSources[currentLoop].source.volume < loopSources[currentLoop].volume)
         {
             loopSources[currentLoop].source.volume += rate * Time.deltaTime;
             if (Mathf.Abs(loopSources[currentLoop].source.volume - 0.1f) < 0.001)
             {
-                loopSources[currentLoop].source.volume = loopAudio;
+                loopSources[currentLoop].source.volume = loopSources[currentLoop].volume;
             }
             yield return null;
         }

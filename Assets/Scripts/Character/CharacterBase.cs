@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
@@ -28,6 +27,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
     public Coroutine curStopVel;
+
+    bool lowHealthReached = false;
 
     Vector3 lastGroundLocation;
 
@@ -99,7 +100,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         if (collision.gameObject.tag == "RestorePoint")
         {
             Debug.Log("No longer touching ground");
-            lastGroundLocation = gameObject.transform.position;
+            //lastGroundLocation = gameObject.transform.position;
         }
 
     }
@@ -410,6 +411,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         playerHealth = maxHealth;
         healthBar.value = maxHealth;
+        RestoreLowHealth();
+
         delayedHealthBar.value = maxHealth;
         invul = false;
     }
@@ -468,6 +471,25 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         }
     }
 
+    public void ApplyLowHealth()
+    {
+        var color = new Color();
+        ColorUtility.TryParseHtmlString("#F7315D", out color);
+        healthBar.fillRect.GetComponent<Image>().color = color;
+        uiManager.ShowCriticalText();
+        audioManager.PlaySFX("LowHealth");
+        lowHealthReached = true;
+    }
+
+    public void RestoreLowHealth()
+    {
+        var color = new Color();
+        ColorUtility.TryParseHtmlString("#31F7A9", out color);
+        healthBar.fillRect.GetComponent<Image>().color = color;
+        uiManager.HideCriticalText();
+        lowHealthReached = false;
+    }
+
     public IEnumerator animateHealth()
     {
         
@@ -486,11 +508,24 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             {
                 healthBar.value += reduceVal * Time.deltaTime;
             }
-            if(healthBar.value == 0)
+
+            if (healthBar.value <= 30)
+            {
+                if(!lowHealthReached) ApplyLowHealth();
+                
+                
+            }
+            else
+            {
+                if (lowHealthReached) RestoreLowHealth();
+            }
+
+            if (healthBar.value == 0)
             {
                 GameObject currentShake = Instantiate(shakeEffect, gameObject.transform.position, Quaternion.identity);
                 currentShake.GetComponent<ParticleSystem>().Play();
             }
+            
 
             yield return null;
         }

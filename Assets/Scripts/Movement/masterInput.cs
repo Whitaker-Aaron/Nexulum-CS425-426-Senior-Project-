@@ -330,7 +330,11 @@ public class masterInput : MonoBehaviour
 
 
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+        {
+            audioManager.PauseFootsteps("TestWalk");
             return;
+        }
+            
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -340,8 +344,14 @@ public class masterInput : MonoBehaviour
 
         if (direction.magnitude >= 0.1f)
         {
+            audioManager.PlayFootsteps("TestWalk");
             movePlayer();
         }
+        else
+        {
+            audioManager.PauseFootsteps("TestWalk");
+        }
+        
 
 
 
@@ -706,6 +716,7 @@ public class masterInput : MonoBehaviour
         canShoot = false;
         while (playerInput.actions["Attack"].IsPressed() && bulletCount > 0 && isReloading == false)
         {
+            audioManager.PlaySFX("Laser");
             bulletCount--;
             GameObject bullet = projectileManager.Instance.getProjectile("bulletPool", bulletSpawn.position, bulletSpawn.rotation); //Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
