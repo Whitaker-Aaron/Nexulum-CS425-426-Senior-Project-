@@ -33,7 +33,7 @@ public class enemySword : MonoBehaviour
         if(other.tag == "Player" && isAttacking)
         {
             Vector3 knockBackDir = other.transform.position - mainSkeletonTransform.position;
-            other.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
+            //other.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
             
             //print("earthBool: " + classAbilties.instance.earthBool + "  aura: " + classAbilties.instance.bubble + "  enemyInstance: " + enemyInstance);
             if (classAbilties.instance.earthBool == true && classAbilties.instance.bubble == true && enemyInstance != null)
@@ -45,7 +45,7 @@ public class enemySword : MonoBehaviour
             else
             {
                 print("hitting player");
-                other.GetComponent<CharacterBase>().takeDamage(damage);
+                other.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
             }
         }
     }
