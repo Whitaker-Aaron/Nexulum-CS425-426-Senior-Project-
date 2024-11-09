@@ -11,7 +11,7 @@ public class Spikes : MonoBehaviour , i_Trap
         if (playerHealth != null)
         {
             // Apply damage to the player
-            playerHealth.takeDamage(damageAmount);
+            playerHealth.takeDamage(damageAmount, Vector3.zero);
             Debug.Log("Player hit by spikes and took " + damageAmount + " damage.");
         }
     }

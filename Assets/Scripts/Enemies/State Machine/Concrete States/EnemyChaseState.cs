@@ -12,6 +12,8 @@ public class EnemyChaseState : EnemyNeutralState
 
     public override void RunState()
     {
+        
+
         stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, true, false);
 
         if (!stateContext.enemyLOS.TargetSpotted()) {

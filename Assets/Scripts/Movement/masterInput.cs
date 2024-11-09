@@ -180,6 +180,7 @@ public class masterInput : MonoBehaviour
 
     UIManager uiManager;
     LifetimeManager lifetimeManager;
+    AudioManager audioManager;
 
 
     //--------------MAIN RUNNING FUNCTIONS--------------
@@ -187,7 +188,7 @@ public class masterInput : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collision detected on player");
-        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         //dashCollision = true;
     }
 
@@ -228,6 +229,7 @@ public class masterInput : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         //playerControl = gameObject.GetComponent<PlayerInputActions>();
 
         SS1 = Instantiate(swordSlashPrefab);
@@ -281,7 +283,7 @@ public class masterInput : MonoBehaviour
     {
 
         if (stopVelocity)
-            player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
+            //player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
 
 
         //Vector2 lookInput = playerControl.player.mouseLook.ReadValue<Vector2>();
@@ -328,7 +330,11 @@ public class masterInput : MonoBehaviour
 
 
         if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+        {
+            audioManager.PauseFootsteps("TestWalk");
             return;
+        }
+            
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -338,8 +344,14 @@ public class masterInput : MonoBehaviour
 
         if (direction.magnitude >= 0.1f)
         {
+            audioManager.PlayFootsteps("TestWalk");
             movePlayer();
         }
+        else
+        {
+            audioManager.PauseFootsteps("TestWalk");
+        }
+        
 
 
 
@@ -487,6 +499,7 @@ public class masterInput : MonoBehaviour
             //dashStarted = true;
             if (!isDashing)
             {
+                audioManager.PlaySFX("Dash");
                 isDashing = true;
                 dashSpeed = 4.5f;
                 Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
@@ -703,6 +716,7 @@ public class masterInput : MonoBehaviour
         canShoot = false;
         while (playerInput.actions["Attack"].IsPressed() && bulletCount > 0 && isReloading == false)
         {
+            audioManager.PlaySFX("Laser");
             bulletCount--;
             GameObject bullet = projectileManager.Instance.getProjectile("bulletPool", bulletSpawn.position, bulletSpawn.rotation); //Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
@@ -818,6 +832,7 @@ public class masterInput : MonoBehaviour
             {
                 if (playerInput.actions["attack"].triggered)
                 {
+                    audioManager.PlaySFX("SwordWoosh");
                     print("click: " + noOfClicks);
 
                     lastClickedTime = Time.time;

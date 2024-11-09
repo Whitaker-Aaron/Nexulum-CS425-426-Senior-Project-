@@ -1,4 +1,5 @@
 using System.Collections;
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -20,6 +21,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject ability2;
     [SerializeField] GameObject ability3;
     [SerializeField] GameObject dashSmear;
+    [SerializeField] GameObject criticalText;
+    [SerializeField] GameObject criticalTextBorder;
+
+    Coroutine currentCriticalOpacity;
+    Coroutine currentCriticalBorderOpacity;
 
     Slider currentAbilitySlider;
 
@@ -35,6 +41,46 @@ public class UIManager : MonoBehaviour
         gunnerHUD.SetActive(false);
         engineerHUD.SetActive(false);
     }
+
+    public void ShowCriticalText()
+    {
+        criticalText.SetActive(true);
+        criticalTextBorder.SetActive(true);
+        StartCoroutine(AnimateCriticalText());
+        StartCoroutine(AnimateCriticalTextBorder());
+    }
+
+    public void HideCriticalText()
+    {
+        StopCoroutine(AnimateCriticalText());
+        StopCoroutine(AnimateCriticalTextBorder());
+        StopCoroutine(currentCriticalOpacity);
+        StopCoroutine(currentCriticalBorderOpacity);
+        criticalText.SetActive(false);
+        criticalTextBorder.SetActive(false);
+        
+    }
+
+    public IEnumerator AnimateCriticalTextBorder()
+    {
+        while (true)
+        {
+            yield return currentCriticalBorderOpacity = StartCoroutine(IncreaseTextOpacity(criticalTextBorder, 1.0f));
+            yield return currentCriticalBorderOpacity = StartCoroutine(ReduceTextOpacity(criticalTextBorder, 1.0f));
+        }
+    }
+
+    public IEnumerator AnimateCriticalText()
+    {
+        
+        while (true)
+        {
+            yield return currentCriticalOpacity = StartCoroutine(IncreaseTextOpacity(criticalText, 1.0f));
+            yield return currentCriticalOpacity = StartCoroutine(ReduceTextOpacity(criticalText, 1.0f)); 
+        }
+        
+    }
+
     public void Initialize()
     {
         ExperienceBar.value = character.weaponClass.totalExp;
@@ -359,6 +405,20 @@ public class UIManager : MonoBehaviour
         {
             Color imgColor = reference.color;
             imgColor.a -= rate * Time.deltaTime;
+            reference.color = imgColor;
+
+            yield return null;
+        }
+        yield break;
+    }
+
+    private IEnumerator IncreaseTextOpacity(GameObject text, float rate)
+    {
+        var reference = text.GetComponent<TMP_Text>();
+        while (reference.color.a <= 1.0 && reference != null)
+        {
+            Color imgColor = reference.color;
+            imgColor.a += rate * Time.deltaTime;
             reference.color = imgColor;
 
             yield return null;

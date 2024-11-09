@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
@@ -27,12 +26,17 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     //[SerializeField] public RuneInt runeInt;
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
+    public Coroutine curStopVel;
+
+    bool lowHealthReached = false;
 
     Vector3 lastGroundLocation;
 
+    //MANAGERS
     LifetimeManager lifetimeManager;
     UIManager uiManager;
     WeaponsManager weaponsManager;
+    AudioManager audioManager;
 
     [SerializeField] GameObject masterInput;
 
@@ -72,7 +76,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         //Debug.Log("Collision detected on player");
         //masterInput.GetComponent<masterInput>().StopDash();
         //gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        //gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         if(collision.gameObject.tag == "ground")
         {
@@ -96,7 +100,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         if (collision.gameObject.tag == "RestorePoint")
         {
             Debug.Log("No longer touching ground");
-            lastGroundLocation = gameObject.transform.position;
+            //lastGroundLocation = gameObject.transform.position;
         }
 
     }
@@ -118,6 +122,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
@@ -347,13 +352,30 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         return masterInput;
     }
 
-    public void takeDamage(int damage)
+    public IEnumerator StopVelocity(float time)
+    {
+        
+        yield return new WaitForSeconds(time);
+        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+
+    public void takeDamage(int damage, Vector3 forwardDir)
     {
         if (bubbleShield)
             return;
         if (!invul)
         {
-            if(playerHealth - damage <= 0)
+            audioManager.PlaySFX("DamageTaken");
+            if (forwardDir != Vector3.zero)
+            {
+                transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15f, ForceMode.VelocityChange);
+                if (curStopVel != null)
+                {
+                    StopCoroutine(curStopVel);
+                }
+                curStopVel = StartCoroutine(StopVelocity(0.25f));
+            }
+            if (playerHealth - damage <= 0)
             {
                 playerHealth = 0;
             }
@@ -389,6 +411,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         playerHealth = maxHealth;
         healthBar.value = maxHealth;
+        RestoreLowHealth();
+
         delayedHealthBar.value = maxHealth;
         invul = false;
     }
@@ -447,6 +471,25 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         }
     }
 
+    public void ApplyLowHealth()
+    {
+        var color = new Color();
+        ColorUtility.TryParseHtmlString("#F7315D", out color);
+        healthBar.fillRect.GetComponent<Image>().color = color;
+        uiManager.ShowCriticalText();
+        audioManager.PlaySFX("LowHealth");
+        lowHealthReached = true;
+    }
+
+    public void RestoreLowHealth()
+    {
+        var color = new Color();
+        ColorUtility.TryParseHtmlString("#31F7A9", out color);
+        healthBar.fillRect.GetComponent<Image>().color = color;
+        uiManager.HideCriticalText();
+        lowHealthReached = false;
+    }
+
     public IEnumerator animateHealth()
     {
         
@@ -465,11 +508,24 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             {
                 healthBar.value += reduceVal * Time.deltaTime;
             }
-            if(healthBar.value == 0)
+
+            if (healthBar.value <= 30)
+            {
+                if(!lowHealthReached) ApplyLowHealth();
+                
+                
+            }
+            else
+            {
+                if (lowHealthReached) RestoreLowHealth();
+            }
+
+            if (healthBar.value == 0)
             {
                 GameObject currentShake = Instantiate(shakeEffect, gameObject.transform.position, Quaternion.identity);
                 currentShake.GetComponent<ParticleSystem>().Play();
             }
+            
 
             yield return null;
         }

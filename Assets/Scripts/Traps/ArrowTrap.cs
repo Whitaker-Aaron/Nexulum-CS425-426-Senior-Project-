@@ -38,7 +38,6 @@ public class ArrowTrap : MonoBehaviour
         }
         GameObject arrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
 
-        // Set the direction and speed of the arrow
         Arrow arrowScript = arrow.GetComponent<Arrow>();
         if (arrowScript != null)
         {

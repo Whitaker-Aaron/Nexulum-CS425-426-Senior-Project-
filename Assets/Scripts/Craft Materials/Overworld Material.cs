@@ -10,6 +10,7 @@ public class OverworldMaterial : MonoBehaviour
     [SerializeField] float verticalFloatRange;
     [SerializeField] float floatSpeed;
     [SerializeField] GameObject scrollManager;
+    AudioManager audioManager;
 
     //Needs to have a reference to an existing CraftMaterial so when we add to inventory, we can pass this object over. 
     [SerializeField]  public CraftMaterial material; 
@@ -23,6 +24,7 @@ public class OverworldMaterial : MonoBehaviour
     void Start()
     {
         scrollManager = GameObject.Find("ScrollManager");
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         originalPos = transform.position.y;
     }
 
@@ -75,6 +77,7 @@ public class OverworldMaterial : MonoBehaviour
         if (other.gameObject.tag == "Player")
 
         {
+            audioManager.PlaySFX("MaterialCollect");
             var scrollRef = scrollManager.GetComponent<MaterialScrollManager>();
             scrollRef.AddToMaterialsInventory(this.material, 1);
             scrollRef.UpdateScroll(this.material.materialTexture, this.material.materialName);
@@ -82,7 +85,6 @@ public class OverworldMaterial : MonoBehaviour
             {
                 GameObject.Find("MenuManager").GetComponent<MenuManager>().AddToCurrentInventory(this.material);
             }
-
             Destroy(this.gameObject);
         }
     }

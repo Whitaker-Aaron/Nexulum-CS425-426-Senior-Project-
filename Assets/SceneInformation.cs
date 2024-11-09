@@ -11,18 +11,30 @@ public class SceneInformation : MonoBehaviour
     [SerializeField] public bool spawnPlayer;
     [SerializeField] public bool screenTransition;
     [SerializeField] RoomInformation beginningRoom;
+    [SerializeField] SceneAudio sceneAudio;
+    [SerializeField] string beginningTrack;
+    AudioManager audioManager;
+    RoomManager roomManager;
     [SerializeField] public Vector3 playerSpawnPos;
     [SerializeField] public GameObject initialSpawnLocation;
     void Start()
     {
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        //audioManager.StopLoop();
+        if(beginningTrack != "" && beginningTrack != null)
+        {
+            audioManager.ChangeTrack(beginningTrack);
+        }
+        if (roomManager.currentRoom.floorEntrance)
+        {
+            audioManager.PlaySFX("Bell");
+        }
         
-        
-
     }
 
     private void Awake()
     {
-        var roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
+        roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
         var player = GameObject.FindWithTag("Player");
         if (sceneName == "BaseCamp")
         {
@@ -34,6 +46,7 @@ public class SceneInformation : MonoBehaviour
         }
         else if (beginningRoom != null)
         {
+            
             roomManager.SetRoom(beginningRoom);
         }
 

@@ -35,6 +35,7 @@ public class Lever : MonoBehaviour, i_Interactable
             {
                 if (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood)
                 {
+                    GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("LeverClick");
                     leverToggled = !leverToggled;
                     animator.SetBool("isToggled", leverToggled);
                     door.isLocked = false;

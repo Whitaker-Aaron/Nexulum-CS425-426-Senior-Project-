@@ -34,7 +34,7 @@ public class DeathPlane : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         if(!character.transitionedRoom && !character.transitioningRoom)
         {
-            character.takeDamage(20);
+            character.takeDamage(20, Vector3.zero);
         }
     }
 }

@@ -149,6 +149,7 @@ public class projectile : MonoBehaviour
             return;
         if (collision.gameObject.tag == "material") return;
 
+        Vector3 knockBackDir = GameObject.FindGameObjectWithTag("Player").transform.position - collision.transform.position;
         if (collision.gameObject.tag == "Player" && poolName == "enemyMagePoolOne")
         {
             if(classAbilties.instance.earthBool == true && classAbilties.instance.bubble == true)
