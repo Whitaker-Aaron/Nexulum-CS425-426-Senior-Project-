@@ -151,8 +151,10 @@ public class projectile : MonoBehaviour
 
         if (collision.gameObject.tag == "Player" && poolName == "enemyMagePoolOne")
         {
-            if(classAbilties.instance.earthBool == true && classAbilties.instance.checkingAura == true)
+            if(classAbilties.instance.earthBool == true && classAbilties.instance.bubble == true)
             {
+                gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                 gameObject.transform.forward = -gameObject.transform.forward;
                 return;
             }

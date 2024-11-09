@@ -36,7 +36,7 @@ public class classAbilties : MonoBehaviour
 
 
     //Knight
-    bool bubble = false;
+    [HideInInspector] public bool bubble = false;
     public float bubbleTime = 5f;
     [SerializeField] private GameObject knightBubblePrefab;
     public float bubbleRadius;
@@ -52,8 +52,7 @@ public class classAbilties : MonoBehaviour
     [SerializeField] private GameObject swordShotIceEffect;
     [SerializeField] private GameObject combatAuraEffectStart, combatAuraEffectEnd, combatAuraEffectLoop;
     public float comatAuraRadius = 4f;
-    private bool activatedAura = false;
-    [HideInInspector] public bool checkingAura = false;
+    private bool activatedAura, checkingAura = false;
     public float auraTime = 5f;
     private Vector3 currentAura;
     bool buffingPlayer = false;

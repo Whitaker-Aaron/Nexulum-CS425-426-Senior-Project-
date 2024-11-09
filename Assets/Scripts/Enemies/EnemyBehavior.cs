@@ -41,7 +41,7 @@ public class EnemyBehavior : MonoBehaviour
         }
         else
         {
-            return transform.position;
+            return Vector3.zero;//transform.position;
         }
     }
 
@@ -62,7 +62,20 @@ public class EnemyBehavior : MonoBehaviour
 
         //animation handling
         Vector3 movementDirection = CalculateMovementDirecton();
-        enemyAnim.updateAnimation(movementDirection);
+        
+
+        int forwardHash = Animator.StringToHash("Forward");
+        int turnHash = Animator.StringToHash("Turn");
+
+        if (movementDirection.magnitude < 0.01f)
+        {
+            enemyAnim.updateAnimation(Vector3.zero);
+        }
+        else
+        {
+            // Continue with animation update when moving
+            enemyAnim.updateAnimation(movementDirection);
+        }
     }
 
     //    public void ChangeTarget(GameObject newTarget)
