@@ -6,6 +6,8 @@ public class enemySword : MonoBehaviour
 {
     int damage;
     public bool isAttacking = false;
+
+    GameObject enemyInstance = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,17 +20,24 @@ public class enemySword : MonoBehaviour
         
     }
 
-    public void activateAttack(bool choice, int dmg)
+    public void activateAttack(bool choice, int dmg, GameObject enemy)
     {
         damage = dmg;
         isAttacking = choice;
+        enemyInstance = enemy;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player" && isAttacking)
         {
-            other.GetComponent<CharacterBase>().takeDamage(damage);
+            if (classAbilties.instance.earthBool == true && classAbilties.instance.checkingAura == true && enemyInstance != null)
+            {
+                enemyInstance.GetComponent<EnemyFrame>().takeDamage(damage, -Vector3.forward, EnemyFrame.DamageSource.Enemy, EnemyFrame.DamageType.Sword);
+                return;
+            }
+            else
+                other.GetComponent<CharacterBase>().takeDamage(damage);
         }
     }
 }

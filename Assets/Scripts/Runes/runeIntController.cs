@@ -111,6 +111,10 @@ public class runeIntController : MonoBehaviour, RuneInt
         {
             abilities.activateIceRune(true);
         }
+        if (rune.runeName == "Earth")
+        {
+            abilities.activateEarthRune(true);
+        }
     }
 
     public void applySpellRunes(Rune rune)
@@ -138,6 +142,10 @@ public class runeIntController : MonoBehaviour, RuneInt
         if (rune.runeName == "Ice")
         {
             abilities.activateIceRune(false);
+        }
+        if (rune.runeName == "Earth")
+        {
+            abilities.activateEarthRune(false);
         }
     }
 

@@ -151,7 +151,13 @@ public class projectile : MonoBehaviour
 
         if (collision.gameObject.tag == "Player" && poolName == "enemyMagePoolOne")
         {
-            collision.gameObject.GetComponent<CharacterBase>().takeDamage(damage);
+            if(classAbilties.instance.earthBool == true && classAbilties.instance.checkingAura == true)
+            {
+                gameObject.transform.forward = -gameObject.transform.forward;
+                return;
+            }
+            else
+                collision.gameObject.GetComponent<CharacterBase>().takeDamage(damage);
         }
         if (collision.gameObject.tag == "Enemy" && poolName == "enemyMagePoolOne")
         {
