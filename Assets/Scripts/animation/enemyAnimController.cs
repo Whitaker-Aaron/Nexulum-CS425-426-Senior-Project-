@@ -21,8 +21,8 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
     private Animator animator;
     private Transform enemyTransform;
 
-    private int forwardHash = Animator.StringToHash("Forward");
-    private int turnHash = Animator.StringToHash("Turn");
+    //private int forwardHash = Animator.StringToHash("Forward");
+    //private int turnHash = Animator.StringToHash("Turn");
 
     bool isAttacking = false;
 
@@ -32,21 +32,18 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
     {
         if (isAttacking)
             return;
-        if(movementDirection.magnitude > 1)
+        if(movementDirection.magnitude > .4f)
         {
             movementDirection.Normalize();
         }
-        else
-        {
-            movementDirection = Vector3.zero;
-        }
+
         //converts from world space to local space
         Vector3 localDir = enemyTransform.InverseTransformDirection(movementDirection);
-        float forwardAmount = localDir.z;
-        float turnAmount = localDir.x;
+        float forwardAmount = localDir.x;
+        float turnAmount = localDir.z;
 
-        animator.SetFloat(forwardHash, forwardAmount);
-        animator.SetFloat(turnHash, turnAmount);
+        animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
+        animator.SetFloat("Turn", turnAmount, 0.1f, Time.deltaTime);
     }
 
     public AnimatorStateInfo getAnimationInfo()

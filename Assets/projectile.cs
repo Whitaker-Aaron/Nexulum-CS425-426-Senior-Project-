@@ -160,7 +160,7 @@ public class projectile : MonoBehaviour
                 return;
             }
             else
-                collision.gameObject.GetComponent<CharacterBase>().takeDamage(damage);
+                collision.gameObject.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
         }
         if (collision.gameObject.tag == "Enemy" && poolName == "enemyMagePoolOne")
         {

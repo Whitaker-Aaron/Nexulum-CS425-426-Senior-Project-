@@ -55,7 +55,7 @@ public class EnemyBehavior : MonoBehaviour
         enemyAnim = GetComponent<EnemyAnimation>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!isMoving || paused)
             return;
@@ -64,16 +64,17 @@ public class EnemyBehavior : MonoBehaviour
         Vector3 movementDirection = CalculateMovementDirecton();
         
 
-        int forwardHash = Animator.StringToHash("Forward");
-        int turnHash = Animator.StringToHash("Turn");
+        //int forwardHash = Animator.StringToHash("Forward");
+        //int turnHash = Animator.StringToHash("Turn");
 
-        if (movementDirection.magnitude < 0.01f)
+        if (movementDirection.magnitude < 0.3f || movementDirection == Vector3.zero)
         {
             enemyAnim.updateAnimation(Vector3.zero);
         }
         else
         {
             // Continue with animation update when moving
+            //print("moving in directions: " + movementDirection);
             enemyAnim.updateAnimation(movementDirection);
         }
     }
