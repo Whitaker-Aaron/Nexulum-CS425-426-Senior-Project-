@@ -36,7 +36,7 @@ public class classAbilties : MonoBehaviour
 
 
     //Knight
-    bool bubble = false;
+    [HideInInspector] public bool bubble = false;
     public float bubbleTime = 5f;
     [SerializeField] private GameObject knightBubblePrefab;
     public float bubbleRadius;
@@ -128,8 +128,7 @@ public class classAbilties : MonoBehaviour
 
 
     //------------------Runes--------------------
-
-    bool fireBool, iceBool, earthBool, windBool, electricBool, waterBool = false;
+    [HideInInspector] public bool fireBool, iceBool, earthBool, windBool, electricBool, waterBool = false;
 
     //knight
 
@@ -329,26 +328,42 @@ public class classAbilties : MonoBehaviour
         player.GetComponent<CharacterBase>().bubbleShield = true;
         print("Activating shield");
 
-        GameObject currentShield = Instantiate(knightBubblePrefab, player.transform.position, Quaternion.identity);
-        currentShield.transform.SetParent(player.transform, false);
-        currentShield.transform.position = player.transform.position;
-        currentShield.GetComponent<CapsuleCollider>().radius = bubbleRadius;
-        currentShield.GetComponent<CapsuleCollider>().center = new Vector3(0, 1, 0);
+        if(earthBool)
+        {
+            EffectsManager.instance.getFromPool("earthShield", Vector3.zero);
+            yield return new WaitForSeconds(.5f);
+            EffectsManager.instance.getFromPool("earthShield", Vector3.zero);
+            yield return new WaitForSeconds(bubbleTime);
+            EffectsManager.instance.getFromPool("earthShield", Vector3.zero);
+        }
+        else
+        {
+            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero);
+            yield return new WaitForSeconds(.5f);
+            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero);
+            yield return new WaitForSeconds(bubbleTime);
+            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero);
+        }
+        //Instantiate(knightBubblePrefab, player.transform.position, Quaternion.identity);
+        //currentShield.transform.SetParent(player.transform, false);
+        //currentShield.transform.position = player.transform.position;
+        //currentShield.GetComponent<CapsuleCollider>().radius = bubbleRadius;
+        //currentShield.GetComponent<CapsuleCollider>().center = new Vector3(0, 1, 0);
 
-        GameObject currentEffect = Instantiate(knightBubbleEffect, player.transform.position, Quaternion.identity);
-        currentEffect.transform.SetParent(player.transform);
-        currentEffect.transform.position = player.transform.position;
-        currentEffect.GetComponent<ParticleSystem>().Play();
-        yield return new WaitForSeconds(bubbleTime);
-        Destroy(currentShield);
+        //GameObject currentEffect = Instantiate(knightBubbleEffect, player.transform.position, Quaternion.identity);
+        //currentEffect.transform.SetParent(player.transform);
+        //currentEffect.transform.position = player.transform.position;
+        //currentEffect.GetComponent<ParticleSystem>().Play();
+        //yield return new WaitForSeconds(bubbleTime);
+        //Destroy(currentShield);
         bubble = false;
         player.GetComponent<CharacterBase>().bubbleShield = false;
         print("Deactivating shield");
-        if(currentEffect != null)
-        {
-            currentEffect.GetComponent<ParticleSystem>().Stop();
-            Destroy(currentEffect);
-        }
+        //if(currentEffect != null)
+        //{
+            //currentEffect.GetComponent<ParticleSystem>().Stop();
+            //Destroy(currentEffect);
+        //}
         yield break;
     }
 
@@ -1054,6 +1069,8 @@ public class classAbilties : MonoBehaviour
                 threwGrenade = true;
                 //gameObject.GetComponent<masterInput>().throwingGrenade = false;
                 GameObject grenade = Instantiate(grenadePrefab, grenadeSpawn.transform.position, grenadeSpawn.transform.rotation);
+                if(earthBool)
+                    grenade.GetComponent<grenade>().isEarth = true;
                 grenade.GetComponent<Rigidbody>().velocity = grenade.transform.forward * grenadeSpeed;
                 StartCoroutine(grenade.GetComponent<grenade>().explode());
                 StartCoroutine(grenadeWait(grenadeCooldown));
@@ -1127,6 +1144,18 @@ public class classAbilties : MonoBehaviour
         else
         {
             iceBool = false;
+        }
+    }
+
+    public void activateEarthRune(bool choice)
+    {
+        if (choice)
+        {
+            earthBool = true;
+        }
+        else
+        {
+            earthBool = false;
         }
     }
 

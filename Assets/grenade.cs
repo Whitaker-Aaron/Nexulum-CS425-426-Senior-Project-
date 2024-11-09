@@ -11,6 +11,8 @@ public class grenade : MonoBehaviour
     public LayerMask enemy;
     public int damage = 25;
 
+    public bool isEarth = false;
+
 
     public IEnumerator explode()
     {
@@ -26,6 +28,11 @@ public class grenade : MonoBehaviour
             {
                 c.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Explosion);
             }
+        }
+
+        if (isEarth)
+        {
+            EffectsManager.instance.getFromPool("earthGrenade", gameObject.transform.position);
         }
 
         Destroy(gameObject);

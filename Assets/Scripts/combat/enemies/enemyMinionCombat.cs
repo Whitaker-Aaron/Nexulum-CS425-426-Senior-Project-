@@ -28,7 +28,7 @@ public class enemyMinionCombat : MonoBehaviour
             //attack player commands
             Debug.Log("Starting attack");
             canAttack = false;
-            sword.activateAttack(true, attackDamage);
+            sword.activateAttack(true, attackDamage, this.gameObject);
             isAttacking = true;
             anim.minionAttack();
             enemy.pauseMovement(anim.getAnimationTime());
@@ -42,7 +42,7 @@ public class enemyMinionCombat : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
         Debug.Log("isAttacking disabled");
         isAttacking = false;
-        sword.activateAttack(false, attackDamage);
+        sword.activateAttack(false, attackDamage, this.gameObject);
     }
 
     IEnumerator wait(float time, EnemyAnimation anim)

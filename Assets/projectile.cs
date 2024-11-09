@@ -152,7 +152,15 @@ public class projectile : MonoBehaviour
         Vector3 knockBackDir = GameObject.FindGameObjectWithTag("Player").transform.position - collision.transform.position;
         if (collision.gameObject.tag == "Player" && poolName == "enemyMagePoolOne")
         {
-            collision.gameObject.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
+            if(classAbilties.instance.earthBool == true && classAbilties.instance.bubble == true)
+            {
+                gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                gameObject.transform.forward = -gameObject.transform.forward;
+                return;
+            }
+            else
+                collision.gameObject.GetComponent<CharacterBase>().takeDamage(damage);
         }
         if (collision.gameObject.tag == "Enemy" && poolName == "enemyMagePoolOne")
         {

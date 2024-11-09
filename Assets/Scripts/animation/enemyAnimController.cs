@@ -36,10 +36,14 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
         {
             movementDirection.Normalize();
         }
+        else
+        {
+            movementDirection = Vector3.zero;
+        }
         //converts from world space to local space
         Vector3 localDir = enemyTransform.InverseTransformDirection(movementDirection);
-        float forwardAmount = localDir.x;
-        float turnAmount = localDir.z;
+        float forwardAmount = localDir.z;
+        float turnAmount = localDir.x;
 
         animator.SetFloat(forwardHash, forwardAmount);
         animator.SetFloat(turnHash, turnAmount);
