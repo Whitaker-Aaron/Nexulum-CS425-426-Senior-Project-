@@ -7,6 +7,8 @@ public class enemySword : MonoBehaviour
     int damage;
     public bool isAttacking = false;
     [SerializeField] Transform mainSkeletonTransform;
+
+    GameObject enemyInstance = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,10 +21,11 @@ public class enemySword : MonoBehaviour
         
     }
 
-    public void activateAttack(bool choice, int dmg)
+    public void activateAttack(bool choice, int dmg, GameObject enemy)
     {
         damage = dmg;
         isAttacking = choice;
+        enemyInstance = enemy;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -30,7 +33,20 @@ public class enemySword : MonoBehaviour
         if(other.tag == "Player" && isAttacking)
         {
             Vector3 knockBackDir = other.transform.position - mainSkeletonTransform.position;
-            other.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
+            //other.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
+            
+            //print("earthBool: " + classAbilties.instance.earthBool + "  aura: " + classAbilties.instance.bubble + "  enemyInstance: " + enemyInstance);
+            if (classAbilties.instance.earthBool == true && classAbilties.instance.bubble == true && enemyInstance != null)
+            {
+                //print("reflecting enemy damage back");
+                enemyInstance.GetComponent<EnemyFrame>().takeDamage(damage, -Vector3.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
+                return;
+            }
+            else
+            {
+                print("hitting player");
+                other.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
+            }
         }
     }
 }

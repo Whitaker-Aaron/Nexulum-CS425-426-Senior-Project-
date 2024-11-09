@@ -41,7 +41,7 @@ public class EnemyBehavior : MonoBehaviour
         }
         else
         {
-            return transform.position;
+            return Vector3.zero;//transform.position;
         }
     }
 
@@ -55,14 +55,28 @@ public class EnemyBehavior : MonoBehaviour
         enemyAnim = GetComponent<EnemyAnimation>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!isMoving || paused)
             return;
 
         //animation handling
         Vector3 movementDirection = CalculateMovementDirecton();
-        enemyAnim.updateAnimation(movementDirection);
+        
+
+        //int forwardHash = Animator.StringToHash("Forward");
+        //int turnHash = Animator.StringToHash("Turn");
+
+        if (movementDirection.magnitude < 0.3f || movementDirection == Vector3.zero)
+        {
+            enemyAnim.updateAnimation(Vector3.zero);
+        }
+        else
+        {
+            // Continue with animation update when moving
+            //print("moving in directions: " + movementDirection);
+            enemyAnim.updateAnimation(movementDirection);
+        }
     }
 
     //    public void ChangeTarget(GameObject newTarget)

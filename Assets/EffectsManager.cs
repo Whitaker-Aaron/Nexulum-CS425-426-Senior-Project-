@@ -7,8 +7,9 @@ public class EffectsManager : MonoBehaviour
     public static EffectsManager instance;
 
     //private static Queue<GameObject> bulletHitPool;
-    public GameObject bulletHitPrefab, tankHitPrefab, mageHitPrefab, rocketHitPrefab, rocketFirePrefab, swordShotPrefab, swordShotIcePrefab;
+    public GameObject bulletHitPrefab, tankHitPrefab, mageHitPrefab, rocketHitPrefab, rocketFirePrefab, swordShotPrefab, swordShotIcePrefab, earthGrenadePrefab;
     public GameObject caStart, caLoop, caEnd, faStart, faLoop, faEnd;
+    public GameObject earthShieldPrefab, esStart, esEnd, bsStart, bsLoop, bsEnd;
     private GameObject poolObj;
     public int bulletPoolSize = 10;
     public int tankPoolSize = 3;
@@ -55,12 +56,15 @@ public class EffectsManager : MonoBehaviour
         createNewPool("rocketFireCircle", rocketFirePrefab, rocketFireSize);
         createNewPool("swordShotHit", swordShotPrefab, swordShotSize);
         createNewPool("swordShotIceHit", swordShotIcePrefab, swordShotSize);
+        createNewPool("bubbleShield", bsStart, 3);
+        createNewPool("earthShield", esStart, 3);
+        createNewPool("earthGrenade", earthGrenadePrefab, 5);
     }
 
 
     public virtual void createNewPool(string poolName, GameObject prefab, int size)
     {
-        if(poolName == "caPool" || poolName == "faPool")
+        if(poolName == "caPool" || poolName == "faPool" || poolName == "earthShield" || poolName == "bubbleShield")
         {
             allPools[poolName] = new Queue<GameObject>();
 
@@ -69,10 +73,19 @@ public class EffectsManager : MonoBehaviour
                 if(i==0)
                 {
                     GameObject temp = Instantiate(prefab);
-                    temp.transform.parent = poolObj.transform;
+                    if (poolName == "bubbleShield" || poolName == "earthShield")
+                    {
+                        temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
+                        if(poolName == "earthShield")
+                            temp.transform.position += new Vector3(0,1,0);
+                        temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+                    }
+                    else
+                        temp.transform.parent = poolObj.transform;
                     //DontDestroyOnLoad(temp.gameObject);
                     allPools[poolName].Enqueue(temp);
                     temp.SetActive(false);
+                    
                 }
                 else if(i==1)
                 {
@@ -84,13 +97,34 @@ public class EffectsManager : MonoBehaviour
                         allPools[poolName].Enqueue(temp);
                         temp.SetActive(false);
                     }
-                    else
+                    else if(poolName == "faPool")
                     {
                         GameObject temp = Instantiate(faLoop);
                         temp.transform.parent = poolObj.transform;
                         //DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
                         temp.SetActive(false);
+                    }
+                    else if (poolName == "bubbleShield")
+                    {
+                        GameObject temp = Instantiate(bsLoop);
+                        temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
+                        temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                        //temp.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform, false);
+                    }
+                    else // earthShield
+                    {
+                        GameObject temp = Instantiate(earthShieldPrefab);
+                        temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
+                        temp.transform.position += new Vector3(0, 1, 0);
+                        temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                        //temp.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform, false);
                     }
                 }
                 else
@@ -103,13 +137,34 @@ public class EffectsManager : MonoBehaviour
                         allPools[poolName].Enqueue(temp);
                         temp.SetActive(false);
                     }
-                    else
+                    else if (poolName == "faPool")
                     {
                         GameObject temp = Instantiate(faEnd);
                         temp.transform.parent = poolObj.transform;
                         //DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
                         temp.SetActive(false);
+                    }
+                    else if (poolName == "bubbleShield")
+                    {
+                        GameObject temp = Instantiate(bsEnd);
+                        temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
+                        temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                        //temp.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform, false);
+                    }
+                    else
+                    {
+                        GameObject temp = Instantiate(esEnd);
+                        temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
+                        temp.transform.position += new Vector3(0, 1, 0);
+                        temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+                        //DontDestroyOnLoad(temp.gameObject);
+                        allPools[poolName].Enqueue(temp);
+                        temp.SetActive(false);
+                        //temp.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform, false);
                     }
                     
                 }
@@ -155,16 +210,36 @@ public class EffectsManager : MonoBehaviour
         if (allPools[poolName].Count > 0)
         {
             GameObject obj = allPools[poolName].Dequeue();
-            obj.transform.position = position;
+            if (poolName != "bubbleShield" && poolName != "earthShield")
+                obj.transform.position = position;
+            else
+                obj.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+            //if(poolName == "bubbleShield" || poolName == "earthShield")
+            //{
+                //obj.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform);
+            //}
             obj.SetActive(true);
             obj.GetComponent<ParticleSystem>().Play();
-            StartCoroutine(returnToPool(poolName, obj.GetComponent<ParticleSystem>().main.duration + .03f, obj));
+
+            if (poolName != "bubbleShield" && poolName != "earthShield")
+                StartCoroutine(returnToPool(poolName, obj.GetComponent<ParticleSystem>().main.duration + .03f, obj));
+            else
+            {
+                print("poolCount = " + allPools[poolName].Count);
+                if (allPools[poolName].Count == 1)
+                {
+                    StartCoroutine(returnToPool(poolName, classAbilties.instance.bubbleTime, obj));
+                }
+                else
+                    StartCoroutine(returnToPool(poolName, obj.GetComponent<ParticleSystem>().main.duration + .01f, obj));
+            }
         }
         else
         {
             GameObject newObj = Instantiate(checkPoolPrefab(poolName));
             newObj.GetComponent<ParticleSystem>().Play();
             StartCoroutine(returnToPool(poolName, newObj.GetComponent<ParticleSystem>().main.duration + .03f, newObj));
+
         }
     }
 
@@ -172,7 +247,8 @@ public class EffectsManager : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         effect.SetActive(false);
-        effect.transform.position = Vector3.zero;
+        if (poolName != "bubbleShield" && poolName != "earthShield")
+            effect.transform.position = Vector3.zero;
         allPools[poolName].Enqueue(effect);
         yield break;
     }
