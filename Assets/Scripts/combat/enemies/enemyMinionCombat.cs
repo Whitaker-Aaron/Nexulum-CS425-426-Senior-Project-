@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class enemyMinionCombat : MonoBehaviour
+public class enemyMinionCombat : MonoBehaviour, enemyInt
 {
     bool canAttack = true;
     public Transform attackPoint;
     public float attackRange = .5f;
-    public bool isAttacking = false;
+    //public bool isAttacking => isAttacking;
     public LayerMask Player;
     public enemySword sword;
     EnemyAnimation anim;
@@ -16,9 +16,26 @@ public class enemyMinionCombat : MonoBehaviour
     EnemyLOS los;
     public int attackDamage = 20;
 
+    private bool _isAttacking;
+    public bool isAttacking
+    {
+        get { return _isAttacking; }
+        set
+        {
+            if (_isAttacking != value)  // Only set if the value is different
+            {
+                _isAttacking = value;
+                // Do the other necessary actions
+            }
+        }
+    }
 
 
-    
+    public enemyInt getType()
+    {
+        return this;
+    }
+
     void attackPlayer()
     {
         Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);

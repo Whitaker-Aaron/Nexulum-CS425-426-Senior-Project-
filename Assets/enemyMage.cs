@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class enemyMage : MonoBehaviour, mageInterface
+public class enemyMage : MonoBehaviour, mageInterface, enemyInt
 {
 
     public float detectionRadius;
@@ -19,6 +19,26 @@ public class enemyMage : MonoBehaviour, mageInterface
 
     [SerializeField]
     private Transform spellProjSpawn;
+
+
+    private bool _isAttacking;
+    public bool isAttacking
+    {
+        get { return _isAttacking; }
+        set
+        {
+            if (_isAttacking != value)  // Only set if the value is different
+            {
+                _isAttacking = value;
+                // Do the other necessary actions
+            }
+        }
+    }
+
+    public enemyInt getType()
+    {
+        return this;
+    }
 
     private void Awake()
     {
@@ -49,9 +69,11 @@ public class enemyMage : MonoBehaviour, mageInterface
     public IEnumerator spellCast()
     {
         canCastSpell = false;
+        isAttacking = true;
         projectileManager.Instance.getProjectile("enemyMagePoolOne", spellProjSpawn.position, spellProjSpawn.rotation);
         yield return new WaitForSeconds(castTime);
         canCastSpell = true;
+        isAttacking = false;
         yield break;
     }
 
