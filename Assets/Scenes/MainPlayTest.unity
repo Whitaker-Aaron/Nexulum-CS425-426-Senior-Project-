@@ -4277,7 +4277,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 615926881}
   attackRange: 1.76
-  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -4461,7 +4460,6 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 4a615bd0a41e4bf4a98b6dc62df78af0, type: 3}
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
-  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -13567,7 +13565,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 257268326}
   attackRange: 1.76
-  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -13751,7 +13748,6 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
-  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -16982,7 +16978,6 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 4a615bd0a41e4bf4a98b6dc62df78af0, type: 3}
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
-  enemyType: {fileID: 0}
   enemyReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -21335,7 +21330,6 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 4a615bd0a41e4bf4a98b6dc62df78af0, type: 3}
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
-  enemyType: {fileID: 0}
   enemyReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -22165,7 +22159,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 1826010261}
   attackRange: 1.76
-  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -22349,7 +22342,6 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
-  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -37188,67 +37180,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 668735768885291391, guid: 91ad7bf144749b04ab484a680630a040, type: 3}
   m_PrefabInstance: {fileID: 1424249969}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1429018626
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -9.605722
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.012938499
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -5.5202026
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424226985590063101, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294237723755017654, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_Name
-      value: PlayerNew
-      objectReference: {fileID: 0}
-    - target: {fileID: 4294237723755017654, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
 --- !u!1 &1433817169
 GameObject:
   m_ObjectHideFlags: 0
@@ -47172,7 +47103,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 9102750}
   attackRange: 1.76
-  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -47356,7 +47286,6 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
-  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -53826,7 +53755,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 552750813}
   attackRange: 1.76
-  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -54010,7 +53938,6 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 4a615bd0a41e4bf4a98b6dc62df78af0, type: 3}
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
-  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
@@ -55248,4 +55175,3 @@ SceneRoots:
   - {fileID: 169142540}
   - {fileID: 1051375770}
   - {fileID: 42218523}
-  - {fileID: 1429018626}

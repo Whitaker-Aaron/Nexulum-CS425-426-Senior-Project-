@@ -15,7 +15,9 @@ public class EnemyFrame : MonoBehaviour
     [SerializeField] GameObject enemyHealth;
 
     //TODO: NEED TO INTERFACE ENEMY TYPE 
-    [SerializeField] enemyMinionCombat enemyType;
+    //[SerializeField] 
+    //enemyMinionCombat enemyType;
+    enemyInt enemyType;
     [SerializeField] Enemy enemyReference;
 
     GameObject enemyUIRef;
@@ -43,6 +45,7 @@ public class EnemyFrame : MonoBehaviour
     Slider delayedEnemyHealthBar;
 
 
+
     private void Awake()
     {
         //enemyType = transform.GetComponent<enemyMinionCombat>();
@@ -52,6 +55,7 @@ public class EnemyFrame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+       
         zeroDir = Vector3.zero;
         health = enemyReference.baseHealth;
         maxHealth = enemyReference.baseHealth;
@@ -87,6 +91,11 @@ public class EnemyFrame : MonoBehaviour
         healthRef.transform.position = new Vector3(this.transform.position.x - 1f, this.transform.position.y + 2f, this.transform.position.z);
     }
 
+    private void OnDestroy()
+    {
+        StopCoroutine(dmgOverTime(0, 0, 0, DamageType.Sword));
+    }
+
     //take damage function with given damage paramater - Spencer
     public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource, DamageType damageType)
     {
@@ -101,35 +110,52 @@ public class EnemyFrame : MonoBehaviour
         // Damage info for state - Aisling
         onDamaged = true;
         source = targetSource;
-
-        Debug.Log("Enemy was attacked");
-        Debug.Log("Enemy attacking?" + enemyType.isAttacking);
-        if (!enemyType.isAttacking)
+        
+        if(enemyReference != null)
         {
-            Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
-            if (forwardDir != Vector3.zero)
+            switch (enemyReference.enemyName)
             {
-                transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 10, ForceMode.VelocityChange);
-                StartCoroutine(StopVelocity(0.15f));
+                case "Skeleton":
+                    if(gameObject != null)
+                        enemyType = gameObject.GetComponent<enemyMinionCombat>().getType();
+                    break;
+                case "Mage":
+                    if (gameObject != null)
+                        enemyType = gameObject.GetComponent<enemyMage>().getType();
+                    break;
             }
 
-            anim.takeHit();
-        }
-        print("Health is: " + health + " Dmg taken is: " + damage);
-        if (health - damage <= 0 && !dying)
-        {
-            health = 0;
-            dying = true;
-            //StartCoroutine(updateHealthBarsNegative());
-            StartCoroutine(death());
 
-        }
+            Debug.Log("Enemy was attacked");
+            Debug.Log("Enemy attacking?" + enemyType.isAttacking);
+            if (!enemyType.isAttacking)
+            {
+                Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
+                if (forwardDir != Vector3.zero)
+                {
+                    transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 10, ForceMode.VelocityChange);
+                    StartCoroutine(StopVelocity(0.15f));
+                }
 
-        else if (!dying)
-        {
-            health -= damage;
-            StartCoroutine(updateHealthBarsNegative());
+                anim.takeHit();
+            }
+            print("Health is: " + health + " Dmg taken is: " + damage);
+            if (health - damage <= 0 && !dying)
+            {
+                health = 0;
+                dying = true;
+                //StartCoroutine(updateHealthBarsNegative());
+                StartCoroutine(death());
+
+            }
+
+            else if (!dying)
+            {
+                health -= damage;
+                StartCoroutine(updateHealthBarsNegative());
+            }
         }
+        
 
         
 
@@ -160,6 +186,10 @@ public class EnemyFrame : MonoBehaviour
         while (Time.time < endTime)
         {
             // Apply damage once per dmgTime interval
+            if(this == null)
+            {
+                yield break;
+            }
             takeDamage(dmg, Vector3.zero, EnemyFrame.DamageSource.AOE, dmgType);
             Debug.Log("Damage taken: " + dmg + " at time: " + Time.time);
 
