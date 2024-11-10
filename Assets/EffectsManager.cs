@@ -58,7 +58,7 @@ public class EffectsManager : MonoBehaviour
         createNewPool("swordShotIceHit", swordShotIcePrefab, swordShotSize);
         createNewPool("bubbleShield", bsStart, 3);
         createNewPool("earthShield", esStart, 3);
-        createNewPool("earthGrenade", earthGrenadePrefab, 5);
+        createNewPool("earthGrenade", earthGrenadePrefab, 4);
     }
 
 

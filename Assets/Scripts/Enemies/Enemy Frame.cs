@@ -356,6 +356,7 @@ public class EnemyFrame : MonoBehaviour
         Explosion,
         Fire,
         Ice,
+        Earth,
         Electric,
         Wind
     }
