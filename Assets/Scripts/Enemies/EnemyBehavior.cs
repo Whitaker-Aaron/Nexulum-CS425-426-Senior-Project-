@@ -33,18 +33,7 @@ public class EnemyBehavior : MonoBehaviour
         yield break;
     }
 
-    private Vector3 CalculateMovementDirecton()
-    {
-        if (target != null)
-        {
-            return (target.transform.position - transform.position).normalized;
-        }
-        else
-        {
-            return Vector3.zero;//transform.position;
-        }
-    }
-
+    
     void Awake()
     {
         target = GameObject.FindWithTag("Player");
@@ -61,87 +50,17 @@ public class EnemyBehavior : MonoBehaviour
             return;
 
         //animation handling
-        Vector3 movementDirection = CalculateMovementDirecton();
-        
-
-        //int forwardHash = Animator.StringToHash("Forward");
-        //int turnHash = Animator.StringToHash("Turn");
-
+        Vector3 movementDirection = gameObject.GetComponent<NavMeshAgent>().velocity;//CalculateMovementDirecton();
+       
         if (movementDirection.magnitude < 0.3f || movementDirection == Vector3.zero)
         {
             enemyAnim.updateAnimation(Vector3.zero);
         }
         else
         {
-            // Continue with animation update when moving
-            //print("moving in directions: " + movementDirection);
             enemyAnim.updateAnimation(movementDirection);
         }
     }
 
-    //    public void ChangeTarget(GameObject newTarget)
-    //    {
-    //        if (newTarget != null)
-    //        {
-    //            target = newTarget;
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("New target cannot be null");
-    //        }
-    //    }
-
-    //    public bool TargetSpotted()
-    //    {
-    //        if (target != null)
-    //        {
-    //            selfPos = transform.position;
-    //            targetPos = target.transform.position;
-    //            Vector3 headingtotarget = targetPos - selfPos;
-
-    //            float distancetotarget = Vector3.Distance(targetPos, selfPos);
-    //            float targetangle = Vector3.Angle(headingtotarget, transform.forward);
-
-    //            RaycastHit hit;
-
-    //            if ((distancetotarget <= detectionRange)) // Determine if target is within detection range
-    //            {
-    //                if (targetangle <= visionAngle) // Determine if target is in vision 'cone' (angle)
-    //                {
-    //                    Physics.Raycast(origin: selfPos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange); // Determine if target is obstructed
-    //                    if (hit.transform == target.transform)
-    //                    {
-    //                        // smoothLook(target.transform);
-    //                        return true;
-    //                    }
-    //                    else
-    //                    {
-    //                        return false;
-    //                    }
-    //                }
-    //                else
-    //                {
-    //                    return false;
-    //                }
-    //        }
-    //        else
-    //        {
-    //            return false;
-    //        }
-    //    }
-    //        else
-    //        {
-    //            return false;
-    //        }
-    //    }
-
-    //    // Spencer's smooth LookAt function from drone combat script, slight edit to work with enemies
-    //    void smoothLook(Transform target)
-    //    {
-    //        Vector3 direction = (target.position - transform.position).normalized;
-    //        direction.y = 0f;  // Keep the y-axis at 0
-    //        Quaternion targetRot = Quaternion.LookRotation(direction);
-
-    //        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime);
-    //    }
+    
 }
