@@ -312,8 +312,8 @@ public class masterInput : MonoBehaviour
 
 
 
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
-            return;
+        //if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
+            //return;
 
         if (inputPaused) return;
 
@@ -323,17 +323,10 @@ public class masterInput : MonoBehaviour
     }
     private void FixedUpdate()
     {
-
+        bool playFootsteps = false;
         player.transform.rotation = Quaternion.Euler(0.0f, player.transform.eulerAngles.y, 0.0f);
-        
 
-
-
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
-        {
-            audioManager.PauseFootsteps("TestWalk");
-            return;
-        }
+        if (inputPaused) return;
             
 
         float horizontal = Input.GetAxis("Horizontal");
@@ -344,14 +337,26 @@ public class masterInput : MonoBehaviour
 
         if (direction.magnitude >= 0.1f)
         {
-            audioManager.PlayFootsteps("TestWalk");
+            playFootsteps = true;
             movePlayer();
+        }
+        else
+        {
+            playFootsteps = false;
+        }
+        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
+        {
+            playFootsteps = false;
+        }
+        if(playFootsteps)
+        {
+            audioManager.PlayFootsteps("TestWalk");
         }
         else
         {
             audioManager.PauseFootsteps("TestWalk");
         }
-        
+
 
 
 
@@ -540,8 +545,8 @@ public class masterInput : MonoBehaviour
     //actual player translation for FixedUpdate
     public void movePlayer()
     {
-        if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused || (isAttacking && currentClass == WeaponBase.weaponClassTypes.Engineer))
-            return;
+        //if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused || (isAttacking && currentClass == WeaponBase.weaponClassTypes.Engineer))
+            //return
         /*
         Vector3 movement = new Vector3(move.x, 0, move.y);
 
