@@ -7,9 +7,11 @@ public class grenade : MonoBehaviour
 
     public float fuseTime = 3f;
     public float blastRadius = 3f;
+    public float earthBlastRadius = 3f;
     public GameObject explosion;
     public LayerMask enemy;
     public int damage = 25;
+    public int earthDamage = 25;
 
     public bool isEarth = false;
 
@@ -32,7 +34,16 @@ public class grenade : MonoBehaviour
 
         if (isEarth)
         {
+
             EffectsManager.instance.getFromPool("earthGrenade", gameObject.transform.position);
+            enemies = Physics.OverlapSphere(gameObject.transform.position, earthBlastRadius, enemy);
+            foreach (Collider c in enemies)
+            {
+                if (c.gameObject.tag == "Enemy")
+                {
+                    c.GetComponent<EnemyFrame>().takeDamage(earthDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Earth);
+                }
+            }
         }
 
         Destroy(gameObject);
