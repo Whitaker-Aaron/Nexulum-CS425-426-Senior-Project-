@@ -1168,5 +1168,10 @@ public class classAbilties : MonoBehaviour
         bubbleRadius += amount;
     }
 
+    public void modifyCombatAuraRad(float amount)
+    {
+        Debug.Log("Modified CombatAura radius by: " + amount);
+        comatAuraRadius += amount;
+    }
 
 }

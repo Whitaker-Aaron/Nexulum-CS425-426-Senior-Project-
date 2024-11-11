@@ -36,6 +36,7 @@ public class SkillTreeManager : MonoBehaviour
 
         //where all skills will go
         skillTree.Add(new skillTreeNode("IncBubRad", () => abilities.modifyBubbleRad(1f)));
+        skillTree.Add(new skillTreeNode("IncComAuraRad", () => abilities.modifyCombatAuraRad(1f)));
 
         foreach (var s in skillTree)
         {
