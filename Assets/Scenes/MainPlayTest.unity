@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.1746235, g: 0.2184166, b: 0.30067572, a: 1}
+  m_IndirectSpecularColor: {r: 0.17462322, g: 0.21841627, b: 0.3006752, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1478,7 +1478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4609186787723949058, guid: 79c6870da66de2240972643c580c1890, type: 3}
       propertyPath: m_Name
-      value: Mini_Control_Button
+      value: Lever
       objectReference: {fileID: 0}
     - target: {fileID: 4609186787723949058, guid: 79c6870da66de2240972643c580c1890, type: 3}
       propertyPath: m_Layer
@@ -1587,9 +1587,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d483f6cb4d2f7b45b5751a060b4af69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prompt: 
+  type: 0
   leverUI: {fileID: 1383166944}
   controlledDoor: {fileID: 1051375771}
+  doorList: []
 --- !u!65 &42218527
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26890,7 +26891,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c57a98fefb040354ebcd8c19256f06ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prompt: 
   doorType: 0
   doorUI: {fileID: 0}
   isLocked: 1

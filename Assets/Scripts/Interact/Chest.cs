@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.UI; 
 public class Chest : MonoBehaviour, i_Interactable
 {
-    [SerializeField] private string prompt;
-
     private Animator animator;
     private MaterialScrollManager materialManager;
     private Key key;
@@ -19,7 +17,6 @@ public class Chest : MonoBehaviour, i_Interactable
 
     [Header("Items to Add")]
     public List<ItemList> itemsToAdd;
-    public string interactionPrompt => prompt;
 
     public void Awake()
     {

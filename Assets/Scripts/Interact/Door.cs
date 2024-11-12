@@ -6,11 +6,9 @@ public enum DoorType { Gate, Wood, Breakable }
 
 public class Door : MonoBehaviour, i_Interactable
 {
-    [SerializeField] private string prompt;
     [SerializeField] public DoorType doorType;
     public GameObject doorUI;
     private Animator animator;
-    public string interactionPrompt => prompt;
     public bool isLocked;
     private bool isOpen;
 
