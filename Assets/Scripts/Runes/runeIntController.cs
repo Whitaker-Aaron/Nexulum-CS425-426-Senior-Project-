@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,9 @@ public class runeIntController : MonoBehaviour, RuneInt
     public CharacterBase character;
     masterInput input;
     classAbilties abilities;
+
+    [SerializedDictionary("buffName", "buffVal(int)")]
+    public SerializedDictionary<string, int> intBuffVals;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +39,20 @@ public class runeIntController : MonoBehaviour, RuneInt
     }
 
 
+
+    private int getIntVal(string name)
+    {
+        //print("string name is: " + name);
+        if (intBuffVals.ContainsKey(name))
+        {
+            return intBuffVals[name];
+        }
+        else
+        {
+            Debug.LogWarning($"Prefab with name {name} not found in the dictionary.");
+            return 0;
+        }
+    }
 
     public void ResetRunes()
     {
@@ -93,7 +111,10 @@ public class runeIntController : MonoBehaviour, RuneInt
     }
     public void applyBuffRunes(Rune rune)
     {
-        
+        if(rune.runeName == "Defense")
+        {
+            character.changeDefenseStat(getIntVal("defenseRuneBuff"));
+        }
 
     }
     public void applyDefenseRunes(Rune rune)
@@ -125,7 +146,10 @@ public class runeIntController : MonoBehaviour, RuneInt
 
     public void removeBuffRunes(Rune rune)
     {
-
+        if (rune.runeName == "Defense")
+        {
+            character.changeDefenseStat(-getIntVal("defenseRuneBuff"));
+        }
     }
 
     public void removeDefenseRunes(Rune rune)

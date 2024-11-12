@@ -16,6 +16,13 @@ public class grenade : MonoBehaviour
     public bool isEarth = false;
 
 
+    public void increaseBlastRadius(float amount)
+    {
+        print("changing grenade rad from " + blastRadius + " to " + (blastRadius + amount));
+        blastRadius += amount;
+        earthBlastRadius += amount;
+    }
+
     public IEnumerator explode()
     {
         yield return new WaitForSeconds(fuseTime);

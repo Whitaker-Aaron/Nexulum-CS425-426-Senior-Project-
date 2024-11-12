@@ -61,6 +61,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     //Player Health System
     int maxHealth;
     int playerHealth;
+    int defense = 0;
 
     //Knight attackpoint transform - NEEDED FOR MASTERINPUT - Spencer
     public Transform swordAttackPoint;
@@ -470,6 +471,17 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             }
         }
     }
+
+    //Rune functions
+
+    public void changeDefenseStat(int amount)
+    {
+        print("Changing defense from " + defense + " to " + (defense + amount));
+        defense += amount;
+    }
+
+
+    //Health
 
     public void ApplyLowHealth()
     {
