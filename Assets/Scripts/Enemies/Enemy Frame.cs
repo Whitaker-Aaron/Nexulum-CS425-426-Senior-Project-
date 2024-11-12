@@ -130,6 +130,10 @@ public class EnemyFrame : MonoBehaviour
             Debug.Log("Enemy attacking?" + enemyType.isAttacking);
             if (!enemyType.isAttacking)
             {
+                anim.takeHit();
+            }
+            if(true)
+            {
                 Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
                 if (forwardDir != Vector3.zero)
                 {
@@ -137,7 +141,7 @@ public class EnemyFrame : MonoBehaviour
                     StartCoroutine(StopVelocity(0.15f));
                 }
 
-                anim.takeHit();
+                
             }
             print("Health is: " + health + " Dmg taken is: " + damage);
             if (health - damage <= 0 && !dying)
