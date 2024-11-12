@@ -14,6 +14,16 @@ public class KnightSkillMenu : MonoBehaviour
     public void OnIncreaseBubbleRadius()
     {
         skillTreeManager.unlockSkill("IncBubRad");
+        EffectsManager.instance.replacePoolEffects("bubbleShield", 1);
+        EffectsManager.instance.replacePoolEffects("earthShield", 1);
         print("Bubble rad has been changed");
+    }
+
+    public void onIncreaseCombatAuraRad()
+    {
+        skillTreeManager.unlockSkill("IncComAuraRad");
+        EffectsManager.instance.replacePoolEffects("caPool", 1);
+        EffectsManager.instance.replacePoolEffects("faPool", 1);
+        print("combat aura rad has been changed");
     }
 }

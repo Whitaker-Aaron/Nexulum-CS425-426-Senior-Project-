@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,40 @@ public class SkillTreeManager : MonoBehaviour
     public static SkillTreeManager instance;
     private List<skillTreeNode> skillTree;
     classAbilties abilities;
+
+    [SerializedDictionary("skillName", "buffValue(float)")]
+    public SerializedDictionary<string, float> floatBuffVals;
+
+    [SerializedDictionary("skillName", "buffValue(int)")]
+    public SerializedDictionary<string, int> intBuffVals;
+
+    private float getFloatVal(string name)
+    {
+        //print("string name is: " + name);
+        if (floatBuffVals.ContainsKey(name))
+        {
+            return floatBuffVals[name];
+        }
+        else
+        {
+            Debug.LogWarning($"Prefab with name {name} not found in the dictionary.");
+            return 0f;
+        }
+    }
+
+    private int getIntVal(string name)
+    {
+        //print("string name is: " + name);
+        if (intBuffVals.ContainsKey(name))
+        {
+            return intBuffVals[name];
+        }
+        else
+        {
+            Debug.LogWarning($"Prefab with name {name} not found in the dictionary.");
+            return 0;
+        }
+    }
 
     public void unlockSkill(string skillName)
     {
@@ -35,7 +70,16 @@ public class SkillTreeManager : MonoBehaviour
         abilities = GameObject.FindGameObjectWithTag("inputManager").GetComponent<classAbilties>();
 
         //where all skills will go
-        skillTree.Add(new skillTreeNode("IncBubRad", () => abilities.modifyBubbleRad(1f)));
+
+        //knight
+        skillTree.Add(new skillTreeNode("IncBubRad", () => abilities.modifyBubbleRad(getFloatVal("bubbleRadUpgrade"))));
+        skillTree.Add(new skillTreeNode("IncComAuraRad", () => abilities.modifyCombatAuraRad(getFloatVal("combatAuraRadUpgrade"))));
+
+        //Gunner
+        skillTree.Add(new skillTreeNode("IncGrenadeRad", () => abilities.modifyGrenadeRad(getFloatVal("grenadeUpgrade"))));
+
+
+        //Engineer
 
         foreach (var s in skillTree)
         {
@@ -57,6 +101,9 @@ public class SkillTreeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            unlockSkill("IncGrenadeRad");
+        }
     }
 }

@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +7,15 @@ public class EffectsManager : MonoBehaviour
 {
     public static EffectsManager instance;
 
+
+    [SerializedDictionary("effectName", "Prefab")]
+    public SerializedDictionary<string, GameObject> prefabs;
+
     //private static Queue<GameObject> bulletHitPool;
-    public GameObject bulletHitPrefab, tankHitPrefab, mageHitPrefab, rocketHitPrefab, rocketFirePrefab, swordShotPrefab, swordShotIcePrefab, earthGrenadePrefab;
-    public GameObject caStart, caLoop, caEnd, faStart, faLoop, faEnd;
-    public GameObject earthShieldPrefab, esStart, esEnd, bsStart, bsLoop, bsEnd;
+    //public GameObject bulletHitPrefab, tankHitPrefab, mageHitPrefab, rocketHitPrefab, rocketFirePrefab, swordShotPrefab, swordShotIcePrefab, earthGrenadePrefab;
+    //public GameObject caStart, caLoop, caEnd, faStart, faLoop, faEnd;
+    //public GameObject earthShieldPrefab, esStart, esEnd, bsStart, bsLoop, bsEnd;
+    //public GameObject cauStart, cauLoop, cauEnd, fauStart, fauLoop, fauEnd;
     private GameObject poolObj;
     public int bulletPoolSize = 10;
     public int tankPoolSize = 3;
@@ -47,22 +53,39 @@ public class EffectsManager : MonoBehaviour
         poolObj.transform.parent = gameObject.transform;
         
 
-        createNewPool("bulletHitPool", bulletHitPrefab, bulletPoolSize);
-        createNewPool("tankHitPool", tankHitPrefab, tankPoolSize);
-        createNewPool("mageHitOne", mageHitPrefab, magePoolSize);
-        createNewPool("caPool", caStart, 3);
-        createNewPool("faPool", faStart, 3);
-        createNewPool("rocketHit", rocketHitPrefab, 3);
-        createNewPool("rocketFireCircle", rocketFirePrefab, rocketFireSize);
-        createNewPool("swordShotHit", swordShotPrefab, swordShotSize);
-        createNewPool("swordShotIceHit", swordShotIcePrefab, swordShotSize);
-        createNewPool("bubbleShield", bsStart, 3);
-        createNewPool("earthShield", esStart, 3);
-        createNewPool("earthGrenade", earthGrenadePrefab, 4);
+        createNewPool("bulletHitPool",getPrefab("bulletHit"), bulletPoolSize);
+        createNewPool("tankHitPool", getPrefab("tankHit"), tankPoolSize);
+        createNewPool("mageHitOne", getPrefab("mageHit"), magePoolSize);
+        createNewPool("caPool", getPrefab("caStart"), 3);
+        createNewPool("faPool", getPrefab("faStart"), 3);
+        createNewPool("rocketHit", getPrefab("rocketHit"), 3);
+        createNewPool("rocketFireCircle", getPrefab("rocketHitFire"), rocketFireSize);
+        createNewPool("swordShotHit", getPrefab("swordShot"), swordShotSize);
+        createNewPool("swordShotIceHit", getPrefab("swordShotIce"), swordShotSize);
+        createNewPool("bubbleShield", getPrefab("bsStart"), 3);
+        createNewPool("earthShield", getPrefab("esStart"), 3);
+        createNewPool("grenade", getPrefab("grenade"), 4);
+        createNewPool("earthGrenade", getPrefab("grenadeEarth"), 4);
     }
 
 
-    public virtual void createNewPool(string poolName, GameObject prefab, int size)
+    private GameObject getPrefab(string name)
+    {
+        print("string name is: " + name);
+        if (prefabs.ContainsKey(name))
+        {
+            // Return the corresponding prefab GameObject
+            return prefabs[name];
+        }
+        else
+        {
+            Debug.LogWarning($"Prefab with name {name} not found in the dictionary.");
+            return null;
+        }
+    }
+
+
+    public virtual void createNewPool(string poolName,GameObject prefab, int size)
     {
         if(poolName == "caPool" || poolName == "faPool" || poolName == "earthShield" || poolName == "bubbleShield")
         {
@@ -91,7 +114,7 @@ public class EffectsManager : MonoBehaviour
                 {
                     if (poolName == "caPool")
                     {
-                        GameObject temp = Instantiate(caLoop);
+                        GameObject temp = Instantiate(getPrefab("caLoop"));
                         temp.transform.parent = poolObj.transform;
                         //DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
@@ -99,7 +122,7 @@ public class EffectsManager : MonoBehaviour
                     }
                     else if(poolName == "faPool")
                     {
-                        GameObject temp = Instantiate(faLoop);
+                        GameObject temp = Instantiate(getPrefab("faLoop"));
                         temp.transform.parent = poolObj.transform;
                         //DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
@@ -107,7 +130,7 @@ public class EffectsManager : MonoBehaviour
                     }
                     else if (poolName == "bubbleShield")
                     {
-                        GameObject temp = Instantiate(bsLoop);
+                        GameObject temp = Instantiate(getPrefab("bsLoop"));
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
                         //DontDestroyOnLoad(temp.gameObject);
@@ -117,7 +140,7 @@ public class EffectsManager : MonoBehaviour
                     }
                     else // earthShield
                     {
-                        GameObject temp = Instantiate(earthShieldPrefab);
+                        GameObject temp = Instantiate(getPrefab("esLoop"));
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         temp.transform.position += new Vector3(0, 1, 0);
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
@@ -131,7 +154,7 @@ public class EffectsManager : MonoBehaviour
                 {
                     if(poolName == "caPool")
                     {
-                        GameObject temp = Instantiate(caEnd);
+                        GameObject temp = Instantiate(getPrefab("caEnd"));
                         temp.transform.parent = poolObj.transform;
                         //DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
@@ -139,7 +162,7 @@ public class EffectsManager : MonoBehaviour
                     }
                     else if (poolName == "faPool")
                     {
-                        GameObject temp = Instantiate(faEnd);
+                        GameObject temp = Instantiate(getPrefab("faEnd"));
                         temp.transform.parent = poolObj.transform;
                         //DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
@@ -147,7 +170,7 @@ public class EffectsManager : MonoBehaviour
                     }
                     else if (poolName == "bubbleShield")
                     {
-                        GameObject temp = Instantiate(bsEnd);
+                        GameObject temp = Instantiate(getPrefab("bsEnd"));
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
                         //DontDestroyOnLoad(temp.gameObject);
@@ -157,7 +180,7 @@ public class EffectsManager : MonoBehaviour
                     }
                     else
                     {
-                        GameObject temp = Instantiate(esEnd);
+                        GameObject temp = Instantiate(getPrefab("esEnd"));
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         temp.transform.position += new Vector3(0, 1, 0);
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
@@ -191,19 +214,62 @@ public class EffectsManager : MonoBehaviour
         }
     }
 
-    GameObject checkPoolPrefab(string poolName)
+    private GameObject checkPoolPrefab(string poolName)
     {
         GameObject temp = null;
-        switch(poolName)
+        if (allPools.ContainsKey(name))
         {
-            case "bulletHitPool":
-                temp = bulletHitPrefab;
-                break;
-
+            switch(poolName)
+            {
+                case "bulletHitPool":
+                    temp = getPrefab("bulletHit");
+                    break;
+                case "tankHitPool":
+                    temp = getPrefab("tankHit");
+                    break;
+                case "mageHitOne":
+                    temp = getPrefab("mageHit");
+                    break;
+                case "caPool":
+                    temp = getPrefab("caStart");
+                    break;
+                case "faPool":
+                    temp = getPrefab("faStart");
+                    break;
+                case "rocketHit":
+                    temp = getPrefab("rocketHit");
+                    break;
+                case "rocketFireCircle":
+                    temp = getPrefab("rocketHitFire");
+                    break;
+                case "swordShotHit":
+                    temp = getPrefab("swordShot");
+                    break;
+                case "swordShotIceHit":
+                    temp = getPrefab("swordShotIce");
+                    break;
+                case "bubbleShield":
+                    temp = getPrefab("bsStart");
+                    break;
+                case "earthShield":
+                    temp = getPrefab("esStart");
+                    break;
+                case "grenade":
+                    temp = getPrefab("grenade");
+                    break;
+                case "earthGrenade":
+                    temp = getPrefab("grenadeEarth");
+                    break;
+            }
+            return temp;
         }
-        return temp;
+        else
+        {
+            //Debug.LogWarning($"Prefab with name {name} not found in the dictionary.");
+            return null;
+        }
     }
-    
+
 
     public void getFromPool(string poolName, Vector3 position)
     {
@@ -251,5 +317,135 @@ public class EffectsManager : MonoBehaviour
             effect.transform.position = Vector3.zero;
         allPools[poolName].Enqueue(effect);
         yield break;
+    }
+
+    public void replacePoolEffects(string poolName, int upgradeCount)
+    {
+        if (allPools.ContainsKey(poolName))
+        {
+            Queue<GameObject> tempQ;
+            allPools.TryGetValue(poolName, out tempQ);
+
+            int count = tempQ.Count;
+
+            
+
+            if(poolName == "caPool" || poolName == "faPool" || poolName == "earthShield" || poolName == "bubbleShield")
+            {
+                GameObject tempObj = null;
+                GameObject oldObj = null;
+                switch (upgradeCount)
+                {
+                    case 1:
+                        switch (poolName)
+                        {
+                            case "caPool":
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("cauStart"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("cauLoop"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("cauEnd"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                break;
+                            case "faPool":
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("fauStart"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("fauLoop"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("fauEnd"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                break;
+                            case "earthShield":
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("esuStart"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("esuLoop"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("esuEnd"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                break;
+                            case "bubbleShield":
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("bsuStart"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("bsuLoop"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                oldObj = tempQ.Dequeue();
+                                tempObj = Instantiate(getPrefab("bsuEnd"), oldObj.transform.position, oldObj.transform.rotation);
+                                tempObj.transform.parent = oldObj.transform.parent;
+                                Destroy(oldObj);
+                                tempQ.Enqueue(tempObj);
+                                tempObj.SetActive(false);
+                                break;
+
+                        }
+                        break;
+                }
+                
+            }
+            else
+            {
+                for(int i = 0; i < count; i++)
+                {
+                    GameObject oldObj = tempQ.Dequeue();  
+
+                    GameObject temp = Instantiate(checkPoolPrefab(poolName), oldObj.transform.position, oldObj.transform.rotation);
+                    temp.transform.parent = oldObj.transform.parent;  
+
+                    Destroy(oldObj);  
+
+                    tempQ.Enqueue(temp);  
+                }
+
+                allPools[poolName] = tempQ;
+            }
+        }
+        else
+        {
+            Debug.Log("No pool exists for that name");
+            return;
+        }
     }
 }

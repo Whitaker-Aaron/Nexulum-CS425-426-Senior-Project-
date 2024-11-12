@@ -1162,11 +1162,26 @@ public class classAbilties : MonoBehaviour
 
     //-------------------skill tree-------------------------
 
+
+    //knight
     public void modifyBubbleRad(float amount)
     {
         Debug.Log("Modified bubble radius by: " + amount);
         bubbleRadius += amount;
     }
 
+    public void modifyCombatAuraRad(float amount)
+    {
+        Debug.Log("Modified CombatAura radius by: " + amount);
+        comatAuraRadius += amount;
+    }
 
+
+    //Gunner
+
+    public void modifyGrenadeRad(float amount)
+    {
+        //Debug.Log("Modified grenade explosion radius by: " + amount);
+        grenadePrefab.GetComponent<grenade>().increaseBlastRadius(amount);
+    }
 }
