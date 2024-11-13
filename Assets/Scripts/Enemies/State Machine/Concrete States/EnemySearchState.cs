@@ -10,11 +10,9 @@ public class EnemySearchState : EnemyNeutralState
 
     public override void RunState()
     {
-        base.OnDamaged();
+        stateContext.MoveTo(stateContext.enemyLOS.lastKnownTargetPos, false);
 
-        stateContext.MoveTo(stateContext.enemyLOS.lastKnownTargetPos, true, false);
-
-        if (stateContext.enemyLOS.TargetSpotted())
+        if (stateContext.enemyLOS.TargetSpotted() || base.OnDamaged())
         {
             stateContext.ChangeState(stateContext.chaseState);
         }

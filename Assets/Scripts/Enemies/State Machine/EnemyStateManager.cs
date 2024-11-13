@@ -84,35 +84,24 @@ public class EnemyStateManager : MonoBehaviour
 
     // Move to a given Vector3 position. Bools for enabling movement with pathfinding (NavMesh) and prediction
     // Pathfinding-less and predicted movement will be supported at a later date, for now this function can only cover movement with pathfinding
-    public void MoveTo(Vector3 position, bool enablePathfinding = false, bool enablePrediction = false)
+    public void MoveTo(Vector3 position, bool enablePrediction = false)
     {
-        if (enablePathfinding)
-        {
-            agent.SetDestination(position);
-        }
-        else
-        {
-            CustomDebugLog("Movement without pathfinding not supported yet--please toggle 'enablePathfinding' to true");
-        }
+        Vector3 directionToPos = (position - enemyLOS.selfPos).normalized;
+
+        agent.SetDestination(position);
     }
 
     // Overloaded MoveTo, enforces engagement range from point
-    public void MoveTo(Vector3 position, float stoppingDist, bool enablePathfinding = false, bool enablePrediction = false)
+    public void MoveTo(Vector3 position, float stoppingDist, bool enablePrediction = false)
     {
         float distanceToPos = Vector3.Distance(enemyLOS.selfPos, position);
+        Vector3 directionToPos = (position - enemyLOS.selfPos).normalized;
 
-        if (enablePathfinding)
+        if (distanceToPos < engagementRange) // Enemy is too close
         {
-            if (distanceToPos < engagementRange) // Enemy is too close
-            {
-                Vector3 awayDirection = (enemyLOS.selfPos - position).normalized; // Get direction away from player
-                Vector3 awayPos = (enemyLOS.selfPos + awayDirection); // Get the position, away from the player, to go to
-                agent.SetDestination(awayPos);
-            }
-        }
-        else
-        {
-            CustomDebugLog("Movement without pathfinding not supported yet--please toggle 'enablePathfinding' to true");
+            Vector3 awayDirection = (enemyLOS.selfPos - position).normalized; // Get direction away from player
+            Vector3 awayPos = (enemyLOS.selfPos + awayDirection); // Get the position, away from the player, to go to
+            agent.SetDestination(awayPos);
         }
     }
 
@@ -123,7 +112,7 @@ public class EnemyStateManager : MonoBehaviour
 
     public void LookAt(GameObject lookat)
     {
-        float rotationSpeed = 4f;
+        float rotationSpeed = 2f;
         Vector3 headingtolookat = lookat.transform.position - transform.position;
 
         var rotationtolookat = Quaternion.LookRotation(headingtolookat);

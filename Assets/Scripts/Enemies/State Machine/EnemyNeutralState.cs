@@ -2,8 +2,10 @@
 
 public abstract class EnemyNeutralState : EnemyState
 {
-    protected virtual void OnDamaged()
+    protected virtual bool OnDamaged()
     {
+        bool damagedActionReady = false;
+
         if (stateContext.enemyFrame.onDamaged)
         {
             stateContext.enemyFrame.onDamaged = false; // Reset onDamaged
@@ -14,13 +16,14 @@ public abstract class EnemyNeutralState : EnemyState
                 case EnemyFrame.DamageSource.Player:
                     // Target player
                     stateContext.enemyLOS.ChangeTarget(stateContext.enemyLOS.player);
+                    stateContext.enemyLOS.isTargetSpotted = true;
 
-                    // Look at, change state
-                    stateContext.LookAt(stateContext.enemyLOS.currentTarget);
-                    stateContext.ChangeState(stateContext.chaseState);
+                    damagedActionReady = true;
                     break;
             }
         }
+
+        return damagedActionReady;
     }
 
     protected virtual void OnFrozen()

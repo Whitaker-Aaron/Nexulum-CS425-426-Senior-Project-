@@ -20,6 +20,8 @@ public class EnemyFrame : MonoBehaviour
     enemyInt enemyType;
     [SerializeField] Enemy enemyReference;
 
+    [SerializeField] EnemyStateManager movmentReference;
+
     GameObject enemyUIRef;
     public GameObject healthRef;
     CharacterBase character;
@@ -65,7 +67,8 @@ public class EnemyFrame : MonoBehaviour
         //Slider delayedEnemyHealthBar = delayedEnemyHealth.GetComponent<Slider>()
         var sliders = enemyHealth.GetComponentsInChildren<Slider>();
         Debug.Log(sliders.Length);
-        
+
+        movmentReference = GetComponent<EnemyStateManager>();
         
         anim = GetComponent<EnemyAnimation>();
         enemyUIRef = GameObject.Find("DynamicEnemyUI");

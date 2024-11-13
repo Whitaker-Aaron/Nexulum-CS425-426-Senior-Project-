@@ -40,11 +40,7 @@ public class EnemyLOS : MonoBehaviour
     // Positions
     // ----------------------------------------------
 
-    public Vector3 selfPos
-    {
-        get;
-        set;
-    }
+    public Vector3 selfPos;
     public Vector3 targetPos;
     public Vector3 lastKnownTargetPos;
 
@@ -58,11 +54,11 @@ public class EnemyLOS : MonoBehaviour
         ChangeTarget(player);
     }
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
+    // Update is called once per frame
+    void Update()
+    {
+        myHeading = transform.forward;
+    }
 
     // ChangeTarget takes a gameobject (a new target) and switches the current target to the new target
     // Returns true if successful, returns false if the new target is null (a null target causes errors)
