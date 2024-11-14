@@ -59,6 +59,8 @@ public class masterInput : MonoBehaviour
 
     public bool abilityInUse = false;
 
+    bool usingSpellRunes = false;
+
     //animation variables
     private PlayerAnimation animationControl;
     Vector3 movement, camForward;
@@ -445,6 +447,27 @@ public class masterInput : MonoBehaviour
             player.transform.LookAt(player.transform.position + lookDir, Vector3.up); // Rotate towards the look direction
         }
         isMouseLooking = false;
+    }
+
+    public void onSwitchToSpell(InputAction.CallbackContext context)
+    {
+        int rCount = 0;
+        foreach(Rune rune in character.equippedRunes)
+        {
+            if(rune.runeType == Rune.RuneType.Spell)
+                rCount++;
+            
+        }
+        if(rCount > 0)
+        {
+            usingSpellRunes = !usingSpellRunes;
+        }
+        else
+        {
+            print("cant switch. no spell runes in inventory");
+            return;
+        }
+        
     }
 
     public void OnGamepadLook(InputAction.CallbackContext context)
@@ -1127,42 +1150,90 @@ public class masterInput : MonoBehaviour
         }
 
         //Class ability Logic
+        if(!usingSpellRunes)
+        {
+            if (playerInput.actions["AbilityOne"].triggered && !abilityInUse)
+            {
+                print("Using ability One");
+                abilityInUse = true;
+                gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
+                if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+                {
+                    StartCoroutine(abilityWait());
+                }
+                //StartCoroutine(abilityWait());
+            }
+            else if (playerInput.actions["AbilityTwo"].triggered && !abilityInUse)
+            {
+                print("Using ability Two");
+                abilityInUse = true;
+                gameObject.GetComponent<classAbilties>().activateAbilityTwo(currentClass);
+                //StartCoroutine(abilityWait());
+                if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+                {
+                    StartCoroutine(abilityWait());
+                }
+            }
+            else if (playerInput.actions["AbilityThree"].triggered && !abilityInUse)
+            {
+                print("Using ability Three");
+                abilityInUse = true;
+                if (currentClass == WeaponBase.weaponClassTypes.Knight)
+                {
+                    animationControl.knightShootSwords();
+                    shootingSwords = true;
+                }
+                gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
+                //StartCoroutine(abilityWait());
+                if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+                {
+                    StartCoroutine(abilityWait());
+                }
+            }
+        }
+        else
+        {
+            if (playerInput.actions["AbilityOne"].triggered && !abilityInUse && character.equippedRunes[0].runeType == Rune.RuneType.Spell)
+            {
+                print("Using spellCast One");
+                abilityInUse = true;
+                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[0]);
+                //StartCoroutine(abilityWait());
+                if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+                {
+                    StartCoroutine(abilityWait());
+                }
+            }
+            else if (playerInput.actions["AbilityTwo"].triggered && !abilityInUse && character.equippedRunes[1].runeType == Rune.RuneType.Spell)
+            {
+                print("Using spellCast Two");
+                abilityInUse = true;
+                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[1]);
+                //StartCoroutine(abilityWait());
+                if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+                {
+                    StartCoroutine(abilityWait());
+                }
+            }
+            else if (playerInput.actions["AbilityThree"].triggered && !abilityInUse && character.equippedRunes[2].runeType == Rune.RuneType.Spell)
+            {
+                print("Using spellCast Three");
+                abilityInUse = true;
+                if (currentClass == WeaponBase.weaponClassTypes.Knight)
+                {
+                    animationControl.knightShootSwords();
+                    shootingSwords = true;
+                }
+                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[2]);
+                //StartCoroutine(abilityWait());
+                if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
+                {
+                    StartCoroutine(abilityWait());
+                }
+            }
+        }
 
-        if (playerInput.actions["AbilityOne"].triggered && !abilityInUse)
-        {
-            abilityInUse = true;
-            gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
-            if(currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
-            {
-                StartCoroutine(abilityWait());
-            }
-            //StartCoroutine(abilityWait());
-        }
-        else if (playerInput.actions["AbilityTwo"].triggered && !abilityInUse)
-        {
-            abilityInUse = true;
-            gameObject.GetComponent<classAbilties>().activateAbilityTwo(currentClass);
-            //StartCoroutine(abilityWait());
-            if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
-            {
-                StartCoroutine(abilityWait());
-            }
-        }
-        else if (playerInput.actions["AbilityThree"].triggered && !abilityInUse)
-        {
-            abilityInUse = true;
-            if (currentClass == WeaponBase.weaponClassTypes.Knight)
-            {
-                animationControl.knightShootSwords();
-                shootingSwords = true;
-            }
-            gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
-            //StartCoroutine(abilityWait());
-            if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
-            {
-                StartCoroutine(abilityWait());
-            }
-        }
+        
     }
 
     IEnumerator abilityWait()

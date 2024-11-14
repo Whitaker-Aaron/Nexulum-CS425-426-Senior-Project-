@@ -83,6 +83,9 @@ public class classAbilties : MonoBehaviour
     public Transform grenadeSpawn;
     public float grenadeCooldown;
 
+    //skill tree 
+    bool SSExplode = false;
+
 
     //Engineer
     public GameObject turretPrefab;
@@ -468,15 +471,22 @@ public class classAbilties : MonoBehaviour
 
         if(iceBool)
         {
-            print(projectileManager.Instance);
+            //print(projectileManager.Instance);
             GameObject sword = projectileManager.Instance.getProjectile("swordShotIcePool", swordSpawn.position, swordSpawn.rotation);
             sword.GetComponent<swordShot>().isIce = true;
             sword.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * swordSpeed;
             sword.GetComponent<swordShot>().damage = swordShotDamage;
         }
+        else if(SSExplode)
+        {
+            GameObject sword = projectileManager.Instance.getProjectile("swordShotPool", swordSpawn.position, swordSpawn.rotation);
+            sword.GetComponent<swordShot>().activateExplosion();
+            sword.GetComponent<Rigidbody>().velocity = swordSpawn.forward * swordSpeed;
+            sword.GetComponent<swordShot>().damage = swordShotDamage;
+        }
         else
         {
-            print(projectileManager.Instance);
+            //print(projectileManager.Instance);
             GameObject sword = projectileManager.Instance.getProjectile("swordShotPool", swordSpawn.position, swordSpawn.rotation);
             sword.GetComponent<Rigidbody>().velocity = swordSpawn.forward * swordSpeed;
             sword.GetComponent<swordShot>().damage = swordShotDamage;
@@ -1176,6 +1186,11 @@ public class classAbilties : MonoBehaviour
         comatAuraRadius += amount;
     }
 
+    public void triggerSSExpolode()
+    {
+        SSExplode = true;
+    }
+
 
     //Gunner
 
@@ -1184,4 +1199,12 @@ public class classAbilties : MonoBehaviour
         //Debug.Log("Modified grenade explosion radius by: " + amount);
         grenadePrefab.GetComponent<grenade>().increaseBlastRadius(amount);
     }
+
+    public void modifyRocketRad(float amount)
+    {
+        //Debug.Log("Modified grenade explosion radius by: " + amount);
+        rocketPrefab.GetComponent<rocket>().increaseBlastRadius(amount);
+    }
+
+    
 }
