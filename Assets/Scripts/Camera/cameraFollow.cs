@@ -10,15 +10,18 @@ public class CameraFollow : MonoBehaviour
 
     public float smoothSpeed = 0.0005f;
     public bool yAxisLocked = false;
+    public bool lookAtLocked = false;
     public float lastYPos;
     public FollowMode followMode = FollowMode.Lerp;
     public Vector3 offset;
 
     bool found = false;
-    bool pauseFollow = false;
+    public bool pauseFollow = false;
 
     private void Start()
     {
+        target = GameObject.FindWithTag("Player").transform;
+        found = true;
         lastYPos = transform.position.y;
     }
 
@@ -31,21 +34,18 @@ public class CameraFollow : MonoBehaviour
         pauseFollow = false;
     }
 
-    private void Update()
-    {
-        if (!found)
-        {
-            if (GameObject.FindWithTag("Player") == null)
-                return;
+    //private void Update()
+    //{
+    //    if (!found)
+    //    {
+    //        if (GameObject.FindWithTag("Player") == null)
+    //            return;
+    //    }
+    //    else
+    //        return;
+    //}
 
-            target = GameObject.FindWithTag("Player").transform;
-            found = true;
-        }
-        else
-            return;
-    }
-
-    void FixedUpdate()
+    void LateUpdate()
     {
 
         switch(followMode)
@@ -81,14 +81,15 @@ public class CameraFollow : MonoBehaviour
             
 
         }
-        transform.LookAt(target);
-        
+        if(!lookAtLocked) transform.LookAt(target);
+
+
     }
 
     void ExactFollow()
     {
-        transform.localPosition = new Vector3(target.localPosition.x + offset.x, target.localPosition.y + offset.y, target.localPosition.z + offset.z);
-        transform.LookAt(target);
+        if(!pauseFollow) transform.position = new Vector3(target.position.x + offset.x, target.position.y + offset.y, target.position.z + offset.z);
+        if (!lookAtLocked) transform.LookAt(target);
     }
 
     public enum FollowMode
