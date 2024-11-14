@@ -9,9 +9,12 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField] Vector3 startPosition;
     [SerializeField] Vector3 desiredPosition;
     [SerializeField] float speed;
+    bool playerOnPlatform = false;
+    private CameraFollow cameraRef;
     void Awake()
     {
         //startPosition = transform.position;   
+        cameraRef = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>();
     }
 
     // Update is called once per frame
@@ -38,6 +41,8 @@ public class MovingPlatform : MonoBehaviour
         {
             Debug.Log("Player has entered platform");
             collision.gameObject.transform.parent = transform;
+            playerOnPlatform = true;
+            StartCoroutine(EnableExactFollowOnCamera());
         }
     }
 
@@ -47,8 +52,28 @@ public class MovingPlatform : MonoBehaviour
         {
             Debug.Log("Player has left platform");
             collision.gameObject.transform.parent = null;
+            playerOnPlatform = false;
+            StartCoroutine(EnableLerpFollowOnCamera());
             DontDestroyOnLoad(collision.gameObject);
             
+        }
+    }
+
+    public IEnumerator EnableLerpFollowOnCamera()
+    {
+        yield return new WaitForSeconds(0.2f);
+        if(!playerOnPlatform)
+        {
+            cameraRef.SetCameraMode(CameraFollow.FollowMode.Lerp);
+        }
+    }
+
+    public IEnumerator EnableExactFollowOnCamera()
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (playerOnPlatform)
+        {
+            cameraRef.SetCameraMode(CameraFollow.FollowMode.Exact);
         }
     }
 

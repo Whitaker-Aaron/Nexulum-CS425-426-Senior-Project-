@@ -92,6 +92,7 @@ public class RoomTransition : MonoBehaviour
                 if (targetInfo.roomName != "BaseCamp")
                 {
                     cameraBehavior.PauseFollow();
+                    //cameraBehavior.PauseLookAt();
                     GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(targetInfo);
                     character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
                     character.transitioningRoom = true;
@@ -102,6 +103,7 @@ public class RoomTransition : MonoBehaviour
                 else
                 {
                     cameraBehavior.PauseFollow();
+                    //cameraBehavior.PauseLookAt();
                     character.transitioningRoom = true;
                     character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
                     StartCoroutine(MovePlayerForward(other, enterDirection));
@@ -174,6 +176,7 @@ public class RoomTransition : MonoBehaviour
         character.transitionedRoom = false;
         character.transitioningRoom = false;
         cameraBehavior.UnpauseFollow();
+        //cameraBehavior.UnpauseLookAt();
         if (currentInfo.isCheckpoint && currentInfo.firstVisit)
         {
             Debug.Log("Need to animate checkpoint");
