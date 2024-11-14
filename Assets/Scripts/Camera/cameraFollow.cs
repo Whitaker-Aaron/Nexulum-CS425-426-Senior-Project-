@@ -34,6 +34,21 @@ public class CameraFollow : MonoBehaviour
         pauseFollow = false;
     }
 
+    public void PauseLookAt()
+    {
+        lookAtLocked = true;
+    }
+
+    public void UnpauseLookAt()
+    {
+        lookAtLocked = false;
+    }
+
+    public void SetCameraMode(FollowMode mode)
+    {
+        followMode = mode;
+    }
+
     //private void Update()
     //{
     //    if (!found)
@@ -51,13 +66,23 @@ public class CameraFollow : MonoBehaviour
         switch(followMode)
         {
             case FollowMode.Lerp:
-                LerpFollow();
-                break;
+                return;
             case FollowMode.Exact:
                 ExactFollow();
                 break;
         }
 
+    }
+    private void FixedUpdate()
+    {
+        switch (followMode)
+        {
+            case FollowMode.Lerp:
+                LerpFollow();
+                break;
+            case FollowMode.Exact:
+                return;
+        }
     }
 
     void LerpFollow()

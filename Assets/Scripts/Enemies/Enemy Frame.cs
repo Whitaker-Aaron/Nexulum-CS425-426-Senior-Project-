@@ -85,6 +85,24 @@ public class EnemyFrame : MonoBehaviour
         
     }
 
+    public void DeactivateHealthBar()
+    {
+        if(healthRef != null)
+        {
+            healthRef.gameObject.SetActive(false);
+        }
+        
+    }
+
+    public void ActivateHealthBar()
+    {
+        if(healthRef != null)
+        {
+            healthRef.gameObject.SetActive(true);
+        }
+        
+    }
+
     // Update is called once per frame
     void LateUpdate()
     {
