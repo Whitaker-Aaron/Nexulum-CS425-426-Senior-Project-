@@ -14,6 +14,8 @@ public class EnemyLOS : MonoBehaviour
 
     public bool isTargetSpotted = false;
 
+    private LayerMask layers = LayerMask.GetMask();
+
     // ----------------------------------------------
     // Concrete targets
     // ----------------------------------------------
@@ -75,7 +77,8 @@ public class EnemyLOS : MonoBehaviour
         }
     }
 
-    public bool TargetSpotted()
+    // Return the tag of the collider spotted
+    public string TargetSpotted()
     {
         if (currentTarget != null)
         {
@@ -91,36 +94,37 @@ public class EnemyLOS : MonoBehaviour
             if ((distancetotarget <= detectionRange) && (targetangle <= visionAngle) && canSeeThroughWalls)
             {
                 isTargetSpotted = true;
-                return true;
+                return currentTarget.tag;
             }
             else if ((distancetotarget <= detectionRange) && (targetangle <= visionAngle) && !canSeeThroughWalls)
             {
                 Physics.Raycast(origin: selfPos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange); // Determine if target is obstructed
+                //Debug.Log("Ray hit: " + hit.collider.tag);
                 if (hit.transform == currentTarget.transform)
                 {
                     isTargetSpotted = true;
-                    return true;
+                    return hit.collider.tag;
                 }
                 else
                 {
                     isTargetSpotted = false;
-                    return false;
+                    return null;
                 }
             }
             else
             {
                 isTargetSpotted = false;
-                return false;
+                return null;
             }
         }
         else
         {
             isTargetSpotted = false;
-            return false;
+            return null;
         }
     }
 
-    public bool TargetInRange()
+    public bool TargetInDetectionRange()
     {
         selfPos = transform.position;
         targetPos = currentTarget.transform.position;

@@ -6,13 +6,13 @@ public class EnemySearchState : EnemyNeutralState
         this.stateName = "Search";
 
         stateContext.CustomDebugLog("Entered " + stateName + " state");
+        stateContext.MoveTo(stateContext.enemyLOS.lastKnownTargetPos, false);
     }
 
     public override void RunState()
     {
-        stateContext.MoveTo(stateContext.enemyLOS.lastKnownTargetPos, false);
-
-        if (stateContext.enemyLOS.TargetSpotted() || base.OnDamaged())
+        base.OnDamaged();
+        if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag())
         {
             stateContext.ChangeState(stateContext.chaseState);
         }

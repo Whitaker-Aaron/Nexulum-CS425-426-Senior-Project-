@@ -20,7 +20,7 @@ public class EnemyFrame : MonoBehaviour
     enemyInt enemyType;
     [SerializeField] Enemy enemyReference;
 
-    [SerializeField] EnemyStateManager movmentReference;
+    [SerializeField] EnemyStateManager movementReference;
 
     GameObject enemyUIRef;
     public GameObject healthRef;
@@ -37,16 +37,21 @@ public class EnemyFrame : MonoBehaviour
     bool takingDmgOT = false;
     bool dying = false;
 
+    // Damage and Damage Types - Aisling
     public bool onDamaged = false; // True on hit, used for state machine logic to aggro enemies on hit - Aisling
     public DamageSource source;
+
+    public float iceEffectThreshold = 90;
+    public float iceMaxValue = 100;
+    public float iceSpeedDecrement = 1;
+    public float iceDecayRate = 5;
+    public IceDamage iceEffect;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
     Vector3 zeroDir;
     Slider enemyHealthBar;
     Slider delayedEnemyHealthBar;
-
-
 
     private void Awake()
     {
@@ -68,7 +73,7 @@ public class EnemyFrame : MonoBehaviour
         var sliders = enemyHealth.GetComponentsInChildren<Slider>();
         Debug.Log(sliders.Length);
 
-        movmentReference = GetComponent<EnemyStateManager>();
+        movementReference = GetComponent<EnemyStateManager>();
         
         anim = GetComponent<EnemyAnimation>();
         enemyUIRef = GameObject.Find("DynamicEnemyUI");
@@ -85,8 +90,9 @@ public class EnemyFrame : MonoBehaviour
         enemyHealthBar.maxValue = maxHealth;
         delayedEnemyHealthBar.maxValue = maxHealth;
 
-        
-    }
+        // Damage Types - Aisling
+        iceEffect = new IceDamage(movementReference, iceEffectThreshold, iceMaxValue, iceSpeedDecrement, iceDecayRate);
+}
 
     // Update is called once per frame
     void LateUpdate()
@@ -102,11 +108,12 @@ public class EnemyFrame : MonoBehaviour
     //take damage function with given damage paramater - Spencer
     public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource, DamageType damageType)
     {
-
+        Debug.Log("Taken damage of type " + damageType);
         switch(damageType)
         {
-            case DamageType.Ice:
-                print("slow enemy");
+            case DamageType.Sword: // change back to ice
+                iceEffect.check();
+                StartCoroutine(iceEffect.Decay());
                 break;
         }
 

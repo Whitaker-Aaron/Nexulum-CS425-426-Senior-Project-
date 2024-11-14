@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.17462322, g: 0.21841627, b: 0.3006752, a: 1}
+  m_IndirectSpecularColor: {r: 0.1746235, g: 0.2184166, b: 0.30067572, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1214,6 +1214,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 757538456699096846, guid: ec3da66061dcb8548b506fe5bd8ed024, type: 3}
   m_PrefabInstance: {fileID: 21275558}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &22294902 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 809249616}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &27486330 stripped
 GameObject:
@@ -4462,6 +4467,7 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movmentReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
@@ -4496,16 +4502,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f00c979386f9b40926e8583f25d4cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTargetSpotted: 0
-  player: {fileID: 0}
-  detectionRange: 7
-  visionAngle: 90
-  canSeeThroughWalls: 0
-  distancetotarget: 0
-  headingtotarget: {x: 0, y: 0, z: 0}
-  myHeading: {x: 0, y: 0, z: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1 &159531912
 GameObject:
   m_ObjectHideFlags: 0
@@ -12762,6 +12758,10 @@ PrefabInstance:
       propertyPath: detectionRange
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 6955319718670308413, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyLOS
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: m_Name
       value: SkeletonMinion
@@ -12774,10 +12774,14 @@ PrefabInstance:
       propertyPath: attackDamage
       value: 10
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 815325697}
   m_SourcePrefab: {fileID: 100100000, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
 --- !u!4 &547943534 stripped
 Transform:
@@ -12789,7 +12793,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 547943533}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 815325685}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
@@ -13750,6 +13754,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movmentReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
@@ -13801,16 +13806,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f00c979386f9b40926e8583f25d4cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTargetSpotted: 0
-  player: {fileID: 0}
-  detectionRange: 7
-  visionAngle: 90
-  canSeeThroughWalls: 0
-  distancetotarget: 0
-  headingtotarget: {x: 0, y: 0, z: 0}
-  myHeading: {x: 0, y: 0, z: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &591135600
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16511,6 +16506,11 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &706956598 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 1857721164}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &717288335
 GameObject:
   m_ObjectHideFlags: 0
@@ -16980,6 +16980,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
   enemyReference: {fileID: 0}
+  movmentReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
@@ -18627,6 +18628,10 @@ PrefabInstance:
       propertyPath: detectionRange
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 6955319718670308413, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyLOS
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: m_Name
       value: SkeletonMinion (1)
@@ -18639,10 +18644,14 @@ PrefabInstance:
       propertyPath: attackDamage
       value: 10
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 809249630}
   m_SourcePrefab: {fileID: 100100000, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
 --- !u!4 &809249617 stripped
 Transform:
@@ -18654,12 +18663,35 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 809249616}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 22294902}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &809249630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22294902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32dc590940c6494890a27fe81efdc00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTargetSpotted: 0
+  player: {fileID: 0}
+  detectionRange: 7
+  visionAngle: 90
+  canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
+  selfPos: {x: 0, y: 0, z: 0}
+  targetPos: {x: 0, y: 0, z: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &809549980
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18755,6 +18787,39 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.9064894, y: 4.653493, z: 0.6491242}
   m_Center: {x: -0.02676916, y: 2.3107166, z: -0.0000009387731}
+--- !u!1 &815325685 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 547943533}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &815325697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815325685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32dc590940c6494890a27fe81efdc00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTargetSpotted: 0
+  player: {fileID: 0}
+  detectionRange: 7
+  visionAngle: 90
+  canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
+  selfPos: {x: 0, y: 0, z: 0}
+  targetPos: {x: 0, y: 0, z: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
+--- !u!1 &817418902 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 892925312}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &820115970
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20792,6 +20857,10 @@ PrefabInstance:
       propertyPath: detectionRange
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 6955319718670308413, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyLOS
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: m_Name
       value: SkeletonMinion (2)
@@ -20804,10 +20873,14 @@ PrefabInstance:
       propertyPath: attackDamage
       value: 10
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 892925326}
   m_SourcePrefab: {fileID: 100100000, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
 --- !u!4 &892925313 stripped
 Transform:
@@ -20819,12 +20892,35 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 892925312}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 817418902}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &892925326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817418902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32dc590940c6494890a27fe81efdc00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTargetSpotted: 0
+  player: {fileID: 0}
+  detectionRange: 7
+  visionAngle: 90
+  canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
+  selfPos: {x: 0, y: 0, z: 0}
+  targetPos: {x: 0, y: 0, z: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &894093078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21332,6 +21428,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
   enemyReference: {fileID: 0}
+  movmentReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
@@ -22344,6 +22441,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movmentReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
@@ -22378,16 +22476,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f00c979386f9b40926e8583f25d4cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTargetSpotted: 0
-  player: {fileID: 0}
-  detectionRange: 7
-  visionAngle: 90
-  canSeeThroughWalls: 0
-  distancetotarget: 0
-  headingtotarget: {x: 0, y: 0, z: 0}
-  myHeading: {x: 0, y: 0, z: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &939174231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25992,6 +26080,10 @@ PrefabInstance:
       propertyPath: detectionRange
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 6955319718670308413, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyLOS
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: m_Name
       value: SkeletonMinion (1)
@@ -26004,10 +26096,14 @@ PrefabInstance:
       propertyPath: attackDamage
       value: 10
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1994688828}
   m_SourcePrefab: {fileID: 100100000, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
 --- !u!4 &1040852319 stripped
 Transform:
@@ -26019,7 +26115,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 1040852318}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1994688816}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
@@ -32144,6 +32240,11 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &1246571672 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 5173493912916497545}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1248825526
 GameObject:
   m_ObjectHideFlags: 0
@@ -34829,16 +34930,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f00c979386f9b40926e8583f25d4cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTargetSpotted: 0
-  player: {fileID: 0}
-  detectionRange: 15
-  visionAngle: 90
-  canSeeThroughWalls: 0
-  distancetotarget: 0
-  headingtotarget: {x: 0, y: 0, z: 0}
-  myHeading: {x: 0, y: 0, z: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!114 &1359352205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47222,6 +47313,7 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movmentReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
@@ -47238,16 +47330,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f00c979386f9b40926e8583f25d4cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTargetSpotted: 0
-  player: {fileID: 0}
-  detectionRange: 7
-  visionAngle: 90
-  canSeeThroughWalls: 0
-  distancetotarget: 0
-  headingtotarget: {x: 0, y: 0, z: 0}
-  myHeading: {x: 0, y: 0, z: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &1837460450
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47947,6 +48029,10 @@ PrefabInstance:
       propertyPath: detectionRange
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 6955319718670308413, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyLOS
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: m_Name
       value: SkeletonMinion
@@ -47959,10 +48045,14 @@ PrefabInstance:
       propertyPath: attackDamage
       value: 10
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1857721178}
   m_SourcePrefab: {fileID: 100100000, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
 --- !u!4 &1857721165 stripped
 Transform:
@@ -47974,12 +48064,35 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 1857721164}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 706956598}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1857721178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706956598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32dc590940c6494890a27fe81efdc00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTargetSpotted: 0
+  player: {fileID: 0}
+  detectionRange: 7
+  visionAngle: 90
+  canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
+  selfPos: {x: 0, y: 0, z: 0}
+  targetPos: {x: 0, y: 0, z: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &1864451841
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -51177,6 +51290,34 @@ Transform:
   - {fileID: 1966392296}
   m_Father: {fileID: 1838127772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1994688816 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+  m_PrefabInstance: {fileID: 1040852318}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1994688828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1994688816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32dc590940c6494890a27fe81efdc00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTargetSpotted: 0
+  player: {fileID: 0}
+  detectionRange: 7
+  visionAngle: 90
+  canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
+  selfPos: {x: 0, y: 0, z: 0}
+  targetPos: {x: 0, y: 0, z: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &1995823291
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53874,6 +54015,7 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movmentReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
@@ -53908,16 +54050,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f00c979386f9b40926e8583f25d4cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTargetSpotted: 0
-  player: {fileID: 0}
-  detectionRange: 7
-  visionAngle: 90
-  canSeeThroughWalls: 0
-  distancetotarget: 0
-  headingtotarget: {x: 0, y: 0, z: 0}
-  myHeading: {x: 0, y: 0, z: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &2108203030
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54960,6 +55092,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6955319718670308413, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      propertyPath: enemyLOS
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955319718670308413, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
       propertyPath: engagementRange
       value: 1
       objectReference: {fileID: 0}
@@ -54975,17 +55111,21 @@ PrefabInstance:
       propertyPath: attackDamage
       value: 10
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2426181664314988161, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5173493912916497560}
   m_SourcePrefab: {fileID: 100100000, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
 --- !u!114 &5173493912916497546 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8117574788877448956, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 5173493912916497545}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1246571672}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dbb5cb0909a9a149b9d46dd3b302c39, type: 3}
@@ -54996,6 +55136,29 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8687218075617284886, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   m_PrefabInstance: {fileID: 5173493912916497545}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5173493912916497560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246571672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32dc590940c6494890a27fe81efdc00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTargetSpotted: 0
+  player: {fileID: 0}
+  detectionRange: 7
+  visionAngle: 90
+  canSeeThroughWalls: 0
+  distancetotarget: 0
+  headingtotarget: {x: 0, y: 0, z: 0}
+  myHeading: {x: 0, y: 0, z: 0}
+  selfPos: {x: 0, y: 0, z: 0}
+  targetPos: {x: 0, y: 0, z: 0}
+  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &7631631515254071988
 PrefabInstance:
   m_ObjectHideFlags: 0

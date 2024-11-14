@@ -11,7 +11,7 @@ public class EnemyStateManager : MonoBehaviour
     // Adjustable in-editor settings for behaviors
     // ----------------------------------------------
 
-    public float movementSpeed = 2f; // Movement speed of enemy
+    public float defaultMovementSpeed = 2f; // Movement speed of enemy
     public float engagementRange = 1f; // How close, from target, the enemy will get to the target (radius). Set with SetEngagementRange(float range)
 
     // ----------------------------------------------
@@ -38,6 +38,11 @@ public class EnemyStateManager : MonoBehaviour
     public bool enableStateDebugLogs = false;
 
     // ----------------------------------------------
+    // Effects
+    // ----------------------------------------------
+    public bool isFrozen = false;
+
+    // ----------------------------------------------
     // Methods
     // ----------------------------------------------
 
@@ -47,7 +52,7 @@ public class EnemyStateManager : MonoBehaviour
         enemyLOS = GetComponent<EnemyLOS>();
         enemyFrame = GetComponent<EnemyFrame>();
 
-        agent.speed = movementSpeed;
+        agent.speed = defaultMovementSpeed;
 
         ChangeState(idleState);
     }
@@ -117,5 +122,20 @@ public class EnemyStateManager : MonoBehaviour
 
         var rotationtolookat = Quaternion.LookRotation(headingtolookat);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotationtolookat, rotationSpeed * Time.deltaTime);
+    }
+
+    public string GetCurrentTargetTag()
+    {
+        return enemyLOS.currentTarget.tag;
+    }
+
+    public string TargetSpotted()
+    {
+        return enemyLOS.TargetSpotted();
+    }
+
+    public void ChangeMovementSpeed(float speed)
+    {
+        agent.speed = speed;
     }
 }

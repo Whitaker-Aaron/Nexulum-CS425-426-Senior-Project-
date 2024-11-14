@@ -51,7 +51,7 @@ GameObject:
   - component: {fileID: 8061995712609356680}
   - component: {fileID: 8117574788877448956}
   - component: {fileID: 6955319718670308413}
-  - component: {fileID: 2426181664314988161}
+  - component: {fileID: 6996728658863666810}
   m_Layer: 7
   m_Name: SkeletonMinion
   m_TagString: Enemy
@@ -92,8 +92,8 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
-  enemyType: {fileID: 0}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movmentReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
@@ -274,7 +274,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPoint: {fileID: 6782279903350017760}
   attackRange: 1.76
-  isAttacking: 0
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -295,10 +294,10 @@ MonoBehaviour:
   movementSpeed: 2
   engagementRange: 1
   agent: {fileID: 4928959221387099164}
-  enemyLOS: {fileID: 2426181664314988161}
+  enemyLOS: {fileID: 0}
   enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
---- !u!114 &2426181664314988161
+--- !u!114 &6996728658863666810
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -307,7 +306,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7686125088459755243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5f00c979386f9b40926e8583f25d4cd, type: 3}
+  m_Script: {fileID: 11500000, guid: f32dc590940c6494890a27fe81efdc00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
@@ -318,6 +317,7 @@ MonoBehaviour:
   distancetotarget: 0
   headingtotarget: {x: 0, y: 0, z: 0}
   myHeading: {x: 0, y: 0, z: 0}
+  selfPos: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &3124172747385768879

@@ -13,7 +13,7 @@ public class EnemyChaseState : EnemyNeutralState
     public override void RunState()
     {
         
-        if (stateContext.enemyLOS.TargetSpotted()) {
+        if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) {
             stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, false);
         }
         else
