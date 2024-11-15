@@ -7,6 +7,7 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public Transform target;
+    public Vector3 positionTarget;
 
     public float smoothSpeed = 0.0005f;
     public bool yAxisLocked = false;
@@ -80,6 +81,9 @@ public class CameraFollow : MonoBehaviour
             case FollowMode.Lerp:
                 LerpFollow();
                 break;
+            case FollowMode.PositionLerp:
+                PositionLerp();
+                break;
             case FollowMode.Exact:
                 return;
         }
@@ -106,7 +110,7 @@ public class CameraFollow : MonoBehaviour
             
 
         }
-        if(!lookAtLocked) transform.LookAt(target);
+        if(!lookAtLocked) transform.LookAt(target.position);
 
 
     }
@@ -114,13 +118,44 @@ public class CameraFollow : MonoBehaviour
     void ExactFollow()
     {
         if(!pauseFollow) transform.position = new Vector3(target.position.x + offset.x, target.position.y + offset.y, target.position.z + offset.z);
-        if (!lookAtLocked) transform.LookAt(target);
+        if (!lookAtLocked) transform.LookAt(target.position);
+    }
+
+    void PositionLerp()
+    {
+        if (positionTarget == null)
+            return;
+        else if (!pauseFollow)
+        {
+            Vector3 desiredPosition;
+            if (!yAxisLocked)
+            {
+                desiredPosition = positionTarget + offset;
+                lastYPos = transform.position.y;
+            }
+            else
+            {
+                desiredPosition = new Vector3(positionTarget.x + offset.x, lastYPos, positionTarget.z + offset.z);
+            }
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+            transform.position = smoothPosition;
+
+
+        }
+        if (!lookAtLocked) transform.LookAt(positionTarget);
+    }
+
+    void SetPositionTarget(Vector3 posTarget)
+    {
+        positionTarget = posTarget;
     }
 
     public enum FollowMode
     {
         Lerp,
-        Exact
+        Exact,
+        PositionLerp,
+        PositionExact
     }
 
 

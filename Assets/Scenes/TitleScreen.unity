@@ -11563,8 +11563,11 @@ MonoBehaviour:
   target: {fileID: 0}
   smoothSpeed: 0.05
   yAxisLocked: 0
+  lookAtLocked: 0
   lastYPos: 0
+  followMode: 0
   offset: {x: 10, y: 10, z: -10}
+  pauseFollow: 0
 --- !u!114 &1517556465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21325,6 +21328,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 493919003284137853, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 540134340503387492, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -21474,7 +21481,15 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4789001080257748655, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789001080257748655, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
       propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789001080257748655, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_CollisionDetection
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4799959043754172466, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
@@ -21573,6 +21588,22 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6478233163631178690, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6478233163631178690, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6478233163631178690, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6478233163631178690, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6539767150391653892, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -21617,6 +21648,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 7668384698434136702, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7729521219049051645, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -21640,6 +21675,14 @@ PrefabInstance:
     - target: {fileID: 8879342585737872209, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8990343206346804218, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8990343206346804218, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9001567495502922571, guid: 862033ccd40f6b84785b44ba08f9a047, type: 3}
       propertyPath: m_Layer

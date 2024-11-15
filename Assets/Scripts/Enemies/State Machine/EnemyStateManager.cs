@@ -129,4 +129,10 @@ public class EnemyStateManager : MonoBehaviour
         var rotationtolookat = Quaternion.LookRotation(headingtolookat);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotationtolookat, rotationSpeed * Time.deltaTime);
     }
+
+    public void ResetEnemyState()
+    {
+        ChangeState(idleState);
+        
+    }
 }

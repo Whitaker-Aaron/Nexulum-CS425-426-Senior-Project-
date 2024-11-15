@@ -79,6 +79,11 @@ public class EnemyLOS : MonoBehaviour
         }
     }
 
+    public void ResetTarget()
+    {
+        currentTarget = null;
+    }
+
     public bool TargetSpotted()
     {
         if (currentTarget != null)
