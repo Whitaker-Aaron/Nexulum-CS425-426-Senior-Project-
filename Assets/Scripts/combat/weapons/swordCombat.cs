@@ -49,6 +49,8 @@ public class swordCombat : MonoBehaviour
                 }
                 audioManager.PlaySFX("SwordCollide");
                 Vector3 knockBackDir = collider.transform.position - GameObject.FindGameObjectWithTag("Player").transform.position;
+                Debug.Log("Enemy knockback mag: " + knockBackDir.magnitude);
+                //knockBackDir *= 1.5f;
                 collider.GetComponent<EnemyFrame>().takeDamage(damage, knockBackDir, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }
         }

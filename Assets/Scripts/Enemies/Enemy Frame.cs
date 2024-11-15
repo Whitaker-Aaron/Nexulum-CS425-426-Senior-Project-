@@ -44,6 +44,8 @@ public class EnemyFrame : MonoBehaviour
     Slider enemyHealthBar;
     Slider delayedEnemyHealthBar;
 
+    public Coroutine curStopVel;
+
 
 
     private void Awake()
@@ -155,8 +157,13 @@ public class EnemyFrame : MonoBehaviour
                 Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
                 if (forwardDir != Vector3.zero)
                 {
-                    transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 10, ForceMode.VelocityChange);
-                    StartCoroutine(StopVelocity(0.15f));
+                    Debug.Log("Normalized enemy knockback: " + forwardDir.normalized);
+                    transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15, ForceMode.VelocityChange);
+                    if (curStopVel != null)
+                    {
+                        StopCoroutine(curStopVel);
+                    }
+                    curStopVel = StartCoroutine(StopVelocity(0.15f));
                 }
 
                 
