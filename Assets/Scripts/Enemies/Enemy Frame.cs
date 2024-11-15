@@ -53,6 +53,10 @@ public class EnemyFrame : MonoBehaviour
     Slider enemyHealthBar;
     Slider delayedEnemyHealthBar;
 
+    public Coroutine curStopVel;
+
+
+
     private void Awake()
     {
         //enemyType = transform.GetComponent<enemyMinionCombat>();
@@ -93,6 +97,24 @@ public class EnemyFrame : MonoBehaviour
         // Damage Types - Aisling
         iceEffect = new IceDamage(movementReference, iceEffectThreshold, iceMaxValue, iceSpeedDecrement, iceDecayRate);
 }
+
+    public void DeactivateHealthBar()
+    {
+        if(healthRef != null)
+        {
+            healthRef.gameObject.SetActive(false);
+        }
+        
+    }
+
+    public void ActivateHealthBar()
+    {
+        if(healthRef != null)
+        {
+            healthRef.gameObject.SetActive(true);
+        }
+        
+    }
 
     // Update is called once per frame
     void LateUpdate()
@@ -147,8 +169,14 @@ public class EnemyFrame : MonoBehaviour
                 Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
                 if (forwardDir != Vector3.zero)
                 {
-                    transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 10, ForceMode.VelocityChange);
-                    StartCoroutine(StopVelocity(0.15f));
+                    Debug.Log("Normalized enemy knockback: " + forwardDir.normalized);
+                    transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15, ForceMode.Impulse);
+                    if (curStopVel != null)
+                    {
+                        StopCoroutine(curStopVel);
+                    }
+                    transform.GetComponent<CapsuleCollider>().isTrigger = true;
+                    curStopVel = StartCoroutine(StopVelocity(0.15f));
                 }
 
                 
@@ -180,6 +208,7 @@ public class EnemyFrame : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        transform.GetComponent<CapsuleCollider>().isTrigger = false;
     }
 
     public void resetPosition()

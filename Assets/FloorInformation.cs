@@ -31,6 +31,7 @@ public class FloorInformation : MonoBehaviour
         {
             if (!RoomList[i].GetComponent<RoomInformation>().floorEntrance)
             {
+                //RoomList[i].GetComponent<RoomInformation>().DeactivateEnemyHealthBars();
                 RoomList[i].SetActive(false);
             }
         }

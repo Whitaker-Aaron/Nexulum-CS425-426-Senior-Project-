@@ -31,6 +31,12 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
         }
     }
 
+    private void OnEnable()
+    {
+        isAttacking = false;
+        canAttack = true;
+    }
+
 
     public enemyInt getType()
     {

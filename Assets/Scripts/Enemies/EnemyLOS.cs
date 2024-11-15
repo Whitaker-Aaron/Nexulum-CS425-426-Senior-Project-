@@ -77,6 +77,11 @@ public class EnemyLOS : MonoBehaviour
         }
     }
 
+    public void ResetTarget()
+    {
+        currentTarget = null;
+    }
+
     // Return the tag of the collider spotted
     public string TargetSpotted()
     {

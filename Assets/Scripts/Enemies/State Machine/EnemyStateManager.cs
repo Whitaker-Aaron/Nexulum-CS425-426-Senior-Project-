@@ -134,8 +134,13 @@ public class EnemyStateManager : MonoBehaviour
         return enemyLOS.TargetSpotted();
     }
 
-    public void ChangeMovementSpeed(float speed)
-    {
+    public void ChangeMovementSpeed(float speed){
         agent.speed = speed;
+    }
+
+    public void ResetEnemyState()
+    {
+        ChangeState(idleState);
+        
     }
 }
