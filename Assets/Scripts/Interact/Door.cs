@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum DoorType { Gate, Wood, Breakable }
+public enum DoorType { Gate, Wood, Breakable, IronGate }
 
 public class Door : MonoBehaviour, i_Interactable
 {
@@ -11,10 +11,12 @@ public class Door : MonoBehaviour, i_Interactable
     private Animator animator;
     public bool isLocked;
     private bool isOpen;
+    public bool forceOpen;
 
     public void Start()
     {
         isOpen = false;
+        forceOpen = false;
         animator = GetComponent<Animator>();
         if (animator == null)
         {
@@ -22,16 +24,15 @@ public class Door : MonoBehaviour, i_Interactable
         }
     }
 
-    // Only allow interaction if the door is not a Gate type
     public bool Interact(Interactor interactor)
     {
         if (doorType == DoorType.Gate)
         {
-            Debug.Log("This door can only be controlled by a lever.");
-            return false; // Block interaction for Gate doors
+            Debug.Log("This door can only open when activated.");
+            return false;
         }
 
-        if (!isLocked)
+        if (isLocked == false)
         {
             ToggleDoor();
         }
@@ -43,7 +44,6 @@ public class Door : MonoBehaviour, i_Interactable
         return true;
     }
 
-    // Method to toggle door open/close, accessible by lever
     public void ToggleDoor()
     {
         if (isOpen)
@@ -58,6 +58,14 @@ public class Door : MonoBehaviour, i_Interactable
 
     public void OpenDoor()
     {
+        if (forceOpen && doorType == DoorType.IronGate)
+        {
+            animator.SetBool("isOpen", true);
+            Debug.Log("Forcing Iron Gate to Open");
+            isOpen = true;
+            return;
+        }
+
         if (doorType == DoorType.Gate || doorType == DoorType.Wood)
         {
             animator.SetBool("isOpen", true);
