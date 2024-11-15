@@ -133,5 +133,6 @@ public class EnemyStateManager : MonoBehaviour
     public void ResetEnemyState()
     {
         ChangeState(idleState);
+        
     }
 }
