@@ -34,9 +34,9 @@ public class DeathPlane : MonoBehaviour
 
     public IEnumerator WaitThenTakeDamage(CharacterBase character)
     {
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.2f);
         camera.SetCameraMode(CameraFollow.FollowMode.PositionLerp);
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.1f);
         camera.SetCameraMode(CameraFollow.FollowMode.Lerp);
         character.ResetToGround();
         yield return new WaitForSeconds(0.25f);
