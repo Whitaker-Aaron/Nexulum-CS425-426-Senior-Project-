@@ -158,7 +158,7 @@ public class EnemyFrame : MonoBehaviour
                 if (forwardDir != Vector3.zero)
                 {
                     Debug.Log("Normalized enemy knockback: " + forwardDir.normalized);
-                    transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15, ForceMode.VelocityChange);
+                    transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15, ForceMode.Impulse);
                     if (curStopVel != null)
                     {
                         StopCoroutine(curStopVel);
