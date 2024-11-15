@@ -40,7 +40,7 @@ public class enemySword : MonoBehaviour
             if (classAbilties.instance.earthBool == true && classAbilties.instance.bubble == true && enemyInstance != null)
             {
                 //print("reflecting enemy damage back");
-                enemyInstance.GetComponent<EnemyFrame>().takeDamage(damage, knockBackDir, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
+                enemyInstance.GetComponent<EnemyFrame>().takeDamage(damage, mainSkeletonTransform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
                 return;
             }
             else

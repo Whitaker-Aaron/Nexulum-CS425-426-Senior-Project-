@@ -163,6 +163,7 @@ public class EnemyFrame : MonoBehaviour
                     {
                         StopCoroutine(curStopVel);
                     }
+                    transform.GetComponent<CapsuleCollider>().isTrigger = true;
                     curStopVel = StartCoroutine(StopVelocity(0.15f));
                 }
 
@@ -195,6 +196,7 @@ public class EnemyFrame : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        transform.GetComponent<CapsuleCollider>().isTrigger = false;
     }
 
     public void resetPosition()
