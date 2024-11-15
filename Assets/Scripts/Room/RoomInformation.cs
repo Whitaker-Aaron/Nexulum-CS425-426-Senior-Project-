@@ -42,6 +42,12 @@ public class RoomInformation : MonoBehaviour
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().yAxisLocked = false;
             Debug.Log("Unlocking camera y-axis");
         }
+        ActivateEnemyHealthBars();
+    }
+
+    private void OnDisable()
+    {
+        DeactivateEnemyHealthBars();
     }
 
     private void Start()
@@ -69,5 +75,35 @@ public class RoomInformation : MonoBehaviour
     public GameObject[] GetEnemies()
     {
         return allEnemies;
+    }
+
+    public void DeactivateEnemyHealthBars()
+    {
+       for(int i = 0; i < allEnemies.Length; i++)
+        {
+            if (allEnemies[i] != null)
+            {
+                allEnemies[i].GetComponent<EnemyFrame>().DeactivateHealthBar();
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    public void ActivateEnemyHealthBars()
+    {
+        for (int i = 0; i < allEnemies.Length; i++)
+        {
+            if (allEnemies[i] != null)
+            {
+                allEnemies[i].GetComponent<EnemyFrame>().ActivateHealthBar();
+            }
+            else
+            {
+                break;
+            }
+        }
     }
 }

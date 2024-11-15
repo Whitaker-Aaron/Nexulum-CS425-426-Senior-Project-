@@ -922,6 +922,7 @@ public class masterInput : MonoBehaviour
             if (playerInput.actions["RightClick"].triggered)
             {
                 isBlocking = true;
+                isAttacking = false;
                 character.invul = true;
 
                 Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
