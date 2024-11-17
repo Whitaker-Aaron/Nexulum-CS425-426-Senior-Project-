@@ -70,7 +70,7 @@ public class masterInput : MonoBehaviour
     //Knight Combat Variables
     bool isAttacking = false;
     float cooldown = 1f;
-    bool inputPaused = false;
+    public bool inputPaused = false;
     bool returningFromMenu = true;
     private static int noOfClicks = 0;
     private float lastClickedTime = 0;
@@ -284,7 +284,7 @@ public class masterInput : MonoBehaviour
     void Update()
     {
 
-        if (stopVelocity)
+        //if (stopVelocity)
             //player.GetComponent<Rigidbody>().velocity = new Vector3(0, player.GetComponent<Rigidbody>().velocity.y, 0);
 
 
@@ -318,6 +318,11 @@ public class masterInput : MonoBehaviour
             //return;
 
         if (inputPaused) return;
+
+        if (playerInput.actions["SwitchAbilities"].triggered)
+        {
+            onSwitchToSpell();
+        }
 
         runLogic();
 
@@ -449,7 +454,7 @@ public class masterInput : MonoBehaviour
         isMouseLooking = false;
     }
 
-    public void onSwitchToSpell(InputAction.CallbackContext context)
+    public void onSwitchToSpell()
     {
         int rCount = 0;
         foreach(Rune rune in character.equippedRunes)
@@ -461,6 +466,7 @@ public class masterInput : MonoBehaviour
         if(rCount > 0)
         {
             usingSpellRunes = !usingSpellRunes;
+            print("usingSpellRunes = " + usingSpellRunes);
         }
         else
         {
@@ -497,7 +503,7 @@ public class masterInput : MonoBehaviour
             Vector3 lookDirection = (cameraRight * rightStickInput.x) + (cameraForward * rightStickInput.y);
 
             // Adjust the look position based on the right stick direction
-            lookPos = player.transform.position + lookDirection * 10f; // Adjust distance as needed
+            lookPos = player.transform.position + lookDirection * 5f; // Adjust distance as needed
         }
 
         // Calculate the direction to look at
