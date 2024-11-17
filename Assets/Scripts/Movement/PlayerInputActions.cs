@@ -152,6 +152,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwitchAbilities"",
+                    ""type"": ""Button"",
+                    ""id"": ""6788e64c-3948-4ba9-a57e-445d9102f926"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -284,17 +293,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""PauseMenu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4a3b79f8-6057-4322-93f4-9bdb0fbcb04b"",
-                    ""path"": ""<Keyboard>/shift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -495,6 +493,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da3dfb9d-7764-43cc-b9a6-d0b12478b1e2"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchAbilities"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b8649d5-e41c-4dde-8a8b-b4fe852a76f7"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchAbilities"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -607,6 +627,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_player_AbilityTwo = m_player.FindAction("AbilityTwo", throwIfNotFound: true);
         m_player_AbilityThree = m_player.FindAction("AbilityThree", throwIfNotFound: true);
         m_player_Interact = m_player.FindAction("Interact", throwIfNotFound: true);
+        m_player_SwitchAbilities = m_player.FindAction("SwitchAbilities", throwIfNotFound: true);
         // MenuControl
         m_MenuControl = asset.FindActionMap("MenuControl", throwIfNotFound: true);
         m_MenuControl_Pause = m_MenuControl.FindAction("Pause", throwIfNotFound: true);
@@ -687,6 +708,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_AbilityTwo;
     private readonly InputAction m_player_AbilityThree;
     private readonly InputAction m_player_Interact;
+    private readonly InputAction m_player_SwitchAbilities;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -705,6 +727,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @AbilityTwo => m_Wrapper.m_player_AbilityTwo;
         public InputAction @AbilityThree => m_Wrapper.m_player_AbilityThree;
         public InputAction @Interact => m_Wrapper.m_player_Interact;
+        public InputAction @SwitchAbilities => m_Wrapper.m_player_SwitchAbilities;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -756,6 +779,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @SwitchAbilities.started += instance.OnSwitchAbilities;
+            @SwitchAbilities.performed += instance.OnSwitchAbilities;
+            @SwitchAbilities.canceled += instance.OnSwitchAbilities;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -802,6 +828,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @SwitchAbilities.started -= instance.OnSwitchAbilities;
+            @SwitchAbilities.performed -= instance.OnSwitchAbilities;
+            @SwitchAbilities.canceled -= instance.OnSwitchAbilities;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -897,6 +926,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnAbilityTwo(InputAction.CallbackContext context);
         void OnAbilityThree(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnSwitchAbilities(InputAction.CallbackContext context);
     }
     public interface IMenuControlActions
     {

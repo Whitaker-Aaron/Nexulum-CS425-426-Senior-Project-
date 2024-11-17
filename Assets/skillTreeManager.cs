@@ -74,9 +74,11 @@ public class SkillTreeManager : MonoBehaviour
         //knight
         skillTree.Add(new skillTreeNode("IncBubRad", () => abilities.modifyBubbleRad(getFloatVal("bubbleRadUpgrade"))));
         skillTree.Add(new skillTreeNode("IncComAuraRad", () => abilities.modifyCombatAuraRad(getFloatVal("combatAuraRadUpgrade"))));
+        skillTree.Add(new skillTreeNode("swordShotExplode", () => abilities.triggerSSExpolode()));
 
         //Gunner
         skillTree.Add(new skillTreeNode("IncGrenadeRad", () => abilities.modifyGrenadeRad(getFloatVal("grenadeUpgrade"))));
+        skillTree.Add(new skillTreeNode("IncRocketRad", () => abilities.modifyRocketRad(getFloatVal("rocketUpgrade"))));
 
 
         //Engineer
@@ -103,7 +105,7 @@ public class SkillTreeManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.I))
         {
-            unlockSkill("IncGrenadeRad");
+            unlockSkill("swordShotExplode");
         }
     }
 }
