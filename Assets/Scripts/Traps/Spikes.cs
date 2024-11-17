@@ -3,6 +3,7 @@ using UnityEngine;
 public class Spikes : MonoBehaviour , i_Trap
 {
     [SerializeField] private int damageAmount = 10;
+    [SerializeField] private float startDelay = 1f;
 
     public void OnTriggerEnter(Collider other)
     {

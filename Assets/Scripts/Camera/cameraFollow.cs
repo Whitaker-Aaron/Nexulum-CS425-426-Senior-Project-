@@ -7,8 +7,10 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public Transform target;
+    public Vector3 positionTarget;
 
     public float smoothSpeed = 0.0005f;
+    public bool cameraPanning = false;
     public bool yAxisLocked = false;
     public bool lookAtLocked = false;
     public float lastYPos;
@@ -49,6 +51,35 @@ public class CameraFollow : MonoBehaviour
         followMode = mode;
     }
 
+    public void StartPan(Vector3 positionToPanTo)
+    {
+        StartCoroutine(PanToPosition(positionToPanTo));
+    }
+
+    public IEnumerator PanToPosition(Vector3 position)
+    {
+        if(cameraPanning)
+        {
+            yield break;
+        }
+        cameraPanning = true;
+        target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        float ogSpeed = smoothSpeed;
+        CameraFollow.FollowMode ogFollowMode = followMode;
+        positionTarget = position;
+        smoothSpeed = 0.01f;
+        SetCameraMode(CameraFollow.FollowMode.PositionLerp);
+        yield return new WaitForSeconds(3.5f);
+        smoothSpeed = 0.05f;
+        SetCameraMode(CameraFollow.FollowMode.Lerp);
+        yield return new WaitForSeconds(1f);
+        SetCameraMode(ogFollowMode);
+        smoothSpeed = ogSpeed;
+        cameraPanning = false;
+        target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        yield break;
+    }
+
     //private void Update()
     //{
     //    if (!found)
@@ -80,6 +111,9 @@ public class CameraFollow : MonoBehaviour
             case FollowMode.Lerp:
                 LerpFollow();
                 break;
+            case FollowMode.PositionLerp:
+                PositionLerp();
+                break;
             case FollowMode.Exact:
                 return;
         }
@@ -106,7 +140,7 @@ public class CameraFollow : MonoBehaviour
             
 
         }
-        if(!lookAtLocked) transform.LookAt(target);
+        if(!lookAtLocked) transform.LookAt(target.position);
 
 
     }
@@ -114,13 +148,44 @@ public class CameraFollow : MonoBehaviour
     void ExactFollow()
     {
         if(!pauseFollow) transform.position = new Vector3(target.position.x + offset.x, target.position.y + offset.y, target.position.z + offset.z);
-        if (!lookAtLocked) transform.LookAt(target);
+        if (!lookAtLocked) transform.LookAt(target.position);
+    }
+
+    void PositionLerp()
+    {
+        if (positionTarget == null)
+            return;
+        else if (!pauseFollow)
+        {
+            Vector3 desiredPosition;
+            if (!yAxisLocked)
+            {
+                desiredPosition = positionTarget + offset;
+                lastYPos = transform.position.y;
+            }
+            else
+            {
+                desiredPosition = new Vector3(positionTarget.x + offset.x, lastYPos, positionTarget.z + offset.z);
+            }
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+            transform.position = smoothPosition;
+
+
+        }
+        if (!lookAtLocked) transform.LookAt(positionTarget);
+    }
+
+    void SetPositionTarget(Vector3 posTarget)
+    {
+        positionTarget = posTarget;
     }
 
     public enum FollowMode
     {
         Lerp,
-        Exact
+        Exact,
+        PositionLerp,
+        PositionExact
     }
 
 

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class DeathPlane : MonoBehaviour
 {
+    CameraFollow camera;
     // Start is called before the first frame update
     void Start()
     {
-        
+        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>();
     }
 
     // Update is called once per frame
@@ -24,17 +25,26 @@ public class DeathPlane : MonoBehaviour
         {
             Debug.Log("Player has fallen through death plane");
             var character = other.gameObject.GetComponent<CharacterBase>();
-            character.ResetToGround();
+            //camera.PauseFollow();
+            //camera.PauseLookAt();
+            camera.positionTarget = character.lastGroundLocation;    
             StartCoroutine(WaitThenTakeDamage(character));
         }
     }
 
     public IEnumerator WaitThenTakeDamage(CharacterBase character)
     {
+        yield return new WaitForSeconds(0.2f);
+        camera.SetCameraMode(CameraFollow.FollowMode.PositionLerp);
+        yield return new WaitForSeconds(0.1f);
+        camera.SetCameraMode(CameraFollow.FollowMode.Lerp);
+        character.ResetToGround();
         yield return new WaitForSeconds(0.25f);
-        if(!character.transitionedRoom && !character.transitioningRoom)
+        if (!character.transitionedRoom && !character.transitioningRoom)
         {
             character.takeDamage(20, Vector3.zero);
+            //camera.UnpauseFollow();
+            //camera.UnpauseLookAt();
         }
     }
 }

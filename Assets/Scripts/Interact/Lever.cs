@@ -9,6 +9,7 @@ public class Lever : MonoBehaviour, i_Interactable
 {
     [SerializeField] public LeverType type;
     public GameObject leverUI;
+    private CameraFollow camera;
 
     [HideInInspector] public GameObject controlledDoor;  // Only used for OneDoor type
     [HideInInspector] public List<Door> doorList;        // Used only for Multiple type
@@ -20,6 +21,7 @@ public class Lever : MonoBehaviour, i_Interactable
     {
         leverToggled = false;
         animator = GetComponent<Animator>();
+        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>();
 
         if (animator == null)
         {
@@ -47,7 +49,12 @@ public class Lever : MonoBehaviour, i_Interactable
                 if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))
                 {
                     door.isLocked = false;
-                    door.ToggleDoor();
+                    if (!door.isOpen)
+                    {
+                        camera.StartPan(door.transform.position);
+                        door.ToggleDoor();
+                    }
+                    
                 }
                 else
                 {
@@ -66,7 +73,9 @@ public class Lever : MonoBehaviour, i_Interactable
                 if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))
                 {
                     door.isLocked = false;
+                    //StartCoroutine(PanToDoor(door));
                     door.ToggleDoor();
+
                 }
                 else
                 {
@@ -77,6 +86,23 @@ public class Lever : MonoBehaviour, i_Interactable
 
         return true;
     }
+
+    //public IEnumerator PanToDoor(Door door)
+    //{
+    //    
+    //    float ogSpeed = camera.smoothSpeed;
+    //    CameraFollow.FollowMode ogFollowMode = camera.followMode;
+    //    camera.positionTarget = door.transform.position;
+    //    camera.smoothSpeed = 0.01f;
+    //    camera.SetCameraMode(CameraFollow.FollowMode.PositionLerp);
+    //    yield return new WaitForSeconds(3.5f);
+    //    camera.smoothSpeed = 0.05f;
+    //    camera.SetCameraMode(CameraFollow.FollowMode.Lerp);
+    //    yield return new WaitForSeconds(1f);
+    //    camera.SetCameraMode(ogFollowMode);
+    //    camera.smoothSpeed = ogSpeed;
+    //    yield break;
+    //}
 
     public void ShowUI()
     {

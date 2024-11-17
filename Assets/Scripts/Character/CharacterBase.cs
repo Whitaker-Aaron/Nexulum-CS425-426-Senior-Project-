@@ -30,7 +30,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     bool lowHealthReached = false;
 
-    Vector3 lastGroundLocation;
+    public Vector3 lastGroundLocation;
 
     //MANAGERS
     LifetimeManager lifetimeManager;
@@ -111,7 +111,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         if (other.gameObject.tag == "RestorePoint")
         {
             Debug.Log("No longer restore point");
-            lastGroundLocation = gameObject.transform.position;
+            lastGroundLocation = transform.position;
         }
     }
 
