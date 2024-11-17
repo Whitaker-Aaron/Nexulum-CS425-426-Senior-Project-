@@ -10,7 +10,7 @@ public class Door : MonoBehaviour, i_Interactable
     public GameObject doorUI;
     private Animator animator;
     public bool isLocked;
-    private bool isOpen;
+    public bool isOpen;
     public bool forceOpen;
 
     public void Start()

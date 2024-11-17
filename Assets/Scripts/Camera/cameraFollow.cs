@@ -10,6 +10,7 @@ public class CameraFollow : MonoBehaviour
     public Vector3 positionTarget;
 
     public float smoothSpeed = 0.0005f;
+    public bool cameraPanning = false;
     public bool yAxisLocked = false;
     public bool lookAtLocked = false;
     public float lastYPos;
@@ -48,6 +49,35 @@ public class CameraFollow : MonoBehaviour
     public void SetCameraMode(FollowMode mode)
     {
         followMode = mode;
+    }
+
+    public void StartPan(Vector3 positionToPanTo)
+    {
+        StartCoroutine(PanToPosition(positionToPanTo));
+    }
+
+    public IEnumerator PanToPosition(Vector3 position)
+    {
+        if(cameraPanning)
+        {
+            yield break;
+        }
+        cameraPanning = true;
+        target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        float ogSpeed = smoothSpeed;
+        CameraFollow.FollowMode ogFollowMode = followMode;
+        positionTarget = position;
+        smoothSpeed = 0.01f;
+        SetCameraMode(CameraFollow.FollowMode.PositionLerp);
+        yield return new WaitForSeconds(3.5f);
+        smoothSpeed = 0.05f;
+        SetCameraMode(CameraFollow.FollowMode.Lerp);
+        yield return new WaitForSeconds(1f);
+        SetCameraMode(ogFollowMode);
+        smoothSpeed = ogSpeed;
+        cameraPanning = false;
+        target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        yield break;
     }
 
     //private void Update()
