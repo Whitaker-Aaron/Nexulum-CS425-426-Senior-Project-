@@ -14,6 +14,9 @@ public class swordShot : MonoBehaviour
 
     string poolName = null;
 
+    bool explode = false;
+    public float explodeRadius = 2f;
+
     private void Awake()
     {
         //waitReturn();
@@ -28,12 +31,18 @@ public class swordShot : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(waitReturn());
+        gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+    }
+
+    private void OnDisable()
+    {
+        explode = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -45,6 +54,21 @@ public class swordShot : MonoBehaviour
             collision.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             if (isIce)
                 iceExplode();
+            else if(explode)
+            {
+                Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, explodeRadius);
+
+                foreach (Collider c in enemies)
+                {
+                    if (c.gameObject.tag == "Enemy")
+                    {
+                        //print("slow down the enemy");
+                        c.gameObject.GetComponent<EnemyFrame>().takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                    }
+                }
+                EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position);
+                returnToPool();
+            }
             else
             {
                 EffectsManager.instance.getFromPool("swordShotHit", gameObject.transform.position);
@@ -55,6 +79,21 @@ public class swordShot : MonoBehaviour
         else if(isIce)
         {
             iceExplode();
+        }
+        else if(explode)
+        {
+            Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, explodeRadius);
+
+            foreach (Collider c in enemies)
+            {
+                if (c.gameObject.tag == "Enemy")
+                {
+                    //print("slow down the enemy");
+                    c.gameObject.GetComponent<EnemyFrame>().takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                }
+            }
+            EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position);
+            returnToPool();
         }
         else
         {
@@ -77,6 +116,11 @@ public class swordShot : MonoBehaviour
         }
         EffectsManager.instance.getFromPool("swordShotIceHit", gameObject.transform.position);
         returnToPool();
+    }
+
+    public void activateExplosion()
+    {
+        explode = true;
     }
 
     void returnToPool()
@@ -102,5 +146,10 @@ public class swordShot : MonoBehaviour
     public void setName(string name)
     {
         poolName = name;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(gameObject.transform.position, explodeRadius);
     }
 }

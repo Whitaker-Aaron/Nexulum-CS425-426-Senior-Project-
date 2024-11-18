@@ -70,4 +70,9 @@ public class rocket : MonoBehaviour
         else
             explode();
     }
+
+    public void increaseBlastRadius(float amount)
+    {
+        explosionRadius += amount;
+    }
 }
