@@ -650,6 +650,8 @@ public class masterInput : MonoBehaviour
     public void pausePlayerInput()
     {
         inputPaused = true;
+        isMoving = false;
+        isDashing = false;
         animationControl.stop();
 
     }

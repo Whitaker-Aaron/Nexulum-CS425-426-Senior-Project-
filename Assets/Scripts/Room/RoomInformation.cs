@@ -9,7 +9,7 @@ public class RoomInformation : MonoBehaviour
     [SerializeField] public string roomName;
     [SerializeField] GameObject enemies;
     [SerializeField] bool lockYAxis = false;
-    GameObject[] allEnemies;
+    List<GameObject> allEnemies = new List<GameObject>();
     public bool firstVisit = true;
     public bool floorEntrance = false;
 
@@ -22,11 +22,11 @@ public class RoomInformation : MonoBehaviour
         character = GameObject.FindGameObjectWithTag("Player");
         
 
-        allEnemies = new GameObject[enemies.transform.childCount];
+        //allEnemies = new GameObject[enemies.transform.childCount];
 
-        for(int i =0; i <  allEnemies.Length; i++)
+        for(int i =0; i < enemies.transform.childCount; i++)
         {
-            allEnemies[i] = enemies.transform.GetChild(i).gameObject;
+            allEnemies.Add(enemies.transform.GetChild(i).gameObject);
         }
     }
 
@@ -48,6 +48,20 @@ public class RoomInformation : MonoBehaviour
     private void OnDisable()
     {
         DeactivateEnemyHealthBars();
+    }
+
+    private void Update()
+    {
+        for(int i = 0; i < allEnemies.Count; i++)
+        {
+            if (allEnemies[i] == null)
+            {
+                Debug.Log("Removing enemy from list");
+                allEnemies.RemoveAt(i);
+                i--;
+            }
+            
+        }
     }
 
     private void Start()
@@ -72,14 +86,14 @@ public class RoomInformation : MonoBehaviour
         //character.transform.position = startPos.transform.position;
     }
 
-    public GameObject[] GetEnemies()
+    public List<GameObject> GetEnemies()
     {
         return allEnemies;
     }
 
     public void DeactivateEnemyHealthBars()
     {
-       for(int i = 0; i < allEnemies.Length; i++)
+       for(int i = 0; i < allEnemies.Count; i++)
         {
             if (allEnemies[i] != null)
             {
@@ -94,7 +108,7 @@ public class RoomInformation : MonoBehaviour
 
     public void ActivateEnemyHealthBars()
     {
-        for (int i = 0; i < allEnemies.Length; i++)
+        for (int i = 0; i < allEnemies.Count; i++)
         {
             if (allEnemies[i] != null)
             {

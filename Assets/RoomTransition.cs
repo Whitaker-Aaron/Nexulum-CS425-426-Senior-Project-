@@ -36,8 +36,9 @@ public class RoomTransition : MonoBehaviour
     public void ResetEnemyPositions()
     {
         var enemies = currentInfo.GetEnemies();
-        for(int i =0;  i < enemies.Length; i++)
+        for(int i =0;  i < enemies.Count; i++)
         {
+            //Debug.Log(enemies[i]);
             if (enemies[i] != null)
             {
                 enemies[i].GetComponent<EnemyFrame>().resetPosition();
@@ -51,7 +52,7 @@ public class RoomTransition : MonoBehaviour
         var enemies = targetInfo.GetEnemies();
         if(enemies != null)
         {
-            for (int i = 0; i < enemies.Length; i++)
+            for (int i = 0; i < enemies.Count; i++)
             {
                 if (enemies[i] != null)
                 {
@@ -66,7 +67,7 @@ public class RoomTransition : MonoBehaviour
         var enemies = currentInfo.GetEnemies();
         if(enemies != null)
         {
-            for (int i = 0; i < enemies.Length; i++)
+            for (int i = 0; i < enemies.Count; i++)
             {
                 if (enemies[i] != null)
                 {

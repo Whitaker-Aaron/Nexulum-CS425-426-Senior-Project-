@@ -76,10 +76,10 @@ public class CameraFollow : MonoBehaviour
         positionTarget = position;
         smoothSpeed = rate;
         SetCameraMode(CameraFollow.FollowMode.PositionLerp);
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(2.5f);
         smoothSpeed = 0.05f;
         SetCameraMode(CameraFollow.FollowMode.Lerp);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         SetCameraMode(ogFollowMode);
         yield return new WaitForSeconds(0.25f);
         smoothSpeed = ogSpeed;
