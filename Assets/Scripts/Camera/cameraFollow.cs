@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
@@ -27,6 +28,7 @@ public class CameraFollow : MonoBehaviour
     {
         target = GameObject.FindWithTag("Player").transform;
         found = true;
+        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0.0f);
         lastYPos = transform.position.y;
     }
 
@@ -54,14 +56,14 @@ public class CameraFollow : MonoBehaviour
         followMode = mode;
     }
 
-    public void StartPan(Vector3 positionToPanTo, bool lockY, bool lockLook)
+    public void StartPan(Vector3 positionToPanTo, bool lockY, bool lockLook, float rate)
     {
         panLookAtLocked = lockLook;
         panYAxisLocked = lockY;
-        StartCoroutine(PanToPosition(positionToPanTo));
+        StartCoroutine(PanToPosition(positionToPanTo, rate));
     }
 
-    public IEnumerator PanToPosition(Vector3 position)
+    public IEnumerator PanToPosition(Vector3 position, float rate)
     {
         if(cameraPanning)
         {
@@ -72,13 +74,14 @@ public class CameraFollow : MonoBehaviour
         float ogSpeed = smoothSpeed;
         CameraFollow.FollowMode ogFollowMode = followMode;
         positionTarget = position;
-        smoothSpeed = 0.01f;
+        smoothSpeed = rate;
         SetCameraMode(CameraFollow.FollowMode.PositionLerp);
         yield return new WaitForSeconds(3.5f);
         smoothSpeed = 0.05f;
         SetCameraMode(CameraFollow.FollowMode.Lerp);
         yield return new WaitForSeconds(1f);
         SetCameraMode(ogFollowMode);
+        yield return new WaitForSeconds(0.25f);
         smoothSpeed = ogSpeed;
         cameraPanning = false;
         target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
@@ -107,12 +110,15 @@ public class CameraFollow : MonoBehaviour
                 return;
             case FollowMode.Exact:
                 ExactFollow();
+                //LerpFollow();
                 break;
         }
+        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0.0f);
 
     }
     private void FixedUpdate()
     {
+        
         switch (followMode)
         {
             case FollowMode.Lerp:
@@ -124,6 +130,7 @@ public class CameraFollow : MonoBehaviour
             case FollowMode.Exact:
                 return;
         }
+
     }
 
     void LerpFollow()
@@ -147,7 +154,15 @@ public class CameraFollow : MonoBehaviour
             
 
         }
-        if(!lookAtLocked && !panLookAtLocked) transform.LookAt(target.position);
+        //if(!lookAtLocked && !panLookAtLocked) transform.LookAt(target.position);
+        if (!lookAtLocked && !panLookAtLocked)
+        {
+            Vector3 direction = (target.position - (transform.position + offset));
+            Quaternion toRotation = Quaternion.LookRotation(direction, transform.up);
+            toRotation = Quaternion.Euler(toRotation.eulerAngles.x, toRotation.eulerAngles.y, 0.0f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, smoothSpeed*2);
+        }
+
 
 
     }
@@ -155,7 +170,14 @@ public class CameraFollow : MonoBehaviour
     void ExactFollow()
     {
         if(!pauseFollow) transform.position = new Vector3(target.position.x + offset.x, target.position.y + offset.y, target.position.z + offset.z);
-        if (!lookAtLocked && !panLookAtLocked) transform.LookAt(target.position);
+        //if (!lookAtLocked && !panLookAtLocked) transform.LookAt(target.position);
+        if (!lookAtLocked && !panLookAtLocked)
+        {
+            Vector3 direction = (target.position - (transform.position + offset));
+            Quaternion toRotation = Quaternion.LookRotation(direction, transform.up);
+            toRotation = Quaternion.Euler(toRotation.eulerAngles.x, toRotation.eulerAngles.y, 0.0f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, smoothSpeed * 2);
+        }
     }
 
     void PositionLerp()
@@ -180,6 +202,13 @@ public class CameraFollow : MonoBehaviour
 
         }
         if (!panLookAtLocked) transform.LookAt(positionTarget);
+        //if (!panLookAtLocked)
+        //{
+        //    Vector3 direction = (positionTarget - transform.position).normalized;
+        //    Quaternion toRotation = Quaternion.LookRotation(direction, transform.up);
+        //    transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, smoothSpeed);
+        //}
+        
     }
 
     void SetPositionTarget(Vector3 posTarget)

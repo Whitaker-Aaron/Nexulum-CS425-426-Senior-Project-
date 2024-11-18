@@ -54,7 +54,7 @@ public class Lever : MonoBehaviour, i_Interactable
                     door.isLocked = false;
                     if (!door.isOpen)
                     {
-                        camera.StartPan(door.transform.position, true, true);
+                        camera.StartPan(door.transform.position, true, true, 0.05f);
                         door.ToggleDoor();
                     }
                     
