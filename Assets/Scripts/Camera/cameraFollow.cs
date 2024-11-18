@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 
 public class CameraFollow : MonoBehaviour
@@ -12,7 +13,9 @@ public class CameraFollow : MonoBehaviour
     public float smoothSpeed = 0.0005f;
     public bool cameraPanning = false;
     public bool yAxisLocked = false;
+    public bool panYAxisLocked = false;
     public bool lookAtLocked = false;
+    public bool panLookAtLocked = false;
     public float lastYPos;
     public FollowMode followMode = FollowMode.Lerp;
     public Vector3 offset;
@@ -51,8 +54,10 @@ public class CameraFollow : MonoBehaviour
         followMode = mode;
     }
 
-    public void StartPan(Vector3 positionToPanTo)
+    public void StartPan(Vector3 positionToPanTo, bool lockY, bool lockLook)
     {
+        panLookAtLocked = lockLook;
+        panYAxisLocked = lockY;
         StartCoroutine(PanToPosition(positionToPanTo));
     }
 
@@ -77,6 +82,8 @@ public class CameraFollow : MonoBehaviour
         smoothSpeed = ogSpeed;
         cameraPanning = false;
         target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        panLookAtLocked = false;
+        panYAxisLocked = false;
         yield break;
     }
 
@@ -126,7 +133,7 @@ public class CameraFollow : MonoBehaviour
         else if (!pauseFollow)
         {
             Vector3 desiredPosition;
-            if (!yAxisLocked)
+            if (!yAxisLocked && !panYAxisLocked)
             {
                 desiredPosition = target.position + offset;
                 lastYPos = transform.position.y;
@@ -140,7 +147,7 @@ public class CameraFollow : MonoBehaviour
             
 
         }
-        if(!lookAtLocked) transform.LookAt(target.position);
+        if(!lookAtLocked && !panLookAtLocked) transform.LookAt(target.position);
 
 
     }
@@ -148,7 +155,7 @@ public class CameraFollow : MonoBehaviour
     void ExactFollow()
     {
         if(!pauseFollow) transform.position = new Vector3(target.position.x + offset.x, target.position.y + offset.y, target.position.z + offset.z);
-        if (!lookAtLocked) transform.LookAt(target.position);
+        if (!lookAtLocked && !panLookAtLocked) transform.LookAt(target.position);
     }
 
     void PositionLerp()
@@ -158,7 +165,7 @@ public class CameraFollow : MonoBehaviour
         else if (!pauseFollow)
         {
             Vector3 desiredPosition;
-            if (!yAxisLocked)
+            if (!yAxisLocked && !panYAxisLocked)
             {
                 desiredPosition = positionTarget + offset;
                 lastYPos = transform.position.y;
@@ -172,7 +179,7 @@ public class CameraFollow : MonoBehaviour
 
 
         }
-        if (!lookAtLocked) transform.LookAt(positionTarget);
+        if (!panLookAtLocked) transform.LookAt(positionTarget);
     }
 
     void SetPositionTarget(Vector3 posTarget)

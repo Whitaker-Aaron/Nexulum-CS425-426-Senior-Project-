@@ -459,8 +459,12 @@ public class masterInput : MonoBehaviour
         int rCount = 0;
         foreach(Rune rune in character.equippedRunes)
         {
-            if(rune.runeType == Rune.RuneType.Spell)
-                rCount++;
+            if(rune != null)
+            {
+                if (rune.runeType == Rune.RuneType.Spell)
+                    rCount++;
+            }
+            
             
         }
         if(rCount > 0)
