@@ -1,15 +1,18 @@
-using System.Collections;
+
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 public enum LeverType { OneDoor, Multiple }
 
 public class Lever : MonoBehaviour, i_Interactable
 {
+    
     [SerializeField] public LeverType type;
+    
+
     public GameObject leverUI;
     private CameraFollow camera;
+    //[SerializeField] public float selectCrystal;
 
     [HideInInspector] public GameObject controlledDoor;  // Only used for OneDoor type
     [HideInInspector] public List<Door> doorList;        // Used only for Multiple type
@@ -109,6 +112,7 @@ public class Lever : MonoBehaviour, i_Interactable
         if (leverUI != null)
         {
             leverUI.SetActive(true);
+            //selectCrystal.SetActive(true);
         }
     }
 
@@ -117,6 +121,7 @@ public class Lever : MonoBehaviour, i_Interactable
         if (leverUI != null)
         {
             leverUI.SetActive(false);
+            //selectCrystal.SetActive(false);
         }
     }
 
