@@ -971,6 +971,11 @@ public class classAbilties : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (bubble)
+        {
+            
+        }
+
         if(checkingAura && currentAura != null)
         {
             Collider[] colliders = Physics.OverlapSphere(currentAura, comatAuraRadius, playerLayer);
