@@ -14,6 +14,8 @@ public class EnemyLOS : MonoBehaviour
 
     public bool isTargetSpotted = false;
 
+    private LayerMask layers = LayerMask.GetMask();
+
     // ----------------------------------------------
     // Concrete targets
     // ----------------------------------------------
@@ -40,11 +42,7 @@ public class EnemyLOS : MonoBehaviour
     // Positions
     // ----------------------------------------------
 
-    public Vector3 selfPos
-    {
-        get;
-        set;
-    }
+    public Vector3 selfPos;
     public Vector3 targetPos;
     public Vector3 lastKnownTargetPos;
 
@@ -58,11 +56,11 @@ public class EnemyLOS : MonoBehaviour
         ChangeTarget(player);
     }
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
+    // Update is called once per frame
+    void Update()
+    {
+        myHeading = transform.forward;
+    }
 
     // ChangeTarget takes a gameobject (a new target) and switches the current target to the new target
     // Returns true if successful, returns false if the new target is null (a null target causes errors)
@@ -84,7 +82,8 @@ public class EnemyLOS : MonoBehaviour
         currentTarget = null;
     }
 
-    public bool TargetSpotted()
+    // Return the tag of the collider spotted
+    public string TargetSpotted()
     {
         if (currentTarget != null)
         {
@@ -100,36 +99,37 @@ public class EnemyLOS : MonoBehaviour
             if ((distancetotarget <= detectionRange) && (targetangle <= visionAngle) && canSeeThroughWalls)
             {
                 isTargetSpotted = true;
-                return true;
+                return currentTarget.tag;
             }
             else if ((distancetotarget <= detectionRange) && (targetangle <= visionAngle) && !canSeeThroughWalls)
             {
                 Physics.Raycast(origin: selfPos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange); // Determine if target is obstructed
+                //Debug.Log("Ray hit: " + hit.collider.tag);
                 if (hit.transform == currentTarget.transform)
                 {
                     isTargetSpotted = true;
-                    return true;
+                    return hit.collider.tag;
                 }
                 else
                 {
                     isTargetSpotted = false;
-                    return false;
+                    return null;
                 }
             }
             else
             {
                 isTargetSpotted = false;
-                return false;
+                return null;
             }
         }
         else
         {
             isTargetSpotted = false;
-            return false;
+            return null;
         }
     }
 
-    public bool TargetInRange()
+    public bool TargetInDetectionRange()
     {
         selfPos = transform.position;
         targetPos = currentTarget.transform.position;

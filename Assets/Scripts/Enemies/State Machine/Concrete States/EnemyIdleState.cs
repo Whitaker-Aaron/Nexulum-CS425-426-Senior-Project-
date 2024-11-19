@@ -14,8 +14,7 @@ public class EnemyIdleState : EnemyNeutralState
     public override void RunState()
     {
         base.OnDamaged();
-
-        if (stateContext.enemyLOS.TargetSpotted())
+        if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag())
         {
             // Changes to chase state if the target is spotted - Aisling
             stateContext.ChangeState(stateContext.chaseState);

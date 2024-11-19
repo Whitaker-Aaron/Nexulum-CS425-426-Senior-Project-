@@ -1,4 +1,4 @@
-// Super state for more common functionalities of child states - Aisling
+// Super state for more common functionalities of basic states - Aisling
 
 public abstract class EnemyNeutralState : EnemyState
 {
@@ -14,22 +14,9 @@ public abstract class EnemyNeutralState : EnemyState
                 case EnemyFrame.DamageSource.Player:
                     // Target player
                     stateContext.enemyLOS.ChangeTarget(stateContext.enemyLOS.player);
-
-                    // Look at, change state
-                    stateContext.LookAt(stateContext.enemyLOS.currentTarget);
                     stateContext.ChangeState(stateContext.chaseState);
                     break;
             }
         }
-    }
-
-    protected virtual void OnFrozen()
-    {
-        //
-    }
-
-    protected virtual void OnParalyzed()
-    {
-        //
     }
 }
