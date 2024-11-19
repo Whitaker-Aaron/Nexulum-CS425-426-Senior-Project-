@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
@@ -27,7 +28,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
     public Coroutine curStopVel;
-    float terminalPoints;
+    float florentineAmount;
 
     bool lowHealthReached = false;
 
@@ -143,6 +144,33 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public void ResetToGround()
     {
         transform.position = lastGroundLocation;
+    }
+
+    public void AddFlorentine(float amount)
+    {
+        if(florentineAmount + amount <= 9999)
+        {
+            florentineAmount += amount;
+            Debug.Log("Character now has " +  florentineAmount + " florentine");
+        }
+        else
+        {
+            florentineAmount = 9999;
+        }
+        
+    }
+
+    public void RemoveFlorentine(float amount)
+    {
+        if(florentineAmount - amount > 0)
+        {
+            florentineAmount -= amount;
+        }
+        else
+        {
+            florentineAmount = 0;
+        }
+        
     }
 
     public IEnumerator MoveForward()
