@@ -3402,8 +3402,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  defaultMovementSpeed: 2
   engagementRange: 10
+  currentSpeed: 0
   agent: {fileID: 450256793}
   enemyLOS: {fileID: 0}
   enemyFrame: {fileID: 0}
@@ -3509,10 +3510,7 @@ MonoBehaviour:
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
-  iceEffectThreshold: 90
-  iceMaxValue: 100
-  iceSpeedDecrement: 1
-  iceDecayRate: 5
+  iceStackMax: 0
 --- !u!114 &450256797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5159,10 +5157,7 @@ MonoBehaviour:
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
-  iceEffectThreshold: 90
-  iceMaxValue: 100
-  iceSpeedDecrement: 1
-  iceDecayRate: 5
+  iceStackMax: 0
 --- !u!4 &728695370
 Transform:
   m_ObjectHideFlags: 0
@@ -5510,6 +5505,7 @@ MonoBehaviour:
   engineerObject: {fileID: 0}
   shakeEffect: {fileID: 0}
   weaponClass: {fileID: 0}
+  lastGroundLocation: {x: 0, y: 0, z: 0}
   masterInput: {fileID: 0}
   healthBar: {fileID: 0}
   delayedHealthBar: {fileID: 0}
@@ -11825,10 +11821,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  positionTarget: {x: 0, y: 0, z: 0}
   smoothSpeed: 0.125
   yAxisLocked: 0
+  lookAtLocked: 0
   lastYPos: 0
+  followMode: 0
   offset: {x: 0, y: 7, z: -7}
+  pauseFollow: 0
 --- !u!114 &963194231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12163,8 +12163,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  defaultMovementSpeed: 2
   engagementRange: 1
+  currentSpeed: 0
   agent: {fileID: 1022020573}
   enemyLOS: {fileID: 0}
   enemyFrame: {fileID: 1022020576}
@@ -12360,10 +12361,7 @@ MonoBehaviour:
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
-  iceEffectThreshold: 90
-  iceMaxValue: 100
-  iceSpeedDecrement: 1
-  iceDecayRate: 5
+  iceStackMax: 4
 --- !u!4 &1022020577
 Transform:
   m_ObjectHideFlags: 0
@@ -16406,8 +16404,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  defaultMovementSpeed: 2
   engagementRange: 1
+  currentSpeed: 0
   agent: {fileID: 0}
   enemyLOS: {fileID: 0}
   enemyFrame: {fileID: 0}
@@ -16433,10 +16432,7 @@ MonoBehaviour:
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
-  iceEffectThreshold: 90
-  iceMaxValue: 100
-  iceSpeedDecrement: 1
-  iceDecayRate: 5
+  iceStackMax: 0
 --- !u!114 &1427238113
 MonoBehaviour:
   m_ObjectHideFlags: 0

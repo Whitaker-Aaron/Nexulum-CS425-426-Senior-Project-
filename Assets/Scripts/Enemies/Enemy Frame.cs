@@ -41,10 +41,7 @@ public class EnemyFrame : MonoBehaviour
     public bool onDamaged = false; // True on hit, used for state machine logic to aggro enemies on hit - Aisling
     public DamageSource source;
 
-    public float iceEffectThreshold = 90;
-    public float iceMaxValue = 100;
-    public float iceSpeedDecrement = 1;
-    public float iceDecayRate = 5;
+    public int iceStackMax = 4;
     public IceDamage iceEffect;
 
     //Enemy animation for taking hits
@@ -94,9 +91,9 @@ public class EnemyFrame : MonoBehaviour
         enemyHealthBar.maxValue = maxHealth;
         delayedEnemyHealthBar.maxValue = maxHealth;
 
-        // Damage Types - Aisling
-        iceEffect = new IceDamage(movementReference, iceEffectThreshold, iceMaxValue, iceSpeedDecrement, iceDecayRate);
-}
+        // Status effects
+        iceEffect = new IceDamage(movementReference, iceStackMax);
+    }
 
     public void DeactivateHealthBar()
     {
@@ -134,8 +131,7 @@ public class EnemyFrame : MonoBehaviour
         switch(damageType)
         {
             case DamageType.Sword: // change back to ice
-                iceEffect.check();
-                StartCoroutine(iceEffect.Decay());
+                iceEffect.execute();
                 break;
         }
 

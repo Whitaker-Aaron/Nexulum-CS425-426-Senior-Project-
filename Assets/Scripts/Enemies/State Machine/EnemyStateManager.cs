@@ -14,6 +14,9 @@ public class EnemyStateManager : MonoBehaviour
     public float defaultMovementSpeed = 2f; // Movement speed of enemy
     public float engagementRange = 1f; // How close, from target, the enemy will get to the target (radius). Set with SetEngagementRange(float range)
 
+    // Debugging
+    public float currentSpeed;
+
     // ----------------------------------------------
     // Components
     // ----------------------------------------------
@@ -34,12 +37,12 @@ public class EnemyStateManager : MonoBehaviour
     public EnemyChaseState chaseState = new EnemyChaseState();
     public EnemySearchState searchState = new EnemySearchState();
 
-    // In-editor, enable debug logging
     public bool enableStateDebugLogs = false;
 
     // ----------------------------------------------
     // Effects
     // ----------------------------------------------
+
     public bool isFrozen = false;
 
     // ----------------------------------------------
@@ -52,13 +55,15 @@ public class EnemyStateManager : MonoBehaviour
         enemyLOS = GetComponent<EnemyLOS>();
         enemyFrame = GetComponent<EnemyFrame>();
 
-        agent.speed = defaultMovementSpeed;
+        currentSpeed = defaultMovementSpeed;
 
         ChangeState(idleState);
     }
 
     public void Update()
     {
+        agent.speed = currentSpeed;
+
         if (currentState != null)
         {
             currentState.RunState();
@@ -132,10 +137,6 @@ public class EnemyStateManager : MonoBehaviour
     public string TargetSpotted()
     {
         return enemyLOS.TargetSpotted();
-    }
-
-    public void ChangeMovementSpeed(float speed){
-        agent.speed = speed;
     }
 
     public void ResetEnemyState()

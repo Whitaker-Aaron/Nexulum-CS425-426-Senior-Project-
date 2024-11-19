@@ -4,40 +4,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IceDamage : DamageTypeHandler
+public class IceDamage : IType
 {
     EnemyStateManager movementRef;
-    float speedDecrement;
-    float baseSpeed;
+    float originalSpeed;
 
-    public IceDamage(EnemyStateManager movementRef, float effectThreshold, float maxValue, float speedDecrement, float decayRate)
+    public int currentStacks = 0;
+    int maxStacks;
+
+    public IceDamage(EnemyStateManager movementRef, int maxStacks)
     {
         this.movementRef = movementRef;
-        this.currentValue = 0;
-        this.effectThreshold = effectThreshold;
-        this.maxValue = maxValue;
-        this.speedDecrement = speedDecrement;
-        this.decayRate = decayRate;
+        this.maxStacks = maxStacks;
+        this.originalSpeed = movementRef.defaultMovementSpeed;
     }
 
-    public void execute() {
-        Debug.Log("Executing ice effect against enemy");
-
-        baseSpeed = movementRef.defaultMovementSpeed;
-
-        if (currentValue < effectThreshold)
+    public void execute()
+    {
+        // Add 1 to stack on hit, work on input later
+        if (currentStacks < maxStacks)
         {
-            // Effect is impacting the enemy, but not yet reached its final form
-            float currentSpeed = movementRef.agent.speed;
-            float appliedDebuffSpeed = currentSpeed - speedDecrement;
+            AddStacks(1);
+        }
 
-            // Change movement speed of enemy to the calculated debuffed speed
-            movementRef.ChangeMovementSpeed(appliedDebuffSpeed);
+        Debug.Log("Current stacks: " + currentStacks);
+        Debug.Log("Max stacks: " + maxStacks);
+
+        // Percent movement reduction
+        float percentage = 1f*(currentStacks / maxStacks);
+        Debug.Log("Percentage: " + percentage);
+        float newSpeed = originalSpeed - (originalSpeed * percentage);
+
+        movementRef.currentSpeed = newSpeed;
+
+        Debug.Log("Current speed: " + movementRef.currentSpeed + "Calculated speed: " + newSpeed);
+
+        if (currentStacks == maxStacks)
+        {
+            movementRef.isFrozen = true;
         }
         else
         {
-            // Effect is "maxed"
-            movementRef.ChangeMovementSpeed(0);
+            movementRef.isFrozen = false;
+        }
+    }
+
+    // Add stacks to current value, can be negative
+    public void AddStacks(int num)
+    {
+        currentStacks += num;
+    }
+
+    // Increase maximum stacks during runtime if desired, can be negative
+    public void IncreaseMaxStacks(int num)
+    {
+        maxStacks += num;
+
+        if (maxStacks < 0)
+        {
+            maxStacks = 0;
         }
     }
 }
