@@ -27,6 +27,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
     public Coroutine curStopVel;
+    float terminalPoints;
 
     bool lowHealthReached = false;
 
