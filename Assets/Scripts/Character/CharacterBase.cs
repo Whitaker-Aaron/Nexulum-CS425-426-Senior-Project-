@@ -54,6 +54,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
 
     int collisionCounter = 0;
+    public int wallCollisionCounter = 0;
+    float yPOSVal = 0f;
     private RuneInt runeInt;
 
     //weapon spawn
@@ -85,6 +87,14 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             Debug.Log("touching ground");
         }
 
+        if(collision.gameObject.tag == "Wall")
+        {
+            Debug.Log("Touching wall");
+            wallCollisionCounter++;
+            if(wallCollisionCounter >= 2)
+                yPOSVal = gameObject.transform.position.y;
+        }
+
 
 
     }
@@ -103,6 +113,12 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
             Debug.Log("No longer touching ground");
             //lastGroundLocation = gameObject.transform.position;
+        }
+
+        if (collision.gameObject.tag == "Wall")
+        {
+            Debug.Log("stopped touching wall");
+            wallCollisionCounter--;
         }
 
     }
@@ -130,6 +146,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     // Update is called once per frame
     void Update()
     {
+        if(wallCollisionCounter >= 2)
+        {
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, yPOSVal, gameObject.transform.position.z);
+        }
+
           if(collisionCounter == 0)
           {
             //masterInput.GetComponent<masterInput>().characterColliding = false;
