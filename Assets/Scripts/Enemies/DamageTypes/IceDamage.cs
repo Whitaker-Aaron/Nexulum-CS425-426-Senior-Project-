@@ -9,8 +9,8 @@ public class IceDamage : IType
     EnemyStateManager movementRef;
     float originalSpeed;
 
-    public int currentStacks = 0;
-    int maxStacks;
+    public float currentStacks = 0;
+    float maxStacks;
 
     public IceDamage(EnemyStateManager movementRef, int maxStacks)
     {
@@ -21,23 +21,17 @@ public class IceDamage : IType
 
     public void execute()
     {
-        // Add 1 to stack on hit, work on input later
-        if (currentStacks < maxStacks)
-        {
-            AddStacks(1);
-        }
-
         Debug.Log("Current stacks: " + currentStacks);
         Debug.Log("Max stacks: " + maxStacks);
 
         // Percent movement reduction
-        float percentage = 1f*(currentStacks / maxStacks);
+        float percentage = (currentStacks / maxStacks);
         Debug.Log("Percentage: " + percentage);
         float newSpeed = originalSpeed - (originalSpeed * percentage);
 
         movementRef.currentSpeed = newSpeed;
 
-        Debug.Log("Current speed: " + movementRef.currentSpeed + "Calculated speed: " + newSpeed);
+        Debug.Log("Current speed: " + movementRef.currentSpeed + " Calculated speed: " + newSpeed);
 
         if (currentStacks == maxStacks)
         {
@@ -52,7 +46,18 @@ public class IceDamage : IType
     // Add stacks to current value, can be negative
     public void AddStacks(int num)
     {
-        currentStacks += num;
+        // Add 1 to stack on hit, work on input later
+        if (currentStacks <= maxStacks)
+        {
+            if (num < 0 && currentStacks != 0)
+            {
+                currentStacks += num;
+            }
+            else if (currentStacks < maxStacks)
+            {
+                currentStacks += num;
+            }
+        }
     }
 
     // Increase maximum stacks during runtime if desired, can be negative

@@ -38,9 +38,10 @@ public class EnemyFrame : MonoBehaviour
     bool dying = false;
 
     // Damage and Damage Types - Aisling
-    public bool onDamaged = false; // True on hit, used for state machine logic to aggro enemies on hit - Aisling
+    public bool onDamaged = false; // True on hit, used for state machine logic to aggro enemies
     public DamageSource source;
 
+    public float effectTickInterval = 5.0f;
     public int iceStackMax = 4;
     public IceDamage iceEffect;
 
@@ -63,7 +64,7 @@ public class EnemyFrame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+     
         zeroDir = Vector3.zero;
         health = enemyReference.baseHealth;
         maxHealth = enemyReference.baseHealth;
@@ -91,8 +92,9 @@ public class EnemyFrame : MonoBehaviour
         enemyHealthBar.maxValue = maxHealth;
         delayedEnemyHealthBar.maxValue = maxHealth;
 
-        // Status effects
+        // Status effects - Aisling
         iceEffect = new IceDamage(movementReference, iceStackMax);
+        InvokeRepeating("TickIceEffect", 0.0f, effectTickInterval); // Decreases current ice stacks by 1 every effectTickInterval seconds until 0
     }
 
     public void DeactivateHealthBar()
@@ -130,7 +132,8 @@ public class EnemyFrame : MonoBehaviour
         Debug.Log("Taken damage of type " + damageType);
         switch(damageType)
         {
-            case DamageType.Sword: // change back to ice
+            case DamageType.Ice:
+                iceEffect.AddStacks(1);
                 iceEffect.execute();
                 break;
         }
@@ -379,6 +382,29 @@ public class EnemyFrame : MonoBehaviour
 
         }
         */
+    }
+
+    private void TickIceEffect() // Tick ice effect - Aisling
+    {
+        if (iceEffect.currentStacks > 0)
+        {
+            iceEffect.AddStacks(-1);
+            iceEffect.execute();
+        }
+    }
+
+    public float GetStacksOfDType(DamageType type)
+    {
+        switch (type)
+        {
+            case DamageType.Ice:
+                return iceEffect.currentStacks;
+                break;
+            default:
+                Debug.Log("Requested stacks of status effect (DType) does not exist.");
+                return -1;
+                break;
+        }
     }
 
     public enum DamageSource
