@@ -639,6 +639,7 @@ public class masterInput : MonoBehaviour
         // Apply movement based on class and whether the player is blocking
         if (currentClass == WeaponBase.weaponClassTypes.Knight && isBlocking)
         {
+            
             player.transform.Translate(movement * blockSpeed * Time.deltaTime, Space.World);
         }
         else

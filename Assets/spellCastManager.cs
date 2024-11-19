@@ -12,7 +12,7 @@ public class spellCastManager : MonoBehaviour
     private PlayerInput playerInput;
 
 
-    [SerializeField] private GameObject lightningSpell, lightingStrike;
+    [SerializeField] private GameObject lightningSpell, lightingStrike, waterShield;
 
     Transform player;
 
@@ -201,6 +201,11 @@ public class spellCastManager : MonoBehaviour
                         Destroy(currentEffect.gameObject);
                         deactivateSpellCast();
                         break;
+
+                    case "WaterCast":
+                        tempEffect = Instantiate(waterShield, currentEffect.transform.position, Quaternion.identity);
+                        //tempEffect.gameObject.GetComponent<>
+                        break;
                 }
             }
         }
@@ -215,6 +220,11 @@ public class spellCastManager : MonoBehaviour
             case "LightningCast":
                 currentRune = rune;
                 activateLightning();
+                break;
+
+            case "WaterCast":
+                currentRune = rune;
+                activateWaterShield();
                 break;
         }
 
@@ -240,6 +250,16 @@ public class spellCastManager : MonoBehaviour
         currentEffect.transform.parent = player.transform;
         currentEffect.transform.position = player.position;
         
+    }
+
+    void activateWaterShield()
+    {
+        print("Activating water shield");
+        gameObject.GetComponent <masterInput>().placing = true;
+        casting = true;
+        currentEffect = Instantiate(waterShield, player.position + spawnOffset, Quaternion.identity);
+        currentEffect.transform.parent = player.transform;
+        currentEffect.transform.position = player.position;
     }
 
     void damageSphere(Vector3 pos, float rad, int dmg, EnemyFrame.DamageType type)
