@@ -618,13 +618,21 @@ public class masterInput : MonoBehaviour
             RaycastHit hit;
        
 
-            projectedPlayer.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z);
+            projectedPlayer.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.z);
             projectedPlayer.transform.Translate(movement * speed * 1.2f * dashSpeed * Time.deltaTime, Space.World);
             // Does the ray intersect any objects excluding the player layer
-            if(Physics.Linecast(player.transform.position, projectedPlayer.transform.position)){
-                //Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-                Debug.Log("Collision detected during dash");
-                dashSpeed = 0.0f;
+            if(Physics.Linecast(player.transform.position, projectedPlayer.transform.position, out RaycastHit hitInfo)){
+                //Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hitInfo.distance, Color.yellow);
+                if(hitInfo.collider.tag == "RestorePoint"){
+                    Debug.Log(hitInfo.collider.tag);
+                    Debug.Log("Ignoring RestorePoint collision");
+                }
+                else
+                {
+                    Debug.Log("Collision detected during dash");
+                    Debug.Log(hitInfo.collider.name);
+                    dashSpeed = 0.0f;
+                }  
             }
         }
 
