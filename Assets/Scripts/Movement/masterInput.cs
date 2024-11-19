@@ -332,12 +332,17 @@ public class masterInput : MonoBehaviour
     {
         bool playFootsteps = false;
         player.transform.rotation = Quaternion.Euler(0.0f, player.transform.eulerAngles.y, 0.0f);
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 movement = new Vector3(horizontal, 0, vertical);
+
+        animationControl.updatePlayerAnimation(movement);
 
         if (inputPaused) return;
             
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        //float horizontal = Input.GetAxis("Horizontal");
+        //float vertical = Input.GetAxis("Vertical");
 
         //universal player movement
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
@@ -385,7 +390,7 @@ public class masterInput : MonoBehaviour
 
         animationControl.updatePlayerAnimation(movement);
         */
-        Vector3 movement = new Vector3(horizontal, 0, vertical);
+        
 
         if (Camera.main != null)
         {

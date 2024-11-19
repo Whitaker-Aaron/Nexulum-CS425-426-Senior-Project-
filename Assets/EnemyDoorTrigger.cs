@@ -54,7 +54,7 @@ public class EnemyDoorTrigger : MonoBehaviour
         var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         //if(character.)
         character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.25f);
         GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().StartPan(pos, true, true, 0.05f);
     }
 }
