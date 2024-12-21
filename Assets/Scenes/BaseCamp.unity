@@ -14,11 +14,11 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
-  m_FogColor: {r: 0.7851852, g: 0.68182623, b: 0.8867924, a: 1}
-  m_FogMode: 1
+  m_Fog: 0
+  m_FogColor: {r: 0.68500644, g: 0.68235296, b: 0.8862745, a: 1}
+  m_FogMode: 2
   m_FogDensity: 0.02
-  m_LinearFogStart: 30
+  m_LinearFogStart: 20
   m_LinearFogEnd: 75
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
@@ -27,8 +27,8 @@ RenderSettings:
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
-  m_HaloStrength: 0.771
-  m_FlareStrength: 1
+  m_HaloStrength: 0.433
+  m_FlareStrength: 0.236
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
@@ -13232,10 +13232,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  positionTarget: {x: 0, y: 0, z: 0}
   smoothSpeed: 0.3
+  cameraPanning: 0
   yAxisLocked: 0
+  panYAxisLocked: 0
+  lookAtLocked: 0
+  panLookAtLocked: 0
   lastYPos: 0
+  followMode: 0
   offset: {x: 10, y: 10, z: -10}
+  pauseFollow: 0
 --- !u!114 &667180030
 MonoBehaviour:
   m_ObjectHideFlags: 0

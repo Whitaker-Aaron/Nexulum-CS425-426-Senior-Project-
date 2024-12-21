@@ -102,6 +102,23 @@ public class RuneManager : MonoBehaviour, SaveSystemInterface
         characterReference.UpdateRunes(runeToEquip, position);
     }
 
+    public void UnequipRune(Rune runeToUnequip)
+    {
+        var charRunes = characterReference.equippedRunes;
+        int position = -1;
+        for (int index = 0; index < charRunes.Length; index++)
+        {
+            if(charRunes[index] != null && runeToUnequip.runeName == charRunes[index].runeName)
+            {
+                position = index;
+                break;
+            }
+        }
+        if (position != -1) characterReference.UpdateRunes(null, position);
+
+
+    }
+
     public Rune[] GetRuneInventory()
     {
         return runesInventory.GetComponent<RuneInventory>().GetInventory();

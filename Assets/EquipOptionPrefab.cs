@@ -13,6 +13,7 @@ public class EquipOptionPrefab : MonoBehaviour
     [SerializeField] public GameObject equipOptionEquipText;
     [SerializeField] public GameObject equipOptionDescription;
     [SerializeField] public GameObject equipOptionButton;
+    [SerializeField] public GameObject unequipOptionButton;
     [SerializeField] public GameObject equipOptionEffect;
     [SerializeField] public GameObject disabledPanel;
 
@@ -46,6 +47,19 @@ public class EquipOptionPrefab : MonoBehaviour
         GameObject.FindGameObjectWithTag("EquipMenu").GetComponent<EquipMenuTransition>().ResetMenu();
     }
 
+
+
+    public void Unequip()
+    {
+        switch (type){
+            case EquipTypes.Rune:
+                UnequipRune();
+                break;
+        }
+        GameObject.FindGameObjectWithTag("EquipMenu").GetComponent<EquipMenuTransition>().ResetMenu();
+
+    }
+
     public void EquipWeapon()
     {
         Debug.Log("Equipping: " + weapon.weaponName);
@@ -60,6 +74,11 @@ public class EquipOptionPrefab : MonoBehaviour
     public void EquipRune()
     {
         GameObject.Find("RuneManager").GetComponent<RuneManager>().ChangeRunes(rune);
+    }
+
+    public void UnequipRune()
+    {
+        GameObject.Find("RuneManager").GetComponent<RuneManager>().UnequipRune(rune);
     }
 
     public enum EquipTypes
