@@ -95,7 +95,7 @@ public class RuneManager : MonoBehaviour, SaveSystemInterface
                 position++;
             }
         }
-        if(position >= 2)
+        if(position > 2)
         {
             position = 0;
         }
