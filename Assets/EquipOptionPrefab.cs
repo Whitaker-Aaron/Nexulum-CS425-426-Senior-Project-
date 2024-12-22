@@ -44,7 +44,7 @@ public class EquipOptionPrefab : MonoBehaviour
                 break;
 
         }
-        GameObject.FindGameObjectWithTag("EquipMenu").GetComponent<EquipMenuTransition>().ResetMenu();
+        
     }
 
 
@@ -64,6 +64,7 @@ public class EquipOptionPrefab : MonoBehaviour
     {
         Debug.Log("Equipping: " + weapon.weaponName);
         GameObject.Find("WeaponManager").GetComponent<WeaponsManager>().ChangeWeapon(weapon);
+        GameObject.FindGameObjectWithTag("EquipMenu").GetComponent<EquipMenuTransition>().ResetMenu();
     }
 
     public void EquipClass()
@@ -73,7 +74,29 @@ public class EquipOptionPrefab : MonoBehaviour
 
     public void EquipRune()
     {
-        GameObject.Find("RuneManager").GetComponent<RuneManager>().ChangeRunes(rune);
+        var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        var equippedRunes = character.equippedRunes;
+        int validCounter = 0;
+        for(int i = 0; i < equippedRunes.Length; i++)
+        {
+            if (equippedRunes[i] != null) validCounter++;
+            else break;
+        }
+        if (validCounter > 2)
+        {
+            DisplayRuneSwapMenu();
+        }
+        else
+        {
+            GameObject.Find("RuneManager").GetComponent<RuneManager>().ChangeRunes(rune, validCounter);
+            GameObject.FindGameObjectWithTag("EquipMenu").GetComponent<EquipMenuTransition>().ResetMenu();
+        }
+        
+    }
+
+    public void DisplayRuneSwapMenu()
+    {
+        GameObject.FindGameObjectWithTag("EquipMenu").GetComponent<EquipMenuTransition>().navigateToRuneSwapMenu();
     }
 
     public void UnequipRune()

@@ -83,18 +83,10 @@ public class RuneManager : MonoBehaviour, SaveSystemInterface
 
     }
 
-    public void ChangeRunes(Rune runeToEquip)
+    public void ChangeRunes(Rune runeToEquip, int position)
     {
 
-        var position = 0;
-        var charRunes = characterReference.equippedRunes;
-        for (int index = 0; index < charRunes.Length; index++)
-        {
-            if (charRunes[index] != null)
-            {
-                position++;
-            }
-        }
+        //var position = 0;
         if(position > 2)
         {
             position = 0;

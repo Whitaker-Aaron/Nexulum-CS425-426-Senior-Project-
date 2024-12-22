@@ -41,6 +41,7 @@ public class SaveData
         runeInventory[0] = "Fire";
         runeInventory[1] = "Ice";
         runeInventory[2] = "Earth";
+        runeInventory[4] = "Regen";
 
         equippedRunes = new string[3];
     }

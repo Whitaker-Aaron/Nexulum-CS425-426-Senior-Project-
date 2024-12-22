@@ -20,6 +20,7 @@ public class EquipMenuTransition : MonoBehaviour
     [SerializeField] GameObject backButton2;
 
     [SerializeField] GameObject disabledPanel;
+    
 
 
     List<GameObject> currentEquipmentObjects = new List<GameObject>();
@@ -29,6 +30,7 @@ public class EquipMenuTransition : MonoBehaviour
     GameObject mainSelection;
     GameObject weaponsScroll;
     GameObject runesScroll;
+    GameObject runeSwapScroll;
     GameObject classScroll;
     GameObject weaponsScrollContent;
     GameObject classScrollContent;
@@ -54,6 +56,8 @@ public class EquipMenuTransition : MonoBehaviour
         mainSelection = GameObject.Find("MainSelection");
         weaponsScroll = GameObject.Find("WeaponsScroll");
         runesScroll = GameObject.Find("RunesScroll");
+        runeSwapScroll = GameObject.Find("RuneSwapScroll");
+        runeSwapScroll.SetActive(false);
         classScroll = GameObject.Find("ClassScroll");
 
         
@@ -191,6 +195,13 @@ public class EquipMenuTransition : MonoBehaviour
         populateRunesScroll();
     }
 
+    public void navigateToRuneSwapMenu()
+    {
+        runesScroll.SetActive(false);
+        runeSwapScroll.SetActive(true);
+
+    }
+
     public void ResetMenu()
     {
         
@@ -206,6 +217,7 @@ public class EquipMenuTransition : MonoBehaviour
 
         classScroll.SetActive(false);
         runesScroll.SetActive(false);
+        runeSwapScroll.SetActive(false);
         weaponsScroll.SetActive(false);
 
         backButton2.SetActive(false);
@@ -364,6 +376,7 @@ public class EquipMenuTransition : MonoBehaviour
             }
         }
     }
+
 
     public void populateRunesScroll()
     {
