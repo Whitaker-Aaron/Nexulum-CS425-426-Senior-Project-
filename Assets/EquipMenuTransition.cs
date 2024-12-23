@@ -35,6 +35,8 @@ public class EquipMenuTransition : MonoBehaviour
     GameObject weaponsScrollContent;
     GameObject classScrollContent;
     GameObject runesScrollContent;
+    GameObject[] swapOptions = new GameObject[3];
+    GameObject runeToSwapIn;
 
     GameObject equippedContainer;
     GameObject equippedPanel;
@@ -57,10 +59,16 @@ public class EquipMenuTransition : MonoBehaviour
         weaponsScroll = GameObject.Find("WeaponsScroll");
         runesScroll = GameObject.Find("RunesScroll");
         runeSwapScroll = GameObject.Find("RuneSwapScroll");
+        swapOptions[0] = GameObject.Find("SwapOption1");
+        swapOptions[1] = GameObject.Find("SwapOption2");
+        swapOptions[2] = GameObject.Find("SwapOption3");
+        runeToSwapIn = GameObject.Find("RuneToSwapIn");
         runeSwapScroll.SetActive(false);
         classScroll = GameObject.Find("ClassScroll");
 
         
+
+
 
         weaponsScrollContent = GameObject.Find("WeaponsScrollContent");
         classScrollContent = GameObject.Find("ClassScrollContent");
@@ -195,8 +203,9 @@ public class EquipMenuTransition : MonoBehaviour
         populateRunesScroll();
     }
 
-    public void navigateToRuneSwapMenu()
+    public void navigateToRuneSwapMenu(Rune runeToAdd)
     {
+        populateRuneSwap(runeToAdd);
         runesScroll.SetActive(false);
         runeSwapScroll.SetActive(true);
 
@@ -375,6 +384,28 @@ public class EquipMenuTransition : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void populateRuneSwap(Rune runeToAdd)
+    {
+        Rune[] charRunes = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().equippedRunes;
+
+        for(int i =0; i < charRunes.Length; i++)
+        {
+            if (swapOptions[i] == null) break;
+            var prefab = swapOptions[i].GetComponent<RuneSwapPrefab>();
+            prefab.rune = charRunes[i];
+            prefab.swapName.GetComponent<TMP_Text>().text = prefab.rune.runeName;
+            prefab.swapEffect.GetComponent<TMP_Text>().text = prefab.rune.runeEffect;
+            prefab.runeToEquip = runeToAdd;
+            prefab.index = i;
+
+        }
+
+
+        runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = runeToAdd.runeName;
+        runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = runeToAdd.runeDescription;
+        runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<TMP_Text>().text = "Effect +" + runeToAdd.runeEffect;
     }
 
 

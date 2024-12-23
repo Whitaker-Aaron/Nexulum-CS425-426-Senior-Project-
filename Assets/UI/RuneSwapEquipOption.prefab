@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 8764016161960136450}
   - component: {fileID: 4359938128088930366}
   m_Layer: 5
-  m_Name: EquipEffect
+  m_Name: RuneEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -392,7 +392,7 @@ GameObject:
   - component: {fileID: 517659732804142843}
   - component: {fileID: 4614704988728330255}
   m_Layer: 5
-  m_Name: UnequipText
+  m_Name: SwapText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -736,7 +736,7 @@ GameObject:
   - component: {fileID: 1709201507503199683}
   - component: {fileID: 2783746137854272819}
   - component: {fileID: 6785592048284984911}
-  - component: {fileID: 2789654805858704850}
+  - component: {fileID: 2834348814158325865}
   m_Layer: 5
   m_Name: RuneSwapEquipOption
   m_TagString: Untagged
@@ -845,7 +845,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
---- !u!114 &2789654805858704850
+--- !u!114 &2834348814158325865
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -854,20 +854,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4408834667872987749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd5044284b45d674386d17cfdfa930b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 0bc908b891bea1243af1917c2f18129c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
-  weapon: {fileID: 11400000, guid: c6b8b453c9eb0e44bb6daf33497239ca, type: 2}
-  weaponClass: {fileID: 0}
-  rune: {fileID: 11400000, guid: 5609a1898700eff4d874af6969309618, type: 2}
-  equipOptionName: {fileID: 9211208725122891456}
-  equipOptionEquipText: {fileID: 2134842769950294134}
-  equipOptionDescription: {fileID: 3082409271400636596}
-  equipOptionButton: {fileID: 5446548644401276504}
-  unequipOptionButton: {fileID: 6468664742958468327}
-  equipOptionEffect: {fileID: 1601123064976337447}
-  disabledPanel: {fileID: 8340512679514566191}
+  rune: {fileID: 0}
+  runeToEquip: {fileID: 0}
+  index: 0
+  swapName: {fileID: 9211208725122891456}
+  swapText: {fileID: 0}
+  swapButton: {fileID: 6468664742958468327}
+  swapEffect: {fileID: 1601123064976337447}
 --- !u!1 &5446548644401276504
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,7 +984,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2789654805858704850}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: EquipOptionPrefab, Assembly-CSharp
         m_MethodName: Equip
         m_Mode: 1
@@ -1013,7 +1009,7 @@ GameObject:
   - component: {fileID: 7072095994528652297}
   - component: {fileID: 3648198887092989458}
   m_Layer: 5
-  m_Name: UnequipButon
+  m_Name: SwapButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1121,9 +1117,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2789654805858704850}
-        m_TargetAssemblyTypeName: EquipOptionPrefab, Assembly-CSharp
-        m_MethodName: Unequip
+      - m_Target: {fileID: 2834348814158325865}
+        m_TargetAssemblyTypeName: RuneSwapPrefab, Assembly-CSharp
+        m_MethodName: Swap
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1336,7 +1332,7 @@ GameObject:
   - component: {fileID: 339419729750882714}
   - component: {fileID: 2440340418784847222}
   m_Layer: 5
-  m_Name: EquipOptionName
+  m_Name: RuneName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

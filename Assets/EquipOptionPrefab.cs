@@ -96,7 +96,7 @@ public class EquipOptionPrefab : MonoBehaviour
 
     public void DisplayRuneSwapMenu()
     {
-        GameObject.FindGameObjectWithTag("EquipMenu").GetComponent<EquipMenuTransition>().navigateToRuneSwapMenu();
+        GameObject.FindGameObjectWithTag("EquipMenu").GetComponent<EquipMenuTransition>().navigateToRuneSwapMenu(rune);
     }
 
     public void UnequipRune()
