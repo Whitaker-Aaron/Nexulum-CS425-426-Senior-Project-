@@ -101,21 +101,17 @@ public class runeIntController : MonoBehaviour, RuneInt
 
     }
 
-    public void applyHealthRunes(Rune rune)
-    {
-        if (rune.runeName == "Regen")
-        {
-            Debug.Log("Applying Regen");
-            StartCoroutine(ApplyRegen());
-        }
-    }
     public void applyBuffRunes(Rune rune)
     {
         if(rune.runeName == "Defense")
         {
             character.changeDefenseStat(getIntVal("defenseRuneBuff"));
         }
-
+        if (rune.runeName == "Regen")
+        {
+            Debug.Log("Applying Regen");
+            StartCoroutine(ApplyRegen());
+        }
     }
     public void applyDefenseRunes(Rune rune)
     {

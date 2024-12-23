@@ -31,6 +31,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     public Vector3 lastGroundLocation;
 
+    public RoomInformation targetRoom;
+
     //MANAGERS
     LifetimeManager lifetimeManager;
     UIManager uiManager;

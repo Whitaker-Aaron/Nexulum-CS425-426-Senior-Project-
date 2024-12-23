@@ -90,6 +90,7 @@ public class RoomTransition : MonoBehaviour
                 if(targetRoom != null)
                 {
                     targetRoom.SetActive(true);
+                    character.targetRoom = targetInfo;
                 }
                 if (targetInfo.roomName != "BaseCamp")
                 {
@@ -114,7 +115,7 @@ public class RoomTransition : MonoBehaviour
                 }
                 
             }
-            else if(character.transitioningRoom)
+            else if((character.transitioningRoom && character.targetRoom == currentInfo) || (character.transitioningRoom && currentInfo.floorEntrance))
             {
                
                 character.transitionedRoom = true;
