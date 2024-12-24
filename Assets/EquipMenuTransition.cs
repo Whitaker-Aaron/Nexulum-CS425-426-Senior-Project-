@@ -18,6 +18,8 @@ public class EquipMenuTransition : MonoBehaviour
 
     [SerializeField] GameObject backButton;
     [SerializeField] GameObject backButton2;
+    [SerializeField] GameObject backButton3;
+    [SerializeField] GameObject backButton4;
 
     [SerializeField] GameObject disabledPanel;
     
@@ -156,9 +158,9 @@ public class EquipMenuTransition : MonoBehaviour
         equippedBackdrop.SetActive(false);
 
         backButton.SetActive(false);
-        backButton2.SetActive(true);
+        backButton3.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(backButton2);
+        EventSystem.current.SetSelectedGameObject(backButton3);
 
 
         populateWeaponsScroll();
@@ -177,9 +179,9 @@ public class EquipMenuTransition : MonoBehaviour
         equippedBackdrop.SetActive(false);
 
         backButton.SetActive(false);
-        backButton2.SetActive(true);
+        backButton4.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(backButton2);
+        EventSystem.current.SetSelectedGameObject(backButton4);
 
         populateClassScroll();
     }
@@ -196,6 +198,8 @@ public class EquipMenuTransition : MonoBehaviour
         equippedBackdrop.SetActive(false);
 
         backButton.SetActive(false);
+        backButton4.SetActive(false);
+        backButton3.SetActive(false);
         backButton2.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(backButton2);
@@ -230,6 +234,8 @@ public class EquipMenuTransition : MonoBehaviour
         weaponsScroll.SetActive(false);
 
         backButton2.SetActive(false);
+        backButton3.SetActive(false);
+        backButton4.SetActive(false);
         backButton.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(backButton);
