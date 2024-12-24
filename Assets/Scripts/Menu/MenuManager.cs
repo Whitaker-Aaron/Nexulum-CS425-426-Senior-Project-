@@ -133,6 +133,7 @@ public class MenuManager : MonoBehaviour
                 currentMenuObject = Instantiate(materialsMenuReference);
                 populateInventoryMaterials();
                 currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+                currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x - 20, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
             }
             else
             {
@@ -202,6 +203,7 @@ public class MenuManager : MonoBehaviour
             currentMenuObject = Instantiate(materialsMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform, false);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x - 20, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
             populateInventoryMaterials();
         }
     }
@@ -229,6 +231,7 @@ public class MenuManager : MonoBehaviour
             currentMenuObject = Instantiate(craftMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform, false);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x - 20, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
         }
     }
 
@@ -240,6 +243,7 @@ public class MenuManager : MonoBehaviour
             currentMenuObject = Instantiate(itemsMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform, false);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x - 20, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
         }
     }
 
@@ -254,6 +258,7 @@ public class MenuManager : MonoBehaviour
             currentMenuObject = Instantiate(equipMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform, false);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x - 20, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
         }
     }
 
