@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class PlayerItemPrefab : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class PlayerItemPrefab : MonoBehaviour
         playerItemName.GetComponent<TMP_Text>().text = item.itemName;
         playerOptionDescription.GetComponent<TMP_Text>().text = item.itemDescription;
         itemAmount.GetComponent<TMP_Text>().text = "x" + (item.itemAmount).ToString();
+        if(!item.canUseFromMenu)
+        {
+            itemUseButton.GetComponent<Button>().interactable = false;
+            disabledPanel.SetActive(true);
+        }
 
     }
 

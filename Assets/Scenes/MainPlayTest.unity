@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.17462312, g: 0.21841584, b: 0.30067477, a: 1}
+  m_IndirectSpecularColor: {r: 0.1746235, g: 0.2184166, b: 0.30067572, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6256,10 +6256,13 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movementReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
+  effectTickInterval: 5
+  iceStackMax: 4
 --- !u!114 &157967353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6272,12 +6275,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  defaultMovementSpeed: 2
   engagementRange: 1
+  currentSpeed: 0
   agent: {fileID: 157967349}
   enemyLOS: {fileID: 157967354}
   enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
+  isFrozen: 0
 --- !u!114 &157967354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19502,10 +19507,13 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movementReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
+  effectTickInterval: 5
+  iceStackMax: 4
 --- !u!4 &581683919
 Transform:
   m_ObjectHideFlags: 0
@@ -19535,12 +19543,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  defaultMovementSpeed: 2
   engagementRange: 1
+  currentSpeed: 0
   agent: {fileID: 581683915}
   enemyLOS: {fileID: 581683923}
   enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
+  isFrozen: 0
 --- !u!114 &581683923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25569,10 +25579,13 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
   enemyReference: {fileID: 0}
+  movementReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
+  effectTickInterval: 5
+  iceStackMax: 4
 --- !u!4 &728695370
 Transform:
   m_ObjectHideFlags: 0
@@ -32129,10 +32142,13 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 0}
   enemyReference: {fileID: 0}
+  movementReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
+  effectTickInterval: 5
+  iceStackMax: 4
 --- !u!4 &914834199
 Transform:
   m_ObjectHideFlags: 0
@@ -33587,10 +33603,13 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movementReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
+  effectTickInterval: 5
+  iceStackMax: 4
 --- !u!114 &937644621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33603,12 +33622,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  defaultMovementSpeed: 2
   engagementRange: 1
+  currentSpeed: 0
   agent: {fileID: 937644617}
   enemyLOS: {fileID: 937644622}
   enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
+  isFrozen: 0
 --- !u!114 &937644622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51889,12 +51910,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  defaultMovementSpeed: 2
   engagementRange: 10
+  currentSpeed: 0
   agent: {fileID: 1359352203}
   enemyLOS: {fileID: 1359352204}
   enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
+  isFrozen: 0
 --- !u!114 &1359352206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70749,12 +70772,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  defaultMovementSpeed: 2
   engagementRange: 1
+  currentSpeed: 0
   agent: {fileID: 1836943733}
   enemyLOS: {fileID: 1836943737}
   enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
+  isFrozen: 0
 --- !u!114 &1836943727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70953,10 +70978,13 @@ MonoBehaviour:
   - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movementReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
+  effectTickInterval: 5
+  iceStackMax: 4
 --- !u!114 &1836943737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78564,9 +78592,53 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 130426149331186791, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 130426149331186791, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_Range
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 130426149331186791, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_Color.b
+      value: 0.7138242
+      objectReference: {fileID: 0}
+    - target: {fileID: 130426149331186791, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_Color.r
+      value: 0.34509802
+      objectReference: {fileID: 0}
+    - target: {fileID: 130426149331186791, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_Intensity
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 799645110971327311, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.007
+      objectReference: {fileID: 0}
+    - target: {fileID: 799645110971327311, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.057
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460676047000930734, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460676047000930734, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 3460676047000930734, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 4540800677679321667, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
       propertyPath: isLocked
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879791489423395509, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6276609823349658365, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
       propertyPath: m_Name
@@ -78626,6 +78698,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6652150685218080839, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
       propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8450791919581462037, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8853300591134115112, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -79614,10 +79694,13 @@ MonoBehaviour:
   - {fileID: 7197842624361033548, guid: 825141a32c50ed0488f382d9be142851, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: d4bc7838f53dc714d8a1587fdee90897, type: 2}
+  movementReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
   onDamaged: 0
   source: 0
+  effectTickInterval: 5
+  iceStackMax: 4
 --- !u!114 &2107450719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79630,12 +79713,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  defaultMovementSpeed: 2
   engagementRange: 1
+  currentSpeed: 0
   agent: {fileID: 2107450715}
   enemyLOS: {fileID: 2107450720}
   enemyFrame: {fileID: 0}
   enableStateDebugLogs: 0
+  isFrozen: 0
 --- !u!114 &2107450720
 MonoBehaviour:
   m_ObjectHideFlags: 0
