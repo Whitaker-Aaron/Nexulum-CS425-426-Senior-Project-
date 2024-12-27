@@ -11,6 +11,7 @@ public class ItemManager : MonoBehaviour
     {
        
         characterReference = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        itemsInventory = GameObject.Find("ItemsInventory").GetComponent<ItemsInventory>();
     }
 
     // Update is called once per frame
@@ -19,9 +20,19 @@ public class ItemManager : MonoBehaviour
         
     }
 
-    public void AddToInventory(PlayerItem itemToAdd)
+    public void AddToInventory(PlayerItem itemToAdd, int amount)
     {
-        itemsInventory.GetComponent<ItemsInventory>().AddToInventory(itemToAdd);
+        itemsInventory.GetComponent<ItemsInventory>().AddToInventory(itemToAdd, amount);
+    }
+
+    public void RemoveFromInventory(PlayerItem itemToRemove, int amount)
+    {
+        itemsInventory.GetComponent<ItemsInventory>().RemoveFromInventory(itemToRemove, amount);
+    }
+
+    public PlayerItem[] GetInventory()
+    {
+        return itemsInventory.GetInventory();
     }
 
     public bool FindItemAndAdd(string itemName)
@@ -34,12 +45,28 @@ public class ItemManager : MonoBehaviour
             {
                 if (itemName == item.name)
                 {
-                    AddToInventory(item);
+                    AddToInventory(item, 1);
                     return true;
                 }
             }
         }
         return false;
 
+    }
+
+    public void ExecuteItemLogic(PlayerItem item)
+    {
+        switch (item.itemType)
+        {
+            case PlayerItem.ItemType.Health:
+                characterReference.restoreHealth((int)item.statAmount);
+                RemoveFromInventory(item, 1);
+                break;
+            case PlayerItem.ItemType.Projectile:
+                break;
+            case PlayerItem.ItemType.Stat:
+                break;
+        }
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().CloseMenu();
     }
 }

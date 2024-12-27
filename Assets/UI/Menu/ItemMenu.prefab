@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6817790424021780485
 RectTransform:
   m_ObjectHideFlags: 0
@@ -427,7 +427,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Crafting
+  m_text: 'Items
 
 '
   m_isRightToLeft: 0
@@ -960,7 +960,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6800887219615458539}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CraftMenuTransition, Assembly-CSharp
         m_MethodName: NavigateBackToMainSelection
         m_Mode: 1
@@ -1284,7 +1284,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6800887219615458539}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CraftMenuTransition, Assembly-CSharp
         m_MethodName: NavigateToItemsCraftMenu
         m_Mode: 1
@@ -1492,7 +1492,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6800887219615458539}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CraftMenuTransition, Assembly-CSharp
         m_MethodName: NavigateToRunesCraftMenu
         m_Mode: 1
@@ -1975,7 +1975,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &161992454727704971
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2156,7 +2156,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6800887219615458539}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CraftMenuTransition, Assembly-CSharp
         m_MethodName: NavigateToWeaponCraftMenu
         m_Mode: 1
@@ -2403,7 +2403,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6800887219615458539}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CraftMenuTransition, Assembly-CSharp
         m_MethodName: NavigateToMaterialMenu
         m_Mode: 1
@@ -2993,10 +2993,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5457429762620250259}
-  - component: {fileID: 6800887219615458539}
+  - component: {fileID: 1086380950890109565}
   m_Layer: 5
-  m_Name: CraftMenu
-  m_TagString: CraftMenu
+  m_Name: ItemMenu
+  m_TagString: ItemMenu
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3027,7 +3027,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 150}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6800887219615458539
+--- !u!114 &1086380950890109565
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3036,15 +3036,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7173683770421921678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e3c84303793adf488a03e7c36005742, type: 3}
+  m_Script: {fileID: 11500000, guid: d16400cbb75e9ad458df8b9385bd7b49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  craftRecipePrefab: {fileID: 4408834667872987749, guid: dc5473722b99ccc46ac3a78c3a4d2528, type: 3}
-  backButton: {fileID: 5489855003074319970}
-  backButton2: {fileID: 1571922908938028609}
-  weaponsScrollBar: {fileID: 1447568840369090981}
-  runesScrollBar: {fileID: 8538152181256383975}
-  itemsScrollBar: {fileID: 521504912357734387}
+  itemOptionPrefab: {fileID: 4408834667872987749, guid: fe27ce9f344a11943b7b01af63287f9b, type: 3}
+  itemsScrollContent: {fileID: 4298052572367269211}
 --- !u!1 &7327047010572797773
 GameObject:
   m_ObjectHideFlags: 0
@@ -3152,7 +3148,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6796718801632515089
 RectTransform:
   m_ObjectHideFlags: 0

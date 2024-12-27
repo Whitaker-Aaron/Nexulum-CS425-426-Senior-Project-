@@ -7,7 +7,11 @@ using UnityEngine.UI;
 public class PlayerItem : ScriptableObject
 {
     [SerializeField] public string itemName;
-    [SerializeField] ItemType itemType;
+    [SerializeField] public ItemType itemType;
+    [SerializeField] public string itemDescription;
+    [SerializeField] public int itemAmount;
+    [SerializeField] public int maxItemAmount;
+    [SerializeField] public float statAmount;
     [SerializeField] Texture itemTexture;
     [SerializeField] public CraftRecipe itemRecipe;
 

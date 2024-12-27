@@ -49,9 +49,11 @@ MonoBehaviour:
   totalMaterialMenuReference: {fileID: 7173683770421921678, guid: efc8d192b5f3340498b955a3380938df, type: 3}
   terminalMenuReference: {fileID: 7173683770421921678, guid: ed63cf8a235952e41a71545c58b42b42, type: 3}
   craftMenuReference: {fileID: 7173683770421921678, guid: 32a642ac951cdf047a36c62c01826422, type: 3}
-  itemsMenuReference: {fileID: 0}
+  itemsMenuReference: {fileID: 7173683770421921678, guid: e1851a3ef3f78884c9546ef3060e8ca3, type: 3}
   equipMenuReference: {fileID: 7173683770421921678, guid: fe8b82ca73273cf408a0f25d288847db, type: 3}
   scrollContent: {fileID: 7685760492805647242, guid: 9848dfb507b11a84e80b9770ce5d049a, type: 3}
+  DepositScrollContent: {fileID: 0}
+  WithdrawScrollContent: {fileID: 0}
   craftListsReference: {fileID: 0}
   pauseMenuReference: {fileID: 0}
 --- !u!114 &5333086485164697951
@@ -127,6 +129,42 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: ed1c9717-1097-496d-a033-fec83905f26a
     m_ActionName: MenuControl/OpenPauseMenu[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 27a5bb3b-72d2-4fd0-a488-adc35627072f
+    m_ActionName: player/Dash[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3f0f93cd-04a7-4f57-b30e-7259b602d8c0
+    m_ActionName: player/GamePadLook
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5549c403-6448-43b6-a6d5-b6e4376b5d43
+    m_ActionName: player/Reload[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b93cb392-5f35-4517-a326-0d4a35e7d800
+    m_ActionName: player/RightClick[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c730c0ad-3e0c-43a1-a7d6-1a9a5b743929
+    m_ActionName: player/AbilityOne[/Keyboard/1]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d46d94aa-a704-4abf-9dc7-3c0d4a9d3cd1
+    m_ActionName: player/AbilityTwo[/Keyboard/2]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4a06af09-d331-4553-af8f-575e133ac80c
+    m_ActionName: player/AbilityThree[/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7060a75b-c932-42ba-bdf5-16fcc807c1ce
+    m_ActionName: player/Interact[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6788e64c-3948-4ba9-a57e-445d9102f926
+    m_ActionName: player/SwitchAbilities[/Keyboard/shift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: MenuControl

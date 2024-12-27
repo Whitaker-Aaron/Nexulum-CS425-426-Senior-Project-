@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 8764016161960136450}
   - component: {fileID: 4359938128088930366}
   m_Layer: 5
-  m_Name: EquipEffect
+  m_Name: ItemAmount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -223,7 +223,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 177.5, y: -67}
+  m_AnchoredPosition: {x: 177, y: -65}
   m_SizeDelta: {x: 426.5469, y: 59.1345}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8764016161960136450
@@ -254,10 +254,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Effect +5 HP restore
+  m_text: x99
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ddcc3da5316e5134f8d9247abc2aaac2, type: 2}
-  m_sharedMaterial: {fileID: -1888400054779354539, guid: ddcc3da5316e5134f8d9247abc2aaac2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9467699eec4427849ba68a4640b504ec, type: 2}
+  m_sharedMaterial: {fileID: 7327981842188418716, guid: 9467699eec4427849ba68a4640b504ec, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -281,8 +281,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 38
+  m_fontSizeBase: 38
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -317,7 +317,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 3.9831543, z: 0, w: 0}
+  m_margin: {x: 0, y: 3.9831543, z: 280.98932, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -335,7 +335,7 @@ GameObject:
   - component: {fileID: 7981361916526076606}
   - component: {fileID: 791605676683418677}
   m_Layer: 5
-  m_Name: EquipText
+  m_Name: UseText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -388,7 +388,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Equip
+  m_text: Use
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 626396190f6c1264bb95ac268f57aedb, type: 2}
   m_sharedMaterial: {fileID: -1287548269120290063, guid: 626396190f6c1264bb95ac268f57aedb, type: 2}
@@ -678,7 +678,7 @@ GameObject:
   - component: {fileID: 4254864119933597322}
   - component: {fileID: 8760665328929291545}
   m_Layer: 5
-  m_Name: EquipDescription
+  m_Name: ItemDescription
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -813,9 +813,9 @@ GameObject:
   - component: {fileID: 1709201507503199683}
   - component: {fileID: 2783746137854272819}
   - component: {fileID: 6785592048284984911}
-  - component: {fileID: 2789654805858704850}
+  - component: {fileID: 4784402199953222198}
   m_Layer: 5
-  m_Name: EquipOption
+  m_Name: ItemOption
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -922,7 +922,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
---- !u!114 &2789654805858704850
+--- !u!114 &4784402199953222198
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -931,20 +931,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4408834667872987749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd5044284b45d674386d17cfdfa930b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 21af7f5627fa03947afbf9f4f0ed53c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
-  weapon: {fileID: 11400000, guid: 554d85fe92943e942b100834507f8f9b, type: 2}
-  weaponClass: {fileID: 0}
-  rune: {fileID: 11400000, guid: 5cea9adeabb6e34489b577c93eac4f25, type: 2}
-  equipOptionName: {fileID: 9211208725122891456}
-  equipOptionEquipText: {fileID: 2134842769950294134}
-  equipOptionDescription: {fileID: 3082409271400636596}
-  equipOptionButton: {fileID: 5446548644401276504}
-  unequipOptionButton: {fileID: 6468664742958468327}
-  equipOptionEffect: {fileID: 1601123064976337447}
-  disabledPanel: {fileID: 8340512679514566191}
+  item: {fileID: 0}
+  playerItemName: {fileID: 9211208725122891456}
+  playerOptionDescription: {fileID: 3082409271400636596}
+  itemUseButton: {fileID: 5446548644401276504}
+  itemAmount: {fileID: 1601123064976337447}
+  disabledPanel: {fileID: 0}
 --- !u!1 &4848172261091798504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1033,7 +1028,7 @@ GameObject:
   - component: {fileID: 1851998598774715289}
   - component: {fileID: 5175363983197315669}
   m_Layer: 5
-  m_Name: EquipButton
+  m_Name: UseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1140,9 +1135,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2789654805858704850}
-        m_TargetAssemblyTypeName: EquipOptionPrefab, Assembly-CSharp
-        m_MethodName: Equip
+      - m_Target: {fileID: 4784402199953222198}
+        m_TargetAssemblyTypeName: PlayerItemPrefab, Assembly-CSharp
+        m_MethodName: Use
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1164,7 +1159,7 @@ GameObject:
   - component: {fileID: 8514443739465961145}
   - component: {fileID: 8293091056363395235}
   m_Layer: 5
-  m_Name: EquipText (1)
+  m_Name: UseTextBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1217,7 +1212,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Equip
+  m_text: Use
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 626396190f6c1264bb95ac268f57aedb, type: 2}
   m_sharedMaterial: {fileID: -1287548269120290063, guid: 626396190f6c1264bb95ac268f57aedb, type: 2}
@@ -1407,7 +1402,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2789654805858704850}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: EquipOptionPrefab, Assembly-CSharp
         m_MethodName: Unequip
         m_Mode: 1
@@ -1623,7 +1618,7 @@ GameObject:
   - component: {fileID: 339419729750882714}
   - component: {fileID: 2440340418784847222}
   m_Layer: 5
-  m_Name: EquipOptionName
+  m_Name: Item Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ItemMenuTransition : MonoBehaviour
+{
+    [SerializeField] GameObject itemOptionPrefab;
+    public GameObject itemsScrollContent;
+    List<GameObject> currentItemScrollObjects = new List<GameObject>();
+    // Start is called before the first frame update
+    void Start()
+    {
+        itemsScrollContent = GameObject.Find("ItemsScrollContent");
+        populateItemsScroll();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public void populateItemsScroll()
+    {
+        var itemsInventory = GameObject.Find("ItemManager").GetComponent<ItemManager>().GetInventory();
+        foreach (var item in itemsInventory)
+        {
+            if(item != null)
+            {
+                itemOptionPrefab.GetComponent<PlayerItemPrefab>().item = item;
+                var itemRef = Instantiate(itemOptionPrefab);
+                itemRef.transform.SetParent(itemsScrollContent.transform, false);
+            }
+            
+        }
+    }
+}

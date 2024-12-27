@@ -31,4 +31,10 @@ public class MaterialMenuTransition : MonoBehaviour
         Debug.Log("Button pressed");
         GameObject.Find("MenuManager").GetComponent<MenuManager>().navigateToEquipMenu();
     }
+
+    public void NavigateToItemsMenu()
+    {
+        Debug.Log("Button pressed");
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().navigateToItemsMenu();
+    }
 }
