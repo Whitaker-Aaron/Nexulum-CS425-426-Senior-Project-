@@ -213,6 +213,13 @@ public class EquipMenuTransition : MonoBehaviour
         runesScroll.SetActive(false);
         runeSwapScroll.SetActive(true);
 
+        backButton.SetActive(false);
+        backButton4.SetActive(true);
+        backButton3.SetActive(false);
+        backButton2.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(backButton4);
+
     }
 
     public void ResetMenu()

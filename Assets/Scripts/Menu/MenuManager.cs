@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -318,7 +319,7 @@ public class MenuManager : MonoBehaviour
     public void populateInventoryMaterials()
     {
         CraftMaterial[] matInventory = materialManager.GetComponent<MaterialScrollManager>().GetMaterialInventory();
-        
+        int matCounter = 0;
         if (currentMenuObject !=  null) {
             var container = currentMenuObject.GetComponentInChildren<GridLayoutGroup>();
             for (int i = 0; i < matInventory.Length; i++) {
@@ -326,7 +327,7 @@ public class MenuManager : MonoBehaviour
                 if (matInventory[i] == null) {
                     break;
                 }
-
+                matCounter++;
                 var scrollObject = scrollContent.GetComponent<MaterialScrollObject>();
                 scrollObject.descriptionMain.text = matInventory[i].materialName;
                 scrollObject.descriptionSub.text = matInventory[i].materialName;
@@ -339,6 +340,7 @@ public class MenuManager : MonoBehaviour
                 currentMaterials.Add(newScrollMaterial);
             }
         }
+        GameObject.Find("CurrentMaterialAmount").GetComponent<TMP_Text>().text = matCounter.ToString() + "/20";
     }
 
     public void updateBaseInventoryMaterials()
