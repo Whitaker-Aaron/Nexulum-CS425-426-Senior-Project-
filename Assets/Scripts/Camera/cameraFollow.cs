@@ -169,7 +169,7 @@ public class CameraFollow : MonoBehaviour
             toRotation = Quaternion.Euler(toRotation.eulerAngles.x, toRotation.eulerAngles.y, 0.0f);
             transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, smoothSpeed*2);
             var lookAtDif = Mathf.Abs(toRotation.eulerAngles.magnitude - transform.rotation.eulerAngles.magnitude);
-            if (lookAtDif < 0.025) isCameraFar = false;
+            if (lookAtDif < 0.2) isCameraFar = false;
             else isCameraFar = true;
         }
 
@@ -188,7 +188,7 @@ public class CameraFollow : MonoBehaviour
             toRotation = Quaternion.Euler(toRotation.eulerAngles.x, toRotation.eulerAngles.y, 0.0f);
             transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, smoothSpeed * 2);
             var lookAtDif = Mathf.Abs(toRotation.eulerAngles.magnitude - transform.rotation.eulerAngles.magnitude);
-            if (lookAtDif < 0.025) isCameraFar = false;
+            if (lookAtDif < 0.2) isCameraFar = false;
             else isCameraFar = true;
         }
     }

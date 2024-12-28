@@ -56,6 +56,7 @@ public class Lever : MonoBehaviour, i_Interactable
                     {
                         camera.StartPan(door.transform.position, true, true, 0.05f);
                         door.ToggleDoor();
+                        leverUI.SetActive(false); 
                     }
                     
                 }
@@ -111,7 +112,10 @@ public class Lever : MonoBehaviour, i_Interactable
     {
         if (leverUI != null)
         {
-            leverUI.SetActive(true);
+            if (type == LeverType.OneDoor && controlledDoor != null && controlledDoor.GetComponent<Door>().isLocked)
+            {
+                leverUI.SetActive(true);
+            }
             //selectCrystal.SetActive(true);
         }
     }
