@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class LockedDoorUI : MonoBehaviour
 {
     [SerializeField] TMP_Text AmountOfSmallKeyText;
+    [SerializeField] GameObject openPanel;
     CharacterBase playerRef;
     // Start is called before the first frame update
     void Start()
@@ -23,5 +24,13 @@ public class LockedDoorUI : MonoBehaviour
     public void UpdateKeyAmount(int amount)
     {
         AmountOfSmallKeyText.text = "Have: Small Key x" + amount.ToString();
+        if(amount >= 1)
+        {
+            openPanel.SetActive(true);
+        }
+        else
+        {
+            openPanel.SetActive(false);
+        }
     }
 }

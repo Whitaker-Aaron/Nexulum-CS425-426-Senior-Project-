@@ -6,6 +6,7 @@ using UnityEngine;
 public class CameraPanTrigger : MonoBehaviour
 {
     [SerializeField] GameObject objectToPanTo;
+    [SerializeField] Vector3 offset = Vector3.zero;
     [SerializeField] float panSpeed;
     [SerializeField] bool panYAxisLocked = false;
     [SerializeField] bool panLookAtLocked = false;
@@ -28,8 +29,8 @@ public class CameraPanTrigger : MonoBehaviour
     {
         camera.panYAxisLocked = panYAxisLocked;
         camera.panLookAtLocked = panLookAtLocked;
-        yield return new WaitForSeconds(0.25f);
-        yield return StartCoroutine(camera.PanToPosition(objectToPanTo.transform.position, panSpeed));
+        //yield return new WaitForSeconds(0.25f);
+        yield return StartCoroutine(camera.PanToPosition(objectToPanTo.transform.position + offset, panSpeed));
         Destroy(this.gameObject);
     }
 }

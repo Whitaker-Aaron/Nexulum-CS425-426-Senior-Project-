@@ -1,4 +1,4 @@
-using AYellowpaper.SerializedCollections.Editor.Data;
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +27,12 @@ public class Door : MonoBehaviour, i_Interactable
         {
             Debug.Log("No animator component found");
         }
+    }
+
+    public void Update()
+    {
+        if(isLocked && doorType == DoorType.Wood) lockedDoorUI.UpdateKeyAmount(GetKeyAmountFromInventory());
+
     }
 
     public bool Interact(Interactor interactor)
@@ -133,7 +139,7 @@ public class Door : MonoBehaviour, i_Interactable
             if(isLocked) doorUI.SetActive(true);
             if (lockedUI != null && isLocked)
             {
-                lockedDoorUI.UpdateKeyAmount(GetKeyAmountFromInventory());
+                
                 lockedUI.SetActive(true);
             }
         }

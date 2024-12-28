@@ -17,6 +17,7 @@ public class CameraFollow : MonoBehaviour
     public bool panYAxisLocked = false;
     public bool lookAtLocked = false;
     public bool panLookAtLocked = false;
+    public bool isCameraFar = false;
     public float lastYPos;
     public FollowMode followMode = FollowMode.Lerp;
     public Vector3 offset;
@@ -76,12 +77,18 @@ public class CameraFollow : MonoBehaviour
         positionTarget = position;
         smoothSpeed = rate;
         SetCameraMode(CameraFollow.FollowMode.PositionLerp);
-        yield return new WaitForSeconds(2.5f);
-        smoothSpeed = 0.05f;
-        SetCameraMode(CameraFollow.FollowMode.Lerp);
         yield return new WaitForSeconds(2f);
+        smoothSpeed = rate;
+        SetCameraMode(CameraFollow.FollowMode.Lerp);
+        panLookAtLocked = false;
+        isCameraFar = true;
+        while(!panLookAtLocked && !lookAtLocked && isCameraFar)
+        {
+            yield return null;
+        }
+        //yield return new WaitForSeconds(2f);
         SetCameraMode(ogFollowMode);
-        yield return new WaitForSeconds(0.25f);
+        //yield return new WaitForSeconds(0.15f);
         smoothSpeed = ogSpeed;
         cameraPanning = false;
         target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
@@ -161,6 +168,9 @@ public class CameraFollow : MonoBehaviour
             Quaternion toRotation = Quaternion.LookRotation(direction, transform.up);
             toRotation = Quaternion.Euler(toRotation.eulerAngles.x, toRotation.eulerAngles.y, 0.0f);
             transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, smoothSpeed*2);
+            var lookAtDif = Mathf.Abs(toRotation.eulerAngles.magnitude - transform.rotation.eulerAngles.magnitude);
+            if (lookAtDif < 0.025) isCameraFar = false;
+            else isCameraFar = true;
         }
 
 
@@ -177,6 +187,9 @@ public class CameraFollow : MonoBehaviour
             Quaternion toRotation = Quaternion.LookRotation(direction, transform.up);
             toRotation = Quaternion.Euler(toRotation.eulerAngles.x, toRotation.eulerAngles.y, 0.0f);
             transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, smoothSpeed * 2);
+            var lookAtDif = Mathf.Abs(toRotation.eulerAngles.magnitude - transform.rotation.eulerAngles.magnitude);
+            if (lookAtDif < 0.025) isCameraFar = false;
+            else isCameraFar = true;
         }
     }
 

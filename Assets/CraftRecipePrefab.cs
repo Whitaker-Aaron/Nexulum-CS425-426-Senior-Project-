@@ -128,6 +128,7 @@ public class CraftRecipePrefab : MonoBehaviour
                 break;
             case CraftRecipe.CraftTypes.Item:
                 AddToItemsInventory();
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetItemsCraftSelection();
                 break;
         }
     }
