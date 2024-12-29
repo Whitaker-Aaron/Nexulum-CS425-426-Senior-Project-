@@ -110,7 +110,9 @@ public class AudioManager : MonoBehaviour
 
         if (currentLoop != null && currentLoop != "")
         {
-            yield return StartCoroutine(ReduceVolOnLoop(0.050f));
+            var startLoop = ReduceVolOnLoop(0.050f);
+            yield return StartCoroutine(startLoop);
+            StopCoroutine(startLoop);
             loopSources[currentLoop].StopLoop();
         }
         currentLoop = newTrack;

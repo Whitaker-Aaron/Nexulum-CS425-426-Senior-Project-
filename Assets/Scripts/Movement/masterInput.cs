@@ -537,7 +537,7 @@ public class masterInput : MonoBehaviour
     //onMove is implemented through InputSystem in unity, context is the input
     public void onMove(InputAction.CallbackContext context)
     {
-        if(inputPaused) return;//(isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+        //if(inputPaused) return;//(isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
            
         move = context.ReadValue<Vector2>();
     }
@@ -591,7 +591,7 @@ public class masterInput : MonoBehaviour
     public void movePlayer()
     {
         //if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused || (isAttacking && currentClass == WeaponBase.weaponClassTypes.Engineer))
-            //return
+        //return
         /*
         Vector3 movement = new Vector3(move.x, 0, move.y);
 
@@ -606,7 +606,9 @@ public class masterInput : MonoBehaviour
             else
                 player.transform.Translate(movement * speed * dashSpeed * Time.deltaTime, Space.World);
         */
-        if(inputPaused && !isDashing) return;
+        //if(inputPaused && !isDashing) return;
+        if (inputPaused) return;
+
         Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
         Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
 
@@ -615,6 +617,8 @@ public class masterInput : MonoBehaviour
         {
             movement = cameraForward * move.y + cameraRight * move.x;
         }
+
+       
         
 
         if (movement.magnitude == 0)
@@ -674,6 +678,8 @@ public class masterInput : MonoBehaviour
         inputPaused = true;
         isMoving = false;
         isDashing = false;
+        //move = Vector2.zero;
+        movement = Vector3.zero;
         animationControl.stop();
 
     }

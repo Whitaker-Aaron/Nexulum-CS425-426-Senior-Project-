@@ -67,21 +67,22 @@ public class LifetimeManager : MonoBehaviour
     public IEnumerator TeleportPlayer()
     {
         characterRef.teleporting = true;
+        menuManager.closePauseMenu();
+        menuManager.menusPaused = true;
+        characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         StartCoroutine(GoToScene(characterRef.teleportSpawnObject.sceneNum));
         
         //characterRef.transitionedRoom = false;
         //characterRef.transitioningRoom = false;
 
-        StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
-        menuManager.closePauseMenu();
-        menuManager.menusPaused = true;
-        characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
-        yield return new WaitForSeconds(2);
-        Load(characterRef.teleportSpawnObject.sceneNum);
+        //StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
+        
+        //yield return new WaitForSeconds(2);
+        //Load(characterRef.teleportSpawnObject.sceneNum);
         yield return new WaitForSeconds(3);
         inputManager.resumePlayerInput();
         characterRef.teleporting = false;
-        yield return null;
+        yield break;
 
     }
 
