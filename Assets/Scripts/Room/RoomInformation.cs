@@ -11,8 +11,10 @@ public class RoomInformation : MonoBehaviour
     [SerializeField] bool lockYAxis = false;
     [SerializeField] public Vector3 roomSpawnPoint;
     List<GameObject> allEnemies = new List<GameObject>();
+    public List<GameObject> allLockedDoors = new List<GameObject>();
     public bool firstVisit = true;
     public bool floorEntrance = false;
+    RoomPersistenceData roomData;
 
     GameObject character; 
     // Start is called before the first frame update

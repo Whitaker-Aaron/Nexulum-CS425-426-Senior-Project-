@@ -1,14 +1,16 @@
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public enum DoorType { Gate, Wood, Breakable, IronGate }
 
-public class Door : MonoBehaviour, i_Interactable
+public class Door : MonoBehaviourID, i_Interactable
 {
     [SerializeField] public DoorType doorType;
     public ItemManager itemManager;
+    [SerializeField] public string doorGuid;
     public GameObject doorUI;
     public GameObject lockedUI;
     public LockedDoorUI lockedDoorUI;
@@ -17,6 +19,10 @@ public class Door : MonoBehaviour, i_Interactable
     public bool isOpen;
     public bool forceOpen;
 
+    private void Awake()
+    {
+        if(isLocked) print("Door's guid: " + doorGuid.ToString());
+    }
     public void Start()
     {
         isOpen = false;
@@ -32,6 +38,7 @@ public class Door : MonoBehaviour, i_Interactable
     public void Update()
     {
         if(isLocked && doorType == DoorType.Wood) lockedDoorUI.UpdateKeyAmount(GetKeyAmountFromInventory());
+        
 
     }
 
