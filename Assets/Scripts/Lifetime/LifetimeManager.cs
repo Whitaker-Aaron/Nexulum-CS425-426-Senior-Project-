@@ -76,6 +76,7 @@ public class LifetimeManager : MonoBehaviour
         menuManager.closePauseMenu();
         //characterRef.transitioningRoom = true;
         characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        yield return new WaitForSeconds(2);
         Load(characterRef.teleportSpawnObject.sceneNum);
         yield return new WaitForSeconds(3);
         inputManager.resumePlayerInput();
@@ -175,6 +176,8 @@ public class LifetimeManager : MonoBehaviour
         Color imgColor = reference.color;
         imgColor.a = 1;
         reference.color = imgColor;
+        characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        menuManager.menusPaused = true;
 
         yield return new WaitForSeconds(0.5f);
 
@@ -185,9 +188,10 @@ public class LifetimeManager : MonoBehaviour
         yield return StartCoroutine(IncreaseTitleOpacity(title, 1.75f));
         yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(ReduceOpacity(GameObject.Find("TransitionScreen"), 1.00f));
+        if(!characterRef.transitioningRoom && !characterRef.transitionedRoom && !characterRef.teleporting) characterRef.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         yield return new WaitForSeconds(0.2f);
         yield return StartCoroutine(ReduceTitleOpacity(title, 1.00f));
-        characterRef.teleporting = false;
+        menuManager.menusPaused = false;
         StopAllCoroutines();
         yield break;
         

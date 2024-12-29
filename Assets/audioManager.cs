@@ -110,7 +110,7 @@ public class AudioManager : MonoBehaviour
 
         if (currentLoop != null && currentLoop != "")
         {
-            yield return StartCoroutine(ReduceVolOnLoop(0.030f));
+            yield return StartCoroutine(ReduceVolOnLoop(0.050f));
             loopSources[currentLoop].StopLoop();
         }
         currentLoop = newTrack;
@@ -137,7 +137,7 @@ public class AudioManager : MonoBehaviour
         while (loopSources[currentLoop].source.volume < loopSources[currentLoop].volume)
         {
             loopSources[currentLoop].source.volume += rate * Time.deltaTime;
-            if (Mathf.Abs(loopSources[currentLoop].source.volume - 0.1f) < 0.001)
+            if (Mathf.Abs(loopSources[currentLoop].source.volume - loopSources[currentLoop].volume) <= 0.001)
             {
                 loopSources[currentLoop].source.volume = loopSources[currentLoop].volume;
             }

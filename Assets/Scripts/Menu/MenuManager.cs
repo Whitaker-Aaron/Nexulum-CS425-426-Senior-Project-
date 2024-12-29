@@ -34,6 +34,7 @@ public class MenuManager : MonoBehaviour
 
     bool menuActive = false;
     bool pauseMenuActive = false;
+    public bool menusPaused = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -67,7 +68,7 @@ public class MenuManager : MonoBehaviour
     {
 
 
-        if (!pauseMenuActive && !character.transitioningRoom && context.performed)
+        if (!pauseMenuActive && !character.transitioningRoom && !menusPaused && context.performed)
         {
 
             if (GameObject.FindGameObjectWithTag("CraftLists") != null)
@@ -128,7 +129,7 @@ public class MenuManager : MonoBehaviour
         public void openMenu(InputAction.CallbackContext context)
     {
         
-        if(!menuActive && !pauseMenuActive && !character.transitioningRoom && context.performed) {
+        if(!menuActive && !pauseMenuActive && !character.transitioningRoom && !menusPaused && context.performed) {
             if (!character.inRangeOfTerminal)
             {
                 currentMenuObject = Instantiate(materialsMenuReference);
