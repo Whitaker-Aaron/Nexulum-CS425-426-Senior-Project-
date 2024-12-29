@@ -74,7 +74,7 @@ public class LifetimeManager : MonoBehaviour
 
         StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         menuManager.closePauseMenu();
-        //characterRef.transitioningRoom = true;
+        menuManager.menusPaused = true;
         characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         yield return new WaitForSeconds(2);
         Load(characterRef.teleportSpawnObject.sceneNum);
@@ -116,6 +116,7 @@ public class LifetimeManager : MonoBehaviour
         StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         menuManager.closePauseMenu();
         characterRef.transitioningRoom = true;
+        menuManager.menusPaused = true;
         characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         Load(1);
     }

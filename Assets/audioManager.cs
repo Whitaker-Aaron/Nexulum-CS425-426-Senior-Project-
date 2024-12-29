@@ -116,6 +116,7 @@ public class AudioManager : MonoBehaviour
         currentLoop = newTrack;
         loopSources[currentLoop].PlayLoop();
         yield return StartCoroutine(IncreaseVolOnLoop(0.050f));
+        yield break;
     }
 
     public IEnumerator ReduceVolOnLoop(float rate)

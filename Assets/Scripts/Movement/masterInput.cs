@@ -332,13 +332,20 @@ public class masterInput : MonoBehaviour
     {
         bool playFootsteps = false;
         player.transform.rotation = Quaternion.Euler(0.0f, player.transform.eulerAngles.y, 0.0f);
+        if (inputPaused)
+        {
+            animationControl.updatePlayerAnimation(Vector3.zero);
+            audioManager.PauseFootsteps("TestWalk");
+            return;
+
+        }
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(horizontal, 0, vertical);
 
         animationControl.updatePlayerAnimation(movement);
 
-        if (inputPaused) return;
+        
             
 
         //float horizontal = Input.GetAxis("Horizontal");
@@ -530,8 +537,8 @@ public class masterInput : MonoBehaviour
     //onMove is implemented through InputSystem in unity, context is the input
     public void onMove(InputAction.CallbackContext context)
     {
-        if(inputPaused)//(isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
-            return;
+        if(inputPaused) return;//(isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight) || inputPaused)
+           
         move = context.ReadValue<Vector2>();
     }
 
@@ -599,6 +606,7 @@ public class masterInput : MonoBehaviour
             else
                 player.transform.Translate(movement * speed * dashSpeed * Time.deltaTime, Space.World);
         */
+        if(inputPaused && !isDashing) return;
         Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
         Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
 
