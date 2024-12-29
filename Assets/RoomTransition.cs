@@ -21,8 +21,8 @@ public class RoomTransition : MonoBehaviour
     Coroutine currentMove;
     void Start()
     {
-        targetInfo = targetRoom.GetComponent<RoomInformation>();
-        currentInfo = currentRoom.GetComponent<RoomInformation>();
+        if(targetRoom != null) targetInfo = targetRoom.GetComponent<RoomInformation>();
+        if(currentRoom != null) currentInfo = currentRoom.GetComponent<RoomInformation>();
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         cameraBehavior = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>();
     }
@@ -80,10 +80,10 @@ public class RoomTransition : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
-        if (other.name == "Player")
+        var character = other.GetComponent<CharacterBase>();
+        if (other.name == "Player" && !character.teleporting)
         {
-            var character = other.GetComponent<CharacterBase>();
+            
             Debug.Log("Player detected");
             if (!character.transitioningRoom)
             {
@@ -160,7 +160,7 @@ public class RoomTransition : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         var character = other.GetComponent<CharacterBase>();
-        if (other.name == "Player")
+        if (other.name == "Player" && !character.teleporting)
         {   
             Debug.Log("Player detected");
             if (character.transitionedRoom)

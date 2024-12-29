@@ -6,6 +6,7 @@ public class FloorInformation : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] GameObject[] RoomList;
+    CharacterBase characterRef;
 
     // Update is called once per frame
     void Update()
@@ -15,12 +16,17 @@ public class FloorInformation : MonoBehaviour
 
     private void Awake()
     {
-        
+        characterRef = GameObject.FindWithTag("Player").GetComponent<CharacterBase>();
     }
 
     private void Start()
     {
         StartCoroutine(DeactivateRooms());
+    }
+
+    public GameObject[] GetRooms()
+    {
+        return RoomList;
     }
 
     public IEnumerator DeactivateRooms()
@@ -29,9 +35,13 @@ public class FloorInformation : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < RoomList.Length; i++)
         {
-            if (!RoomList[i].GetComponent<RoomInformation>().floorEntrance)
+            if (!RoomList[i].GetComponent<RoomInformation>().floorEntrance && !characterRef.teleporting)
             {
                 //RoomList[i].GetComponent<RoomInformation>().DeactivateEnemyHealthBars();
+                RoomList[i].SetActive(false);
+            }
+            else if (characterRef.teleporting && characterRef.teleportSpawnObject.roomName != RoomList[i].GetComponent<RoomInformation>().roomName)
+            {
                 RoomList[i].SetActive(false);
             }
         }

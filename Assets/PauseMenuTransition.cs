@@ -23,6 +23,9 @@ public class PauseMenuTransition : MonoBehaviour
     [SerializeField] WeaponClass engineerRef;
 
     [SerializeField] GameObject MapButton;
+    CharacterBase characterRef;
+
+    LifetimeManager lifetimeManager;
 
     
 
@@ -33,8 +36,18 @@ public class PauseMenuTransition : MonoBehaviour
         
     }
 
+
+
+    public void OnMapTeleport(RoomSpawnObject roomSpawn)
+    {
+        characterRef.teleportSpawnObject = roomSpawn;
+        lifetimeManager.StartTeleport();
+    }
+
     private void Awake()
     {
+        characterRef = GameObject.FindWithTag("Player").GetComponent<CharacterBase>();
+        lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
         SkillMenu.SetActive(false);
         KnightSkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(false);

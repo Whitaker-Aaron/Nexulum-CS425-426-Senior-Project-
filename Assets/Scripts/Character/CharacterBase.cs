@@ -28,6 +28,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     float florentineAmount;
 
     bool lowHealthReached = false;
+    
 
     public Vector3 lastGroundLocation;
 
@@ -49,6 +50,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     public bool transitioningRoom = false;
     public bool transitionedRoom = false;
+    public bool teleporting = false;
+    public RoomSpawnObject teleportSpawnObject;
 
     public bool inRangeOfTerminal = false;
 

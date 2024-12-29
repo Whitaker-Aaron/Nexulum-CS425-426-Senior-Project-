@@ -142,6 +142,7 @@ public class CameraFollow : MonoBehaviour
 
     void LerpFollow()
     {
+        var posDif = 0.0f;
         if (target == null)
             return;
         else if (!pauseFollow)
@@ -158,9 +159,11 @@ public class CameraFollow : MonoBehaviour
             }
             Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
             transform.position = smoothPosition;
-            
+            posDif = Mathf.Abs(transform.position.magnitude - desiredPosition.magnitude);
+
 
         }
+        else if(pauseFollow) posDif = 0.0f;
         //if(!lookAtLocked && !panLookAtLocked) transform.LookAt(target.position);
         if (!lookAtLocked && !panLookAtLocked)
         {
@@ -169,7 +172,7 @@ public class CameraFollow : MonoBehaviour
             toRotation = Quaternion.Euler(toRotation.eulerAngles.x, toRotation.eulerAngles.y, 0.0f);
             transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, smoothSpeed*2);
             var lookAtDif = Mathf.Abs(toRotation.eulerAngles.magnitude - transform.rotation.eulerAngles.magnitude);
-            if (lookAtDif < 0.2) isCameraFar = false;
+            if (lookAtDif < 0.2 && posDif < 0.2) isCameraFar = false;
             else isCameraFar = true;
         }
 
@@ -179,7 +182,17 @@ public class CameraFollow : MonoBehaviour
 
     void ExactFollow()
     {
-        if(!pauseFollow) transform.position = new Vector3(target.position.x + offset.x, target.position.y + offset.y, target.position.z + offset.z);
+        var posDif = 0.0f;
+        if (!pauseFollow)
+        {
+            transform.position = new Vector3(target.position.x + offset.x, target.position.y + offset.y, target.position.z + offset.z);
+            posDif = Mathf.Abs(transform.position.magnitude - target.position.magnitude);
+        }
+        else
+        {
+            posDif = 0.0f;
+        }
+        
         //if (!lookAtLocked && !panLookAtLocked) transform.LookAt(target.position);
         if (!lookAtLocked && !panLookAtLocked)
         {
@@ -188,7 +201,7 @@ public class CameraFollow : MonoBehaviour
             toRotation = Quaternion.Euler(toRotation.eulerAngles.x, toRotation.eulerAngles.y, 0.0f);
             transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, smoothSpeed * 2);
             var lookAtDif = Mathf.Abs(toRotation.eulerAngles.magnitude - transform.rotation.eulerAngles.magnitude);
-            if (lookAtDif < 0.2) isCameraFar = false;
+            if (lookAtDif < 0.2 && posDif < 0.2) isCameraFar = false;
             else isCameraFar = true;
         }
     }

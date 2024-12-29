@@ -9,6 +9,7 @@ public class RoomInformation : MonoBehaviour
     [SerializeField] public string roomName;
     [SerializeField] GameObject enemies;
     [SerializeField] bool lockYAxis = false;
+    [SerializeField] public Vector3 roomSpawnPoint;
     List<GameObject> allEnemies = new List<GameObject>();
     public bool firstVisit = true;
     public bool floorEntrance = false;

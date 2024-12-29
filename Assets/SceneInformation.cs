@@ -13,10 +13,13 @@ public class SceneInformation : MonoBehaviour
     [SerializeField] RoomInformation beginningRoom;
     [SerializeField] SceneAudio sceneAudio;
     [SerializeField] string beginningTrack;
+    [SerializeField] FloorInformation floorInfo;
     AudioManager audioManager;
     RoomManager roomManager;
+    CharacterBase characterRef;
     [SerializeField] public Vector3 playerSpawnPos;
     [SerializeField] public GameObject initialSpawnLocation;
+
     void Start()
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
@@ -25,7 +28,7 @@ public class SceneInformation : MonoBehaviour
         {
             audioManager.ChangeTrack(beginningTrack);
         }
-        if (roomManager.currentRoom.floorEntrance)
+        if (!characterRef.teleporting && roomManager.currentRoom != null && roomManager.currentRoom.floorEntrance)
         {
             audioManager.PlaySFX("Bell");
         }
@@ -35,7 +38,7 @@ public class SceneInformation : MonoBehaviour
     private void Awake()
     {
         roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
-        var player = GameObject.FindWithTag("Player");
+        characterRef = GameObject.FindWithTag("Player").GetComponent<CharacterBase>();
         if (sceneName == "BaseCamp")
         {
             beginningRoom = new RoomInformation();
@@ -44,34 +47,41 @@ public class SceneInformation : MonoBehaviour
             roomManager.SetRoom(beginningRoom);
 
         }
-        else if (beginningRoom != null)
+        else if (beginningRoom != null && !characterRef.teleporting) 
         {
             
             roomManager.SetRoom(beginningRoom);
         }
+        else if(characterRef.teleporting) SetCurrentRoomFromTeleport();
 
         if (spawnPlayer && sceneName != "BaseCamp")
         {
 
-            if (initialSpawnLocation != null)
+            if (initialSpawnLocation != null && !characterRef.teleporting)
             {
-                player.transform.position = initialSpawnLocation.transform.position;
+                characterRef.transform.position = initialSpawnLocation.transform.position;
+            }
+            else if (characterRef.teleporting)
+            {
+                characterRef.transform.position = characterRef.teleportSpawnObject.spawnPosition;
+
             }
             else
             {
-                player.transform.position = playerSpawnPos;
+                characterRef.transform.position = playerSpawnPos;
             }
         }
-        else if (sceneName == "BaseCamp" && player.GetComponent<CharacterBase>().transitioningRoom)
+        else if (sceneName == "BaseCamp" && characterRef.transitioningRoom)
         {
 
-            StartCoroutine(WaitThenStartCharacterMove(player));
+            StartCoroutine(WaitThenStartCharacterMove(characterRef.gameObject));
         }
-        else if(sceneName == "BaseCamp" && !player.GetComponent<CharacterBase>().transitioningRoom & spawnPlayer)
+        else if(sceneName == "BaseCamp" && !characterRef.transitioningRoom & spawnPlayer)
         {
-            player.transform.position = playerSpawnPos;
+            characterRef.transform.position = playerSpawnPos;
 
         }
+        
 
         if (screenTransition) StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().StartScene());
     }
@@ -87,6 +97,25 @@ public class SceneInformation : MonoBehaviour
         character.transform.rotation = Quaternion.Euler(character.transform.rotation.x, 180.0f, character.transform.rotation.z);
         StartCoroutine(character.GetComponent<CharacterBase>().MoveBackward());
         yield break;
+    }
+
+    public void SetCurrentRoomFromTeleport()
+    {
+        if(floorInfo != null)
+        {
+            var rooms = floorInfo.GetRooms();
+            foreach (var room in rooms)
+            {
+                var info = room.GetComponent<RoomInformation>();
+                if(info.roomName == characterRef.teleportSpawnObject.roomName)
+                {
+                    roomManager.SetRoom(info);
+                    break;
+                }
+            }
+
+        }
+
     }
 
     // Update is called once per frame

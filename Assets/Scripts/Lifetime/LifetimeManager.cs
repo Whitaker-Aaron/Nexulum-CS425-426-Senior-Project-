@@ -64,6 +64,31 @@ public class LifetimeManager : MonoBehaviour
 
     }
 
+    public IEnumerator TeleportPlayer()
+    {
+        characterRef.teleporting = true;
+        StartCoroutine(GoToScene(characterRef.teleportSpawnObject.sceneNum));
+        
+        //characterRef.transitionedRoom = false;
+        //characterRef.transitioningRoom = false;
+
+        StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
+        menuManager.closePauseMenu();
+        //characterRef.transitioningRoom = true;
+        characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        Load(characterRef.teleportSpawnObject.sceneNum);
+        yield return new WaitForSeconds(3);
+        inputManager.resumePlayerInput();
+        characterRef.teleporting = false;
+        yield return null;
+
+    }
+
+    public void StartTeleport()
+    {
+        StartCoroutine(TeleportPlayer());
+    }
+
     public void Load(int index)
     {
         SceneManager.LoadSceneAsync(index);
@@ -162,6 +187,7 @@ public class LifetimeManager : MonoBehaviour
         yield return StartCoroutine(ReduceOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         yield return new WaitForSeconds(0.2f);
         yield return StartCoroutine(ReduceTitleOpacity(title, 1.00f));
+        characterRef.teleporting = false;
         StopAllCoroutines();
         yield break;
         
