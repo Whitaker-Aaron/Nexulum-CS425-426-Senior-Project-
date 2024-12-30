@@ -141,6 +141,7 @@ public class LifetimeManager : MonoBehaviour
     {
         
         menuManager.CloseMenu();
+        menuManager.menusPaused = true;
         inputManager.pausePlayerInput();
         StartCoroutine(AnimateDeathScreen());
 
@@ -166,6 +167,7 @@ public class LifetimeManager : MonoBehaviour
         deathScreenObj.ResetObjScales();
         deathScreen.SetActive(false);
         inputManager.resumePlayerInput();
+        menuManager.menusPaused = false;
         scrollManager.ClearInventory();
         yield return null;
     }

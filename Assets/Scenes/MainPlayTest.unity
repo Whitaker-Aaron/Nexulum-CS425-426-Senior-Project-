@@ -515,8 +515,10 @@ MonoBehaviour:
   enemies: {fileID: 1240847736}
   lockYAxis: 0
   roomSpawnPoint: {x: 0, y: 0, z: 0}
+  allLockedDoors: []
   firstVisit: 1
   floorEntrance: 0
+  roomData: {fileID: 0}
 --- !u!1001 &8195844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6336,6 +6338,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4540800677679321667, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: _id.Value
+      value: 15a4f0a5-de8b-4a04-97c6-d2791c039d3b
+      objectReference: {fileID: 0}
     - target: {fileID: 6276609823349658365, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
       propertyPath: m_Name
       value: Wood Door
@@ -47526,6 +47532,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3913941553707608852, guid: 03c74f5662effbd4594aa4c8eb4004bf, type: 3}
+      propertyPath: _id.Value
+      value: 514066cf-fc52-4b69-8268-8016be5b5e71
+      objectReference: {fileID: 0}
     - target: {fileID: 4414412087963034143, guid: 03c74f5662effbd4594aa4c8eb4004bf, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 1
@@ -53442,8 +53452,10 @@ MonoBehaviour:
   enemies: {fileID: 1346152659}
   lockYAxis: 0
   roomSpawnPoint: {x: 0, y: 0, z: 0}
+  allLockedDoors: []
   firstVisit: 1
   floorEntrance: 0
+  roomData: {fileID: 0}
 --- !u!1 &1399872134
 GameObject:
   m_ObjectHideFlags: 0
@@ -64547,13 +64559,25 @@ PrefabInstance:
       value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 6854106946459819322, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
+      propertyPath: roomData
+      value: 
+      objectReference: {fileID: 11400000, guid: 86d522d402f097b49a0a031a849082b5, type: 2}
+    - target: {fileID: 6854106946459819322, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
       propertyPath: roomName
-      value: Room4
+      value: Floor1Room1
       objectReference: {fileID: 0}
     - target: {fileID: 6854106946459819322, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
       propertyPath: floorEntrance
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6854106946459819322, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
+      propertyPath: allLockedDoors.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6854106946459819322, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
+      propertyPath: allLockedDoors.Array.data[0]
+      value: 
+      objectReference: {fileID: 1756938178}
     - target: {fileID: 7115343847778769737, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15.795168
@@ -67939,6 +67963,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1691465522848890036, guid: 399e7b0c7701552488018cf50718287b, type: 3}
+      propertyPath: doorGuid
+      value: a49e2d29-6064-45d6-b89c-8471a45fbf91
+      objectReference: {fileID: 0}
+    - target: {fileID: 1691465522848890036, guid: 399e7b0c7701552488018cf50718287b, type: 3}
+      propertyPath: isLocked
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1691465522848890036, guid: 399e7b0c7701552488018cf50718287b, type: 3}
+      propertyPath: _id.Value
+      value: a49e2d29-6064-45d6-b89c-8471a45fbf91
+      objectReference: {fileID: 0}
     - target: {fileID: 2503727465538892979, guid: 399e7b0c7701552488018cf50718287b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 30.09257
@@ -69207,6 +69243,10 @@ PrefabInstance:
     - target: {fileID: 1334011885964027929, guid: 03c74f5662effbd4594aa4c8eb4004bf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3913941553707608852, guid: 03c74f5662effbd4594aa4c8eb4004bf, type: 3}
+      propertyPath: _id.Value
+      value: e741691d-9cb2-48dd-979e-b28ff288c095
       objectReference: {fileID: 0}
     - target: {fileID: 3913941553707608852, guid: 03c74f5662effbd4594aa4c8eb4004bf, type: 3}
       propertyPath: forceOpen
@@ -79048,6 +79088,10 @@ PrefabInstance:
       propertyPath: isLocked
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4540800677679321667, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
+      propertyPath: _id.Value
+      value: c6c7f3b2-c7c5-4fd8-9991-4f89d7054848
+      objectReference: {fileID: 0}
     - target: {fileID: 4879791489423395509, guid: c6cbc732211a76a4bab00dccd2213dfb, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -79285,8 +79329,10 @@ MonoBehaviour:
   enemies: {fileID: 806914970}
   lockYAxis: 0
   roomSpawnPoint: {x: 0, y: 0, z: 0}
+  allLockedDoors: []
   firstVisit: 1
   floorEntrance: 0
+  roomData: {fileID: 0}
 --- !u!1001 &2082328629
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -79618,6 +79664,10 @@ PrefabInstance:
     - target: {fileID: 248916571370095027, guid: 399e7b0c7701552488018cf50718287b, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1691465522848890036, guid: 399e7b0c7701552488018cf50718287b, type: 3}
+      propertyPath: _id.Value
+      value: a43829d1-ce03-437c-9db7-cff1e066e851
       objectReference: {fileID: 0}
     - target: {fileID: 2503727465538892979, guid: 399e7b0c7701552488018cf50718287b, type: 3}
       propertyPath: m_LocalPosition.x

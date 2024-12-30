@@ -14,14 +14,14 @@ public class RoomInformation : MonoBehaviour
     public List<GameObject> allLockedDoors = new List<GameObject>();
     public bool firstVisit = true;
     public bool floorEntrance = false;
-    RoomPersistenceData roomData;
+    public RoomPersistenceData roomData;
 
     GameObject character; 
     // Start is called before the first frame update
 
     private void Awake()
     {
-        
+        //roomData = new RoomPersistenceData();
         character = GameObject.FindGameObjectWithTag("Player");
         
 
@@ -73,6 +73,28 @@ public class RoomInformation : MonoBehaviour
         {
             
             StartCoroutine(WaitThenStartCharacterMove());
+        }
+        InitializeDoors();
+    }
+
+    public void InitializeDoors()
+    {
+        if(allLockedDoors != null && allLockedDoors.Count > 0 && roomData.lockedDoors != null)
+        {
+            foreach (var door in allLockedDoors)
+            {
+                var doorScript = door.GetComponent<Door>();
+                if(doorScript != null)
+                {
+                    print(roomData.lockedDoors);
+                    print(doorScript.doorGuid);
+                    //print(roomData.lockedDoors["a49e2d29 - 6064 - 45d6 - b89c - 8471a45fbf91"]);
+                    if (!roomData.lockedDoors[doorScript.doorGuid])
+                    {
+                        doorScript.UnlockDoor();
+                    }
+                }
+            }
         }
     }
 

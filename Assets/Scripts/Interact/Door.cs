@@ -35,6 +35,11 @@ public class Door : MonoBehaviourID, i_Interactable
         }
     }
 
+    public void UnlockDoor()
+    {
+        ToggleDoor();
+        isLocked = false;
+    }
     public void Update()
     {
         if(isLocked && doorType == DoorType.Wood) lockedDoorUI.UpdateKeyAmount(GetKeyAmountFromInventory());
