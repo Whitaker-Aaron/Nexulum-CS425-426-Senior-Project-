@@ -7,6 +7,7 @@ using UnityEngine;
 public class SaveData
 {
     // Start is called before the first frame update
+    public bool isNewFile = true;
     public int maxPlayerHealth;
     public int playerHealth;
     public string equippedWeapon;
@@ -15,6 +16,7 @@ public class SaveData
     public CraftMaterialSaveData[] materialInventory;
     public CraftMaterialSaveData[] totalMaterialInventory;
     public WeaponClassSaveData[] weaponClasses;
+    public List<RoomSaveData> roomData = new List<RoomSaveData>();
 
     public string[] weaponInventory;
     public string[] runeInventory;
@@ -27,6 +29,7 @@ public class SaveData
 
         materialInventory = new CraftMaterialSaveData[50];
         totalMaterialInventory = new CraftMaterialSaveData[150];
+        //roomData = new RoomSaveData[50];
         weaponClasses = new WeaponClassSaveData[3];
         weaponClasses[0] = new WeaponClassSaveData();
         weaponClasses[1] = new WeaponClassSaveData();

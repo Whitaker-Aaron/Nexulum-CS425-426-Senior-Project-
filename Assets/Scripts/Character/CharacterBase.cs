@@ -220,6 +220,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     public void SaveData(ref SaveData data)
     {
+        data.isNewFile = false;
         data.playerHealth = playerHealth;
         data.maxPlayerHealth = maxHealth;
 

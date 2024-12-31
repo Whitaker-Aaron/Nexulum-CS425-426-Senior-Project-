@@ -32,6 +32,8 @@ public class SceneInformation : MonoBehaviour
         {
             audioManager.PlaySFX("Bell");
         }
+
+        
         
     }
 

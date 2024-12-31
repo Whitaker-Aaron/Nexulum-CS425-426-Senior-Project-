@@ -21,7 +21,20 @@ public class FloorInformation : MonoBehaviour
 
     private void Start()
     {
+        InitailizeRoomDoors();
         StartCoroutine(DeactivateRooms());
+
+    }
+
+    public void InitailizeRoomDoors()
+    {
+        if (RoomList.Length > 0)
+        {
+            foreach (var room in RoomList)
+            {
+                room.GetComponent<RoomInformation>().InitializeDoors();
+            }
+        }
     }
 
     public GameObject[] GetRooms()
@@ -32,7 +45,7 @@ public class FloorInformation : MonoBehaviour
     public IEnumerator DeactivateRooms()
     {
         Debug.Log("Deactivating rooms");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         for (int i = 0; i < RoomList.Length; i++)
         {
             if (!RoomList[i].GetComponent<RoomInformation>().floorEntrance && !characterRef.teleporting)

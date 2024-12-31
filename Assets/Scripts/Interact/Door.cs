@@ -14,6 +14,7 @@ public class Door : MonoBehaviourID, i_Interactable
     public GameObject doorUI;
     public GameObject lockedUI;
     public LockedDoorUI lockedDoorUI;
+    RoomInformation roomInfo;
     private Animator animator;
     public bool isLocked;
     public bool isOpen;
@@ -45,6 +46,16 @@ public class Door : MonoBehaviourID, i_Interactable
         if(isLocked && doorType == DoorType.Wood) lockedDoorUI.UpdateKeyAmount(GetKeyAmountFromInventory());
         
 
+    }
+
+    public void SetRoomInfo(RoomInformation roomInfo_)
+    {
+        roomInfo = roomInfo_;
+    }
+
+    public void UpdateDoorState()
+    {
+        roomInfo.UpdateDoorState(doorGuid, isLocked);
     }
 
     public bool Interact(Interactor interactor)
@@ -113,7 +124,9 @@ public class Door : MonoBehaviourID, i_Interactable
         else
         {
             OpenDoor();
+            
         }
+        UpdateDoorState();
     }
 
     public void OpenDoor()
@@ -123,6 +136,7 @@ public class Door : MonoBehaviourID, i_Interactable
             animator.SetBool("isOpen", true);
             Debug.Log("Forcing Iron Gate to Open");
             isOpen = true;
+            isLocked = false;
             return;
         }
 
@@ -131,6 +145,7 @@ public class Door : MonoBehaviourID, i_Interactable
             animator.SetBool("isOpen", true);
             Debug.Log("Opening the Door");
             isOpen = true;
+            isLocked = false;
         }
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEditor;
+using Unity.VisualScripting.FullSerializer;
 
 
 public class FileManager
@@ -44,6 +45,7 @@ public class FileManager
     public SaveData LoadGameData()
     {
         var path = Path.Combine(dataDirectory, dataName);
+        Debug.Log(path);
         SaveData data = null;
         if(File.Exists(path))
         {
