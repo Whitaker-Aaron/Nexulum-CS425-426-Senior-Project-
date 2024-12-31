@@ -635,14 +635,13 @@ public class masterInput : MonoBehaviour
             // Does the ray intersect any objects excluding the player layer
             if(Physics.Linecast(player.transform.position, projectedPlayer.transform.position, out RaycastHit hitInfo)){
                 //Debug.DrawRay(player.transform.position, transform.TransformDirection(Vector3.forward) * hitInfo.distance, Color.yellow);
-                if(hitInfo.collider.tag == "RestorePoint" || hitInfo.collider.tag == "MovingPlatform"){
+                if(hitInfo.collider.tag == "RestorePoint" || hitInfo.collider.tag == "MovingPlatform" || hitInfo.collider.tag == "Player"){
                     Debug.Log(hitInfo.collider.tag);
                     Debug.Log("Ignoring collision");
                 }
                 else
                 {
-                    Debug.Log("Collision detected during dash");
-                    Debug.Log(hitInfo.collider.name);
+                    Debug.Log("Collision detected during dash: " + hitInfo.collider.name);
                     dashSpeed = 0.0f;
                 }  
             }
