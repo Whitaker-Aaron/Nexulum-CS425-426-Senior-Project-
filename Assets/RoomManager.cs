@@ -57,13 +57,22 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
         {
             for(int i =0; i< allRoomData.Count; i++)
             {
+                //INITIALIZE ALL LOCKED DOORS TO LOCKED
                 if (allRoomData[i].lockedDoors != null && allRoomData[i].lockedDoors.Count > 0)
                 {
                     foreach (var doorKey in allRoomData[i].lockedDoors.Keys.ToList())
                     {
                         var doors = allRoomData[i].lockedDoors;
                         doors[doorKey] = true;
-                        //continue;
+                    }
+                }
+                //INITIALIZE ALL EVENT TRIGGERS TO UNTRIGGERED
+                if (allRoomData[i].eventTriggers != null && allRoomData[i].eventTriggers.Count > 0)
+                {
+                    foreach (var triggerKey in allRoomData[i].eventTriggers.Keys.ToList())
+                    {
+                        var trigger = allRoomData[i].eventTriggers;
+                        trigger[triggerKey] = false;
                     }
                 }
             }
@@ -76,14 +85,23 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
                     {
                         if (data.roomData[j].roomName == allRoomData[i].roomName)
                         {
-                            //Debug.Log("Reading from: " + allRoomData[i].roomName);
+                            //LOAD LOCKED DOORS FROM SAVE DATA 
                             if (data.roomData[j].lockedDoors != null && data.roomData[j].lockedDoors.Count > 0 && 
                                 allRoomData[i].lockedDoors != null && allRoomData[i].lockedDoors.Count > 0)
                             {
-                                Debug.Log("Loaded door guid: " + data.roomData[j].lockedDoors[0].doorGuid);
                                 foreach (var door in data.roomData[j].lockedDoors)
                                 {
                                     allRoomData[i].lockedDoors[door.doorGuid] = door.isLocked;
+                                }
+                            }
+
+                            //LOAD EVENT TRIGGERS FROM SAVE DATA 
+                            if (data.roomData[j].eventTriggers != null && data.roomData[j].eventTriggers.Count > 0 && 
+                                allRoomData[i].eventTriggers != null && allRoomData[i].eventTriggers.Count > 0)
+                            {
+                                foreach (var trigger in data.roomData[j].eventTriggers)
+                                {
+                                    allRoomData[i].eventTriggers[trigger.triggerGuid] = trigger.hasTriggered;
                                 }
                             }
                         break;

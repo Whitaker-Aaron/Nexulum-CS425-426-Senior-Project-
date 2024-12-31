@@ -21,18 +21,30 @@ public class FloorInformation : MonoBehaviour
 
     private void Start()
     {
-        InitailizeRoomDoors();
+        InitializeRoomDoors();
+        InitializeRoomTriggers();
         StartCoroutine(DeactivateRooms());
 
     }
 
-    public void InitailizeRoomDoors()
+    public void InitializeRoomDoors()
     {
         if (RoomList.Length > 0)
         {
             foreach (var room in RoomList)
             {
                 room.GetComponent<RoomInformation>().InitializeDoors();
+            }
+        }
+    }
+
+    public void InitializeRoomTriggers()
+    {
+        if (RoomList.Length > 0)
+        {
+            foreach (var room in RoomList)
+            {
+                room.GetComponent<RoomInformation>().InitializeTriggers();
             }
         }
     }

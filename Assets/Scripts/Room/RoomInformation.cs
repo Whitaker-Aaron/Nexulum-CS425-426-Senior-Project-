@@ -12,6 +12,7 @@ public class RoomInformation : MonoBehaviour
     [SerializeField] public Vector3 roomSpawnPoint;
     List<GameObject> allEnemies = new List<GameObject>();
     public List<GameObject> allLockedDoors = new List<GameObject>();
+    public List<GameObject> allEventTriggers = new List<GameObject>();
     public bool firstVisit = true;
     public bool floorEntrance = false;
     public RoomPersistenceData roomData;
@@ -96,11 +97,38 @@ public class RoomInformation : MonoBehaviour
         }
     }
 
+    public void InitializeTriggers()
+    {
+        if (allEventTriggers != null && allEventTriggers.Count > 0 && roomData.eventTriggers != null)
+        {
+            foreach (var trigger in allEventTriggers)
+            {
+                var triggerScript = trigger.GetComponent<CameraPanTrigger>();
+                if (triggerScript != null)
+                {
+                    triggerScript.SetRoomInfo(this);
+                    if (roomData.eventTriggers[triggerScript.triggerGuid])
+                    {
+                        triggerScript.DisableTrigger();
+                    }
+                }
+            }
+        }
+    }
+
     public void UpdateDoorState(string guid, bool state)
     {
         if(roomData.lockedDoors != null)
         {
             roomData.lockedDoors[guid] = state;
+        }
+    }
+
+    public void UpdateTriggerState(string guid, bool state)
+    {
+        if (roomData.eventTriggers != null)
+        {
+            roomData.eventTriggers[guid] = state;
         }
     }
 

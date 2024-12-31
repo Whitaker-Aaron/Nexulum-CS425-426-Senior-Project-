@@ -560,6 +560,7 @@ MonoBehaviour:
   lockYAxis: 0
   roomSpawnPoint: {x: 0, y: 0, z: 0}
   allLockedDoors: []
+  allEventTriggers: []
   firstVisit: 1
   floorEntrance: 0
   roomData: {fileID: 0}
@@ -55759,6 +55760,7 @@ MonoBehaviour:
   lockYAxis: 0
   roomSpawnPoint: {x: 0, y: 0, z: 0}
   allLockedDoors: []
+  allEventTriggers: []
   firstVisit: 1
   floorEntrance: 0
   roomData: {fileID: 0}
@@ -67169,9 +67171,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6854106946459819322, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
+      propertyPath: allEventTriggers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6854106946459819322, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
       propertyPath: allLockedDoors.Array.data[0]
       value: 
       objectReference: {fileID: 1756938178}
+    - target: {fileID: 6854106946459819322, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
+      propertyPath: allEventTriggers.Array.data[0]
+      value: 
+      objectReference: {fileID: 1947008683}
     - target: {fileID: 7115343847778769737, guid: 51881e2fa8fb58242bc60c58d79cb508, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15.795168
@@ -77792,11 +77802,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39cd00f8a3c0b3e4c9e5e94bc604a31c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _id:
+    Value: 40ae6302-d06a-4e61-a1a3-1417a13082ce
   objectToPanTo: {fileID: 190296354}
   offset: {x: -5, y: 0, z: 0}
   panSpeed: 0.05
   panYAxisLocked: 1
   panLookAtLocked: 1
+  hasTriggered: 0
+  triggerGuid: 40ae6302-d06a-4e61-a1a3-1417a13082ce
 --- !u!1001 &1948236666
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -82902,6 +82916,7 @@ MonoBehaviour:
   lockYAxis: 0
   roomSpawnPoint: {x: 0, y: 0, z: 0}
   allLockedDoors: []
+  allEventTriggers: []
   firstVisit: 1
   floorEntrance: 0
   roomData: {fileID: 0}
