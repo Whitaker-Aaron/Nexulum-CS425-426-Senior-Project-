@@ -22,13 +22,13 @@ public class Door : MonoBehaviourID, i_Interactable
 
     private void Awake()
     {
-        if(isLocked) print("Door's guid: " + doorGuid.ToString());
+        animator = GetComponent<Animator>();
+        if (isLocked) print("Door's guid: " + doorGuid.ToString());
     }
     public void Start()
     {
         isOpen = false;
         forceOpen = false;
-        animator = GetComponent<Animator>();
         itemManager = GameObject.Find("ItemManager").GetComponent<ItemManager>();
         if (animator == null)
         {

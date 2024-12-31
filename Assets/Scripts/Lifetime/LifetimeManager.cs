@@ -289,9 +289,10 @@ public class LifetimeManager : MonoBehaviour
         while (reference.transform.localPosition.y >= -1200.0f)
         {
             var val = reference.transform.localPosition;
-            reference.transform.localPosition = new Vector3(val.x, val.y -= (4500.0f * Time.deltaTime), val.z);
+            reference.transform.localPosition = new Vector3(val.x, val.y -= (3500.0f * Time.deltaTime), val.z);
             if(reference.transform.localPosition.y <= 0.0f && !hasStopped)
             {
+                reference.transform.localPosition = new Vector3(val.x, 0.0f, val.z);
                 yield return new WaitForSeconds(0.55f);
                 hasStopped = true;
             }
