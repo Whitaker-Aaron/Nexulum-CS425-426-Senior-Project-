@@ -151,7 +151,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         if(wallCollisionCounter >= 2)
         {
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x, yPOSVal, gameObject.transform.position.z);
+            //gameObject.transform.position = new Vector3(gameObject.transform.position.x, yPOSVal, gameObject.transform.position.z);
         }
 
           if(collisionCounter == 0)

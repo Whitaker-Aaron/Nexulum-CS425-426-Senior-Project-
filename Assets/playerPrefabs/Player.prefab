@@ -5106,7 +5106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 39b86ae4f6cb17442bf8133d8bd4d350, type: 3}
       propertyPath: m_Name
-      value: PlayerNew
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 39b86ae4f6cb17442bf8133d8bd4d350, type: 3}
       propertyPath: m_Layer
@@ -5252,6 +5252,8 @@ MonoBehaviour:
   engineerObject: {fileID: 11400000, guid: e3ef3f47a6bc3bd41a72438ea84b99af, type: 2}
   shakeEffect: {fileID: 2433282508537954060, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
   weaponClass: {fileID: 0}
+  lastGroundLocation: {x: 0, y: 0, z: 0}
+  targetRoom: {fileID: 0}
   masterInput: {fileID: 0}
   healthBar: {fileID: 0}
   delayedHealthBar: {fileID: 0}
@@ -5259,7 +5261,10 @@ MonoBehaviour:
   bubbleShield: 0
   transitioningRoom: 0
   transitionedRoom: 0
+  teleporting: 0
+  teleportSpawnObject: {fileID: 0}
   inRangeOfTerminal: 0
+  wallCollisionCounter: 0
   hand: {fileID: 9208678921278773950}
   wrist: {fileID: 5698249890566877889}
   leftHand: {fileID: 6709786861545956428}
@@ -5292,6 +5297,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentClass: 0
   character: {fileID: 0}
+  intBuffVals:
+    _serializedList: []
 --- !u!54 &4789001080257748655
 Rigidbody:
   m_ObjectHideFlags: 0
