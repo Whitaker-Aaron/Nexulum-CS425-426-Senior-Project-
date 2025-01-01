@@ -25,6 +25,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
     public Coroutine curStopVel;
+    PhysicMaterial physicMat;
     float florentineAmount;
 
     bool lowHealthReached = false;
@@ -76,6 +77,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     private void Awake()
     {
         runeInt = GameObject.FindGameObjectWithTag("runeManager").GetComponent<runeIntController>();
+        physicMat = GetComponent<CapsuleCollider>().material;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -94,8 +96,9 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
             Debug.Log("Touching wall");
             wallCollisionCounter++;
-            if(wallCollisionCounter >= 2)
-                yPOSVal = gameObject.transform.position.y;
+            
+
+                //yPOSVal = gameObject.transform.position.y;
         }
 
 
@@ -151,7 +154,13 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         if(wallCollisionCounter >= 2)
         {
+            
+               physicMat.dynamicFriction = 0f;
             //gameObject.transform.position = new Vector3(gameObject.transform.position.x, yPOSVal, gameObject.transform.position.z);
+        }
+        else
+        {
+               physicMat.dynamicFriction = 0.5f;
         }
 
           if(collisionCounter == 0)
