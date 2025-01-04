@@ -24,6 +24,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject criticalText;
     [SerializeField] GameObject criticalTextBorder;
 
+    [SerializeField] GameObject damageNumPrefab;
+
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
 
@@ -32,6 +34,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Slider ExperienceBar;
     GameObject currentCheckpointText;
     Queue<GameObject> currentSmears = new Queue<GameObject>();
+    Queue<GameObject> currentDamageNums = new Queue<GameObject>();
     CharacterBase character;
     // Start is called before the first frame update
     private void Awake()
@@ -40,6 +43,17 @@ public class UIManager : MonoBehaviour
         knightHUD.SetActive(false);
         gunnerHUD.SetActive(false);
         engineerHUD.SetActive(false);
+    }
+
+    private void LateUpdate()
+    {
+        if(currentDamageNums.Count > 0)
+        {
+            foreach (var num in currentDamageNums)
+            {
+                //num.transform.position = new Vector3(num.transform.position.x, num.transform.position.y, num.transform.position.z);
+            }
+        }
     }
 
     public void ShowCriticalText()
@@ -59,6 +73,34 @@ public class UIManager : MonoBehaviour
         criticalText.SetActive(false);
         criticalTextBorder.SetActive(false);
         
+    }
+
+    public void DisplayDamageNum(Transform enemyTransform, float damage)
+    {
+        damageNumPrefab.GetComponent<TMP_Text>().text = damage.ToString();
+        GameObject numRef = Instantiate(damageNumPrefab);
+        var ui = GameObject.Find("Canvas");
+        numRef.transform.SetParent(ui.transform, false);
+        var screenPos = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().WorldToScreenPoint(enemyTransform.position);
+        numRef.transform.position = new Vector3(screenPos.x + Random.Range(-50.0f, 50.0f), screenPos.y + Random.Range(0.0f, 120.0f), screenPos.z);
+        StartCoroutine(AnimateDamageNum(numRef));
+        //currentDamageNums.Enqueue(numRef);
+    }
+
+    public IEnumerator AnimateDamageNum(GameObject num)
+    {
+        var text = num.GetComponent<TMP_Text>();
+        
+        while (text.color.a > 0)
+        {
+            num.transform.position = new Vector3((num.transform.position.x + 100f*Time.deltaTime), num.transform.position.y, num.transform.position.z);
+            Color txtColor = text.color;
+            txtColor.a -= 2f * Time.deltaTime;
+            text.color = txtColor;
+            yield return null;
+        }
+        Destroy(num);
+        yield break;
     }
 
     public IEnumerator AnimateCriticalTextBorder()

@@ -34,6 +34,7 @@ public class WeaponClass : ScriptableObject
                 leveledUp = true;
                 currentLvl = item.Value;
                 numSkillPoints += 1;
+                baseAttack += 2;
             }
         }
         return leveledUp;

@@ -6,6 +6,7 @@ public class swordCombat : MonoBehaviour
 {
     public int damage = 0;
     AudioManager audioManager;
+    UIManager uiManager;
 
 
     //rune ability combat mechanic
@@ -35,6 +36,7 @@ public class swordCombat : MonoBehaviour
     {
         print("activating sword attack");
         Collider[] colliders = Physics.OverlapSphere(attackPoint.position, radius, layer);
+        GetDamage();
         foreach (Collider collider in colliders)
         {
             if (collider.gameObject.tag == "Enemy")
@@ -47,7 +49,9 @@ public class swordCombat : MonoBehaviour
                 {
                     audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
                 }
+                if(uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
                 audioManager.PlaySFX("SwordCollide");
+                uiManager.DisplayDamageNum(collider.gameObject.transform, damage);
                 //Vector3 knockBackDir = collider.transform.position - GameObject.FindGameObjectWithTag("Player").transform.position;
                 //Debug.Log("Enemy knockback mag: " + knockBackDir.magnitude);
                 //knockBackDir *= 1.5f;
@@ -56,16 +60,28 @@ public class swordCombat : MonoBehaviour
         }
     }
 
+    public void GetDamage()
+    {
+        var playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+
+        switch (playerBase.equippedWeapon.weaponClassType)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                damage = playerBase.knightObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                break;
+        }
+    }
+
     public void updateDamage(int dmg)
     {
         Debug.Log("Sword damaged updated to: " + dmg);
-        damage = dmg;
+        //damage = dmg;
     }
 
-    public void activateFire(bool activate)
-    {
-        //isFire = activate;
-    }
 
 
     

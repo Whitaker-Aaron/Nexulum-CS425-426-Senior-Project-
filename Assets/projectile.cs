@@ -15,6 +15,7 @@ public class projectile : MonoBehaviour
     Rigidbody rb;
     public LayerMask enemy;
     masterInput input;
+    UIManager uiManager;
 
     bool hitEnemy = false;
     bool hitPlayer = false;
@@ -43,6 +44,8 @@ public class projectile : MonoBehaviour
         
         stop = false;
         lifeTime = maxLifeTime;
+        GetDamage();
+        if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         int layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
 
@@ -58,19 +61,21 @@ public class projectile : MonoBehaviour
             if (hit.collider.gameObject.tag == "Enemy" && poolName != "enemyMagePoolOne")
             {
                 hitEnemy = true;
+                int updatedDamage = damage;
                 if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistance)
                 {
-                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.gunnerDmgMod, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+                    updatedDamage = damage / masterInput.instance.gunnerDmgMod;
+                    
                 }
                 else if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistanceEngr)
                 {
-                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage / masterInput.instance.engrDmgMod, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+                    updatedDamage = damage / masterInput.instance.engrDmgMod;
+                    
                 }
-                else
-                {
-                    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
-                }
-                
+
+                hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(updatedDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+                uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
+
             }
 
             //enemy mage projectile conditions
@@ -100,9 +105,16 @@ public class projectile : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         DontDestroyOnLoad(this);
         input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
+        GetDamage();
+        
+        
+    }
+
+    public void GetDamage()
+    {
         playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
 
-        switch(playerBase.equippedWeapon.weaponClassType)
+        switch (playerBase.equippedWeapon.weaponClassType)
         {
             case WeaponBase.weaponClassTypes.Knight:
                 break;
@@ -113,7 +125,6 @@ public class projectile : MonoBehaviour
                 damage = playerBase.engineerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
                 break;
         }
-        
     }
 
     // Start is called before the first frame update

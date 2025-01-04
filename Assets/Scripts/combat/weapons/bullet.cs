@@ -6,7 +6,7 @@ public class bullet : MonoBehaviour
 {
     public GameObject target;
     public float lifeTime = 4f;
-    public int damage = 10;
+    public int damage = 0;
     public int bossdamageMult;
     public LayerMask enemy, boss;
     public float explosiveRange;

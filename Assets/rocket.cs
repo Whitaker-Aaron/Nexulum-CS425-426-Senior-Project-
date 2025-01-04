@@ -9,6 +9,7 @@ public class rocket : MonoBehaviour
     public float explosionRadius = 3f;
     public int damage, directHitDamage;
     public int fireDmg;
+    UIManager uiManager;
     public float fireT, fireR, fireRadius, abilityTime;
 
     public bool fireB = false;
@@ -17,7 +18,7 @@ public class rocket : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
     }
 
     // Update is called once per frame
@@ -49,6 +50,7 @@ public class rocket : MonoBehaviour
             if(collider.gameObject.tag == "Enemy")
             {
                 collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Explosion);
+                uiManager.DisplayDamageNum(collider.gameObject.transform, damage);
             }
         }
         //Destroy(currentExplosion, 2f);
