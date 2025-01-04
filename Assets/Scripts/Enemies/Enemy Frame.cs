@@ -26,6 +26,8 @@ public class EnemyFrame : MonoBehaviour
     public GameObject healthRef;
     CharacterBase character;
 
+    UIManager uiManager;
+
     //PLAYER HEALTH - Spencer
     private int health;
     private int maxHealth;
@@ -79,6 +81,7 @@ public class EnemyFrame : MonoBehaviour
         
         anim = GetComponent<EnemyAnimation>();
         enemyUIRef = GameObject.Find("DynamicEnemyUI");
+        
 
         healthRef = Instantiate(enemyHealth);
         healthRef.transform.SetParent(enemyUIRef.transform);
@@ -91,6 +94,8 @@ public class EnemyFrame : MonoBehaviour
 
         enemyHealthBar.maxValue = maxHealth;
         delayedEnemyHealthBar.maxValue = maxHealth;
+
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         // Status effects - Aisling
         iceEffect = new IceDamage(movementReference, iceStackMax);
@@ -233,6 +238,7 @@ public class EnemyFrame : MonoBehaviour
                 yield break;
             }
             takeDamage(dmg, Vector3.zero, EnemyFrame.DamageSource.AOE, dmgType);
+            uiManager.DisplayDamageNum(gameObject.transform, dmg);
             Debug.Log("Damage taken: " + dmg + " at time: " + Time.time);
 
             // Wait for the next damage tick

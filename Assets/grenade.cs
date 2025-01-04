@@ -10,6 +10,7 @@ public class grenade : MonoBehaviour
     public float earthBlastRadius = 3f;
     public GameObject explosion;
     public LayerMask enemy;
+    UIManager uiManager;
     public int damage = 25;
     public int earthDamage = 25;
 
@@ -36,6 +37,7 @@ public class grenade : MonoBehaviour
             if (c.gameObject.tag == "Enemy")
             {
                 c.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Explosion);
+                uiManager.DisplayDamageNum(c.gameObject.transform, damage);
             }
         }
 
@@ -49,6 +51,7 @@ public class grenade : MonoBehaviour
                 if (c.gameObject.tag == "Enemy")
                 {
                     c.GetComponent<EnemyFrame>().takeDamage(earthDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Earth);
+                    uiManager.DisplayDamageNum(c.gameObject.transform, damage);
                 }
             }
         }
@@ -84,7 +87,7 @@ public class grenade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if(uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
     }
 
     // Update is called once per frame

@@ -6,6 +6,7 @@ using TMPro;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 public class UIManager : MonoBehaviour
 {
@@ -82,18 +83,23 @@ public class UIManager : MonoBehaviour
         var ui = GameObject.Find("Canvas");
         numRef.transform.SetParent(ui.transform, false);
         var screenPos = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().WorldToScreenPoint(enemyTransform.position);
-        numRef.transform.position = new Vector3(screenPos.x + Random.Range(-50.0f, 50.0f), screenPos.y + Random.Range(0.0f, 120.0f), screenPos.z);
-        StartCoroutine(AnimateDamageNum(numRef));
+        numRef.transform.position = new Vector3(screenPos.x + Random.Range(-25.0f, 25.0f), screenPos.y + Random.Range(0.0f, 120.0f), screenPos.z);
+        StartCoroutine(AnimateDamageNum(numRef, enemyTransform));
         //currentDamageNums.Enqueue(numRef);
     }
 
-    public IEnumerator AnimateDamageNum(GameObject num)
+    public IEnumerator AnimateDamageNum(GameObject num, Transform enemyTrans)
     {
         var text = num.GetComponent<TMP_Text>();
+        float xOffset = Random.Range(-100.0f, 0.0f);
+        float yOffset = Random.Range(0.0f, 120.0f);
+        Vector3 screenPos = Vector3.zero;
         
         while (text.color.a > 0)
         {
-            num.transform.position = new Vector3((num.transform.position.x + 100f*Time.deltaTime), num.transform.position.y, num.transform.position.z);
+            xOffset += 100f * Time.deltaTime;
+            if(enemyTrans != null) screenPos = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().WorldToScreenPoint(enemyTrans.position);
+            num.transform.position = new Vector3((screenPos.x + xOffset), (screenPos.y + yOffset), screenPos.z);
             Color txtColor = text.color;
             txtColor.a -= 2f * Time.deltaTime;
             text.color = txtColor;

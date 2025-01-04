@@ -28,7 +28,7 @@ public class TransitionDoorTrigger : MonoBehaviour
 
     public void OpenDoor()
     {
-        if (controlledDoor != null)
+        if (controlledDoor != null && controlledDoor.GetComponent<Door>().isLocked)
         {
             Door door = controlledDoor.GetComponent<Door>();
             if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))

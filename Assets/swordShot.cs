@@ -16,6 +16,7 @@ public class swordShot : MonoBehaviour
 
     bool explode = false;
     public float explodeRadius = 2f;
+    UIManager uiManager;
 
     private void Awake()
     {
@@ -31,6 +32,7 @@ public class swordShot : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(waitReturn());
+        if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
     }
 
@@ -50,6 +52,7 @@ public class swordShot : MonoBehaviour
         if(collision.gameObject.tag == "Enemy")
         {
             collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+            uiManager.DisplayDamageNum(collision.gameObject.transform, damage);
             collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             collision.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             if (isIce)
@@ -64,6 +67,7 @@ public class swordShot : MonoBehaviour
                     {
                         //print("slow down the enemy");
                         c.gameObject.GetComponent<EnemyFrame>().takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                        uiManager.DisplayDamageNum(c.gameObject.transform, damage);
                     }
                 }
                 EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position);
@@ -90,6 +94,7 @@ public class swordShot : MonoBehaviour
                 {
                     //print("slow down the enemy");
                     c.gameObject.GetComponent<EnemyFrame>().takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                    uiManager.DisplayDamageNum(c.gameObject.transform, damage);
                 }
             }
             EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position);
@@ -112,6 +117,7 @@ public class swordShot : MonoBehaviour
             {
                 //print("slow down the enemy");
                 c.gameObject.GetComponent<EnemyFrame>().takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                uiManager.DisplayDamageNum(c.gameObject.transform, damage);
             }
         }
         EffectsManager.instance.getFromPool("swordShotIceHit", gameObject.transform.position);
