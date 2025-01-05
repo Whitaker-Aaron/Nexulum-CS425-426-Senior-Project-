@@ -76,21 +76,28 @@ public class UIManager : MonoBehaviour
         
     }
 
-    public void DisplayDamageNum(Transform enemyTransform, float damage)
+    public void DisplayDamageNum(Transform enemyTransform, float damage, float textSize = 40f, float rate = 2f)
     {
-        damageNumPrefab.GetComponent<TMP_Text>().text = damage.ToString();
+        var mainText = damageNumPrefab.GetComponent<TMP_Text>();
+        mainText.text = damage.ToString();
+        mainText.fontSize = textSize;
+        var backdropText = damageNumPrefab.transform.Find("EnemyDamageNumberBackdrop").GetComponent<TMP_Text>();
+        backdropText.text = damage.ToString();
+        backdropText.fontSize = textSize;
         GameObject numRef = Instantiate(damageNumPrefab);
         var ui = GameObject.Find("Canvas");
         numRef.transform.SetParent(ui.transform, false);
         var screenPos = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().WorldToScreenPoint(enemyTransform.position);
         numRef.transform.position = new Vector3(screenPos.x + Random.Range(-25.0f, 25.0f), screenPos.y + Random.Range(0.0f, 120.0f), screenPos.z);
-        StartCoroutine(AnimateDamageNum(numRef, enemyTransform));
+        StartCoroutine(AnimateDamageNum(numRef, enemyTransform, rate));
         //currentDamageNums.Enqueue(numRef);
     }
 
-    public IEnumerator AnimateDamageNum(GameObject num, Transform enemyTrans)
+    public IEnumerator AnimateDamageNum(GameObject num, Transform enemyTrans, float rate)
     {
         var text = num.GetComponent<TMP_Text>();
+        var textBackdrop = num.transform.GetChild(0).GetComponent<TMP_Text>();
+        //textBackdrop.color 
         float xOffset = Random.Range(-100.0f, 0.0f);
         float yOffset = Random.Range(0.0f, 120.0f);
         Vector3 screenPos = Vector3.zero;
@@ -101,8 +108,11 @@ public class UIManager : MonoBehaviour
             if(enemyTrans != null) screenPos = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().WorldToScreenPoint(enemyTrans.position);
             num.transform.position = new Vector3((screenPos.x + xOffset), (screenPos.y + yOffset), screenPos.z);
             Color txtColor = text.color;
-            txtColor.a -= 2f * Time.deltaTime;
+            Color txtBackdropColor = textBackdrop.color;
+            txtColor.a -= rate * Time.deltaTime;
+            txtBackdropColor.a -= rate * Time.deltaTime;
             text.color = txtColor;
+            textBackdrop.color = txtBackdropColor;
             yield return null;
         }
         Destroy(num);

@@ -50,7 +50,7 @@ public class rocket : MonoBehaviour
             if(collider.gameObject.tag == "Enemy")
             {
                 collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Explosion);
-                uiManager.DisplayDamageNum(collider.gameObject.transform, damage);
+                uiManager.DisplayDamageNum(collider.gameObject.transform, damage, 60f, 1f);
             }
         }
         //Destroy(currentExplosion, 2f);
