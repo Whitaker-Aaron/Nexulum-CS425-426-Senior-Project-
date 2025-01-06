@@ -45,9 +45,21 @@ public class Chest : MonoBehaviour, i_Interactable
     {
         if (itemsToAdd.Count <= 0)
         {
+            if (isOpen && menuManager.chestMenuActive)
+            {
+                menuManager.closeChestMenu();
+                HideUI();
+            }
             isLocked = true;
             isOpen = false;
         }
+    }
+
+    public void UpdateChestItem(int index, int amountRemoved)
+    {
+        if(amountRemoved < itemsToAdd[index].amount) itemsToAdd[index].amount -= amountRemoved;
+        else itemsToAdd.RemoveAt(index);
+
     }
 
     public bool Interact(Interactor interactor)
@@ -90,7 +102,7 @@ public class Chest : MonoBehaviour, i_Interactable
 
     public void ShowUI()
     {
-        if (chestUI != null && !isOpen)
+        if (chestUI != null && !isOpen && itemsToAdd.Count > 0)
         {
             chestUI.SetActive(true);
         }

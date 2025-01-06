@@ -10,6 +10,11 @@ public class ChestWithdrawOption : MonoBehaviour
     [SerializeField] public TMP_Text itemName;
     [SerializeField] public RawImage itemTexture;
     [SerializeField] public TMP_Text itemAmount;
+    [SerializeField] public TMP_Text amountInChest;
+    public int chestAmount;
+    int amountToTake;
+    public int itemIndex;
+    public CraftMaterial item;
     void Start()
     {
         
@@ -19,5 +24,39 @@ public class ChestWithdrawOption : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void TakeFromChest()
+    {
+        var scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
+        
+        if(amountToTake > 0 ) scrollManager.AddToMaterialsInventory(item, amountToTake);
+        //scrollManager.RemoveFromTotalMaterialsInventory(attachedMaterial, materialDepositCount);
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().updateChestMenuMaterials();
+        chestAmount -= amountToTake;
+        if(chestAmount <= 0) this.gameObject.SetActive(false);
+        else
+        {
+            itemAmount.text = "x" + chestAmount.ToString();
+            amountInChest.text = "0";
+        }
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().UpdateChest(itemIndex, amountToTake);
+
+
+    }
+
+    public void OnPlusButton()
+    {
+        //int val = 0;
+        //int.TryParse(itemAmount.text, out val);
+        if (amountToTake + 1 <= chestAmount) amountToTake++;
+        amountInChest.text = amountToTake.ToString();
+
+    }
+
+    public void OnMinusButton()
+    {
+        if (amountToTake - 1 >= 0) amountToTake--;
+        amountInChest.text = amountToTake.ToString();
     }
 }

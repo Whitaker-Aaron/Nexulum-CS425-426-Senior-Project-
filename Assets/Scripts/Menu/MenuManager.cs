@@ -36,7 +36,7 @@ public class MenuManager : MonoBehaviour
     Chest currentChest;
 
     bool menuActive = false;
-    bool chestMenuActive = false;
+    public bool chestMenuActive = false;
     bool pauseMenuActive = false;
     public bool menusPaused = false;
     // Start is called before the first frame update
@@ -84,6 +84,9 @@ public class MenuManager : MonoBehaviour
                 chestItem.itemName.text = chestRef.itemsToAdd[i].material.materialName;
                 chestItem.itemTexture.texture = chestRef.itemsToAdd[i].material.materialTexture;
                 chestItem.itemAmount.text = "x" + chestRef.itemsToAdd[i].amount.ToString();
+                chestItem.chestAmount = chestRef.itemsToAdd[i].amount;
+                chestItem.item = chestRef.itemsToAdd[i].material;
+                chestItem.itemIndex = i;
             }
             else chestDeposit.itemDisplays[i].SetActive(false);
         }
@@ -94,6 +97,31 @@ public class MenuManager : MonoBehaviour
         chestMenuActive = true;
         
         populateInventoryMaterials();
+    }
+
+    public void UpdateChest(int index, int amountRemoved)
+    {
+        if (chestMenuActive && currentChest != null) {
+            currentChest.UpdateChestItem(index, amountRemoved);
+            UpdateChestIndex();
+        }
+    }
+
+    public void UpdateChestIndex()
+    {
+        if(chestMenuActive && currentChest != null)
+        {
+            var curItems = currentMenuObject.GetComponent<ChestMaterialDeposit>().itemDisplays;
+            int counter = 0;
+            for (int i = 0; i < curItems.Count; i++)
+            {
+                if (curItems[i].activeSelf)
+                {
+                    curItems[i].GetComponent<ChestWithdrawOption>().itemIndex = counter;
+                    counter++;
+                }
+            }
+        }
     }
 
     public void closeChestMenu()
@@ -392,6 +420,17 @@ public class MenuManager : MonoBehaviour
             }
         }
         GameObject.Find("CurrentMaterialAmount").GetComponent<TMP_Text>().text = matCounter.ToString() + "/20";
+    }
+
+    public void updateChestMenuMaterials()
+    {
+        for (int i = 0; i < currentMaterials.Count; i++)
+        {
+            Destroy(currentMaterials[i]);
+            currentMaterials.RemoveAt(i);
+            i--;
+        }
+        populateInventoryMaterials();
     }
 
     public void updateBaseInventoryMaterials()
