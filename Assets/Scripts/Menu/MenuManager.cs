@@ -74,11 +74,26 @@ public class MenuManager : MonoBehaviour
             Destroy(currentMenuObject);
         }
         currentChest = chestRef;
+        var chestDeposit = chestMenuReference.GetComponent<ChestMaterialDeposit>();
+        for(int i =0; i < chestDeposit.itemDisplays.Count; i++)
+        {
+            if (i < chestRef.itemsToAdd.Count && chestRef.itemsToAdd[i] != null)
+            {
+                chestDeposit.itemDisplays[i].SetActive(true);
+                var chestItem = chestDeposit.itemDisplays[i].GetComponent<ChestWithdrawOption>();
+                chestItem.itemName.text = chestRef.itemsToAdd[i].material.materialName;
+                chestItem.itemTexture.texture = chestRef.itemsToAdd[i].material.materialTexture;
+                chestItem.itemAmount.text = "x" + chestRef.itemsToAdd[i].amount.ToString();
+            }
+            else chestDeposit.itemDisplays[i].SetActive(false);
+        }
         currentMenuObject = Instantiate(chestMenuReference);
         currentMenuObject.transform.SetParent(canvas.transform, false);
 
         inputManager.pausePlayerInput();
         chestMenuActive = true;
+        
+        populateInventoryMaterials();
     }
 
     public void closeChestMenu()

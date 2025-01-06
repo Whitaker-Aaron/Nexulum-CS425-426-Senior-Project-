@@ -6,6 +6,7 @@ using UnityEngine;
 public class ChestMaterialDeposit : MonoBehaviour
 {
     MenuManager menuManager;
+    [SerializeField] public List<GameObject> itemDisplays;
     // Start is called before the first frame update
     void Start()
     {
