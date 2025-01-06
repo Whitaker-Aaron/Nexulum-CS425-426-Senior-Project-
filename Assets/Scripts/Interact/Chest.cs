@@ -6,6 +6,7 @@ public class Chest : MonoBehaviour, i_Interactable
 {
     private Animator animator;
     private MaterialScrollManager materialManager;
+    private MenuManager menuManager;
     private Key key;
     public enum chestType { material, weapon, item }
 
@@ -14,6 +15,7 @@ public class Chest : MonoBehaviour, i_Interactable
     public string chestID;
     public bool isOpen;
     public GameObject chestUI;
+    public GameObject depositUI;
 
     [Header("Items to Add")]
     public List<ItemList> itemsToAdd;
@@ -21,7 +23,8 @@ public class Chest : MonoBehaviour, i_Interactable
     public void Awake()
     {
         materialManager = FindObjectOfType<MaterialScrollManager>();
-
+        menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        animator = GetComponent<Animator>();
         if (materialManager == null)
         {
             Debug.LogError("MaterialScrollManager not found in the scene.");
@@ -38,6 +41,15 @@ public class Chest : MonoBehaviour, i_Interactable
         }
     }
 
+    public void Update()
+    {
+        if (itemsToAdd.Count <= 0)
+        {
+            isLocked = true;
+            isOpen = false;
+        }
+    }
+
     public bool Interact(Interactor interactor)
     {
         if (materialManager == null)
@@ -51,8 +63,12 @@ public class Chest : MonoBehaviour, i_Interactable
             if (!isOpen)
             {
                 isOpen = true;
-                ShowUI();
+                //ShowUI();
                 Debug.Log("Opening the Chest");
+                //animator.SetBool("isOpen", true);
+                //if (itemsToAdd.Count > 0) AddItemToInventory(itemsToAdd[0]);
+                menuManager.openChestMenu(this);
+
             }
             else
             {
@@ -67,9 +83,14 @@ public class Chest : MonoBehaviour, i_Interactable
         return true;
     }
 
+    public void OnMenuClosed()
+    {
+        if(itemsToAdd.Count > 0) isOpen = false;
+    }
+
     public void ShowUI()
     {
-        if (chestUI != null)
+        if (chestUI != null && !isOpen)
         {
             chestUI.SetActive(true);
         }

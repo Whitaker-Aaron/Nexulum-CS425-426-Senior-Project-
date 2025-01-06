@@ -292,6 +292,7 @@ GameObject:
   - component: {fileID: 5697148873686077831}
   - component: {fileID: 8032986317835551833}
   - component: {fileID: 5639494636001510667}
+  - component: {fileID: -6260247181101687791}
   m_Layer: 10
   m_Name: Chest
   m_TagString: Untagged
@@ -333,9 +334,7 @@ MonoBehaviour:
   chestID: 
   isOpen: 0
   chestUI: {fileID: 914988306510974925}
-  itemsToAdd:
-  - material: {fileID: 11400000, guid: 1445bd1f8d4434548a72a2c955bca2e8, type: 2}
-    amount: 3
+  itemsToAdd: []
 --- !u!65 &5639494636001510667
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -357,6 +356,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &-6260247181101687791
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4568864298422130106}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4892603617124522680
 GameObject:
   m_ObjectHideFlags: 0

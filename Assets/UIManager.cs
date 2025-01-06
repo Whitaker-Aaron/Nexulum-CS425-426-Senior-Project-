@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject criticalTextBorder;
 
     [SerializeField] GameObject damageNumPrefab;
+    [SerializeField] GameObject chestDepositUI;
 
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
@@ -91,6 +92,11 @@ public class UIManager : MonoBehaviour
         numRef.transform.position = new Vector3(screenPos.x + Random.Range(-25.0f, 25.0f), screenPos.y + Random.Range(0.0f, 120.0f), screenPos.z);
         StartCoroutine(AnimateDamageNum(numRef, enemyTransform, rate));
         //currentDamageNums.Enqueue(numRef);
+    }
+
+    public void DisplayChestDepositUI()
+    {
+
     }
 
     public IEnumerator AnimateDamageNum(GameObject num, Transform enemyTrans, float rate)

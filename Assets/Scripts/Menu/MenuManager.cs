@@ -15,10 +15,12 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject craftMenuReference;
     [SerializeField] GameObject itemsMenuReference;
     [SerializeField] GameObject equipMenuReference;
+    [SerializeField] GameObject chestMenuReference;
 
     [SerializeField] GameObject scrollContent;
     [SerializeField] GameObject DepositScrollContent;
     [SerializeField] GameObject WithdrawScrollContent;
+    [SerializeField] GameObject ChestWithdrawObject;
 
     [SerializeField] GameObject craftListsReference;
     [SerializeField] GameObject pauseMenuReference;
@@ -31,8 +33,10 @@ public class MenuManager : MonoBehaviour
     GameObject materialManager;
     masterInput inputManager;
     CharacterBase character;
+    Chest currentChest;
 
     bool menuActive = false;
+    bool chestMenuActive = false;
     bool pauseMenuActive = false;
     public bool menusPaused = false;
     // Start is called before the first frame update
@@ -61,6 +65,36 @@ public class MenuManager : MonoBehaviour
 
         inputManager.pausePlayerInput();
         menuActive = true;
+    }
+
+    public void openChestMenu(Chest chestRef)
+    {
+        if (menuActive)
+        {
+            Destroy(currentMenuObject);
+        }
+        currentChest = chestRef;
+        currentMenuObject = Instantiate(chestMenuReference);
+        currentMenuObject.transform.SetParent(canvas.transform, false);
+
+        inputManager.pausePlayerInput();
+        chestMenuActive = true;
+    }
+
+    public void closeChestMenu()
+    {
+        if (chestMenuActive)
+        {
+            chestMenuActive = false;
+            Destroy(currentMenuObject);
+            inputManager.resumePlayerInput();
+            if (currentChest != null)
+            {
+                currentChest.OnMenuClosed();
+            }
+            currentChest = null;
+
+        }
     }
 
 
@@ -130,6 +164,7 @@ public class MenuManager : MonoBehaviour
     {
         
         if(!menuActive && !pauseMenuActive && !character.transitioningRoom && !menusPaused && context.performed) {
+            if (chestMenuActive && currentMenuObject != null) closeChestMenu();
             if (!character.inRangeOfTerminal)
             {
                 currentMenuObject = Instantiate(materialsMenuReference);
