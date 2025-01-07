@@ -57,7 +57,8 @@ public class Chest : MonoBehaviour, i_Interactable
 
     public void UpdateChestItem(int index, int amountRemoved)
     {
-        if(amountRemoved < itemsToAdd[index].amount) itemsToAdd[index].amount -= amountRemoved;
+        Debug.Log("Index: " + index + "Amount removed: " + amountRemoved);
+        if(itemsToAdd[index] != null && amountRemoved < itemsToAdd[index].amount) itemsToAdd[index].amount -= amountRemoved;
         else itemsToAdd.RemoveAt(index);
 
     }

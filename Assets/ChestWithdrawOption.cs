@@ -12,7 +12,7 @@ public class ChestWithdrawOption : MonoBehaviour
     [SerializeField] public TMP_Text itemAmount;
     [SerializeField] public TMP_Text amountInChest;
     public int chestAmount;
-    int amountToTake;
+    public int amountToTake;
     public int itemIndex;
     public CraftMaterial item;
     void Start()

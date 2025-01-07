@@ -115,7 +115,7 @@ public class MenuManager : MonoBehaviour
             int counter = 0;
             for (int i = 0; i < curItems.Count; i++)
             {
-                if (curItems[i].activeSelf)
+                if (curItems[i].GetComponent<ChestWithdrawOption>().chestAmount > 0 && curItems[i].activeSelf) // && 
                 {
                     curItems[i].GetComponent<ChestWithdrawOption>().itemIndex = counter;
                     counter++;
