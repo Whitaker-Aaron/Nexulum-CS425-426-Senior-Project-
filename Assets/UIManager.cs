@@ -30,6 +30,7 @@ public class UIManager : MonoBehaviour
 
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
+    Coroutine currentTransitionTypewriter;
 
     Slider currentAbilitySlider;
 
@@ -38,9 +39,11 @@ public class UIManager : MonoBehaviour
     Queue<GameObject> currentSmears = new Queue<GameObject>();
     Queue<GameObject> currentDamageNums = new Queue<GameObject>();
     CharacterBase character;
+    AudioManager audioManager;
     // Start is called before the first frame update
     private void Awake()
     {
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         knightHUD.SetActive(false);
         gunnerHUD.SetActive(false);
@@ -97,6 +100,110 @@ public class UIManager : MonoBehaviour
     public void DisplayChestDepositUI()
     {
 
+    }
+
+    public void StartAnimateTypewriterScreenTransition(TMP_Text tmp_text, string text_to_animate, string leadingChar, float rate)
+    {
+        if (currentTransitionTypewriter != null) StopCoroutine(currentTransitionTypewriter);
+        currentTransitionTypewriter = StartCoroutine(AnimateTypewriterScreenTransition(tmp_text, text_to_animate, leadingChar, rate));
+    }
+
+    public IEnumerator AnimateTypewriterScreenTransition(TMP_Text tmp_text, string text_to_animate, string leadingChar="", float rate=0.25f)
+    {
+        
+        tmp_text.text = "";
+        foreach (char c in text_to_animate)
+        {
+            if (tmp_text.text.Length > 0)
+            {
+                tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            }
+            tmp_text.text += c;
+            tmp_text.text += leadingChar;
+            audioManager.PlaySFX("KeyTap");
+            yield return new WaitForSeconds(rate);
+        }
+        int counter = 0;
+        while(leadingChar != "" && counter < 2)
+        {
+            tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            yield return new WaitForSeconds(rate*2);
+            counter++;
+            tmp_text.text += leadingChar;
+            yield return new WaitForSeconds(rate*2);
+            //yield return null;
+        }
+        foreach (char c in text_to_animate)
+        {
+            if (tmp_text.text.Length > 0)
+            {
+                tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            }
+            tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - 1);
+            tmp_text.text += leadingChar;
+            audioManager.PlaySFX("KeyTap");
+            yield return new WaitForSeconds(rate);
+        }
+        counter = 0;
+        while (leadingChar != "" && counter < 2)
+        {
+            tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            yield return new WaitForSeconds(rate * 2);
+            counter++;
+            tmp_text.text += leadingChar;
+            yield return new WaitForSeconds(rate * 2);
+            //yield return null;
+        }
+        if (leadingChar != "") tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+    }
+
+    public IEnumerator AnimateTypewriterCheckpoint(TMP_Text tmp_text, string text_to_animate, string leadingChar = "", float rate = 0.25f)
+    {
+
+        tmp_text.text = "";
+        foreach (char c in text_to_animate)
+        {
+            if (tmp_text.text.Length > 0)
+            {
+                tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            }
+            tmp_text.text += c;
+            tmp_text.text += leadingChar;
+            audioManager.PlaySFX("KeyTap");
+            yield return new WaitForSeconds(rate);
+        }
+        int counter = 0;
+        while (leadingChar != "" && counter < 2)
+        {
+            tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            yield return new WaitForSeconds(0.5f);
+            counter++;
+            tmp_text.text += leadingChar;
+            yield return new WaitForSeconds(0.5f);
+            //yield return null;
+        }
+        foreach (char c in text_to_animate)
+        {
+            if (tmp_text.text.Length > 0)
+            {
+                tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            }
+            tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - 1);
+            tmp_text.text += leadingChar;
+            audioManager.PlaySFX("KeyTap");
+            yield return new WaitForSeconds(rate);
+        }
+        counter = 0;
+        /*while (leadingChar != "" && counter < 2)
+        {
+            tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            yield return new WaitForSeconds(rate * 2);
+            counter++;
+            tmp_text.text += leadingChar;
+            yield return new WaitForSeconds(rate * 2);
+            //yield return null;
+        }*/
+        if (leadingChar != "") tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
     }
 
     public IEnumerator AnimateDamageNum(GameObject num, Transform enemyTrans, float rate)
@@ -429,7 +536,7 @@ public class UIManager : MonoBehaviour
 
         }
         //yield return new WaitForSeconds(2.8f);
-        yield return StartCoroutine(ReduceTextOpacity(currentCheckpointText, 1.00f));
+        yield return StartCoroutine(AnimateTypewriterCheckpoint(currentCheckpointText.GetComponent<TMP_Text>(), "Checkpoint Reached", "|", 0.125f));
         Destroy(currentCheckpointText);
         yield break;
     }

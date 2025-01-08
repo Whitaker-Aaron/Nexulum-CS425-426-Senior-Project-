@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class LifetimeManager : MonoBehaviour
@@ -187,14 +188,14 @@ public class LifetimeManager : MonoBehaviour
 
         currentScene = GameObject.Find("SceneInformation").GetComponent<SceneInformation>().sceneName;
         var title = GameObject.Find("TransitionTitle");
-        title.GetComponent<Text>().text = GameObject.Find("SceneInformation").GetComponent<SceneInformation>().transitionTitle;
-        yield return new WaitForSeconds(0.2f);
-        yield return StartCoroutine(IncreaseTitleOpacity(title, 1.75f));
-        yield return new WaitForSeconds(0.5f);
+        uiManager.StartAnimateTypewriterScreenTransition(title.GetComponent<TMP_Text>(), GameObject.Find("SceneInformation").GetComponent<SceneInformation>().transitionTitle, "|", 0.2f);
+        //title.GetComponent<Text>().text = GameObject.Find("SceneInformation").GetComponent<SceneInformation>().transitionTitle;
+        //yield return StartCoroutine(IncreaseTitleOpacity(title, 1.75f));
+        yield return new WaitForSeconds(1f);
         yield return StartCoroutine(ReduceOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         if(!characterRef.transitioningRoom && !characterRef.transitionedRoom && !characterRef.teleporting) characterRef.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         yield return new WaitForSeconds(0.2f);
-        yield return StartCoroutine(ReduceTitleOpacity(title, 1.00f));
+        //yield return StartCoroutine(ReduceTitleOpacity(title, 1.00f));
         menuManager.menusPaused = false;
         StopAllCoroutines();
         yield break;
