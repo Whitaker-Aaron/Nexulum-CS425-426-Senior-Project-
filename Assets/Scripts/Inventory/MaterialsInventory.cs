@@ -222,6 +222,7 @@ public class MaterialsInventory : MonoBehaviour, SaveSystemInterface
 
     public void ClearInventory()
     {
+        Debug.Log("Clearing inventory from materials inventory");
         Array.Clear(inventory, 0, inventory.Length);
         nextFreeIndex = 0;
     }

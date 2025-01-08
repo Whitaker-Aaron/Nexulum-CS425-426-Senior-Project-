@@ -197,7 +197,7 @@ public class LifetimeManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         //yield return StartCoroutine(ReduceTitleOpacity(title, 1.00f));
         menuManager.menusPaused = false;
-        StopAllCoroutines();
+        //StopAllCoroutines();
         yield break;
         
     }

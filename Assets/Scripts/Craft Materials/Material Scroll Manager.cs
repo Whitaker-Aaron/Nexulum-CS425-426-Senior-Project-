@@ -145,6 +145,7 @@ public class MaterialScrollManager : MonoBehaviour
 
     public void ClearInventory()
     {
+        Debug.Log("Clearing inventory from scroll manager");
         materialInventory.ClearInventory();
     }
 
