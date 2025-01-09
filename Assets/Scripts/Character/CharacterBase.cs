@@ -52,9 +52,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public bool transitioningRoom = false;
     public bool transitionedRoom = false;
     public bool teleporting = false;
+    public bool inDialogueBox = false;
     public RoomSpawnObject teleportSpawnObject;
 
     public bool inRangeOfTerminal = false;
+    
 
 
     int collisionCounter = 0;

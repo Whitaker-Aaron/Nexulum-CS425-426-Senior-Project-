@@ -41,6 +41,7 @@ public class ChestWithdrawOption : MonoBehaviour
             amountInChest.text = "0";
         }
         GameObject.Find("MenuManager").GetComponent<MenuManager>().UpdateChest(itemIndex, amountToTake);
+        amountToTake = 0;
 
 
     }

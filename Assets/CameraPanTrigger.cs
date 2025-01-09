@@ -10,6 +10,7 @@ public class CameraPanTrigger : MonoBehaviourID
     [SerializeField] float panSpeed;
     [SerializeField] bool panYAxisLocked = false;
     [SerializeField] bool panLookAtLocked = false;
+    [SerializeField] DialogueObject dialogueObject;
     RoomInformation roomInfo;
     public bool hasTriggered = false;
     public string triggerGuid;
@@ -34,6 +35,7 @@ public class CameraPanTrigger : MonoBehaviourID
         camera.panYAxisLocked = panYAxisLocked;
         camera.panLookAtLocked = panLookAtLocked;
         //yield return new WaitForSeconds(0.25f);
+        if (dialogueObject != null) StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(dialogueObject));
         yield return StartCoroutine(camera.PanToPosition(objectToPanTo.transform.position + offset, panSpeed));
         hasTriggered = true;
         UpdateTriggerState();

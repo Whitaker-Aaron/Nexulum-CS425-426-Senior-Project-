@@ -28,9 +28,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject damageNumPrefab;
     [SerializeField] GameObject chestDepositUI;
 
+    [SerializeField] GameObject talk_portrait;
+    [SerializeField] GameObject dialogue_box;
+
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
     Coroutine currentTransitionTypewriter;
+    Coroutine currentDialogueBox;
 
     Slider currentAbilitySlider;
 
@@ -38,6 +42,7 @@ public class UIManager : MonoBehaviour
     GameObject currentCheckpointText;
     Queue<GameObject> currentSmears = new Queue<GameObject>();
     Queue<GameObject> currentDamageNums = new Queue<GameObject>();
+    Queue<string> dialogueText = new Queue<string>();
     CharacterBase character;
     AudioManager audioManager;
     // Start is called before the first frame update
@@ -52,7 +57,7 @@ public class UIManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(currentDamageNums.Count > 0)
+        if (currentDamageNums.Count > 0)
         {
             foreach (var num in currentDamageNums)
             {
@@ -77,7 +82,7 @@ public class UIManager : MonoBehaviour
         StopCoroutine(currentCriticalBorderOpacity);
         criticalText.SetActive(false);
         criticalTextBorder.SetActive(false);
-        
+
     }
 
     public void DisplayDamageNum(Transform enemyTransform, float damage, float textSize = 40f, float rate = 2f)
@@ -108,9 +113,9 @@ public class UIManager : MonoBehaviour
         currentTransitionTypewriter = StartCoroutine(AnimateTypewriterScreenTransition(tmp_text, text_to_animate, leadingChar, rate));
     }
 
-    public IEnumerator AnimateTypewriterScreenTransition(TMP_Text tmp_text, string text_to_animate, string leadingChar="", float rate=0.25f)
+    public IEnumerator AnimateTypewriterScreenTransition(TMP_Text tmp_text, string text_to_animate, string leadingChar = "", float rate = 0.25f)
     {
-        
+
         tmp_text.text = "";
         foreach (char c in text_to_animate)
         {
@@ -124,13 +129,13 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(rate);
         }
         int counter = 0;
-        while(leadingChar != "" && counter < 2)
+        while (leadingChar != "" && counter < 2)
         {
             tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
-            yield return new WaitForSeconds(rate*2);
+            yield return new WaitForSeconds(rate * 2);
             counter++;
             tmp_text.text += leadingChar;
-            yield return new WaitForSeconds(rate*2);
+            yield return new WaitForSeconds(rate * 2);
             //yield return null;
         }
         foreach (char c in text_to_animate)
@@ -145,7 +150,7 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(rate);
         }
         counter = 0;
-        while (leadingChar != "" && counter < 2)
+        /*while (leadingChar != "" && counter < 2)
         {
             tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
             yield return new WaitForSeconds(rate * 2);
@@ -153,8 +158,115 @@ public class UIManager : MonoBehaviour
             tmp_text.text += leadingChar;
             yield return new WaitForSeconds(rate * 2);
             //yield return null;
-        }
+        }*/
         if (leadingChar != "") tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+    }
+
+    public IEnumerator LoadDialogueBox(DialogueObject dialogueObject)
+    {
+        foreach (var text in dialogueObject.dialogueList)
+        {
+            dialogueText.Enqueue(text);
+        }
+        StartCoroutine(AnimateDialogueBoxMovement("left"));
+        currentDialogueBox = StartCoroutine(AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer));
+        yield return currentDialogueBox;
+        dialogueObject.dialogueFinished = true;
+    }
+
+    public void UnloadDialogue()
+    {
+        StopCoroutine(currentDialogueBox);
+        GameObject talk_portrait = GameObject.Find("Portrait_Talk");
+        GameObject static_portrait = GameObject.Find("Portrait_Static");
+        talk_portrait.SetActive(false);
+        static_portrait.SetActive(true);
+        dialogueText.Clear();
+        GameObject.Find("DialogueText").GetComponent<TMP_Text>().text = "";
+    }
+
+    public IEnumerator DialogueBoxTimeout()
+    {
+
+        yield return new WaitForSeconds(1.5f);
+        if(dialogueText.Count > 0)
+        {
+            yield break;
+        }
+        else
+        {
+           StartCoroutine(AnimateDialogueBoxMovement("right"));
+        }
+    }
+
+    public IEnumerator AnimateDialogueBoxMovement(string direction)
+    {
+        Vector3 desiredPos = dialogue_box.transform.localPosition;
+        if (direction == "left")
+        {
+            desiredPos = new Vector3(413, dialogue_box.transform.localPosition.y, dialogue_box.transform.localPosition.z);
+            
+        }
+        else if(direction == "right")
+        {
+            desiredPos = new Vector3(1510, dialogue_box.transform.localPosition.y, dialogue_box.transform.localPosition.z);
+        }
+        while (dialogue_box.transform.localPosition != desiredPos)
+        {
+            if (Mathf.Abs(dialogue_box.transform.localPosition.magnitude - desiredPos.magnitude) <= 0.5f) dialogue_box.transform.localPosition = desiredPos;
+            dialogue_box.transform.localPosition = Vector3.Lerp(dialogue_box.transform.localPosition, desiredPos, 2.75f * Time.deltaTime);
+            yield return null;
+        }
+    }
+
+    public IEnumerator AnimateTypewriterDialogue(TMP_Text tmp_text, string leadingChar = "", float rate = 0.25f, bool freezePlayer = false)
+    {
+        if (freezePlayer)
+        {
+            character.inDialogueBox = true;
+            character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        }
+        tmp_text.text = "";
+        GameObject static_portrait = GameObject.Find("Portrait_Static");
+        talk_portrait.SetActive(false);
+        while (dialogueText.Count > 0)
+        {
+            var text_to_aniamte = dialogueText.Dequeue();
+            foreach (char c in text_to_aniamte)
+            {
+                if (c == ' ') talk_portrait.SetActive(false);
+                else talk_portrait.SetActive(true);
+                if (tmp_text.text.Length > 0)
+                {
+                    tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+                }
+                tmp_text.text += c;
+                tmp_text.text += leadingChar;
+                audioManager.PlaySFX("KeyTap");
+                yield return new WaitForSeconds(rate);
+            }
+            int counter = 0;
+            talk_portrait.SetActive(false);
+            while (leadingChar != "" && counter < 2)
+            {
+                tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+                yield return new WaitForSeconds(0.5f);
+                counter++;
+                tmp_text.text += leadingChar;
+                yield return new WaitForSeconds(0.5f);
+                //yield return null;
+            }
+            yield return StartCoroutine(DialogueBoxTimeout());
+
+            tmp_text.text = "";
+        }
+        if (freezePlayer)
+        {
+            character.inDialogueBox = false;
+            character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        }
+        yield return StartCoroutine(DialogueBoxTimeout());
+        //if (leadingChar != "") tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
     }
 
     public IEnumerator AnimateTypewriterCheckpoint(TMP_Text tmp_text, string text_to_animate, string leadingChar = "", float rate = 0.25f)
