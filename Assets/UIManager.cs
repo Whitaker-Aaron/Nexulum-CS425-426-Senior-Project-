@@ -31,11 +31,13 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] GameObject talk_portrait;
     [SerializeField] GameObject dialogue_box;
+    [SerializeField] GameObject advance_textbox_obj;
 
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
     Coroutine currentTransitionTypewriter;
-    Coroutine currentDialogueBox;
+    IEnumerator currentDialogueBox;
+    Coroutine currentDialogueBoxAnimation;
 
     Slider currentAbilitySlider;
 
@@ -167,20 +169,23 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator LoadDialogueBox(DialogueObject dialogueObject)
     {
+        if (currentDialogueBox != null) UnloadDialogue();
         foreach (var text in dialogueObject.dialogueList)
         {
             dialogueText.Enqueue(text);
         }
-        StartCoroutine(AnimateDialogueBoxMovement("left"));
-        currentDialogueBox = StartCoroutine(AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer));
-        yield return currentDialogueBox;
-        dialogueObject.dialogueFinished = true;
+        currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("left"));
+        currentDialogueBox = AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer);
+        StartCoroutine(currentDialogueBox);
+        //Debug.Log("Returned from dialogue coroutine");
+        //dialogueObject.dialogueFinished = true;
+        yield break;
     }
 
     public void UnloadDialogue()
     {
-        StopCoroutine(currentDialogueBox);
-        GameObject talk_portrait = GameObject.Find("Portrait_Talk");
+        if(currentDialogueBox != null) StopCoroutine(currentDialogueBox);
+        if(currentDialogueBoxAnimation != null) StopCoroutine(currentDialogueBoxAnimation);
         GameObject static_portrait = GameObject.Find("Portrait_Static");
         talk_portrait.SetActive(false);
         static_portrait.SetActive(true);
@@ -199,15 +204,16 @@ public class UIManager : MonoBehaviour
     public IEnumerator DialogueBoxTimeout()
     {
 
-        yield return new WaitForSeconds(0.2f);
+        //yield return new WaitForSeconds(0.2f);
         if(dialogueText.Count > 0)
         {
             yield break;
         }
         else
         {
-           StartCoroutine(AnimateDialogueBoxMovement("right"));
+           currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("right"));
         }
+        yield break;
     }
 
     public IEnumerator AnimateDialogueBoxMovement(string direction)
@@ -228,6 +234,7 @@ public class UIManager : MonoBehaviour
             dialogue_box.transform.localPosition = Vector3.Lerp(dialogue_box.transform.localPosition, desiredPos, 2.75f * Time.deltaTime);
             yield return null;
         }
+        yield break;
     }
 
     public IEnumerator AwaitDialogueBoxLeadChar()
@@ -246,7 +253,6 @@ public class UIManager : MonoBehaviour
         }
         tmp_text.text = "";
         GameObject static_portrait = GameObject.Find("Portrait_Static");
-        GameObject advance_textbox_obj = GameObject.Find("AdvanceText");
         talk_portrait.SetActive(false);
         //advance_textbox_obj.SetActive(false);
         while (dialogueText.Count > 0)
@@ -311,7 +317,9 @@ public class UIManager : MonoBehaviour
             character.inDialogueBox = false;
             character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         }
-        yield return StartCoroutine(DialogueBoxTimeout());
+        StartCoroutine(DialogueBoxTimeout());
+        Debug.Log("Finished dialogue box");
+        yield break;
         //if (leadingChar != "") tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
     }
 

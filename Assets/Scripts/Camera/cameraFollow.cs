@@ -64,7 +64,7 @@ public class CameraFollow : MonoBehaviour
         StartCoroutine(PanToPosition(positionToPanTo, rate));
     }
 
-    public IEnumerator PanToPosition(Vector3 position, float rate)
+    public IEnumerator PanToPosition(Vector3 position, float rate, float delay = 2f)
     {
         if(cameraPanning)
         {
@@ -72,12 +72,13 @@ public class CameraFollow : MonoBehaviour
         }
         cameraPanning = true;
         target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        target.transform.GetComponent<CharacterBase>().inEvent = true;
         float ogSpeed = smoothSpeed;
         CameraFollow.FollowMode ogFollowMode = followMode;
         positionTarget = position;
         smoothSpeed = rate;
         SetCameraMode(CameraFollow.FollowMode.PositionLerp);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(delay);
         smoothSpeed = rate;
         SetCameraMode(CameraFollow.FollowMode.Lerp);
         panLookAtLocked = false;
@@ -92,6 +93,7 @@ public class CameraFollow : MonoBehaviour
         smoothSpeed = ogSpeed;
         cameraPanning = false;
         target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        target.transform.GetComponent<CharacterBase>().inEvent = false;
         panLookAtLocked = false;
         panYAxisLocked = false;
         yield break;

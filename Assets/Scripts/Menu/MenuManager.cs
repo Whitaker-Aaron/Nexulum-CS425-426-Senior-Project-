@@ -206,7 +206,7 @@ public class MenuManager : MonoBehaviour
         public void openMenu(InputAction.CallbackContext context)
     {
         
-        if(!menuActive && !pauseMenuActive && !character.transitioningRoom && !menusPaused && context.performed) {
+        if(!menuActive && !pauseMenuActive && !character.inEvent && !character.transitioningRoom && !character.inDialogueBox && !menusPaused && context.performed) {
             if (chestMenuActive && currentMenuObject != null) closeChestMenu();
             if (!character.inRangeOfTerminal)
             {
