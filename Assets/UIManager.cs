@@ -246,12 +246,23 @@ public class UIManager : MonoBehaviour
         }
         tmp_text.text = "";
         GameObject static_portrait = GameObject.Find("Portrait_Static");
+        GameObject advance_textbox_obj = GameObject.Find("AdvanceText");
         talk_portrait.SetActive(false);
+        //advance_textbox_obj.SetActive(false);
         while (dialogueText.Count > 0)
         {
             var text_to_aniamte = dialogueText.Dequeue();
+            advance_textbox_obj.SetActive(false);
             foreach (char c in text_to_aniamte)
             {
+                if (freezePlayer && advanceTextbox)
+                {
+                    tmp_text.text = text_to_aniamte;
+                    tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+                    tmp_text.text += leadingChar;
+                    advanceTextbox = false;
+                    break;
+                }
                 if (c == ' ') talk_portrait.SetActive(false);
                 else talk_portrait.SetActive(true);
                 if (tmp_text.text.Length > 0)
@@ -266,6 +277,7 @@ public class UIManager : MonoBehaviour
             int counter = 0;
             int counterLimit = 3;
             talk_portrait.SetActive(false);
+            if(freezePlayer) advance_textbox_obj.SetActive(true);
             while (counter < counterLimit && !advanceTextbox)
             {
                 advanceLeadChar = false;
