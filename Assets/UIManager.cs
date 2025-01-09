@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Unity.VisualScripting;
 using System.Collections.Generic;
 using UnityEngine.Rendering;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
@@ -45,6 +46,8 @@ public class UIManager : MonoBehaviour
     Queue<string> dialogueText = new Queue<string>();
     CharacterBase character;
     AudioManager audioManager;
+    bool advanceTextbox = false;
+    bool advanceLeadChar = false;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -185,10 +188,18 @@ public class UIManager : MonoBehaviour
         GameObject.Find("DialogueText").GetComponent<TMP_Text>().text = "";
     }
 
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (character.inDialogueBox && context.performed)
+        {
+            advanceTextbox = true;
+        }
+    }
+
     public IEnumerator DialogueBoxTimeout()
     {
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.2f);
         if(dialogueText.Count > 0)
         {
             yield break;
@@ -219,6 +230,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public IEnumerator AwaitDialogueBoxLeadChar()
+    {
+        yield return new WaitForSeconds(0.5f);
+        advanceLeadChar = true;
+        yield return null;
+    }
+
     public IEnumerator AnimateTypewriterDialogue(TMP_Text tmp_text, string leadingChar = "", float rate = 0.25f, bool freezePlayer = false)
     {
         if (freezePlayer)
@@ -246,19 +264,35 @@ public class UIManager : MonoBehaviour
                 yield return new WaitForSeconds(rate);
             }
             int counter = 0;
+            int counterLimit = 3;
             talk_portrait.SetActive(false);
-            while (leadingChar != "" && counter < 2)
+            while (counter < counterLimit && !advanceTextbox)
             {
+                advanceLeadChar = false;
+                if (advanceTextbox) break;
                 tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
-                yield return new WaitForSeconds(0.5f);
-                counter++;
+                StartCoroutine(AwaitDialogueBoxLeadChar());
+                while (!advanceLeadChar)
+                {
+                    if (advanceTextbox) break;
+                    yield return null;
+                }
+                advanceLeadChar = false;
+                if(!freezePlayer) counter++;
                 tmp_text.text += leadingChar;
-                yield return new WaitForSeconds(0.5f);
-                //yield return null;
+                if (advanceTextbox) break;
+                StartCoroutine(AwaitDialogueBoxLeadChar());
+                while (!advanceLeadChar)
+                {
+                    if (advanceTextbox) break;
+                    yield return null;
+                }
+                yield return null;
             }
-            yield return StartCoroutine(DialogueBoxTimeout());
+            advanceTextbox = false;
+            //if (!freezePlayer) yield return new WaitForSeconds(0.75f);
 
-            tmp_text.text = "";
+            if(dialogueText.Count > 0) tmp_text.text = "";
         }
         if (freezePlayer)
         {
