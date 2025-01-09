@@ -35,7 +35,7 @@ public class MenuManager : MonoBehaviour
     CharacterBase character;
     Chest currentChest;
 
-    bool menuActive = false;
+    public bool menuActive = false;
     public bool chestMenuActive = false;
     bool pauseMenuActive = false;
     public bool menusPaused = false;
