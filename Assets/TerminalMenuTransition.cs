@@ -19,4 +19,9 @@ public class TerminalMenuTransition : MonoBehaviour
     {
         menuManager.navigateToBaseMaterialsMenu();
     }
+
+    public void OnBackButton()
+    {
+        menuManager.CloseMenu();
+    }
 }

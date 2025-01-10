@@ -23,6 +23,7 @@ public class terminal : MonoBehaviour, i_Interactable
     public bool Interact(Interactor interactor)
     {
         if(menuManager.menuActive) return false;
+        character.usingTerminal = true;
         menuManager.openTerminalMenu();
         return true;
 

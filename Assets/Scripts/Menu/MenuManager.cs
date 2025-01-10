@@ -197,7 +197,8 @@ public class MenuManager : MonoBehaviour
             {
                 inputManager.resumePlayerInput();
             }
-            
+            character.usingTerminal = false;
+
 
         }
 
@@ -205,23 +206,16 @@ public class MenuManager : MonoBehaviour
 
         public void openMenu(InputAction.CallbackContext context)
     {
-        
+        if (character.usingTerminal) return;
         if(!menuActive && !pauseMenuActive && !character.inEvent && !character.transitioningRoom && !character.inDialogueBox && !menusPaused && context.performed) {
             if (chestMenuActive && currentMenuObject != null) closeChestMenu();
-            if (!character.inRangeOfTerminal)
-            {
-                currentMenuObject = Instantiate(materialsMenuReference);
-                populateInventoryMaterials();
-                currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x + 75, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
-            }
-            else
-            {
-                currentMenuObject = Instantiate(terminalMenuReference);
-            }
-            
+            currentMenuObject = Instantiate(materialsMenuReference);
+            populateInventoryMaterials();
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x + 75, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
             Debug.Log("activating main menu");
             currentMenuObject.transform.SetParent(canvas.transform, false);
+
             
             inputManager.pausePlayerInput();
             menuActive = true;
@@ -262,6 +256,7 @@ public class MenuManager : MonoBehaviour
             Destroy(GameObject.FindGameObjectWithTag("ItemMenu"));
         }
         inputManager.resumePlayerInput();
+        character.usingTerminal = false;
         menuActive = false;
     }
 
@@ -459,7 +454,8 @@ public class MenuManager : MonoBehaviour
             //var container = currentMenuObject.transform.Find("MaterialsLayout");
             var container = GameObject.Find("MaterialsLayout").GetComponent<GridLayoutGroup>();
             var totalContainer = GameObject.Find("MaterialsLayout2").GetComponent<GridLayoutGroup>();
-
+            int matCounter = 0;
+            int baseMatCounter = 0;
             for (int i = 0; i < matInventory.Length; i++)
             {
 
@@ -467,7 +463,7 @@ public class MenuManager : MonoBehaviour
                 {
                     break;
                 }
-
+                matCounter++;
                 var depositMaterial = DepositScrollContent.transform.Find("Material Scroll Object").GetComponent<MaterialScrollObject>();
                 depositMaterial.descriptionMain.text = matInventory[i].materialName;
                 depositMaterial.descriptionSub.text = matInventory[i].materialName;
@@ -483,6 +479,7 @@ public class MenuManager : MonoBehaviour
                 currentMaterials.Add(newScrollMaterial);
 
             }
+            GameObject.Find("CurrentMaterialAmount").GetComponent<TMP_Text>().text = matCounter.ToString() + "/20";
 
             for (int i = 0; i < totalMatInventory.Length; i++)
             {
@@ -491,6 +488,7 @@ public class MenuManager : MonoBehaviour
                 {
                     break;
                 }
+                baseMatCounter++;
                 Debug.Log("Inside total mat inventory for menu manager");
                 var depositMaterial = WithdrawScrollContent.transform.Find("Material Scroll Object").GetComponent<MaterialScrollObject>();
                 depositMaterial.descriptionMain.text = totalMatInventory[i].materialName;
@@ -507,6 +505,7 @@ public class MenuManager : MonoBehaviour
                 currentMaterials.Add(newScrollMaterial);
 
             }
+            GameObject.Find("CurrentBaseMaterialAmount").GetComponent<TMP_Text>().text = baseMatCounter.ToString() + "/150";
         }
     }
     

@@ -18,12 +18,12 @@ public class PlayerInteraction : MonoBehaviour
 
         if (currentItem != null)
         {
-            character.inRangeOfTerminal = true;
+            //character.inRangeOfTerminal = true;
             //currentItem.Interact();
         }
         else
         {
-            character.inRangeOfTerminal = false;
+            //character.inRangeOfTerminal = false;
         }
     }
 

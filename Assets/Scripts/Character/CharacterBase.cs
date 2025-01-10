@@ -54,9 +54,9 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public bool teleporting = false;
     public bool inDialogueBox = false;
     public bool inEvent = false;
+    public bool usingTerminal = false;
     public RoomSpawnObject teleportSpawnObject;
 
-    public bool inRangeOfTerminal = false;
     
 
 
