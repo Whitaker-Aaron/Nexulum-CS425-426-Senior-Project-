@@ -319,13 +319,19 @@ public class EquipMenuTransition : MonoBehaviour
                 switch (characterRef.equippedRunes[i].runeType)
                 {
                     case Rune.RuneType.Buff:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Buff]";
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().buffRuneType.SetActive(true);
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().classRuneType.SetActive(false);
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().spellRuneType.SetActive(false);
                         break;
                     case Rune.RuneType.Class:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Class]";
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().classRuneType.SetActive(true);
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().spellRuneType.SetActive(false);
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().buffRuneType.SetActive(false);
                         break;
                     case Rune.RuneType.Spell:
-                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().runeType.GetComponent<TMP_Text>().text = "[Spell]";
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().spellRuneType.SetActive(true);
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().buffRuneType.SetActive(false);
+                        equippedRunePrefab.GetComponent<EquippedRunePrefab>().classRuneType.SetActive(false);
                         break;
                 }
 
