@@ -260,8 +260,8 @@ public class MaterialScrollManager : MonoBehaviour
         while(reference != null && reference.localPosition != desiredPos)
         {
 
-            reference.localPosition = Vector3.Lerp(reference.localPosition, desiredPos, Time.deltaTime * 4.5f);
-            if (Mathf.Abs(reference.localPosition.magnitude - desiredPos.magnitude) <= 1) reference.localPosition = desiredPos;
+            reference.localPosition = Vector3.Lerp(reference.localPosition, desiredPos, Time.deltaTime * 14f);
+            if (Mathf.Abs(reference.localPosition.magnitude - desiredPos.magnitude) <= 5) reference.localPosition = desiredPos;
             yield return null;
         }
         yield break;
