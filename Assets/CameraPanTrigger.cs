@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CameraPanTrigger : MonoBehaviourID
 {
-    [SerializeField] GameObject objectToPanTo;
+    [SerializeField] List<GameObject> objectToPanTo;
     [SerializeField] Vector3 offset = Vector3.zero;
     [SerializeField] float panSpeed;
     [SerializeField] bool panYAxisLocked = false;
@@ -16,11 +16,13 @@ public class CameraPanTrigger : MonoBehaviourID
     public bool hasTriggered = false;
     public string triggerGuid;
     CameraFollow camera;
+    CharacterBase character;
     // Start is called before the first frame update
 
     private void Start()
     {
         camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>();
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         
     }
     private void OnTriggerEnter(Collider other)
@@ -36,10 +38,14 @@ public class CameraPanTrigger : MonoBehaviourID
         camera.panYAxisLocked = panYAxisLocked;
         camera.panLookAtLocked = panLookAtLocked;
         //yield return new WaitForSeconds(0.25f);
+        character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        character.inEvent = true;
         if (dialogueObject != null) StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(dialogueObject));
-        yield return StartCoroutine(camera.PanToPosition(objectToPanTo.transform.position + offset, panSpeed, panDelay));
+        yield return StartCoroutine(camera.PanToPosition(objectToPanTo[0].transform.position + offset, panSpeed, panDelay));
         hasTriggered = true;
         UpdateTriggerState();
+        character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        character.inEvent = false;
         Destroy(this.gameObject);
     }
 

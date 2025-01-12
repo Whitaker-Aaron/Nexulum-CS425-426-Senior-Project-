@@ -4,6 +4,7 @@ using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.TextCore.Text;
 
 
 public class CameraFollow : MonoBehaviour
@@ -61,6 +62,8 @@ public class CameraFollow : MonoBehaviour
     {
         panLookAtLocked = lockLook;
         panYAxisLocked = lockY;
+        target.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        target.GetComponent<CharacterBase>().inEvent = true;
         StartCoroutine(PanToPosition(positionToPanTo, rate));
     }
 
@@ -71,8 +74,6 @@ public class CameraFollow : MonoBehaviour
             yield break;
         }
         cameraPanning = true;
-        target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
-        target.transform.GetComponent<CharacterBase>().inEvent = true;
         float ogSpeed = smoothSpeed;
         CameraFollow.FollowMode ogFollowMode = followMode;
         positionTarget = position;
@@ -92,8 +93,8 @@ public class CameraFollow : MonoBehaviour
         //yield return new WaitForSeconds(0.15f);
         smoothSpeed = ogSpeed;
         cameraPanning = false;
-        target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         target.transform.GetComponent<CharacterBase>().inEvent = false;
+        target.transform.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         panLookAtLocked = false;
         panYAxisLocked = false;
         yield break;

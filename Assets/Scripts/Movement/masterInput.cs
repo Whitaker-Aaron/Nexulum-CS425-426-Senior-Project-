@@ -685,7 +685,7 @@ public class masterInput : MonoBehaviour
 
     public void resumePlayerInput()
     {
-        if (!character.inDialogueBox)
+        if (!character.inDialogueBox && !character.inEvent)
         {
             inputPaused = false;
             animationControl.stop();
