@@ -292,26 +292,26 @@ public class classAbilties : MonoBehaviour
 
     IEnumerator abilitiesCooldown(int ability, float time)
     {
-        uiManager.StartCooldownSlider(ability, (0.9f/time));
-        yield return new WaitForSeconds(time);
+        yield return StartCoroutine(uiManager.StartCooldownSlider(ability, (0.9f/time)));
+        //yield return new WaitForSeconds(time);
 
         switch (ability)
         {
             case 1:
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.2f);
                 a1cooldown = false;
                 acc1 = null;
                 print("ability 1 done");
           
                 break;
             case 2:
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.2f);
                 a2cooldown = false;
                 acc2 = null;
                 print("ability 2 done");
                 break;
             case 3:
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.2f);
                 a3cooldown = false;
                 acc3 = null;
                 print("ability 3 done");

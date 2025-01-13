@@ -490,15 +490,16 @@ public class UIManager : MonoBehaviour
     public IEnumerator AnimateCooldownSlider(Slider currentAbilitySlider, float rate)
     {
         
-        while(currentAbilitySlider != null && currentAbilitySlider.value > 0)
+        while(currentAbilitySlider != null && currentAbilitySlider.value != 1)
         {
-            currentAbilitySlider.value -= rate * Time.deltaTime;
+            currentAbilitySlider.value += rate * Time.deltaTime;
+            if (Mathf.Abs(currentAbilitySlider.value - 1) <= 0.01) currentAbilitySlider.value = 1;
             yield return null;
         }
         yield break;
     }
 
-    public void StartCooldownSlider(int abilityNum, float rate)
+    public IEnumerator StartCooldownSlider(int abilityNum, float rate)
     {
         Slider currentAbilitySlider = null;
         switch (abilityNum)
@@ -513,7 +514,7 @@ public class UIManager : MonoBehaviour
                 currentAbilitySlider = ability3.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
                 break;
         }
-        StartCoroutine(AnimateCooldownSlider(currentAbilitySlider, rate));
+        yield return StartCoroutine(AnimateCooldownSlider(currentAbilitySlider, rate));
     }
 
     public void DeactivateCooldownOnAbility(int abilityNum)
@@ -531,9 +532,8 @@ public class UIManager : MonoBehaviour
                 ability = ability3;
                 break;
         }
-
+        ability.transform.Find("AbilityCooldownFill").gameObject.GetComponent<Slider>().value = 0.0f;
         ability.transform.Find("AbilityCooldownFill").gameObject.SetActive(false);
-        ability.transform.Find("AbilityCooldownFill").gameObject.GetComponent<Slider>().value = 1.0f;
         ability.transform.Find("AbilityBorderCooldown").gameObject.SetActive(false);
         ability.transform.Find("AbilityBorderNormal").gameObject.SetActive(true);
         ability.transform.Find("AbilityCooldownBorder").gameObject.SetActive(true);
