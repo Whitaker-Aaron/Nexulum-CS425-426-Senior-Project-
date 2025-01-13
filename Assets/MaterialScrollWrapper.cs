@@ -14,5 +14,6 @@ public class MaterialScrollWrapper : MonoBehaviour
     [SerializeField] public TMP_Text descriptionSub;
     [SerializeField] public TMP_Text quantityMain;
     [SerializeField] public TMP_Text quantitySub;
+    [SerializeField] public Image dropShadowRef;
     public int quantityInt;
 }

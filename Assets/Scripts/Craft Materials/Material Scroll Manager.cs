@@ -293,6 +293,10 @@ public class MaterialScrollManager : MonoBehaviour
         Color quanColor2 = reference.quantitySub.color;
         quanColor2.a = 1;
         reference.quantitySub.color = quanColor2;
+
+        Color shadowColor = reference.dropShadowRef.color;
+        shadowColor.a = 1;
+        reference.dropShadowRef.color = shadowColor;
     }
 
     private IEnumerator ReduceOpacity(GameObject scrollObj)
@@ -323,6 +327,10 @@ public class MaterialScrollManager : MonoBehaviour
             Color quanColor2 = reference.quantitySub.color;
             quanColor2.a -= 0.10f * Time.deltaTime;
             reference.quantitySub.color = quanColor2;
+
+            Color shadowColor = reference.dropShadowRef.color;
+            shadowColor.a -= 0.10f * Time.deltaTime;
+            reference.dropShadowRef.color = shadowColor;
 
             yield return null;
         }
