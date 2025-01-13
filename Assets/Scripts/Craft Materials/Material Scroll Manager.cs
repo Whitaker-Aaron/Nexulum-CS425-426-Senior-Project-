@@ -68,7 +68,7 @@ public class MaterialScrollManager : MonoBehaviour
         }
     }
 
-    public void UpdateScroll(Texture materialTexture, string materialName)
+    public void UpdateScroll(Texture materialTexture, string materialName, int amount = 1)
     {
         CheckForNull();
 
@@ -78,7 +78,7 @@ public class MaterialScrollManager : MonoBehaviour
         scrollContentWrapperMaterial.descriptionMain.text = materialName;
         scrollContentWrapperMaterial.descriptionSub.text = materialName;
         scrollContentWrapperMaterial.imageRef.texture = materialTexture;
-        scrollContentWrapperMaterial.quantityInt = 1;
+        scrollContentWrapperMaterial.quantityInt = amount;
         scrollContentWrapperMaterial.quantityMain.text = "x" + scrollContentWrapperMaterial.quantityInt.ToString();
         scrollContentWrapperMaterial.quantitySub.text = "x" + scrollContentWrapperMaterial.quantityInt.ToString();
         //scrollContentWrapper.GetComponent<MaterialScrollWrapper>().scrollObject = scrollObject;

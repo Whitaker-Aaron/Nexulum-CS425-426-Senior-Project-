@@ -129,6 +129,7 @@ public class Chest : MonoBehaviour, i_Interactable
         if (materialManager != null)
         {
             materialManager.AddToMaterialsInventory(item.material, item.amount);
+            materialManager.UpdateScroll(item.material.materialTexture, item.material.materialName, item.amount);
             Debug.Log($"Added {item.material.name} (x{item.amount}) to inventory");
         }
     }
