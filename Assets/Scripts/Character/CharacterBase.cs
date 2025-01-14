@@ -69,7 +69,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public Transform hand, wrist, leftHand, leftForearm;
 
     //Player Health System
-    int maxHealth;
+    public int maxHealth;
     int playerHealth;
     int defense = 0;
 

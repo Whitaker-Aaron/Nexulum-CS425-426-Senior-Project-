@@ -40,6 +40,12 @@ public class MaterialDepositObject : MonoBehaviour
         }
     }
 
+    public void OnAll()
+    {
+        materialDepositCount = currentMaterialCount;
+        UpdateDepositCount();
+    }
+
     public void UpdateDepositCount()
     {
         DepositNumber.text = materialDepositCount.ToString();
@@ -47,6 +53,7 @@ public class MaterialDepositObject : MonoBehaviour
 
     public void DepositToTotalInventory()
     {
+        if (materialDepositCount <= 0) return;
         var scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
         scrollManager.AddToTotalMaterialsInventory(attachedMaterial, materialDepositCount);
         scrollManager.RemoveFromMaterialsInventory(attachedMaterial, materialDepositCount);
@@ -55,6 +62,7 @@ public class MaterialDepositObject : MonoBehaviour
 
     public void WithdrawFromTotalInventory()
     {
+        if (materialDepositCount <= 0) return;
         var scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
         scrollManager.AddToMaterialsInventory(attachedMaterial, materialDepositCount);
         scrollManager.RemoveFromTotalMaterialsInventory(attachedMaterial, materialDepositCount);
