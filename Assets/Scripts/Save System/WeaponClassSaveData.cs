@@ -9,5 +9,6 @@ public class WeaponClassSaveData
 
     public float totalExp;
     public float numSkillPoints;
+    public float baseAttack;
     public int currentLvl;
 }

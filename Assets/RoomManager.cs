@@ -45,6 +45,16 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
                         tempRoomData.lockedDoors.Add(tempLockedDoorData);
                     }
                 }
+                if (allRoomData[i].eventTriggers != null && allRoomData[i].eventTriggers.Count > 0)
+                {
+                    foreach (var trigger in allRoomData[i].eventTriggers)
+                    {
+                        var tempEventTriggerData = new EventTriggerSaveData();
+                        tempEventTriggerData.triggerGuid = trigger.Key;
+                        tempEventTriggerData.hasTriggered = trigger.Value;
+                        tempRoomData.eventTriggers.Add(tempEventTriggerData);
+                    }
+                }
                 data.roomData.Add(tempRoomData);
             }
                 

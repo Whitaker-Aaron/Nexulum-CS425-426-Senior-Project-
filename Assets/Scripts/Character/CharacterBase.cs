@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -246,18 +247,21 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
                     data.weaponClasses[index].totalExp = knightObject.totalExp;
                     data.weaponClasses[index].numSkillPoints = knightObject.numSkillPoints;
                     data.weaponClasses[index].currentLvl = knightObject.currentLvl;
+                    data.weaponClasses[index].baseAttack = knightObject.baseAttack;
                     break;
                 case 1:
                     data.weaponClasses[index].currentWeapon = gunnerObject.currentWeapon.weaponName;
                     data.weaponClasses[index].totalExp = gunnerObject.totalExp;
                     data.weaponClasses[index].numSkillPoints = gunnerObject.numSkillPoints;
                     data.weaponClasses[index].currentLvl = gunnerObject.currentLvl;
+                    data.weaponClasses[index].baseAttack = gunnerObject.baseAttack;
                     break;
                 case 2:
                     data.weaponClasses[index].currentWeapon = engineerObject.currentWeapon.weaponName;
                     data.weaponClasses[index].totalExp = engineerObject.totalExp;
                     data.weaponClasses[index].numSkillPoints = engineerObject.numSkillPoints;
                     data.weaponClasses[index].currentLvl = engineerObject.currentLvl;
+                    data.weaponClasses[index].baseAttack = engineerObject.baseAttack;
                     break;
             }
         }
@@ -288,7 +292,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
         
 
-        if (data.weaponClasses[0].currentWeapon != null)
+        if (data.weaponClasses[0].currentWeapon != null && !data.isNewFile)
         {
             
             for (int index = 0; index < 3; index++)
@@ -315,6 +319,24 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
                         break;
                 }
             }
+        }
+        else if (data.isNewFile)
+        {
+            knightObject.totalExp = 0f;
+            knightObject.numSkillPoints = 0f;
+            knightObject.currentLvl = 1;
+            knightObject.baseAttack = 30;
+
+            gunnerObject.totalExp = 0f;
+            gunnerObject.numSkillPoints = 0f;
+            gunnerObject.currentLvl = 1;
+            gunnerObject.baseAttack = 5;
+
+            engineerObject.totalExp = 0f;
+            engineerObject.numSkillPoints = 0f;
+            engineerObject.currentLvl = 1;
+            engineerObject.baseAttack = 5;
+
         }
 
         
