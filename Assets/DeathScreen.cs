@@ -11,29 +11,25 @@ public class DeathScreen : MonoBehaviour
     [SerializeField] TMP_Text firstText;
     [SerializeField] TMP_Text secondText;
     [SerializeField] TMP_Text thirdText;
+    string ogFirstText = "";
+    string ogSecondText = "";
+    string ogThirdText = "";
     [SerializeField] List<RawImage> materialImages;
     [SerializeField] List<GameObject> strokes;
     [SerializeField] List<GameObject> itemCounts;
+    [SerializeField] public List<DialogueObject> onDeathDialogues;
     [SerializeField] GameObject grid;
     [SerializeField] GameObject materialsRef;
+    [SerializeField] GameObject itemsGrid;
     UIManager uiManager;
 
     private void Start()
     { 
 
-       /*var color1 = firstText.color;
-       color1.a = 0.0f;
-       firstText.color = color1;
-
-       var color2 = secondText.color;
-       color2.a = 0.0f;
-       secondText.color = color2;
-
-       var color3 = thirdText.color;
-       color3.a = 0.0f;
-       thirdText.color = color3;*/
-
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        ogFirstText = firstText.text;
+        ogSecondText = secondText.text;
+        ogThirdText =  thirdText.text;
         ResetObjScales();
     }
     public IEnumerator CountdownStroke(int index)
@@ -57,37 +53,18 @@ public class DeathScreen : MonoBehaviour
         int validTextures = 0;
         for (int i = 0; i < index; i++)
         {
+            if (curMaterials[i] == null) break;
             validTextures++;
             materialImages[i].texture = curMaterials[i].materialTexture;
         }
 
-        /*material1 = mat1Obj.GetComponent<RawImage>();
-        material2 = mat2Obj.GetComponent<RawImage>();
-        material3 = mat3Obj.GetComponent<RawImage>();
-
-        Texture[] matText = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>().ReturnFirstThreeMatTextures();
-        
-        material1.texture = matText[0];
-        Color col = material1.color;
-        col.a = 0.0f;
-        material1.color = col;
-
-        material2.texture = matText[1];
-        Color col2 = material2.color;
-        col2.a = 0.0f;
-        material2.color = col2;
-
-        material3.texture = matText[2];
-        Color col3 = material3.color;
-        col3.a = 0.0f;
-        material3.color = col3;*/
 
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         yield return new WaitForSeconds(0.2f);
         var color1 = firstText.color;
         color1.a = 1.0f;
         firstText.color = color1;
-        yield return StartCoroutine(uiManager.AnimateTypewriterDeathscreen(firstText, firstText.text, "|", .085f));
+        yield return StartCoroutine(uiManager.AnimateTypewriterDeathscreen(firstText, firstText.text, "|", .065f));
         color1 = firstText.color;
         color1.a = 0.0f;
         firstText.color = color1;
@@ -96,39 +73,46 @@ public class DeathScreen : MonoBehaviour
         var color2 = secondText.color;
         color2.a = 1.0f;
         secondText.color = color2;
-        yield return StartCoroutine(uiManager.AnimateTypewriterDeathscreen(secondText, secondText.text, "|", .085f));
+        yield return StartCoroutine(uiManager.AnimateTypewriterDeathscreen(secondText, secondText.text, "|", .065f));
         color2 = secondText.color;
         color2.a = 0.0f;
         secondText.color = color2;
 
+
         yield return new WaitForSeconds(0.2f);
+        grid.SetActive(true);
+        StartCoroutine(animateGrid());
         var color3 = thirdText.color;
         color3.a = 1.0f;
         thirdText.color = color3;
-        yield return StartCoroutine(uiManager.AnimateTypewriterDeathscreen(thirdText, thirdText.text, "|", .085f));
-        color3 = thirdText.color;
-        color3.a = 0.0f;
-        thirdText.color = color3;
-        grid.SetActive(true);
+        StartCoroutine(uiManager.AnimateTypewriterDeathscreen(thirdText, thirdText.text, "|", .065f));
+        
+ 
+        yield return new WaitForSeconds(0.2f);
         for (int i = 0; i < validTextures; i++)
         {
             StartCoroutine(CountdownStroke(i));
             InitializeText(i, curMaterials[i].currentAmount);
             yield return StartCoroutine(IncreaseMaterialOpacity(materialImages[i], 2.6f));
         }
-
-        /*if (material1.texture != null) yield return StartCoroutine(IncreaseMaterialOpacity(material1, 1.8f));
-        if (material2.texture != null) yield return StartCoroutine(IncreaseMaterialOpacity(material2, 1.8f));
-        if (material3.texture != null) yield return StartCoroutine(IncreaseMaterialOpacity(material3, 1.8f));*/
         yield break;
 
     }
 
+    public IEnumerator animateGrid()
+    {
+        var desiredPos = new Vector3(593, itemsGrid.transform.localPosition.y, itemsGrid.transform.localPosition.z);
+        while(itemsGrid.transform.localPosition.x != 593)
+        {
+            itemsGrid.transform.localPosition = Vector3.Lerp(itemsGrid.transform.localPosition, desiredPos, Time.deltaTime * 7f);
+            if(Mathf.Abs(itemsGrid.transform.localPosition.magnitude -  desiredPos.magnitude) < 0.1) itemsGrid.transform.localPosition = desiredPos;
+            yield return null;
+        }
+        yield break;
+    }
+
     public void ResetObjScales()
     {
-        //mat1Obj.transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
-        //mat2Obj.transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
-        //mat3Obj.transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
         for(int i =0; i < materialImages.Count; i++)
         {
             materialImages[i].transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
@@ -144,6 +128,15 @@ public class DeathScreen : MonoBehaviour
         {
             itemCounts[i].SetActive(false);
         }
+        itemsGrid.transform.localPosition = new Vector3(1500, itemsGrid.transform.localPosition.y, itemsGrid.transform.localPosition.z);
+        firstText.text = ogFirstText;
+        secondText.text = ogSecondText;
+        thirdText.text = ogThirdText;
+
+        var color3 = thirdText.color;
+        color3.a = 0.0f;
+        thirdText.color = color3;
+        //firstText
     }
 
     public IEnumerator IncreaseOpacity(Text text, float rate)

@@ -84,9 +84,9 @@ public class AudioManager : MonoBehaviour
 
     public void StopLoop()
     {
-        if (audioSource != null && audioSource.isPlaying)
+        if (loopSources[currentLoop] != null)
         {
-            audioSource.Stop();
+            loopSources[currentLoop].StopLoop();
         }
     }
 

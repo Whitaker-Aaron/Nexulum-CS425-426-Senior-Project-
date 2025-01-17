@@ -15,6 +15,7 @@ public class LifetimeManager : MonoBehaviour
 
     WeaponsManager weaponsManager;
     UIManager uiManager;
+    AudioManager audioManager;
     RuneManager runeManager;
     MaterialScrollManager scrollManager;
     MenuManager menuManager;
@@ -31,6 +32,7 @@ public class LifetimeManager : MonoBehaviour
     private void Awake()
     {
         weaponsManager = GameObject.Find("WeaponManager").GetComponent<WeaponsManager>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         runeManager = GameObject.Find("RuneManager").GetComponent<RuneManager>();
         scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
         characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
@@ -152,24 +154,25 @@ public class LifetimeManager : MonoBehaviour
     public IEnumerator AnimateDeathScreen()
     {
         Time.timeScale = 0.2f;
+        audioManager.StopLoop();
         yield return new WaitForSeconds(0.5f);
-        var reference = GameObject.Find("TransitionScreen").GetComponent<Image>();
-        Color imgColor = reference.color;
-        imgColor.a = 1;
-        reference.color = imgColor;
         Time.timeScale = 1.0f;
         var deathScreenObj = deathScreen.GetComponent<DeathScreen>();
+        var onDeathDialogue = deathScreenObj.onDeathDialogues[0];
         deathScreen.SetActive(true);
         yield return StartCoroutine(deathScreenObj.AnimateDeath());
-        yield return new WaitForSeconds(12);
+        yield return new WaitForSeconds(6);
+        yield return StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
+        deathScreenObj.ResetObjScales();
+        deathScreen.SetActive(false);
         Load(1);
         characterRef.RecoverFromDeath();
         yield return new WaitForSeconds(3);
-        deathScreenObj.ResetObjScales();
-        deathScreen.SetActive(false);
+        StartCoroutine(ReduceOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         inputManager.resumePlayerInput();
         menuManager.menusPaused = false;
         scrollManager.ClearInventory();
+        StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(onDeathDialogue));
         yield return null;
     }
 
@@ -195,6 +198,7 @@ public class LifetimeManager : MonoBehaviour
         yield return StartCoroutine(ReduceOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         if(!characterRef.transitioningRoom && !characterRef.transitionedRoom && !characterRef.teleporting) characterRef.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         yield return new WaitForSeconds(0.2f);
+        
         //yield return StartCoroutine(ReduceTitleOpacity(title, 1.00f));
         menuManager.menusPaused = false;
         //StopAllCoroutines();

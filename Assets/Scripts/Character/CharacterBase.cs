@@ -56,6 +56,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public bool inDialogueBox = false;
     public bool inEvent = false;
     public bool isDying = false;
+    public bool isGettingKnockbacked;
     public bool usingTerminal = false;
     public RoomSpawnObject teleportSpawnObject;
 
@@ -446,6 +447,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         
         yield return new WaitForSeconds(time);
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        isGettingKnockbacked = false;
     }
 
     public void takeDamage(int damage, Vector3 forwardDir)
@@ -457,12 +459,19 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             audioManager.PlaySFX("DamageTaken");
             if (forwardDir != Vector3.zero)
             {
-                transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15f, ForceMode.VelocityChange);
-                if (curStopVel != null)
+                if (!isGettingKnockbacked)
                 {
-                    StopCoroutine(curStopVel);
+                    transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15f, ForceMode.VelocityChange);
+                    if (curStopVel != null)
+                    {
+                        StopCoroutine(curStopVel);
+                    }
+                    curStopVel = StartCoroutine(StopVelocity(0.25f));
+                    isGettingKnockbacked = true;
                 }
-                curStopVel = StartCoroutine(StopVelocity(0.25f));
+                
+               
+                
             }
             if (playerHealth - damage <= 0)
             {
