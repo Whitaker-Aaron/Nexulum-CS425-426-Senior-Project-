@@ -323,6 +323,55 @@ public class UIManager : MonoBehaviour
         //if (leadingChar != "") tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
     }
 
+    public IEnumerator AnimateTypewriterDeathscreen(TMP_Text tmp_text, string text_to_animate, string leadingChar = "", float rate = 0.25f)
+    {
+        tmp_text.text = "";
+        foreach (char c in text_to_animate)
+        {
+            if (tmp_text.text.Length > 0)
+            {
+                tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            }
+            tmp_text.text += c;
+            tmp_text.text += leadingChar;
+            audioManager.PlaySFX("KeyTap");
+            yield return new WaitForSeconds(rate);
+        }
+        int counter = 0;
+        while (leadingChar != "" && counter < 2)
+        {
+            tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            yield return new WaitForSeconds(0.5f);
+            counter++;
+            tmp_text.text += leadingChar;
+            yield return new WaitForSeconds(0.5f);
+            //yield return null;
+        }
+        foreach (char c in text_to_animate)
+        {
+            if (tmp_text.text.Length > 0)
+            {
+                tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            }
+            tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - 1);
+            tmp_text.text += leadingChar;
+            audioManager.PlaySFX("KeyTap");
+            yield return new WaitForSeconds(rate);
+        }
+        counter = 0;
+        /*while (leadingChar != "" && counter < 2)
+        {
+            tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+            yield return new WaitForSeconds(rate * 2);
+            counter++;
+            tmp_text.text += leadingChar;
+            yield return new WaitForSeconds(rate * 2);
+            //yield return null;
+        }*/
+        if (leadingChar != "") tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+        yield break;
+    }
+
     public IEnumerator AnimateTypewriterCheckpoint(TMP_Text tmp_text, string text_to_animate, string leadingChar = "", float rate = 0.25f)
     {
 

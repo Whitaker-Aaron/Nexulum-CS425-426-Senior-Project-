@@ -160,7 +160,7 @@ public class LifetimeManager : MonoBehaviour
         Time.timeScale = 1.0f;
         var deathScreenObj = deathScreen.GetComponent<DeathScreen>();
         deathScreen.SetActive(true);
-        StartCoroutine(deathScreenObj.AnimateDeath());
+        yield return StartCoroutine(deathScreenObj.AnimateDeath());
         yield return new WaitForSeconds(12);
         Load(1);
         characterRef.RecoverFromDeath();

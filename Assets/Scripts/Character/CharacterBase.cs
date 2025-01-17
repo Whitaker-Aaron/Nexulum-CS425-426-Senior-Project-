@@ -55,6 +55,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public bool teleporting = false;
     public bool inDialogueBox = false;
     public bool inEvent = false;
+    public bool isDying = false;
     public bool usingTerminal = false;
     public RoomSpawnObject teleportSpawnObject;
 
@@ -484,6 +485,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public void Death()
     {
         invul = true;
+        isDying = true;
         lifetimeManager.OnDeath();
         masterInput.GetComponent<masterInput>().pausePlayerInput();
 
@@ -499,6 +501,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         playerHealth = maxHealth;
         healthBar.value = maxHealth;
+        isDying = false;
         RestoreLowHealth();
 
         delayedHealthBar.value = maxHealth;
@@ -651,7 +654,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
             yield return null;
         }
-        if(delayedHealthBar.value == 0)
+        if(delayedHealthBar.value == 0 && !isDying)
         {
             Death();
         }
