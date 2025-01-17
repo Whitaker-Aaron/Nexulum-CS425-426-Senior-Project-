@@ -550,6 +550,7 @@ public class masterInput : MonoBehaviour
             if (!isDashing)
             {
                 audioManager.PlaySFX("Dash");
+                uiManager.startBorderStretch();
                 isDashing = true;
                 dashSpeed = 4.5f;
                 Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
@@ -583,6 +584,7 @@ public class masterInput : MonoBehaviour
     {
         dashSpeed = 1.0f;
         isDashing = false;
+        uiManager.stopBorderStretch();
     }
 
 
@@ -664,8 +666,7 @@ public class masterInput : MonoBehaviour
     IEnumerator PlayerDash()
     {
         yield return new WaitForSeconds(0.2f);
-        isDashing = false;
-        dashSpeed = 1;
+        StopDash();
         //yield return new WaitForSeconds(0.15f);
         uiManager.DestroyOldestSmear();
         yield break;

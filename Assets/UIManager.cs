@@ -38,6 +38,7 @@ public class UIManager : MonoBehaviour
     Coroutine currentTransitionTypewriter;
     IEnumerator currentDialogueBox;
     Coroutine currentDialogueBoxAnimation;
+    Coroutine currentBorderStretch;
 
     Slider currentAbilitySlider;
 
@@ -242,6 +243,70 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         advanceLeadChar = true;
         yield return null;
+    }
+
+    public void startBorderStretch()
+    {
+        currentBorderStretch = StartCoroutine(StretchBorderUI());
+    }
+
+    public void stopBorderStretch()
+    {
+        if (currentBorderStretch != null) StopCoroutine(currentBorderStretch);
+        StartCoroutine(UnstretchBorderUI());
+    }
+
+    public IEnumerator StretchBorderUI()
+    {
+     
+        var topGrad = GameObject.Find("TopGradient").GetComponent<RectTransform>();
+        var topGrad2 = GameObject.Find("TopGradient2").GetComponent<RectTransform>();
+        var botGrad = GameObject.Find("BottomGradient").GetComponent<RectTransform>();
+        var botGrad2 = GameObject.Find("BottomGradient2").GetComponent<RectTransform>();
+        float desiredAmount = topGrad.sizeDelta.y + 300;
+        
+        while(topGrad.sizeDelta.y != desiredAmount)
+        {
+            topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, topGrad.sizeDelta.y + 1250f*Time.deltaTime);
+            topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, topGrad2.sizeDelta.y + 1250f * Time.deltaTime);
+            botGrad.sizeDelta = new Vector2(botGrad.sizeDelta.x, botGrad.sizeDelta.y + 1250f * Time.deltaTime);
+            botGrad2.sizeDelta = new Vector2(botGrad2.sizeDelta.x, botGrad2.sizeDelta.y + 1250f * Time.deltaTime);
+            if(Mathf.Abs(topGrad.sizeDelta.y - desiredAmount) <= 25)
+            {
+                topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, desiredAmount);
+                topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, desiredAmount);
+                botGrad.sizeDelta = new Vector2(botGrad.sizeDelta.x, desiredAmount);
+                botGrad2.sizeDelta = new Vector2(botGrad2.sizeDelta.x, desiredAmount);
+            }
+            yield return null;
+        }
+        yield break;
+    }
+
+    public IEnumerator UnstretchBorderUI()
+    {
+        var topGrad = GameObject.Find("TopGradient").GetComponent<RectTransform>();
+        var topGrad2 = GameObject.Find("TopGradient2").GetComponent<RectTransform>();
+        var botGrad = GameObject.Find("BottomGradient").GetComponent<RectTransform>();
+        var botGrad2 = GameObject.Find("BottomGradient2").GetComponent<RectTransform>();
+        float desiredAmount = 275.9484f;
+
+        while (topGrad.sizeDelta.y != desiredAmount)
+        {
+            topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, topGrad.sizeDelta.y - 1250f * Time.deltaTime);
+            topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, topGrad2.sizeDelta.y - 1250f * Time.deltaTime);
+            botGrad.sizeDelta = new Vector2(botGrad.sizeDelta.x, botGrad.sizeDelta.y - 1250f * Time.deltaTime);
+            botGrad2.sizeDelta = new Vector2(botGrad2.sizeDelta.x, botGrad2.sizeDelta.y - 1250f * Time.deltaTime);
+            if (Mathf.Abs(topGrad.sizeDelta.y - desiredAmount) <= 25)
+            {
+                topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, desiredAmount);
+                topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, desiredAmount);
+                botGrad.sizeDelta = new Vector2(botGrad.sizeDelta.x, desiredAmount);
+                botGrad2.sizeDelta = new Vector2(botGrad2.sizeDelta.x, desiredAmount);
+            }
+            yield return null;
+        }
+        yield break;
     }
 
     public IEnumerator AnimateTypewriterDialogue(TMP_Text tmp_text, string leadingChar = "", float rate = 0.25f, bool freezePlayer = false)
