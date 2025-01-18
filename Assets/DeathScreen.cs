@@ -41,7 +41,9 @@ public class DeathScreen : MonoBehaviour
     public void InitializeText(int index, int itemCount)
     {
         TMP_Text text = itemCounts[index].GetComponent<TMP_Text>();
+        TMP_Text text2 = itemCounts[index].transform.GetChild(0).GetComponent<TMP_Text>();
         text.text = itemCount.ToString();
+        text2.text = itemCount.ToString();
         itemCounts[index].SetActive(true);
     }
 

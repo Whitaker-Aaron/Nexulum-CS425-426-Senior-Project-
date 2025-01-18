@@ -55,9 +55,13 @@ public class CraftRecipePrefab : MonoBehaviour
 
             int curAmount = matManager.GetMaterialAmount(item.Key);
             wrapComponent.materialDescription.GetComponent<TMP_Text>().text = item.Key.materialName;
-            wrapComponent.requiredAmount.GetComponent<TMP_Text>().text = item.Value.ToString();
-            wrapComponent.amountHas.GetComponent<TMP_Text>().text = curAmount.ToString();
+            //wrapComponent.requiredAmount.GetComponent<TMP_Text>().text = item.Value.ToString();
+            wrapComponent.amountHas.GetComponent<TMP_Text>().text = curAmount.ToString() + "/" + item.Value.ToString();
             wrapComponent.materialTexture.GetComponent<RawImage>().texture = item.Key.materialTexture;
+            Color32 red = new Color32(0xE4, 0x3c, 0x54, 0xFF);
+            Color32 white = new Color32(0xFF, 0xFF, 0xFF, 0xFF);
+            if (curAmount < item.Value) wrapComponent.amountHas.GetComponent<TMP_Text>().color = red;
+            else wrapComponent.amountHas.GetComponent<TMP_Text>().color = white;
 
             
 
