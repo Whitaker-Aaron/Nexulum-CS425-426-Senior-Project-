@@ -89,11 +89,13 @@ public class EnemyFrame : MonoBehaviour
         enemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().health;
         delayedEnemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().delayedHealth;
 
+        enemyHealthBar.maxValue = maxHealth;
+        delayedEnemyHealthBar.maxValue = maxHealth;
+
         enemyHealthBar.value = health;
         delayedEnemyHealthBar.value = health;
 
-        enemyHealthBar.maxValue = maxHealth;
-        delayedEnemyHealthBar.maxValue = maxHealth;
+        
 
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
@@ -153,6 +155,10 @@ public class EnemyFrame : MonoBehaviour
             {
                 case "Skeleton":
                     if(gameObject != null)
+                        enemyType = gameObject.GetComponent<enemyMinionCombat>().getType();
+                    break;
+                case "SkeletonBoss":
+                    if (gameObject != null)
                         enemyType = gameObject.GetComponent<enemyMinionCombat>().getType();
                     break;
                 case "Mage":
