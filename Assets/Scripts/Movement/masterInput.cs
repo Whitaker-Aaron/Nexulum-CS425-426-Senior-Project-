@@ -88,14 +88,18 @@ public class masterInput : MonoBehaviour
     public Transform swordAttackPoint;
     public float swordAttackRadius;
     public LayerMask layer;
+    public bool canDash = true;
     public float dashSpeed = 3f;
     public float dashTime = .2f;
+    Coroutine dashCooldown;
 
     GameObject staminaBar;
     GameObject staminaFill;
-    GameObject staminaBorder; 
+    GameObject staminaBorder;
+    GameObject dashBar;
 
     float maxStaminaValue;
+    float maxDashValue;
 
     public bool shootingSwords = false;
 
@@ -200,10 +204,12 @@ public class masterInput : MonoBehaviour
         instance = this;
 
         staminaBar = GameObject.Find("StaminaBar");
+        dashBar = GameObject.Find("DashBar");
         staminaFill = GameObject.Find("StaminaFill");
         staminaBorder = GameObject.Find("StaminaBorder");
 
         maxStaminaValue = staminaBar.GetComponent<Slider>().value;
+        maxDashValue = dashBar.GetComponent<Slider>().value;
 
         Vector4 staminaColor = staminaFill.GetComponent<Image>().color;
         staminaFill.GetComponent<Image>().color = new Vector4(staminaColor.x, staminaColor.y, staminaColor.z, 0.0f);
@@ -544,7 +550,7 @@ public class masterInput : MonoBehaviour
 
     public void onDash(InputAction.CallbackContext context)
     {
-        if (context.performed && isMoving && !characterColliding && !inputPaused)
+        if (context.performed && isMoving && canDash && character.isTouchingGround && !characterColliding && !inputPaused)
         {
             //dashStarted = true;
             if (!isDashing)
@@ -585,6 +591,8 @@ public class masterInput : MonoBehaviour
         dashSpeed = 1.0f;
         isDashing = false;
         uiManager.stopBorderStretch();
+        //if (dashCooldown != null) StopCoroutine(dashCooldown);
+        //dashCooldown = StartCoroutine(RechargeDashBar());
     }
 
 
@@ -665,6 +673,9 @@ public class masterInput : MonoBehaviour
     }
     IEnumerator PlayerDash()
     {
+        //canDash = false;
+        if (dashCooldown != null) StopCoroutine(dashCooldown);
+        dashCooldown = StartCoroutine(RechargeDashBar());
         yield return new WaitForSeconds(0.2f);
         StopDash();
         //yield return new WaitForSeconds(0.15f);
@@ -672,6 +683,13 @@ public class masterInput : MonoBehaviour
         yield break;
         
     }
+
+    IEnumerator ResetDash()
+    {
+        yield return new WaitForSeconds(0.3f);
+        //canDash = true;
+    }
+
 
     public void pausePlayerInput()
     {
@@ -1354,6 +1372,31 @@ public class masterInput : MonoBehaviour
             
         }
 
+        yield break;
+    }
+
+    private IEnumerator RechargeDashBar()
+    {
+        Slider slider = dashBar.GetComponent<Slider>();
+        Debug.Log("starting recharge dash bar");
+        canDash = false;
+        slider.value = 0;
+        while (slider.value < maxDashValue && slider != null)
+        {
+            Debug.Log("recharging dash bar");
+            slider.value += 2.0f * Time.deltaTime;
+            /*if (maxDashValue - slider.value < 10)
+            {
+                //slider.value = maxDashValue;
+            }
+            else
+            {
+                
+            }*/
+            yield return null;
+
+        }
+        canDash = true;
         yield break;
     }
 

@@ -87,6 +87,7 @@ public class RoomTransition : MonoBehaviour
             Debug.Log("Player detected");
             if (!character.transitioningRoom)
             {
+                character.ResetGroundCounter();
                 if(targetRoom != null)
                 {
                     targetRoom.SetActive(true);
@@ -196,6 +197,7 @@ public class RoomTransition : MonoBehaviour
             var character = other.GetComponent<CharacterBase>();
             yield return new WaitForSeconds(1f);
             StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().AnimateRoomTransition());
+            
             yield return new WaitForSeconds(0.22f);
             character.transform.position = targetLoad.transform.position;
         }

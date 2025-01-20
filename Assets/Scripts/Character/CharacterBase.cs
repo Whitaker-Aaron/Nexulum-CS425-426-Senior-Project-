@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 
@@ -56,6 +57,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public bool inDialogueBox = false;
     public bool inEvent = false;
     public bool isDying = false;
+    public bool isTouchingGround = false;
     public bool isGettingKnockbacked;
     public bool usingTerminal = false;
     public RoomSpawnObject teleportSpawnObject;
@@ -64,6 +66,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
 
     int collisionCounter = 0;
+    int groundCounter = 0;
     public int wallCollisionCounter = 0;
     float yPOSVal = 0f;
     private RuneInt runeInt;
@@ -93,9 +96,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         //gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         //gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
-        if(collision.gameObject.tag == "ground")
+        if(collision.gameObject.tag == "ground" || collision.gameObject.tag == "MovingPlatform")
         {
             Debug.Log("touching ground");
+            groundCounter++;
+            
         }
 
         if(collision.gameObject.tag == "Wall")
@@ -111,6 +116,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     }
 
+    public void ResetGroundCounter()
+    {
+        groundCounter = 0;
+    }
+
     private void OnCollisionExit(Collision collision)
     {
         //if (masterInput.GetComponent<masterInput>().characterColliding)
@@ -121,9 +131,10 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         //    }
         //    
         //}
-        if (collision.gameObject.tag == "RestorePoint")
+        if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "MovingPlatform")
         {
             Debug.Log("No longer touching ground");
+            if(groundCounter -1 > -1) groundCounter--;
             //lastGroundLocation = gameObject.transform.position;
         }
 
@@ -142,6 +153,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             Debug.Log("No longer restore point");
             lastGroundLocation = transform.position;
         }
+
     }
 
 
@@ -168,15 +180,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
                physicMat.dynamicFriction = 0.5f;
         }
-
-          if(collisionCounter == 0)
-          {
-            //masterInput.GetComponent<masterInput>().characterColliding = false;
-          }
-          else
-          {
-            //masterInput.GetComponent<masterInput>().characterColliding = true;
-          }
+        if (groundCounter <= 0) isTouchingGround = false;
+        else isTouchingGround = true;
     }
 
     public void ResetToGround()

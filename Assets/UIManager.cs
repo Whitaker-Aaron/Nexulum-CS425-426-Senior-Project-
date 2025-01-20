@@ -329,7 +329,7 @@ public class UIManager : MonoBehaviour
                 if (freezePlayer && advanceTextbox)
                 {
                     tmp_text.text = text_to_aniamte;
-                    tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
+                    //tmp_text.text = tmp_text.text.Substring(0, tmp_text.text.Length - leadingChar.Length);
                     tmp_text.text += leadingChar;
                     advanceTextbox = false;
                     break;

@@ -71,6 +71,7 @@ public class LifetimeManager : MonoBehaviour
     {
         characterRef.teleporting = true;
         menuManager.closePauseMenu();
+        characterRef.ResetGroundCounter();
         menuManager.menusPaused = true;
         characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         StartCoroutine(GoToScene(characterRef.teleportSpawnObject.sceneNum));
@@ -119,6 +120,7 @@ public class LifetimeManager : MonoBehaviour
     {
         StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         menuManager.closePauseMenu();
+        characterRef.ResetGroundCounter();
         characterRef.transitioningRoom = true;
         menuManager.menusPaused = true;
         characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
@@ -165,6 +167,7 @@ public class LifetimeManager : MonoBehaviour
         yield return StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
         deathScreenObj.ResetObjScales();
         deathScreen.SetActive(false);
+        characterRef.ResetGroundCounter();
         Load(1);
         characterRef.RecoverFromDeath();
         yield return new WaitForSeconds(3);
