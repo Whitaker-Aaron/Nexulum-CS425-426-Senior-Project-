@@ -232,7 +232,7 @@ public class UIManager : MonoBehaviour
         while (dialogue_box.transform.localPosition != desiredPos)
         {
             if (Mathf.Abs(dialogue_box.transform.localPosition.magnitude - desiredPos.magnitude) <= 0.5f) dialogue_box.transform.localPosition = desiredPos;
-            dialogue_box.transform.localPosition = Vector3.Lerp(dialogue_box.transform.localPosition, desiredPos, 2.75f * Time.deltaTime);
+            dialogue_box.transform.localPosition = Vector3.Lerp(dialogue_box.transform.localPosition, desiredPos, 5.5f * Time.deltaTime);
             yield return null;
         }
         yield break;
