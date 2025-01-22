@@ -114,7 +114,7 @@ public class classAbilties : MonoBehaviour
     int teslaNumCount, turretNumCount = 0;
     [SerializeField] private int teslaMaxQuantity, turretMaxQuantity;
 
-    private Dictionary<int, GameObject> placedTowers;
+    private GameObject[] placedTowers;
     private int totalTowerCount;
 
 
@@ -179,6 +179,8 @@ public class classAbilties : MonoBehaviour
             //currentTurret = turretTransparentPrefab;
 
         }
+        else
+            return;
     }
 
     public void activateAbilityTwo(WeaponBase.weaponClassTypes currentClass)
@@ -575,7 +577,7 @@ public class classAbilties : MonoBehaviour
    
     void removeAllTowers()
     {
-        for (int i = placedTowers.Count - 1; i >= 0; i--) // Start from the end of the list
+        for (int i = placedTowers.Length; i >= 0; i--) // Start from the end of the list
         {
             GameObject tower = placedTowers[i];
             if (tower != null)
@@ -587,18 +589,25 @@ public class classAbilties : MonoBehaviour
 
     public void removeTower(int count)
     {
-        if (placedTowers.ContainsKey(count))
-        {
+        
             GameObject temp = placedTowers[count];
-            placedTowers.Remove(count); // Remove the specific tower
-            Destroy(temp);
+            //if (temp.GetComponent<turretCombat>().getKey() == count)
+            //{
+                placedTowers[count] = null; // Remove the specific tower
+                Destroy(temp);
 
-            for (int i = count + 1; i <= placedTowers.Count; i++)
-            {
-                temp = placedTowers[i];
-                temp.GetComponent<turretCombat>().assignKey(count);
-            }
-        }
+                turretNumCount -= 1;
+                totalTowerCount -= 1;
+
+                for (int j = count + 1; j <= placedTowers.Length; j++)
+                {
+                    temp = placedTowers[j];
+                    temp.GetComponent<turretCombat>().assignKey(count);
+                    placedTowers[j-1] = temp;
+                }
+                return;
+            //}
+        
         
     }
 
@@ -735,7 +744,7 @@ public class classAbilties : MonoBehaviour
 
             StartCoroutine(playerInputWait());
             gameObject.GetComponent<masterInput>().abilityInUse = false;
-            placedTowers.Add(totalTowerCount, teslaParent);
+            placedTowers.Append(teslaParent);
         }
     }
 
@@ -873,7 +882,7 @@ public class classAbilties : MonoBehaviour
                 }
             }
             gameObject.GetComponent<masterInput>().abilityInUse = false; // Reset ability in use
-            placedTowers.Add(totalTowerCount, currentTurret); // Add to placed towers
+            placedTowers.Append(currentTurret); // Add to placed towers
             currentTurret.GetComponent<turretCombat>().assignKey(totalTowerCount);
         }
 
@@ -961,7 +970,7 @@ public class classAbilties : MonoBehaviour
 
         skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<SkillTreeManager>();
 
-        placedTowers = new Dictionary<int, GameObject>();
+        placedTowers = new GameObject[0];
 
         playerInput = GetComponent<PlayerInput>();
     }
