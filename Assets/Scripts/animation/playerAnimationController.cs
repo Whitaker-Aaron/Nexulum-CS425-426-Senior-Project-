@@ -244,7 +244,7 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         animator.SetBool("engAttack1", false);
 
 
-        StartCoroutine(attackWait(time * 1.5f, "engWaitTwo", 2));
+        StartCoroutine(attackWait(time * 2f, "engWaitTwo", 2));
     }
 
     public void engAttackThree()

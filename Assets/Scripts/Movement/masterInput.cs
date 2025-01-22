@@ -105,6 +105,8 @@ public class masterInput : MonoBehaviour
 
     public GameObject swordSlashPrefab, swordSlash2, swordSlash3;
     private GameObject SS1, SS2, SS3;
+    public GameObject ESP1, ESP2, ESP3;
+    private GameObject ES1, ES2, ES3;
 
 
 
@@ -240,18 +242,7 @@ public class masterInput : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         //playerControl = gameObject.GetComponent<PlayerInputActions>();
 
-        SS1 = Instantiate(swordSlashPrefab);
-        SS2 = Instantiate(swordSlash2);
-        SS3 = Instantiate(swordSlash3);
-        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS1.transform.SetParent(player.transform, false);
-        SS2.transform.SetParent(player.transform, false);
-        SS3.transform.SetParent(player.transform, false);
-        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        activateSwordSlashes();
         //DontDestroyOnLoad(SS1);
         //DontDestroyOnLoad(SS2);
         //DontDestroyOnLoad(SS3);
@@ -760,10 +751,16 @@ public class masterInput : MonoBehaviour
                 laserLine.enabled = true;
 
             //if(laserLine.enabled)
+            if(currentClass == WeaponBase.weaponClassTypes.Gunner)
                 laserLine.SetPosition(0, bulletSpawn.position);
+            else
+                laserLine.SetPosition(0, pistolBulletSpawn.position);
             //Debug.Log("rendering line with position: " + bulletSpawn);
-
-            Ray ray = new Ray(bulletSpawn.position, bulletSpawn.forward);
+            Ray ray;
+            if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+                ray = new Ray(bulletSpawn.position, bulletSpawn.forward);
+            else
+                ray = new Ray(pistolBulletSpawn.position, pistolBulletSpawn.forward);
             RaycastHit hit;
 
             int layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
@@ -792,7 +789,10 @@ public class masterInput : MonoBehaviour
             {
                 //if(laserLine.enabled)
                 laserLine.startColor = laserStartColor;
-                laserLine.SetPosition(1, bulletSpawn.position + bulletSpawn.forward * 25f);
+                if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+                    laserLine.SetPosition(1, bulletSpawn.position + bulletSpawn.forward * 25f);
+                else
+                    laserLine.SetPosition(1, bulletSpawn.position + pistolBulletSpawn.forward * 25f);
             }
             //laserLine.startColor = Color.green;
             //laserLine.endColor = Color.green;
@@ -1170,10 +1170,11 @@ public class masterInput : MonoBehaviour
                         animationControl.engAttackOne(engAnimTime);
                         StartCoroutine(waitAttack(engAnimTime * 2));
                         StartCoroutine(wait(engAnimTime));
+                        ES1.GetComponent<ParticleSystem>().Play();
                     }
                     noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
 
-                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeTwo * 2)
+                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeTwo)
                     {
                         print("animate two");
                         engNextAttackTime = engAnimTimeTwo;
@@ -1181,6 +1182,7 @@ public class masterInput : MonoBehaviour
                         animationControl.engAttackTwo(engAnimTimeTwo);
                         StartCoroutine(wait(engAnimTimeTwo));
                         StartCoroutine(waitAttack(engAnimTimeTwo * 2));
+                        ES2.GetComponent<ParticleSystem>().Play();
                     }
 
                     if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("engWaitTwo"))
@@ -1194,6 +1196,7 @@ public class masterInput : MonoBehaviour
                         StartCoroutine(wait(engAnimTimeThree));
                         StartCoroutine(waitAttack(engAnimTimeThree * 2));
                         engNextAttackTime = engAnimTime;
+                        ES3.GetComponent<ParticleSystem>().Play();
 
                     }
                     else
@@ -1220,10 +1223,13 @@ public class masterInput : MonoBehaviour
                 print("Using ability One");
                 abilityInUse = true;
                 gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
-                if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
-                {
-                    StartCoroutine(abilityWait());
-                }
+
+                if (currentClass == WeaponBase.weaponClassTypes.Knight)
+                    StartCoroutine(abilityWait(classAbilties.instance.ka1Time - .05f));
+                else if(currentClass == WeaponBase.weaponClassTypes.Gunner)
+                    StartCoroutine(abilityWait(classAbilties.instance.ga1Time - .05f));
+                else
+                    StartCoroutine(abilityWait(classAbilties.instance.ea1Time - .05f));
                 //StartCoroutine(abilityWait());
             }
             else if (playerInput.actions["AbilityTwo"].triggered && !abilityInUse)
@@ -1232,10 +1238,12 @@ public class masterInput : MonoBehaviour
                 abilityInUse = true;
                 gameObject.GetComponent<classAbilties>().activateAbilityTwo(currentClass);
                 //StartCoroutine(abilityWait());
-                if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
-                {
-                    StartCoroutine(abilityWait());
-                }
+                if (currentClass == WeaponBase.weaponClassTypes.Knight)
+                    StartCoroutine(abilityWait(classAbilties.instance.ka2Time - .05f));
+                else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+                    StartCoroutine(abilityWait(classAbilties.instance.ga2Time - .05f));
+                else
+                    StartCoroutine(abilityWait(classAbilties.instance.ea2Time - .05f));
             }
             else if (playerInput.actions["AbilityThree"].triggered && !abilityInUse)
             {
@@ -1248,10 +1256,12 @@ public class masterInput : MonoBehaviour
                 }
                 gameObject.GetComponent<classAbilties>().activateAbilityThree(currentClass);
                 //StartCoroutine(abilityWait());
-                if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
-                {
-                    StartCoroutine(abilityWait());
-                }
+                if (currentClass == WeaponBase.weaponClassTypes.Knight)
+                    StartCoroutine(abilityWait(classAbilties.instance.ka3Time - .05f));
+                else if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+                    StartCoroutine(abilityWait(classAbilties.instance.ga3Time - .05f));
+                else
+                    StartCoroutine(abilityWait(classAbilties.instance.ea3Time - .05f));
             }
         }
         else
@@ -1264,7 +1274,7 @@ public class masterInput : MonoBehaviour
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
-                    StartCoroutine(abilityWait());
+                    StartCoroutine(abilityWait(1));
                 }
             }
             else if (playerInput.actions["AbilityTwo"].triggered && !abilityInUse && character.equippedRunes[1].runeType == Rune.RuneType.Spell)
@@ -1275,7 +1285,7 @@ public class masterInput : MonoBehaviour
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
-                    StartCoroutine(abilityWait());
+                    StartCoroutine(abilityWait(1));
                 }
             }
             else if (playerInput.actions["AbilityThree"].triggered && !abilityInUse && character.equippedRunes[2].runeType == Rune.RuneType.Spell)
@@ -1291,7 +1301,7 @@ public class masterInput : MonoBehaviour
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
-                    StartCoroutine(abilityWait());
+                    StartCoroutine(abilityWait(1));
                 }
             }
         }
@@ -1299,9 +1309,9 @@ public class masterInput : MonoBehaviour
         
     }
 
-    IEnumerator abilityWait()
+    IEnumerator abilityWait(float time)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(time);
         abilityInUse = false;
         yield break;
     }
@@ -1437,6 +1447,38 @@ public class masterInput : MonoBehaviour
     
 
 
+
+
+
+
+
+    private void activateSwordSlashes()
+    {
+        SS1 = Instantiate(swordSlashPrefab);
+        SS2 = Instantiate(swordSlash2);
+        SS3 = Instantiate(swordSlash3);
+        ES1 = Instantiate(ESP1);
+        ES2 = Instantiate(ESP2);
+        ES3 = Instantiate(ESP3);
+        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        ES1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        ES2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        ES3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        SS1.transform.SetParent(player.transform, false);
+        SS2.transform.SetParent(player.transform, false);
+        SS3.transform.SetParent(player.transform, false);
+        ES1.transform.SetParent(player.transform, false);
+        ES2.transform.SetParent(player.transform, false);
+        ES3.transform.SetParent(player.transform, false);
+        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        ES1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        ES2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        ES3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+    }
 }
 
 
