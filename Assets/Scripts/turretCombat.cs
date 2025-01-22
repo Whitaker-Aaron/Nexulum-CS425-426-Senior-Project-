@@ -6,6 +6,7 @@ using UnityEngine;
 public class turretCombat : MonoBehaviour
 {
     public GameObject turretGun;
+    private int key = 0;
 
     //Enemy layer
     public LayerMask Enemy;
@@ -43,12 +44,18 @@ public class turretCombat : MonoBehaviour
 
         if (health - damage <= 0)
         {
-            Destroy(gameObject);
+            destroyTurret();
         }
         else
             health -= damage;
 
         Debug.Log("turret health is: " + health);
+    }
+
+    public void destroyTurret()
+    {
+        print("calling destroy turret with key: " + key);
+        classAbilties.instance.removeTower(key);
     }
 
     public void repair(int amount)
@@ -230,5 +237,11 @@ public class turretCombat : MonoBehaviour
         }
         //else
           //  StartCoroutine(turn(true, false));
+    }
+
+
+    public void assignKey(int num)
+    {
+        key = num;
     }
 }

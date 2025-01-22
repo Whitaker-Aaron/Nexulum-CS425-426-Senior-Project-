@@ -119,9 +119,9 @@ public class classAbilties : MonoBehaviour
 
 
     //cooldown rates
-    [SerializeField] private float ka1Time, ka2Time, ka3Time;
-    [SerializeField] private float ga1Time, ga2Time, ga3Time;
-    [SerializeField] private float ea1Time, ea2Time, ea3Time;
+    public float ka1Time, ka2Time, ka3Time;
+    public float ga1Time, ga2Time, ga3Time;
+    public float ea1Time, ea2Time, ea3Time;
     private bool a1cooldown, a2cooldown, a3cooldown = false;
     private Coroutine acc1, acc2, acc3;
 
@@ -168,7 +168,7 @@ public class classAbilties : MonoBehaviour
             StartCoroutine(abilitiesCooldown(1, ga1Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity && !placing)
         {
             turretNumCount += 1;
             totalTowerCount += 1;
@@ -206,7 +206,7 @@ public class classAbilties : MonoBehaviour
             StartCoroutine(abilitiesCooldown(2, ga2Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && teslaNumCount < teslaMaxQuantity)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && teslaNumCount < teslaMaxQuantity && !placing)
         {
             teslaNumCount += 1;
             totalTowerCount += 1;
@@ -580,20 +580,26 @@ public class classAbilties : MonoBehaviour
             GameObject tower = placedTowers[i];
             if (tower != null)
             {
-                placedTowers.Remove(i); // Remove by index
-                Destroy(tower); // Destroy the GameObject
+                 // Destroy the GameObject
             }
         }
     }
 
-    void removeTower(int count)
+    public void removeTower(int count)
     {
         if (placedTowers.ContainsKey(count))
         {
             GameObject temp = placedTowers[count];
             placedTowers.Remove(count); // Remove the specific tower
-            Destroy(temp); // Destroy the GameObject
+            Destroy(temp);
+
+            for (int i = count + 1; i <= placedTowers.Count; i++)
+            {
+                temp = placedTowers[i];
+                temp.GetComponent<turretCombat>().assignKey(count);
+            }
         }
+        
     }
 
     void activateTesla()
@@ -801,7 +807,7 @@ public class classAbilties : MonoBehaviour
             instant = false;
             if (turretTransparentPrefab != null) // Check if prefab is assigned
             {
-                currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position + new Vector3(1,0,0), player.transform.rotation); // Match player's rotation
+                currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position + new Vector3(2.5f,0,0), player.transform.rotation); // Match player's rotation
             }
             else
             {
@@ -849,6 +855,7 @@ public class classAbilties : MonoBehaviour
             if (currentTurret != null) // Ensure currentTurret is valid
             {
                 placing = false; // Update placing status
+                instant = true;
                 Quaternion rot = currentTurret.transform.rotation; // Store current turret rotation
                 Vector3 pos = currentTurret.transform.position; // Store current turret position
 
@@ -867,6 +874,7 @@ public class classAbilties : MonoBehaviour
             }
             gameObject.GetComponent<masterInput>().abilityInUse = false; // Reset ability in use
             placedTowers.Add(totalTowerCount, currentTurret); // Add to placed towers
+            currentTurret.GetComponent<turretCombat>().assignKey(totalTowerCount);
         }
 
 
