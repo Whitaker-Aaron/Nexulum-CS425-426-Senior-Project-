@@ -75,6 +75,8 @@ public class MaterialScrollManager : MonoBehaviour
         int existingIndex = -1; 
         bool exists = false;
         var scrollContentWrapperMaterial = scrollContentWrapper.GetComponent<MaterialScrollWrapper>();
+        Debug.Log(materialName);
+        Debug.Log(scrollContentWrapperMaterial);
         scrollContentWrapperMaterial.descriptionMain.text = materialName;
         scrollContentWrapperMaterial.descriptionSub.text = materialName;
         scrollContentWrapperMaterial.imageRef.texture = materialTexture;

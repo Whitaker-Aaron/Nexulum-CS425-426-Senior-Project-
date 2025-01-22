@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnergyRefill : MonoBehaviour, i_Interactable
+public class EnergyRefil : MonoBehaviour, i_Interactable
 {
     [SerializeField] GameObject refillUI;
     MenuManager menuManager;
