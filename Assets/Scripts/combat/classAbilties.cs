@@ -300,6 +300,8 @@ public class classAbilties : MonoBehaviour
 
     IEnumerator abilitiesCooldown(int ability, float time)
     {
+        if (turretNumCount == turretMaxQuantity || teslaNumCount == teslaMaxQuantity)
+            yield break;
         yield return StartCoroutine(uiManager.StartCooldownSlider(ability, (0.98f/time)));
         //yield return new WaitForSeconds(time);
 
