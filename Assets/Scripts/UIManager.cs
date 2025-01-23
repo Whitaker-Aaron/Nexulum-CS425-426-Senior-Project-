@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using System.Collections.Generic;
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
+using System.Xml.Schema;
 
 public class UIManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject dashSmear;
     [SerializeField] GameObject criticalText;
     [SerializeField] GameObject criticalTextBorder;
+    [SerializeField] GameObject florentineUI;
 
     [SerializeField] GameObject damageNumPrefab;
     [SerializeField] GameObject chestDepositUI;
@@ -39,6 +41,7 @@ public class UIManager : MonoBehaviour
     IEnumerator currentDialogueBox;
     Coroutine currentDialogueBoxAnimation;
     Coroutine currentBorderStretch;
+    Coroutine currentFlorentineAnimator;
 
     Slider currentAbilitySlider;
 
@@ -89,6 +92,33 @@ public class UIManager : MonoBehaviour
         criticalText.SetActive(false);
         criticalTextBorder.SetActive(false);
 
+    }
+
+    public void UpdateFlorentine(int amount)
+    {
+        //var text = florentineUI.GetComponent<TMP_Text>();
+        //text.text = amount.ToString();
+        if (currentFlorentineAnimator != null) StopCoroutine(currentFlorentineAnimator);
+        currentFlorentineAnimator = StartCoroutine(AnimateFlorentine(amount));
+    }
+
+    public IEnumerator AnimateFlorentine(int amount)
+    {
+        bool finished = false;
+        var text = florentineUI.GetComponent<TMP_Text>();
+        while (!finished)
+        {
+            var textInt = int.Parse(text.text);
+            if(textInt >= amount)
+            {
+                finished = true;
+                break;
+            }
+            text.text = (textInt + 1).ToString();
+            yield return null;
+            
+        }
+        yield break;
     }
 
     public void DisplayDamageNum(Transform enemyTransform, float damage, float textSize = 40f, float rate = 2f)
