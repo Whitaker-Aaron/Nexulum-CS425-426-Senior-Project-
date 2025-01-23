@@ -244,4 +244,9 @@ public class turretCombat : MonoBehaviour
     {
         key = num;
     }
+
+    public int getKey()
+    {
+        return key;
+    }
 }
