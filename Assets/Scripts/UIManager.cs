@@ -111,10 +111,11 @@ public class UIManager : MonoBehaviour
             var textInt = int.Parse(text.text);
             if(textInt >= amount)
             {
+                text.text = amount.ToString();
                 finished = true;
                 break;
             }
-            text.text = (textInt + 1).ToString();
+            text.text = (textInt + 3).ToString();
             yield return null;
             
         }
