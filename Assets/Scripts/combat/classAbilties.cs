@@ -112,7 +112,7 @@ public class classAbilties : MonoBehaviour
     public GameObject teslaWall, teslaParent;
 
     int teslaNumCount, turretNumCount = 0;
-    [SerializeField] private int teslaMaxQuantity, turretMaxQuantity;
+    [SerializeField] private int teslaMaxQuantity, turretMaxQuantity, towerMaxQuantity;
 
     private GameObject[] placedTowers;
     private int totalTowerCount;
@@ -145,33 +145,39 @@ public class classAbilties : MonoBehaviour
 
     public void activateAbilityOne(WeaponBase.weaponClassTypes currentClass)
     {
-        if (a1cooldown || acc1 != null)
+        if (a1cooldown || acc1 != null || turretNumCount == turretMaxQuantity)
         {
             Debug.Log("Ability 1 is on cooldown.");
             return;
         }
         Debug.Log("Activating Ability 1.");
 
-        uiManager.ActivateCooldownOnAbility(1);
+        
         a1cooldown = true;
 
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !bubble)
         {
+            uiManager.ActivateCooldownOnAbility(1);
             StartCoroutine(bubbleShield());
             acc1 = StartCoroutine(abilitiesCooldown(1, ka1Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
         {
+            uiManager.ActivateCooldownOnAbility(1);
             gameObject.GetComponent<masterInput>().shootingRocket = true;
             shootingRocket = true;
             StartCoroutine(abilitiesCooldown(1, ga1Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity && !placing)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity  && teslaNumCount < teslaMaxQuantity && !placing)
         {
-            turretNumCount += 1;
-            totalTowerCount += 1;
+            if(turretNumCount == turretMaxQuantity)
+            {
+                return;
+            }
+            uiManager.ActivateCooldownOnAbility(1);
+            print("turretCount = " + turretNumCount);
             placing = true;
             instant = true;
             gameObject.GetComponent<masterInput>().placing = true;
@@ -294,7 +300,7 @@ public class classAbilties : MonoBehaviour
 
     IEnumerator abilitiesCooldown(int ability, float time)
     {
-        yield return StartCoroutine(uiManager.StartCooldownSlider(ability, (0.9f/time)));
+        yield return StartCoroutine(uiManager.StartCooldownSlider(ability, (0.98f/time)));
         //yield return new WaitForSeconds(time);
 
         switch (ability)
@@ -589,26 +595,27 @@ public class classAbilties : MonoBehaviour
 
     public void removeTower(int count)
     {
-        
-            GameObject temp = placedTowers[count];
-            //if (temp.GetComponent<turretCombat>().getKey() == count)
-            //{
-                placedTowers[count] = null; // Remove the specific tower
-                Destroy(temp);
+        GameObject temp = placedTowers[count];
+        placedTowers[count] = null; // Remove the specific tower
+        Destroy(temp);
 
-                turretNumCount -= 1;
-                totalTowerCount -= 1;
+        turretNumCount -= 1;
+        totalTowerCount -= 1;
 
-                for (int j = count + 1; j <= placedTowers.Length; j++)
-                {
-                    temp = placedTowers[j];
-                    temp.GetComponent<turretCombat>().assignKey(count);
-                    placedTowers[j-1] = temp;
-                }
+        for (int j = count + 1; j <= placedTowers.Length; j++)
+        {
+            temp = placedTowers[j];
+            if (temp == null)
                 return;
-            //}
-        
-        
+            temp.GetComponent<turretCombat>().assignKey(count);
+            placedTowers[j-1] = temp;
+            if (j == placedTowers.Length - 1)
+            {
+                placedTowers[placedTowers.Length] = null;
+                return;
+            }
+        }
+        return;
     }
 
     void activateTesla()
@@ -779,6 +786,7 @@ public class classAbilties : MonoBehaviour
             usingMouseInput = false; // Set flag for gamepad input
         }
 
+
         // Handle mouse input
         if (usingMouseInput)
         {
@@ -814,29 +822,27 @@ public class classAbilties : MonoBehaviour
         if (instant)
         {
             instant = false;
-            if (turretTransparentPrefab != null) // Check if prefab is assigned
+            if (turretTransparentPrefab != null) 
             {
-                currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position + new Vector3(2.5f,0,0), player.transform.rotation); // Match player's rotation
+                currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position + new Vector3(2.5f,0,0), player.transform.rotation);
+                currentTurret.transform.position = player.transform.position + new Vector3(0, 0, 5);
             }
             else
             {
                 Debug.LogError("turretTransparentPrefab is null");
-                return; // Early exit if prefab is null
+                return; 
             }
         }
 
-        // Check if currentTurret is valid
         if (currentTurret == null)
         {
             Debug.LogError("currentTurret is not initialized");
             return; // Exit if currentTurret is null
         }
 
-        // Calculate the distance from player to mousePos
         float distanceFromPlayer = Vector3.Distance(player.transform.position, mousePos);
         Vector3 direction = (mousePos - player.transform.position).normalized;
 
-        // Position the turret based on distance from player
         if (distanceFromPlayer <= turretPlacementRadius && distanceFromPlayer > playerRad)
         {
             currentTurret.transform.position = mousePos;
@@ -861,12 +867,12 @@ public class classAbilties : MonoBehaviour
         // Handle the Attack action
         if (playerInput.actions["Attack"].triggered)
         {
-            if (currentTurret != null) // Ensure currentTurret is valid
+            if (currentTurret != null) 
             {
-                placing = false; // Update placing status
+                placing = false; 
                 instant = true;
-                Quaternion rot = currentTurret.transform.rotation; // Store current turret rotation
-                Vector3 pos = currentTurret.transform.position; // Store current turret position
+                Quaternion rot = currentTurret.transform.rotation; 
+                Vector3 pos = currentTurret.transform.position; 
 
                 Destroy(currentTurret); // Destroy the temporary turret
 
@@ -882,8 +888,10 @@ public class classAbilties : MonoBehaviour
                 }
             }
             gameObject.GetComponent<masterInput>().abilityInUse = false; // Reset ability in use
-            placedTowers.Append(currentTurret); // Add to placed towers
+            placedTowers[totalTowerCount] = currentTurret; // Add to placed towers
             currentTurret.GetComponent<turretCombat>().assignKey(totalTowerCount);
+            turretNumCount += 1;
+            totalTowerCount += 1;
         }
 
 
@@ -970,7 +978,8 @@ public class classAbilties : MonoBehaviour
 
         skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<SkillTreeManager>();
 
-        placedTowers = new GameObject[0];
+        towerMaxQuantity = turretMaxQuantity + teslaMaxQuantity;
+        placedTowers = new GameObject[towerMaxQuantity];
 
         playerInput = GetComponent<PlayerInput>();
     }
@@ -981,6 +990,8 @@ public class classAbilties : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         teslaNumCount = 0;
         turretNumCount = 0;
+
+        
 
         //skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<skillTreeManager>();
     }

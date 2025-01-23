@@ -1218,6 +1218,11 @@ public class masterInput : MonoBehaviour
         //Class ability Logic
         if(!usingSpellRunes)
         {
+            if(currentClass == WeaponBase.weaponClassTypes.Engineer && placing)
+            {
+                print("still placing, cant activate");
+                return;
+            }
             if (playerInput.actions["AbilityOne"].triggered && !abilityInUse)
             {
                 print("Using ability One");
