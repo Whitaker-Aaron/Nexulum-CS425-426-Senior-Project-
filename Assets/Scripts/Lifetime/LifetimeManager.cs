@@ -54,12 +54,13 @@ public class LifetimeManager : MonoBehaviour
         
     }
 
-    public IEnumerator GoToScene(int index)
+    public IEnumerator GoToScene(int index, bool transition = true, string name = "")
     {
-        //Debug.Log("Changing to: " + sceneName);
+        Debug.Log("Changing to: " + name);
         
-        yield return StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
-        SceneManager.LoadSceneAsync(index);
+        if(transition) yield return StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
+        if(name != "") SceneManager.LoadSceneAsync(name);
+        else SceneManager.LoadSceneAsync(index);
         yield break;
 
         //SceneManager.UnloadSceneAsync(currentScene);
@@ -114,6 +115,14 @@ public class LifetimeManager : MonoBehaviour
     {
         InitializeManagers();
         SceneManager.LoadSceneAsync(1);
+    }
+
+    public IEnumerator StartNewGame()
+    {
+        InitializeManagers();
+        yield return new WaitForSeconds(0.2f);
+        SceneManager.LoadSceneAsync("ClassSelect");
+        yield break;
     }
 
     public void ReturnToBase()

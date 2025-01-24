@@ -115,7 +115,8 @@ public class UIManager : MonoBehaviour
                 finished = true;
                 break;
             }
-            text.text = (textInt + 3).ToString();
+            var rate = (int)(500 * Time.deltaTime);
+            text.text = (textInt + rate).ToString();
             yield return null;
             
         }
@@ -468,7 +469,7 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
-    public IEnumerator AnimateTypewriterCheckpoint(TMP_Text tmp_text, string text_to_animate, string leadingChar = "", float rate = 0.25f)
+    public IEnumerator AnimateTypewriterCheckpoint(TMP_Text tmp_text, string text_to_animate, string leadingChar = "", float rate = 0.25f, bool deleteText = true)
     {
 
         tmp_text.text = "";
@@ -491,8 +492,10 @@ public class UIManager : MonoBehaviour
             counter++;
             tmp_text.text += leadingChar;
             yield return new WaitForSeconds(0.5f);
+            if (!deleteText) counter = 0;
             //yield return null;
         }
+        
         foreach (char c in text_to_animate)
         {
             if (tmp_text.text.Length > 0)
