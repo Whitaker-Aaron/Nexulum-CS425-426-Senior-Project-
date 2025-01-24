@@ -726,11 +726,18 @@ public class masterInput : MonoBehaviour
     IEnumerator waitAttack(float animationTime)
     {
         isAttacking = true;
+
+        if(currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            StartCoroutine(waitShoot(animationTime * 4));
+        }
         yield return new WaitForSeconds(animationTime);
         //animationControl.resetKnight();
         isAttacking = false;
         yield break;
     }
+
+    
 
     
 
@@ -839,7 +846,13 @@ public class masterInput : MonoBehaviour
 
 
     //----------------------Engineer Functions------------------------
-
+    IEnumerator waitShoot(float shootTime)
+    {
+        canPistolShoot = false;
+        yield return new WaitForSeconds(shootTime);
+        canPistolShoot = true;
+        yield break;
+    }
     public void changeTool(WeaponBase newTool)
     {
         tool = newTool.weaponMesh;
@@ -848,7 +861,7 @@ public class masterInput : MonoBehaviour
     IEnumerator pistolShoot()
     {
         canPistolShoot = false;
-        while (playerInput.actions["Attack"].IsPressed() && pistolBulletCount > 0 && pistolReloading == false)
+        while (playerInput.actions["Attack"].IsPressed() && pistolBulletCount > 0 && pistolReloading == false && isAttacking == false)
         {
             pistolBulletCount--;
             GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", pistolBulletSpawn.position, pistolBulletSpawn.rotation);
@@ -1066,9 +1079,13 @@ public class masterInput : MonoBehaviour
         //Engineer Logic
         if (currentClass == WeaponBase.weaponClassTypes.Engineer && placing == false)
         {
-            
+            if (playerInput.actions["attack"].IsPressed() && playerInput.actions["RightClick"].IsPressed())
+            {
+                isAttacking = true;
+                StartCoroutine(waitAttack(.03f));
+            }
 
-            if (playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false)
+            if (playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
             {
                 pistolBulletCount = 0;
                 canPistolShoot = false;
@@ -1076,7 +1093,7 @@ public class masterInput : MonoBehaviour
                 animationControl.engineerReload();
             }
 
-            if (playerInput.actions["Reload"].triggered && pistolBulletCount < pistolMagSize && !pistolReloading && isAttacking == false)
+            if (playerInput.actions["Reload"].triggered && pistolBulletCount < pistolMagSize && !pistolReloading && isAttacking == false && !repairing)
             {
                 StartCoroutine(pistolReload());
                 animationControl.engineerReload();
@@ -1106,9 +1123,12 @@ public class masterInput : MonoBehaviour
             }
 
             // Check for shooting conditions
-            if (shooting && !pistolReloading && pistolBulletCount > 0 && canPistolShoot)
+            if (shooting && !pistolReloading && pistolBulletCount > 0 && canPistolShoot && isAttacking == false && !repairing)
             {
                 //Debug.Log("Shooting..."); // Log when the shoot coroutine is called
+                if (isAttacking)
+                    return; 
+
                 StartCoroutine(pistolShoot());
             }
 
@@ -1142,10 +1162,16 @@ public class masterInput : MonoBehaviour
             {
                 noOfClicks = 0;
             }
-            if (Time.time > lastClickedTime + engNextAttackTime && isAttacking == false)// && Time.time > engCooldown)//&& isAttacking == false)
+            if (Time.time > lastClickedTime + engNextAttackTime && isAttacking == false && shooting == false && !pistolReloading && !repairing)// && Time.time > engCooldown)//&& isAttacking == false)
             {
+                if (shooting)
+                    return;
+
                 if (playerInput.actions["RightClick"].triggered)
                 {
+                    if (shooting)
+                        return;
+                    isAttacking = true;
                     print("click: " + noOfClicks);
 
                     lastClickedTime = Time.time;
