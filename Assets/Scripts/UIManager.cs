@@ -40,6 +40,7 @@ public class UIManager : MonoBehaviour
     Coroutine currentTransitionTypewriter;
     IEnumerator currentDialogueBox;
     Coroutine currentDialogueBoxAnimation;
+    Coroutine currentCheckpointAnimator;
     Coroutine currentBorderStretch;
     Coroutine currentFlorentineAnimator;
 
@@ -115,7 +116,7 @@ public class UIManager : MonoBehaviour
                 finished = true;
                 break;
             }
-            var rate = (int)(500 * Time.deltaTime);
+            var rate = (int)(200 * Time.deltaTime);
             text.text = (textInt + rate).ToString();
             yield return null;
             
