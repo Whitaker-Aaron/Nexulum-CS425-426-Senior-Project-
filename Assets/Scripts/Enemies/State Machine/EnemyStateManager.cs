@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyStateManager : MonoBehaviour
+public class EnemyStateManager : MonoBehaviour, IStateMachine
 {
     // ----------------------------------------------
     // Adjustable in-editor settings for behaviors
