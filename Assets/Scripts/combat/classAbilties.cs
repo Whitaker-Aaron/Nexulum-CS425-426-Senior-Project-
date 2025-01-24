@@ -117,6 +117,9 @@ public class classAbilties : MonoBehaviour
     private GameObject[] placedTowers;
     private int totalTowerCount;
 
+    [SerializeField] private GameObject clonePrefab;
+    public GameObject currentClone;
+
 
     //cooldown rates
     public float ka1Time, ka2Time, ka3Time;
@@ -293,6 +296,7 @@ public class classAbilties : MonoBehaviour
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
+            currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
             StartCoroutine(abilitiesCooldown(3, ea3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
@@ -300,6 +304,8 @@ public class classAbilties : MonoBehaviour
 
     IEnumerator abilitiesCooldown(int ability, float time)
     {
+        if (turretNumCount == turretMaxQuantity || teslaNumCount == teslaMaxQuantity)
+            yield break;
         yield return StartCoroutine(uiManager.StartCooldownSlider(ability, (0.98f/time)));
         //yield return new WaitForSeconds(time);
 
