@@ -20,7 +20,7 @@ public interface PlayerAnimation
 
     void blocking();
 
-    void engineerReload();
+    void engineerReload(float speed);
 
     void engAttackOne(float time);
 

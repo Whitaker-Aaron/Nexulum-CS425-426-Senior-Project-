@@ -27,7 +27,7 @@ public class rifleBasic : weaponType
         if (!canShoot || isReloading)
             yield break;
 
-        if (bulletSpawn == null)
+        if (bulletSpawn == null || bulletSpawn != masterInput.instance.bulletSpawn)
             bulletSpawn = masterInput.instance.bulletSpawn;
 
         print("Starting shoot coroutine in pistolBasic");

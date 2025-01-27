@@ -418,6 +418,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("bulletPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
             
         }
+
+        equippedWeapon.weaponType = equippedWeapon.weaponMesh.GetComponent<weaponType>();
         
     }
 

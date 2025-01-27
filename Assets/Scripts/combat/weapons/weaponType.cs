@@ -11,10 +11,12 @@ public abstract class weaponType : MonoBehaviour
     public int magSize;
     public int bulletCount;
     public float reloadTime;
+    public int damage;
     protected bool canShoot = true;
     public bool isReloading = false;
     protected PlayerInput playerInput;
     protected projectileManager projectileManager;
+    protected CharacterBase character;
 
     public abstract IEnumerator Shoot();
 

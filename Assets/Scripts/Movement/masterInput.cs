@@ -591,6 +591,22 @@ public class masterInput : MonoBehaviour
 
     public void updateWeapon(weaponType newType)
     {
+        equippedWeapon = newType;
+        equippedWeapon.Reload();
+        if (currentClass == WeaponBase.weaponClassTypes.Gunner)
+        {
+            StartCoroutine(equippedWeapon.Reload());
+            animationControl.gunnerReload();
+            return;
+        }
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            StartCoroutine(equippedWeapon.Reload());
+            animationControl.engineerReload(equippedWeapon.reloadTime);
+            return;
+        }
+        else
+            return;
 
     }
 
@@ -735,10 +751,10 @@ public class masterInput : MonoBehaviour
     {
         isAttacking = true;
 
-        if(currentClass == WeaponBase.weaponClassTypes.Engineer)
-        {
-            StartCoroutine(waitShoot(animationTime * 4));
-        }
+        //if(currentClass == WeaponBase.weaponClassTypes.Engineer)
+        //{
+            //StartCoroutine(waitShoot(animationTime * 4));
+        //}
         yield return new WaitForSeconds(animationTime);
         //animationControl.resetKnight();
         isAttacking = false;
@@ -816,7 +832,7 @@ public class masterInput : MonoBehaviour
 
     }
 
-    IEnumerator shoot()
+    /*IEnumerator shoot()
     {
         canShoot = false;
         while (playerInput.actions["Attack"].IsPressed() && bulletCount > 0 && isReloading == false)
@@ -840,22 +856,22 @@ public class masterInput : MonoBehaviour
         StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Reload());
 
     }
-
+    */
 
     //----------------------Engineer Functions------------------------
-    IEnumerator waitShoot(float shootTime)
+    /*IEnumerator waitShoot(float shootTime)
     {
         canPistolShoot = false;
         yield return new WaitForSeconds(shootTime);
         canPistolShoot = true;
         yield break;
-    }
+    }*/
     public void changeTool(WeaponBase newTool)
     {
         tool = newTool.weaponMesh;
     }
 
-    IEnumerator pistolShoot()
+    /*IEnumerator pistolShoot()
     {
         canPistolShoot = false;
         while (playerInput.actions["Attack"].IsPressed() && pistolBulletCount > 0 && pistolReloading == false && isAttacking == false)
@@ -872,7 +888,7 @@ public class masterInput : MonoBehaviour
 
     IEnumerator pistolReload()
     {
-        StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Reload());
+        StartCoroutine(equippedWeapon.Reload());
         
 
         if (pistolBulletCount == pistolMagSize)
@@ -892,6 +908,7 @@ public class masterInput : MonoBehaviour
         }
         yield break;
     }
+    */
 
     public void assignRepair(GameObject current)
     {
@@ -1047,20 +1064,16 @@ public class masterInput : MonoBehaviour
                 shooting = false;
             }
 
-            // Always check the trigger input regardless of the frame state
             float triggerValue = playerInput.actions["attack"].ReadValue<float>();
-            //Debug.Log("Trigger Value: " + triggerValue); // Log the trigger value for debugging
+            //Debug.Log("Trigger Value: " + triggerValue);
 
-            // Check if the trigger is pressed above the threshold
-            if (triggerValue > 0.5f) // Adjust threshold if necessary
+            if (triggerValue > 0.5f) 
             {
                 shooting = true;
             }
 
-            // Check for shooting conditions
             if (shooting && !equippedWeapon.isReloading)
             {
-                //Debug.Log("Shooting..."); // Log when the shoot coroutine is called
                 StartCoroutine(equippedWeapon.Shoot());
             }
         }
@@ -1076,17 +1089,14 @@ public class masterInput : MonoBehaviour
 
             if ((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0 && equippedWeapon.isReloading == false) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize && equippedWeapon.isReloading == false))//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
             {
-                //pistolBulletCount = 0;
-                //canPistolShoot = false;
                 StartCoroutine(equippedWeapon.Reload());
-                animationControl.engineerReload();
+                animationControl.engineerReload(equippedWeapon.reloadTime);
             }
 
 
 
             
 
-            // Check mouse input for shooting
             if (playerInput.actions["attack"].WasPressedThisFrame())
             {
                 shooting = true;
@@ -1096,19 +1106,16 @@ public class masterInput : MonoBehaviour
                 shooting = false;
             }
 
-            // Always check the trigger input regardless of the frame state
             float triggerValue = playerInput.actions["attack"].ReadValue<float>();
-            //Debug.Log("Trigger Value: " + triggerValue); // Log the trigger value for debugging
+            //Debug.Log("Trigger Value: " + triggerValue); 
 
-            // Check if the trigger is pressed above the threshold
-            if (triggerValue > 0.5f) // Adjust threshold if necessary
+            if (triggerValue > 0.5f) 
             {
                 shooting = true;
             }
 
             if (shooting && !equippedWeapon.isReloading && isAttacking == false && !repairing)
             {
-                //Debug.Log("Shooting..."); // Log when the shoot coroutine is called
                 if (isAttacking)
                     return;
 
@@ -1116,10 +1123,6 @@ public class masterInput : MonoBehaviour
                 StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Shoot());
             }
 
-            //if (playerInput.actions["attack"].triggered && canPistolShoot && pistolBulletCount > 0 && isAttacking == false)
-            //{
-                //StartCoroutine(pistolShoot());
-            //}
 
             if (canRepair)
             {
