@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class pistolBasic : weaponType
 {
@@ -37,8 +38,8 @@ public class pistolBasic : weaponType
 
         bulletCount--;
         GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", bulletSpawn.position, bulletSpawn.rotation);
-            //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
-
+        //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
+        EffectsManager.instance.getFromPool("pistolFlash", bulletSpawn.position, bulletSpawn.rotation);
         yield return new WaitForSeconds(fireRateTime);
         
         canShoot = true;

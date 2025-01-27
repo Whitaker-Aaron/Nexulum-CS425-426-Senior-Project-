@@ -221,11 +221,12 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     //Engineer Animations------------------------------------
 
-    public void engineerReload(float speed)
+    public void engineerReload(float time)
     {
         
         animator.SetBool("reload", true);
         animator.Play("engReloadBlendTree");
+        animator.SetFloat("blendTreeSpeed", (animator.GetCurrentAnimatorStateInfo(2).length / time) - .03f);
         animator.SetBool("reload", false);
     }
 

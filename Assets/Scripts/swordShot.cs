@@ -70,12 +70,12 @@ public class swordShot : MonoBehaviour
                         uiManager.DisplayDamageNum(c.gameObject.transform, damage);
                     }
                 }
-                EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position);
+                EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position, Quaternion.identity);
                 returnToPool();
             }
             else
             {
-                EffectsManager.instance.getFromPool("swordShotHit", gameObject.transform.position);
+                EffectsManager.instance.getFromPool("swordShotHit", gameObject.transform.position, Quaternion.identity);
                 returnToPool();
             }
                 
@@ -97,12 +97,12 @@ public class swordShot : MonoBehaviour
                     uiManager.DisplayDamageNum(c.gameObject.transform, damage);
                 }
             }
-            EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position);
+            EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position, Quaternion.identity);
             returnToPool();
         }
         else
         {
-            EffectsManager.instance.getFromPool("swordShotHit", gameObject.transform.position);
+            EffectsManager.instance.getFromPool("swordShotHit", gameObject.transform.position, Quaternion.identity);
             returnToPool();
         }
     }
@@ -120,7 +120,7 @@ public class swordShot : MonoBehaviour
                 uiManager.DisplayDamageNum(c.gameObject.transform, damage);
             }
         }
-        EffectsManager.instance.getFromPool("swordShotIceHit", gameObject.transform.position);
+        EffectsManager.instance.getFromPool("swordShotIceHit", gameObject.transform.position, Quaternion.identity);
         returnToPool();
     }
 

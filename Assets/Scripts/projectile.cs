@@ -230,19 +230,19 @@ public class projectile : MonoBehaviour
             switch (poolName)
             {
                 case "bulletPool":
-                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
                 case "pistolPool":
-                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
                 case "turretPool":
-                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
                 case "dronePool":
-                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
                 case "tankPool":
-                    EffectsManager.instance.getFromPool("tankHitPool", position);
+                    EffectsManager.instance.getFromPool("tankHitPool", position, Quaternion.identity);
                     break;
             }
         }
@@ -253,7 +253,7 @@ public class projectile : MonoBehaviour
             {
                 case "enemyMagePoolOne":
                     print("Playing mage hit");
-                    EffectsManager.instance.getFromPool("mageHitOne", position);
+                    EffectsManager.instance.getFromPool("mageHitOne", position, Quaternion.identity);
                     break;
             }
         }
