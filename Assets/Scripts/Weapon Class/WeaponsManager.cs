@@ -93,6 +93,7 @@ public class WeaponsManager : MonoBehaviour
 
         //characterReference.GetWeaponClass().currentWeapon = newWeapon;
         characterReference.UpdateWeapon(newWeapon);
+        masterInput.instance.updateWeapon(newWeapon);
         Destroy(currentWeapon);
 
         GameObject inputManager = GameObject.FindGameObjectWithTag("inputManager");

@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 8347349755831739137}
   - component: {fileID: 5521410423111979468}
   - component: {fileID: 9101806755589663397}
+  - component: {fileID: 2166373094147278122}
   m_Layer: 13
-  m_Name: testGun
+  m_Name: rifleBasic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,3 +84,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2166373094147278122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7136917823426561269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2beb89680aa26d944868542cf1c91a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletSpawn: {fileID: 0}
+  fireRateTime: 0.2
+  magSize: 25
+  bulletCount: 0
+  reloadTime: 4
+  isReloading: 0

@@ -32,12 +32,14 @@ public class masterInput : MonoBehaviour
 
     private GameObject player;
     public WeaponBase.weaponClassTypes currentClass;
-
     
+
+
 
     //player
     CharacterBase character;
     GameObject projectedPlayer;
+    private weaponType equippedWeapon;
 
     //basic general player movement
     //public PlayerInputActions playerControl;
@@ -126,6 +128,7 @@ public class masterInput : MonoBehaviour
     public int magSize = 25;
     public float damageDropOffDistance = 5f;
     public int gunnerDmgMod;
+    bool shooting = false;
 
     //rocket
     public bool shootingRocket = false;
@@ -274,7 +277,7 @@ public class masterInput : MonoBehaviour
             toolAttackPoint = character.toolAttackPoint;
             laserLine.enabled = true;
         }
-
+        equippedWeapon = character.equippedWeapon.weaponMesh.GetComponent<weaponType>();
     }
 
     // Update is called once per frame
@@ -586,6 +589,11 @@ public class masterInput : MonoBehaviour
         //dashCooldown = StartCoroutine(RechargeDashBar());
     }
 
+    public void updateWeapon(weaponType newType)
+    {
+
+    }
+
 
 
     //actual player translation for FixedUpdate
@@ -827,21 +835,10 @@ public class masterInput : MonoBehaviour
         yield break;
     }
 
-    IEnumerator reload()
+    void reload()
     {
-        if (bulletCount == magSize)
-            yield break;
+        StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Reload());
 
-        isReloading = true;
-        laserLine.enabled = false;
-        pauseLaser = true;
-        yield return new WaitForSeconds(reloadTime);
-        bulletCount = magSize;
-        isReloading = false;
-        canShoot = true;
-        laserLine.enabled = true;
-        pauseLaser = false;
-        yield break;
     }
 
 
@@ -875,6 +872,9 @@ public class masterInput : MonoBehaviour
 
     IEnumerator pistolReload()
     {
+        StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Reload());
+        
+
         if (pistolBulletCount == pistolMagSize)
             yield break;
         else
@@ -1028,25 +1028,14 @@ public class masterInput : MonoBehaviour
         //GUNNER LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket && !shootingLaser && !throwingGrenade)
         {
-            
-
-            if (bulletCount <= 0 && !isReloading && bulletCount < magSize)
+            if ((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0 && equippedWeapon.isReloading == false) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize && equippedWeapon.isReloading == false))//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
             {
-                bulletCount = 0;
-                canShoot = false;
-                StartCoroutine(reload());
+                //pistolBulletCount = 0;
+                //canPistolShoot = false;
+                StartCoroutine(equippedWeapon.Reload());
                 animationControl.gunnerReload();
             }
 
-            // Reload input check
-            if (playerInput.actions["Reload"].triggered && bulletCount < magSize)
-            {
-                StartCoroutine(reload());
-                animationControl.gunnerReload();
-            }
-
-            // Initialize shooting state
-            bool shooting = false;
 
             // Check mouse input for shooting
             if (playerInput.actions["attack"].WasPressedThisFrame())
@@ -1069,10 +1058,10 @@ public class masterInput : MonoBehaviour
             }
 
             // Check for shooting conditions
-            if (shooting && !isReloading && bulletCount > 0 && canShoot)
+            if (shooting && !equippedWeapon.isReloading)
             {
                 //Debug.Log("Shooting..."); // Log when the shoot coroutine is called
-                StartCoroutine(shoot());
+                StartCoroutine(equippedWeapon.Shoot());
             }
         }
 
@@ -1085,22 +1074,17 @@ public class masterInput : MonoBehaviour
                 StartCoroutine(waitAttack(.03f));
             }
 
-            if (playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
+            if ((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0 && equippedWeapon.isReloading == false) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize && equippedWeapon.isReloading == false))//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
             {
-                pistolBulletCount = 0;
-                canPistolShoot = false;
-                StartCoroutine(pistolReload());
-                animationControl.engineerReload();
-            }
-
-            if (playerInput.actions["Reload"].triggered && pistolBulletCount < pistolMagSize && !pistolReloading && isAttacking == false && !repairing)
-            {
-                StartCoroutine(pistolReload());
+                //pistolBulletCount = 0;
+                //canPistolShoot = false;
+                StartCoroutine(equippedWeapon.Reload());
                 animationControl.engineerReload();
             }
 
 
-            bool shooting = false;
+
+            
 
             // Check mouse input for shooting
             if (playerInput.actions["attack"].WasPressedThisFrame())
@@ -1122,14 +1106,14 @@ public class masterInput : MonoBehaviour
                 shooting = true;
             }
 
-            // Check for shooting conditions
-            if (shooting && !pistolReloading && pistolBulletCount > 0 && canPistolShoot && isAttacking == false && !repairing)
+            if (shooting && !equippedWeapon.isReloading && isAttacking == false && !repairing)
             {
                 //Debug.Log("Shooting..."); // Log when the shoot coroutine is called
                 if (isAttacking)
-                    return; 
+                    return;
 
-                StartCoroutine(pistolShoot());
+                //StartCoroutine(pistolShoot());
+                StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Shoot());
             }
 
             //if (playerInput.actions["attack"].triggered && canPistolShoot && pistolBulletCount > 0 && isAttacking == false)

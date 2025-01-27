@@ -215,11 +215,10 @@ public class projectile : MonoBehaviour
 
     void resetProjectile()
     {
-        // Reset any other projectile properties
         if (rb != null)
         {
-            rb.velocity = Vector3.zero;  // Reset velocity
-            rb.angularVelocity = Vector3.zero;  // Reset rotation
+            rb.velocity = Vector3.zero;  
+            rb.angularVelocity = Vector3.zero; 
         }
     }
 
