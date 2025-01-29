@@ -10,7 +10,7 @@ public class pistolBasic : weaponType
     // Start is called before the first frame update
     void Start()
     {
-        bulletSpawn = masterInput.instance.bulletSpawn;
+        bulletSpawn = masterInput.instance.pistolBulletSpawn;
         playerInput = masterInput.instance.gameObject.GetComponent<PlayerInput>();
         canShoot = true;
     }

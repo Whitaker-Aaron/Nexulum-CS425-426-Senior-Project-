@@ -591,23 +591,32 @@ public class masterInput : MonoBehaviour
 
     public void updateWeapon(weaponType newType)
     {
+        print("Calling Reload in MI");
         equippedWeapon = newType;
-        equippedWeapon.Reload();
+        StartCoroutine(updateWeaponWait());
+        
+
+    }
+
+    IEnumerator updateWeaponWait()
+    {
+        print("Calling Reload in MI");
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(equippedWeapon.Reload());
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
             StartCoroutine(equippedWeapon.Reload());
-            animationControl.gunnerReload();
-            return;
+            animationControl.gunnerReload(equippedWeapon.reloadTime);
+            yield break;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             StartCoroutine(equippedWeapon.Reload());
             animationControl.engineerReload(equippedWeapon.reloadTime);
-            return;
+            yield break;
         }
         else
-            return;
-
+            yield break;
     }
 
 
@@ -1050,7 +1059,7 @@ public class masterInput : MonoBehaviour
                 //pistolBulletCount = 0;
                 //canPistolShoot = false;
                 StartCoroutine(equippedWeapon.Reload());
-                animationControl.gunnerReload();
+                animationControl.gunnerReload(equippedWeapon.reloadTime);
             }
 
 
@@ -1074,6 +1083,7 @@ public class masterInput : MonoBehaviour
 
             if (shooting && !equippedWeapon.isReloading)
             {
+                print("Calling shoot in MI");
                 StartCoroutine(equippedWeapon.Shoot());
             }
         }

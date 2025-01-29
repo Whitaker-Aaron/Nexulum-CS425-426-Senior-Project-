@@ -25,7 +25,7 @@ public abstract class weaponType : MonoBehaviour
         if (isReloading)
             yield break;
 
-        print("Reloading in pistolBasic");
+        print("Reloading in weaponType");
         print(canShoot);
         //if (bulletCount == magSize)
             //yield break;

@@ -55,6 +55,7 @@ public class EffectsManager : MonoBehaviour
 
         createNewPool("bulletHitPool",getPrefab("bulletHit"), bulletPoolSize);
         createNewPool("pistolFlash", getPrefab("pistolFlash"), 4);
+        createNewPool("rifleFlash", getPrefab("rifleFlash"), 12);
         createNewPool("tankHitPool", getPrefab("tankHit"), tankPoolSize);
         createNewPool("mageHitOne", getPrefab("mageHit"), magePoolSize);
         createNewPool("caPool", getPrefab("caStart"), 3);
@@ -285,8 +286,9 @@ public class EffectsManager : MonoBehaviour
             //obj.transform.position = position;
             //obj.transform.rotation = rotation;
             //}
-            if (poolName == "pistolFlash")
+            if (poolName == "pistolFlash" || poolName == "rifleFlash")
                 obj.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+
 
             obj.transform.position = position;
             obj.transform.rotation = rotation;

@@ -92,6 +92,7 @@ public class WeaponsManager : MonoBehaviour
         }
 
         //characterReference.GetWeaponClass().currentWeapon = newWeapon;
+        print("Calling update W in WM");
         masterInput.instance.updateWeapon(newWeapon.weaponMesh.GetComponent<weaponType>());
         characterReference.UpdateWeapon(newWeapon);
         

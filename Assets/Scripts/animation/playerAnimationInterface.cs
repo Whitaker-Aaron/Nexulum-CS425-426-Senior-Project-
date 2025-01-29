@@ -29,7 +29,7 @@ public interface PlayerAnimation
     void engAttackThree();
     void resetEngineer();
 
-    void gunnerReload();
+    void gunnerReload(float time);
     void stop();
 
     void changeClassLayer(int layerOne, int layerTwo);

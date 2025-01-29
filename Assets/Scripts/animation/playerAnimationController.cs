@@ -208,10 +208,11 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     //GUNNER ANIMATIONS--------------------------------------
 
-    public void gunnerReload()
+    public void gunnerReload(float time)
     {
         animator.SetBool("reload", true);
         animator.Play("Reload Blend Tree");
+        animator.SetFloat("blendTreeSpeed", (animator.GetCurrentAnimatorStateInfo(1).length / time));
         animator.SetBool("reload", false);
     }
 
@@ -226,8 +227,9 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         
         animator.SetBool("reload", true);
         animator.Play("engReloadBlendTree");
-        animator.SetFloat("blendTreeSpeed", (animator.GetCurrentAnimatorStateInfo(2).length / time) - .03f);
+        animator.SetFloat("blendTreeSpeed", (animator.GetCurrentAnimatorStateInfo(2).length / time) * 2f);
         animator.SetBool("reload", false);
+        //StartCoroutine(engrReloadWait((animator.GetCurrentAnimatorStateInfo(2).length / time) + 1));
     }
 
     public void engAttackOne(float time)
