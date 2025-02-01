@@ -98,6 +98,9 @@ public class EnemyFrame : MonoBehaviour
         
 
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        if (enemyReference != null) enemyType = gameObject.GetComponent<enemyInt>().getType();
+        
+            
 
         // Status effects - Aisling
         iceEffect = new IceDamage(movementReference, iceStackMax);
@@ -151,21 +154,21 @@ public class EnemyFrame : MonoBehaviour
         
         if(enemyReference != null)
         {
-            switch (enemyReference.enemyName)
+            /*switch (enemyReference.enemyName)
             {
                 case "Skeleton":
                     if(gameObject != null)
-                        enemyType = gameObject.GetComponent<enemyMinionCombat>().getType();
+                        enemyType = gameObject.GetComponent<enemyInt>().getType();
                     break;
                 case "SkeletonBoss":
                     if (gameObject != null)
-                        enemyType = gameObject.GetComponent<enemyMinionCombat>().getType();
+                        enemyType = gameObject.GetComponent<enemyInt>().getType();
                     break;
                 case "Mage":
                     if (gameObject != null)
-                        enemyType = gameObject.GetComponent<enemyMage>().getType();
-                    break;
-            }
+                        enemyType = gameObject.GetComponent<enemyInt>().getType();
+                    break;`
+            }*/
 
 
             Debug.Log("Enemy was attacked");
