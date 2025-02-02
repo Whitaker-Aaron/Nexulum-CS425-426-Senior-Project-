@@ -6,6 +6,7 @@ public class EnemyChaseState : EnemyNeutralState
         this.stateName = "Chase";
 
         stateContext.CustomDebugLog("Entered " + stateName + " state");
+        stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, false);
 
         stateContext.agent.isStopped = false;
     }
@@ -13,8 +14,8 @@ public class EnemyChaseState : EnemyNeutralState
     public override void RunState()
     {
         
-        if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) {
-            stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, false);
+        if (false) {
+            
         }
         else
         {

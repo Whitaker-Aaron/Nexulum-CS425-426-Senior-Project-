@@ -7,6 +7,8 @@ public interface enemyInt
 {
     bool isAttacking { get; set; }
     enemyInt getType();
+
+    void onDeath();
 }
 
 public class enemyInterface

@@ -64,6 +64,11 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
         }
     }
 
+    public void onDeath()
+    {
+
+    }
+
 
 
     public IEnumerator spellCast()

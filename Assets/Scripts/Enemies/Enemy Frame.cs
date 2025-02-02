@@ -154,23 +154,6 @@ public class EnemyFrame : MonoBehaviour
         
         if(enemyReference != null)
         {
-            /*switch (enemyReference.enemyName)
-            {
-                case "Skeleton":
-                    if(gameObject != null)
-                        enemyType = gameObject.GetComponent<enemyInt>().getType();
-                    break;
-                case "SkeletonBoss":
-                    if (gameObject != null)
-                        enemyType = gameObject.GetComponent<enemyInt>().getType();
-                    break;
-                case "Mage":
-                    if (gameObject != null)
-                        enemyType = gameObject.GetComponent<enemyInt>().getType();
-                    break;`
-            }*/
-
-
             Debug.Log("Enemy was attacked");
             Debug.Log("Enemy attacking?" + enemyType.isAttacking);
             if (!enemyType.isAttacking)
@@ -349,6 +332,7 @@ public class EnemyFrame : MonoBehaviour
     private IEnumerator death()
     {
         yield return (StartCoroutine(updateHealthBarsNegative()));
+        enemyType.onDeath();
         for (int i = 0; i < materialList.Length; i++)
         {
             var craftMat = materialList[i].GetComponent<OverworldMaterial>();
