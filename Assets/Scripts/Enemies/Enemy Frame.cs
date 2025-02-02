@@ -33,7 +33,7 @@ public class EnemyFrame : MonoBehaviour
     private int maxHealth;
     
 
-    Vector3 initialPos;
+    public Vector3 initialPos;
 
     public bool dmgOverTimeActivated = false;
     bool takingDmgOT = false;
@@ -84,7 +84,7 @@ public class EnemyFrame : MonoBehaviour
         
 
         healthRef = Instantiate(enemyHealth);
-        healthRef.transform.SetParent(enemyUIRef.transform);
+        healthRef.transform.SetParent(enemyUIRef.transform, false);
 
         enemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().health;
         delayedEnemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().delayedHealth;

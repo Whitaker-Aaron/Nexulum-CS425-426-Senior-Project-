@@ -87,7 +87,6 @@ public class EnemyLOS : MonoBehaviour
     {
         if (currentTarget != null)
         {
-            Debug.Log("Current target"+ currentTarget.name);
             selfPos = transform.position;
             targetPos = currentTarget.transform.position;
             headingtotarget = targetPos - selfPos;

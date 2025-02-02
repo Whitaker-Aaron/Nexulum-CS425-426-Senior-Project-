@@ -65,9 +65,11 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
             //attack player commands
             Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
             if(player.tag == "Player") playerRef.takeDamage(attackDamage, knockBackDir);
+            Debug.Log(player.tag);
+
 
         }
-        
+
     }
 
     public void onDeath()
@@ -80,6 +82,9 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
                 smallSlime.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1f, this.transform.position.z);
                 smallSlime.GetComponent<NavMeshAgent>().Warp(smallSlime.transform.position);
                 smallSlime.GetComponent<EnemyLOS>().ChangeTarget(playerRef.gameObject);
+                smallSlime.transform.parent = this.transform.parent;
+                smallSlime.GetComponent<EnemyFrame>().initialPos = GetComponent<EnemyFrame>().initialPos;
+                //smallSlime.GetComponent<EnemyFrame>().healthRef.transform.SetParent(GameObject.Find("DynamicEnemyUI").transform);
             }
             
         }
