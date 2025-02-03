@@ -12,7 +12,7 @@ public abstract class weaponType : MonoBehaviour
     public int bulletCount;
     public float reloadTime;
     public int damage;
-    protected bool canShoot = true;
+    public bool canShoot = true;
     public bool isReloading = false;
     protected PlayerInput playerInput;
     protected projectileManager projectileManager;

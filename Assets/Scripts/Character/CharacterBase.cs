@@ -43,7 +43,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     WeaponsManager weaponsManager;
     AudioManager audioManager;
 
-    [SerializeField] GameObject masterInput;
+    masterInput masterInput;
 
     [SerializeField] Slider healthBar;
     [SerializeField] Slider delayedHealthBar;
@@ -389,6 +389,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
                 break;
             case WeaponBase.weaponClassTypes.Engineer:
                 weaponClass = engineerObject;
+                masterInput.instance.changeTool(engineerTool);
                 break;
         }
     }
@@ -400,7 +401,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Knight)
         {
             Debug.Log("Newly equipped weapon is of type Knight");
-            masterInput.GetComponent<masterInput>().changeSword(newWeapon);
+            masterInput.instance.changeSword(newWeapon);
             equippedWeapon = newWeapon;
             equippedWeapon.weaponMesh.GetComponent<swordCombat>().updateDamage(knightObject.baseAttack + equippedWeapon.weaponAttack);
         }
@@ -408,7 +409,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
         {
             Debug.Log("Newly equipped weapon is of type Engineer");
-            masterInput.GetComponent<masterInput>().changeTool(newWeapon);
+            masterInput.instance.changeTool(newWeapon);
             equippedWeapon = newWeapon;
             GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("pistolPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
         }
@@ -426,10 +427,14 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public void UpdateClass(WeaponBase.weaponClassTypes newClass)
     {
         EquipClass(newClass);
-        masterInput.GetComponent<masterInput>().currentClass = newClass;
+        masterInput.instance.currentClass = newClass;
         //Debug.Log(weaponClass.currentWeapon);
         weaponsManager.ChangeWeapon(weaponClass.currentWeapon);
-        
+
+        if (newClass == WeaponBase.weaponClassTypes.Engineer)
+            masterInput.instance.changeTool(engineerTool);
+
+
         uiManager.UpdateClass(newClass, weaponClass.currentLvl, true);
         //UpdateWeapon(weaponClass.currentWeapon);
         runeInt.ChangeClass(newClass);
@@ -446,7 +451,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     public GameObject GetMasterInput()
     {
-        return masterInput;
+        return masterInput.instance.gameObject;
     }
 
     public IEnumerator StopVelocity(float time)
@@ -503,7 +508,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         invul = true;
         isDying = true;
         lifetimeManager.OnDeath();
-        masterInput.GetComponent<masterInput>().pausePlayerInput();
+        masterInput.instance.pausePlayerInput();
 
         StopCoroutine(animateHealth());
         StopCoroutine(animateDelayedHealth());

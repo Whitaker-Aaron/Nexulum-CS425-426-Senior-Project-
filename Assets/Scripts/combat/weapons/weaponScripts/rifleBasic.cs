@@ -17,17 +17,18 @@ public class rifleBasic : weaponType
     // Update is called once per frame
     void Update()
     {
-        print("canShoot: " + canShoot);
-        print("isReloading: " + isReloading);
+        //int("canShoot: " + canShoot);
+        //int("isReloading: " + isReloading);
     }
 
     public override IEnumerator Shoot()
     {
-        print("canShoot: " + canShoot);
-        print("isReloading: " + isReloading);
+        //nt("canShoot: " + canShoot);
+        //int("isReloading: " + isReloading);
         if (!canShoot || isReloading)
             yield break;
 
+        print("Shooting in rifleBasic");
         if (bulletSpawn == null || bulletSpawn != masterInput.instance.bulletSpawn)
             bulletSpawn = masterInput.instance.bulletSpawn;
 
@@ -37,7 +38,7 @@ public class rifleBasic : weaponType
         bulletCount--;
         GameObject bullet = projectileManager.Instance.getProjectile("bulletPool", bulletSpawn.position, bulletSpawn.rotation);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
-        //EffectsManager.instance.getFromPool("rifleFlash", bulletSpawn.position, bulletSpawn.rotation);
+        EffectsManager.instance.getFromPool("rifleFlash", bulletSpawn.position, bulletSpawn.rotation);
         yield return new WaitForSeconds(fireRateTime);
 
         canShoot = true;
