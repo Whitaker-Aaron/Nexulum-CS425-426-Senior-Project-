@@ -128,7 +128,8 @@ public class EnemyFrame : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        healthRef.transform.position = new Vector3(this.transform.position.x - 1f, this.transform.position.y + 2f, this.transform.position.z);
+        healthRef.transform.position = new Vector3(this.transform.position.x - 1f, 
+            this.transform.position.y + 2f + enemyReference.healthBarOffset, this.transform.position.z);
     }
 
     private void OnDestroy()
