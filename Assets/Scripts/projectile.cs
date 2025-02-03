@@ -62,12 +62,12 @@ public class projectile : MonoBehaviour
             {
                 hitEnemy = true;
                 int updatedDamage = damage;
-                if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistance)
+                if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)
                 {
                     updatedDamage = damage / masterInput.instance.gunnerDmgMod;
                     
                 }
-                else if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistanceEngr)
+                else if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)
                 {
                     updatedDamage = damage / masterInput.instance.engrDmgMod;
                     
@@ -235,6 +235,9 @@ public class projectile : MonoBehaviour
                 case "pistolPool":
                     EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
+                case "revolverPool":
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
+                    break;
                 case "turretPool":
                     EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
@@ -266,6 +269,8 @@ public class projectile : MonoBehaviour
             projectileManager.Instance.returnProjectile("bulletPool", gameObject);
         else if(poolName == "pistolPool")
             projectileManager.Instance.returnProjectile("pistolPool", gameObject);
+        else if (poolName == "revolverPool")
+            projectileManager.Instance.returnProjectile("revolverPool", gameObject);
         else if(poolName == "turretPool")
             projectileManager.Instance.returnProjectile("turretPool", gameObject);
         else if (poolName == "dronePool")

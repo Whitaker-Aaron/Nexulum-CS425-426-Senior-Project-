@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class projectileManager : MonoBehaviour
 {
     public static projectileManager Instance;
-    public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, tankPrefab, mageProjOne, swordShotPrefab, swordShotIcePrefab;
+    public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, tankPrefab, mageProjOne, swordShotPrefab, swordShotIcePrefab, revolverPrefab;
     private GameObject poolObj;
     public int poolSize = 25;
     public int poolSize2 = 15;
@@ -51,6 +51,7 @@ public class projectileManager : MonoBehaviour
 
         createNewPool("bulletPool", projPrefab, poolSize);
         createNewPool("pistolPool", projPrefab2, poolSize2);
+        createNewPool("revolverPool", revolverPrefab, poolSize2);
         createNewPool("turretPool", turretPrefab, turretSize);
         createNewPool("dronePool", dronePrefab, turretSize);
         createNewPool("tankPool", tankPrefab, tankSize);
@@ -100,7 +101,7 @@ public class projectileManager : MonoBehaviour
         //print("Getting proj");
         //print(pool.Count);
 
-        print("getting proj from" + poolName);
+        print("getting proj from " + poolName);
 
         if(allPools[poolName].Count > 0)
         {
