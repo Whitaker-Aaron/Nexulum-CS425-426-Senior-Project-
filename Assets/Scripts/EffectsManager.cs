@@ -287,7 +287,7 @@ public class EffectsManager : MonoBehaviour
             //obj.transform.position = position;
             //obj.transform.rotation = rotation;
             //}
-            if (poolName == "pistolFlash" || poolName == "rifleFlash")
+            if (poolName == "pistolFlash" || poolName == "rifleFlash" || poolName == "revolverFlash")
                 obj.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
 
 
