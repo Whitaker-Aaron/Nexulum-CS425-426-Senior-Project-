@@ -29,6 +29,7 @@ public class WeaponsManager : MonoBehaviour
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         shieldPrefab = characterReference.knightShield.weaponMesh;
+        toolPrefab = characterReference.engineerTool.weaponMesh;
         GameObject inputManager = GameObject.Find("InputandAnimationManager");
 
 
@@ -92,7 +93,10 @@ public class WeaponsManager : MonoBehaviour
         }
 
         //characterReference.GetWeaponClass().currentWeapon = newWeapon;
+        print("Calling update W in WM");
+        masterInput.instance.updateWeapon(newWeapon.weaponMesh.GetComponent<weaponType>());
         characterReference.UpdateWeapon(newWeapon);
+        
         Destroy(currentWeapon);
 
         GameObject inputManager = GameObject.FindGameObjectWithTag("inputManager");

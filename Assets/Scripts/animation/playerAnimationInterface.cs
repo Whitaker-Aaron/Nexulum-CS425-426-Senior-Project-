@@ -20,7 +20,7 @@ public interface PlayerAnimation
 
     void blocking();
 
-    void engineerReload();
+    void engineerReload(float time);
 
     void engAttackOne(float time);
 
@@ -29,7 +29,7 @@ public interface PlayerAnimation
     void engAttackThree();
     void resetEngineer();
 
-    void gunnerReload();
+    void gunnerReload(float time);
     void stop();
 
     void changeClassLayer(int layerOne, int layerTwo);
