@@ -30,7 +30,9 @@ public class enemySword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player" && isAttacking)
+        if(isAttacking) Debug.Log("Sword collision detected on " + other.tag + "while attacking");
+        else if (!isAttacking) Debug.Log("Sword collision detected on " + other.tag + "while not attacking");
+        if (other.tag == "Player" && isAttacking)
         {
             Vector3 knockBackDir = other.transform.position - mainSkeletonTransform.position;
             Debug.Log("Knock back direction: " + knockBackDir);

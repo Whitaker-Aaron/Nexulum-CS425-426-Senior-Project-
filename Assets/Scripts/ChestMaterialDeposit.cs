@@ -1,16 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 
 public class ChestMaterialDeposit : MonoBehaviour
 {
     MenuManager menuManager;
     [SerializeField] public List<GameObject> itemDisplays;
+    [SerializeField] public GameObject backButton;
     // Start is called before the first frame update
     void Start()
     {
-        menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();   
+        menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        StartCoroutine(selectionTimeout());
+        
+    }
+
+    public IEnumerator selectionTimeout()
+    {
+        yield return new WaitForSeconds(0.1f);
+        if(backButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(backButton);
+        }
+        
     }
 
     // Update is called once per frame

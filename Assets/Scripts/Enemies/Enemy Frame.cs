@@ -33,7 +33,7 @@ public class EnemyFrame : MonoBehaviour
     private int maxHealth;
     
 
-    Vector3 initialPos;
+    public Vector3 initialPos;
 
     public bool dmgOverTimeActivated = false;
     bool takingDmgOT = false;
@@ -84,7 +84,7 @@ public class EnemyFrame : MonoBehaviour
         
 
         healthRef = Instantiate(enemyHealth);
-        healthRef.transform.SetParent(enemyUIRef.transform);
+        healthRef.transform.SetParent(enemyUIRef.transform, false);
 
         enemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().health;
         delayedEnemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().delayedHealth;
@@ -98,6 +98,9 @@ public class EnemyFrame : MonoBehaviour
         
 
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        if (enemyReference != null) enemyType = gameObject.GetComponent<enemyInt>().getType();
+        
+            
 
         // Status effects - Aisling
         iceEffect = new IceDamage(movementReference, iceStackMax);
@@ -125,7 +128,8 @@ public class EnemyFrame : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        healthRef.transform.position = new Vector3(this.transform.position.x - 1f, this.transform.position.y + 2f, this.transform.position.z);
+        healthRef.transform.position = new Vector3(this.transform.position.x - 1f, 
+            this.transform.position.y + 2f + enemyReference.healthBarOffset, this.transform.position.z);
     }
 
     private void OnDestroy()
@@ -151,23 +155,6 @@ public class EnemyFrame : MonoBehaviour
         
         if(enemyReference != null)
         {
-            switch (enemyReference.enemyName)
-            {
-                case "Skeleton":
-                    if(gameObject != null)
-                        enemyType = gameObject.GetComponent<enemyMinionCombat>().getType();
-                    break;
-                case "SkeletonBoss":
-                    if (gameObject != null)
-                        enemyType = gameObject.GetComponent<enemyMinionCombat>().getType();
-                    break;
-                case "Mage":
-                    if (gameObject != null)
-                        enemyType = gameObject.GetComponent<enemyMage>().getType();
-                    break;
-            }
-
-
             Debug.Log("Enemy was attacked");
             Debug.Log("Enemy attacking?" + enemyType.isAttacking);
             if (!enemyType.isAttacking)
@@ -346,6 +333,7 @@ public class EnemyFrame : MonoBehaviour
     private IEnumerator death()
     {
         yield return (StartCoroutine(updateHealthBarsNegative()));
+        enemyType.onDeath();
         for (int i = 0; i < materialList.Length; i++)
         {
             var craftMat = materialList[i].GetComponent<OverworldMaterial>();

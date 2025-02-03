@@ -200,6 +200,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
             florentineAmount = 9999;
         }
+        uiManager.UpdateFlorentine((int)florentineAmount);
         
     }
 
@@ -213,7 +214,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
             florentineAmount = 0;
         }
-        
+        uiManager.UpdateFlorentine((int)florentineAmount);
+
     }
 
     public IEnumerator MoveForward()
@@ -243,6 +245,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         data.isNewFile = false;
         data.playerHealth = playerHealth;
         data.maxPlayerHealth = maxHealth;
+        data.florentineAmount = (int)florentineAmount;
 
         data.equippedWeapon = equippedWeapon.weaponName;
 
@@ -294,6 +297,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
         playerHealth = data.playerHealth;
         maxHealth = data.maxPlayerHealth;
+        florentineAmount = data.florentineAmount;
+        uiManager.UpdateFlorentine(data.florentineAmount);
 
         equippedWeapon = weapons.ReturnWeapon(data.equippedWeapon);
 

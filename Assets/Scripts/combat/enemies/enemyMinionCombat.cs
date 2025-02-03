@@ -101,6 +101,11 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
         
     }
 
+    public void onDeath()
+    {
+
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
