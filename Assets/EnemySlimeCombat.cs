@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SocialPlatforms.Impl;
-using static UnityEditor.FilePathAttribute;
 
 public class EnemySlimeCombat : MonoBehaviour, enemyInt
 {

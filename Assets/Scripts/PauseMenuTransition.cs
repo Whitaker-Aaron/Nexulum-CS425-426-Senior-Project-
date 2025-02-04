@@ -17,6 +17,9 @@ public class PauseMenuTransition : MonoBehaviour
     [SerializeField] GameObject KnightSkillMenu;
     [SerializeField] GameObject GunnerSkillMenu;
     [SerializeField] GameObject EngineerSkillMenu;
+    [SerializeField] GameObject MapMenu;
+
+    [SerializeField] GameObject CheckpointUIRef;
 
     [SerializeField] WeaponClass knightRef;
     [SerializeField] WeaponClass gunnerRef;
@@ -26,6 +29,7 @@ public class PauseMenuTransition : MonoBehaviour
     CharacterBase characterRef;
 
     LifetimeManager lifetimeManager;
+    RoomManager roomManager;
 
     
 
@@ -38,16 +42,12 @@ public class PauseMenuTransition : MonoBehaviour
 
 
 
-    public void OnMapTeleport(RoomSpawnObject roomSpawn)
-    {
-        characterRef.teleportSpawnObject = roomSpawn;
-        lifetimeManager.StartTeleport();
-    }
 
     private void Awake()
     {
         characterRef = GameObject.FindWithTag("Player").GetComponent<CharacterBase>();
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
+        roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
         SkillMenu.SetActive(false);
         KnightSkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(false);
@@ -111,6 +111,16 @@ public class PauseMenuTransition : MonoBehaviour
         GunnerSkillMenu.SetActive(false);
     }
 
+    public void returnToMainPause()
+    {
+        SkillMenu.SetActive(false);
+        KnightSkillMenu.SetActive(false);
+        EngineerSkillMenu.SetActive(false);
+        GunnerSkillMenu.SetActive(false);
+        MapMenu.SetActive(false);
+        PauseMenu.SetActive(true);
+    }
+
     public void ReturnToBase()
     {
         //Time.timeScale = 1.0f;
@@ -157,6 +167,26 @@ public class PauseMenuTransition : MonoBehaviour
         EngineerSkillMenu.SetActive(true);
     }
 
+    public void OpenMapMenu()
+    {
+        PauseMenu.SetActive(false);
+        MapMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(GameObject.Find("BackButton"));
+        PopulateSpawnObjects();
 
+    }
+
+    public void PopulateSpawnObjects()
+    {
+        var checkpoints = roomManager.GetCheckpoints();
+        var checkpointContent = GameObject.Find("CheckpointContent");
+        for(int i =0; i <checkpoints.Count; i++) {
+           CheckpointUIRef.GetComponent<CheckpointUI>().spawnObject = checkpoints[i];
+           var reference = Instantiate(CheckpointUIRef);
+           reference.transform.SetParent(checkpointContent.transform, false);
+        }
+        
+    }
 
 }
