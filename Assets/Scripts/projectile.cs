@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class projectile : MonoBehaviour
+public abstract class projectile : MonoBehaviour
 {
     private CharacterBase playerBase;
     private masterInput masterInput;
@@ -44,7 +44,11 @@ public class projectile : MonoBehaviour
         
         stop = false;
         lifeTime = maxLifeTime;
+        Invoke(nameof(returnToPool), lifeTime);
+
         GetDamage();
+
+        /*
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         int layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
@@ -89,6 +93,7 @@ public class projectile : MonoBehaviour
             }
             
         }
+        */
 
     }
 
@@ -147,15 +152,21 @@ public class projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if ((hitPoint != Vector3.zero || hitEnemy) && poolName != "enemyMagePoolOne")
+        if (hitPoint != Vector3.zero || hitEnemy)
         {
             checkDistance();
+        }
+        if(!stop)
+        { 
+            moveProj(); 
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name);
+        onHit(collision);
+        returnToPool();
+        /*Debug.Log(collision.gameObject.name);
         if (poolName != "enemyMagePoolOne")
             return;
         if (collision.gameObject.tag == "material") return;
@@ -182,6 +193,7 @@ public class projectile : MonoBehaviour
         stop = true;
         resetProjectile();
         returnToPool();
+        */
     }
 
     void checkDistance()
@@ -265,6 +277,9 @@ public class projectile : MonoBehaviour
 
     void returnToPool()
     {
+        stop = true;
+        projectileManager.Instance.returnProjectile(poolName, gameObject);
+        /*
         if(poolName == "bulletPool")
             projectileManager.Instance.returnProjectile("bulletPool", gameObject);
         else if(poolName == "pistolPool")
@@ -281,13 +296,16 @@ public class projectile : MonoBehaviour
             projectileManager.Instance.returnProjectile("enemyMagePoolOne", gameObject);
         else
             projectileManager.Instance.returnProjectile("bulletPool", gameObject);
+        */
     }
 
 
-    void moveProj()
-    {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-    }
+    protected abstract void moveProj();
+
+    protected abstract void onHit(Collision collision);
+    //{
+        //transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    //}
 
     void handleTime()
     {

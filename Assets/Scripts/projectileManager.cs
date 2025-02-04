@@ -7,16 +7,19 @@ using UnityEngine.UIElements;
 public class projectileManager : MonoBehaviour
 {
     public static projectileManager Instance;
-    public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, tankPrefab, mageProjOne, swordShotPrefab, swordShotIcePrefab, revolverPrefab;
-    private GameObject poolObj;
-    public int poolSize = 25;
-    public int poolSize2 = 15;
-    public int turretSize = 15;
-    public int tankSize = 4;
-    public int mageSizeOne = 5;
-    public int swordShotSize = 15;
+    public GameObject poolContainer;
+    public Dictionary<string, Queue<GameObject>> allPools = new Dictionary<string, Queue<GameObject>>();
 
-    protected Dictionary<string, Queue<GameObject>> allPools;
+    //public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, tankPrefab, mageProjOne, swordShotPrefab, swordShotIcePrefab, revolverPrefab;
+    //private GameObject poolObj;
+    //public int poolSize = 25;
+    //public int poolSize2 = 15;
+    //public int turretSize = 15;
+    //public int tankSize = 4;
+    //public int mageSizeOne = 5;
+    //public int swordShotSize = 15;
+
+    //protected Dictionary<string, Queue<GameObject>> allPools;
 
     //private static Queue<GameObject> pool;
     //private static Queue<GameObject> pool2;
@@ -25,12 +28,15 @@ public class projectileManager : MonoBehaviour
     private void Awake()
     {
         //initializePool();
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
+        poolContainer = new GameObject("ProjectilePools");
+        DontDestroyOnLoad(poolContainer);
     }
 
     // Update is called once per frame
@@ -69,10 +75,11 @@ public class projectileManager : MonoBehaviour
             for (int i = 0; i < size; i++)
             {
                 GameObject temp = Instantiate(prefab);
-                temp.transform.parent = poolObj.transform;
+                temp.transform.parent = poolContainer.transform;
                 //DontDestroyOnLoad(temp);
-                allPools[poolName].Enqueue(temp);
                 temp.SetActive(false);
+                allPools[poolName].Enqueue(temp);
+                
             }
         }
         else
@@ -98,12 +105,18 @@ public class projectileManager : MonoBehaviour
 
     public GameObject getProjectile(string poolName, Vector3 position, Quaternion rotation)
     {
+        if (!allPools.ContainsKey(poolName))
+        {
+            Debug.LogError($"Projectile pool '{poolName}' not found!");
+            return null;
+        }
         //print("Getting proj");
         //print(pool.Count);
 
-        print("getting proj from " + poolName);
+        //print("getting proj from " + poolName);
 
-        if(allPools[poolName].Count > 0)
+        /*
+        if (allPools[poolName].Count > 0)
         {
             GameObject proj = allPools[poolName].Dequeue();
             //if (proj == null)
@@ -122,6 +135,22 @@ public class projectileManager : MonoBehaviour
             GameObject proj = Instantiate(projPrefab, position, rotation);
             return proj;
         }
+        */
+
+        GameObject proj;
+        if (allPools[poolName].Count > 0)
+        {
+            proj = allPools[poolName].Dequeue();
+        }
+        else
+        {
+            proj = Instantiate(Resources.Load<GameObject>(poolName)); // Load dynamically
+        }
+
+        proj.transform.position = position;
+        proj.transform.rotation = rotation;
+        proj.SetActive(true);
+        return proj;
     }
 
     public void updateProjectileDamage(string pool, int damageInc)
