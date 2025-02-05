@@ -38,7 +38,7 @@ public class bow : weaponType
         GameObject arrow = projectileManager.Instance.getProjectile("archerPool", bulletSpawn.position, bulletSpawn.rotation);
         arrow.GetComponent<bowProj>().setArcher(archer);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
-        EffectsManager.instance.getFromPool("bowShot", bulletSpawn.position, bulletSpawn.rotation);
+        //EffectsManager.instance.getFromPool("bowShot", bulletSpawn.position, bulletSpawn.rotation);
         yield return new WaitForSeconds(fireRateTime);
 
         canShoot = true;

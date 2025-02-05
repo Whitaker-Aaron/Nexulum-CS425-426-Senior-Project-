@@ -14,6 +14,12 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     private bow bow;
     public Transform arrowSpawn;
 
+    public float detectionRange;
+    bool inRange;
+    public LayerMask Player;
+
+    public GameObject playerObj;
+
     public bool isAttacking
     {
         get { return _isAttacking; }
@@ -33,7 +39,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
         enemyStateManager = gameObject.GetComponent<EnemyStateManager>();
         enemyState = enemyStateManager.GetCurrentState();
         bow = bowPrefab.GetComponent<bow>();
-        bow.setArcher(this);
+        bow.setArcher(gameObject.GetComponent<enemyArcher>());
     }
 
 
@@ -45,8 +51,9 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 
         enemyState = enemyStateManager.GetCurrentState();
         print("Enemy state is: " + enemyState.stateName);
-        if(enemyState != null && enemyState.stateName == "Chase")
+        if(enemyState != null && enemyState.stateName == "Chase" && (inRange && playerObj != null))
         {
+            gameObject.transform.LookAt(playerObj.transform.position, Vector3.up);
             print("Enemy can shoot bow");
             if (bow.canShoot)
             {
@@ -69,5 +76,34 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 
     }
 
+    void checkDistance()
+    {
+        Collider[] objs = Physics.OverlapSphere(gameObject.transform.position, detectionRange, Player);
+
+        foreach(Collider obj in objs)
+        {
+            if(obj.gameObject.tag == "Player")
+            {
+                if(Vector3.Distance(obj.gameObject.transform.position, gameObject.transform.position) > detectionRange)
+                {
+                    inRange = false;
+                    return;
+                }
+                else
+                {
+                    inRange = true;
+                    assignPlayer(obj);
+                }
+                
+                
+            }
+
+        }
+    }
+
+    void assignPlayer(Collider obj)
+    {
+        playerObj = obj.gameObject;
+    }
 
 }

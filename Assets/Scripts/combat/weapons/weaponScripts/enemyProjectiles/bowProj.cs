@@ -19,9 +19,11 @@ public class bowProj : projectile
 
     private void OnTriggerEnter(Collider other)
     {
-        hitPoint = gameObject.transform.forward;
+        //GetDamage(false);
+        hitPoint = gameObject.transform.position;
         if (other.gameObject.tag == "Player")
         {
+            
             other.gameObject.GetComponent<CharacterBase>().takeDamage(damage, gameObject.transform.forward);
             playEffect(hitPoint);
         }
@@ -39,7 +41,7 @@ public class bowProj : projectile
     private void Awake()
     {
         bulletHitEffect = "archerHitPool";
-        GetDamage(false);
+        GetDamage("Archer");
     }
 
     private void FixedUpdate()
@@ -60,7 +62,8 @@ public class bowProj : projectile
 
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
-
+        bulletHitEffect = "archerHitPool";
+        GetDamage("archer");
     }
 
     protected override void moveProj()
@@ -70,8 +73,8 @@ public class bowProj : projectile
 
     public void setArcher(enemyArcher archer)
     {
-        this.archerParent = archer.gameObject;
-        setParent(this.archerParent);
+        archerParent = archer.gameObject;
+        setParent(archerParent);
     }
 
 }

@@ -127,9 +127,9 @@ public abstract class projectile : MonoBehaviour
 
     }
 
-    public void GetDamage(bool playerParent)
+    public void GetDamage(string name)
     {
-        if(playerParent)
+        if(name == "Player")
         {
             playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
 
@@ -147,20 +147,14 @@ public abstract class projectile : MonoBehaviour
         }
         else
         {
-            if (parent == null)
-                return;
-
-            EnemyFrame frame = parent.GetComponent<EnemyFrame>();
-            enemyInt inter = frame.GetEnemy().GetComponent<enemyInt>();
-            if (inter != null)
+            
+            switch(name)
             {
-                switch(inter)
-                {
-                    case enemyArcher:
-                        damage = frame.gameObject.GetComponent<enemyArcher>().damage;
-                        break;
-                }
+                case "Archer":
+                    damage = enemyProjectileDamage.instance.getDamage("Archer");
+                    break;
             }
+            
         }
         
 

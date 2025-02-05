@@ -70,6 +70,7 @@ public class EffectsManager : MonoBehaviour
         createNewPool("grenade", getPrefab("grenade"), 4);
         createNewPool("earthGrenade", getPrefab("grenadeEarth"), 4);
         createNewPool("swordShotExplodeHit", getPrefab("swordShotExplode"), swordShotSize);
+        createNewPool("archerHitPool", getPrefab("archerHit"), 4);
     }
 
 

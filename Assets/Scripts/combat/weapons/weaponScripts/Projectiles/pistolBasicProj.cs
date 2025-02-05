@@ -33,7 +33,7 @@ public class pistolBasicProj : projectile
     private void Awake()
     {
         bulletHitEffect = "bulletHitPool";
-        GetDamage(true);
+        GetDamage("Player");
     }
 
     private void OnEnable()
