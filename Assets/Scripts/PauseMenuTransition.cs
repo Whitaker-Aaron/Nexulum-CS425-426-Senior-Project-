@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Collections;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 
 public class PauseMenuTransition : MonoBehaviour
@@ -27,7 +28,7 @@ public class PauseMenuTransition : MonoBehaviour
 
     [SerializeField] GameObject MapButton;
     CharacterBase characterRef;
-
+    List<GameObject> checkpointList = new List<GameObject>(); 
     LifetimeManager lifetimeManager;
     RoomManager roomManager;
 
@@ -113,6 +114,7 @@ public class PauseMenuTransition : MonoBehaviour
 
     public void returnToMainPause()
     {
+        CleanUpCheckpoint();
         SkillMenu.SetActive(false);
         KnightSkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(false);
@@ -185,8 +187,22 @@ public class PauseMenuTransition : MonoBehaviour
            CheckpointUIRef.GetComponent<CheckpointUI>().spawnObject = checkpoints[i];
            var reference = Instantiate(CheckpointUIRef);
            reference.transform.SetParent(checkpointContent.transform, false);
+           checkpointList.Add(reference);
         }
         
+    }
+
+    public void CleanUpCheckpoint()
+    {
+
+        if (checkpointList.Count <= 0) return;
+        for (int i=0; i < checkpointList.Count; i++)
+        {
+            Destroy(checkpointList[i]);
+            checkpointList.RemoveAt(i);
+            i--;
+
+        }
     }
 
 }
