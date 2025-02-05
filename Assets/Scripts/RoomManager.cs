@@ -10,6 +10,7 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
 
     public RoomInformation currentRoom;
     public List<RoomPersistenceData> allRoomData;
+    public List<RoomSpawnObject> currentRoomsCanTravelTo;
 
     void Start()
     {
@@ -19,6 +20,11 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
     public RoomInformation GetRoom()
     {
         return currentRoom;
+    }
+
+    public List<RoomSpawnObject> GetCheckpoints()
+    {
+        return currentRoomsCanTravelTo;
     }
 
     public void SetRoom(RoomInformation newRoom)

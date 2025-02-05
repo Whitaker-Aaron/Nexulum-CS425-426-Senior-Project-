@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Collections;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 
 public class PauseMenuTransition : MonoBehaviour
@@ -17,6 +18,9 @@ public class PauseMenuTransition : MonoBehaviour
     [SerializeField] GameObject KnightSkillMenu;
     [SerializeField] GameObject GunnerSkillMenu;
     [SerializeField] GameObject EngineerSkillMenu;
+    [SerializeField] GameObject MapMenu;
+
+    [SerializeField] GameObject CheckpointUIRef;
 
     [SerializeField] WeaponClass knightRef;
     [SerializeField] WeaponClass gunnerRef;
@@ -24,8 +28,15 @@ public class PauseMenuTransition : MonoBehaviour
 
     [SerializeField] GameObject MapButton;
     CharacterBase characterRef;
-
+    List<GameObject> checkpointList = new List<GameObject>(); 
     LifetimeManager lifetimeManager;
+    RoomManager roomManager;
+
+    GameObject checkpointContent = null;
+    ScrollRect checkpointScrollRect = null;
+
+    GameObject mapContent = null;
+    ScrollRect mapScrollRect = null;
 
     
 
@@ -38,16 +49,12 @@ public class PauseMenuTransition : MonoBehaviour
 
 
 
-    public void OnMapTeleport(RoomSpawnObject roomSpawn)
-    {
-        characterRef.teleportSpawnObject = roomSpawn;
-        lifetimeManager.StartTeleport();
-    }
 
     private void Awake()
     {
         characterRef = GameObject.FindWithTag("Player").GetComponent<CharacterBase>();
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
+        roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
         SkillMenu.SetActive(false);
         KnightSkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(false);
@@ -95,7 +102,29 @@ public class PauseMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "CheckpointRoom(Clone)"
+            && checkpointContent != null && checkpointScrollRect != null && mapContent != null && mapScrollRect != null)
+        {
+            var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
+            RectTransform selectedItemRect = selectedItem.GetComponent<RectTransform>();
+
+            var contentPanel = checkpointContent.GetComponent<RectTransform>();
+            Vector2 newPos = (Vector2)checkpointScrollRect.transform.InverseTransformPoint(contentPanel.position)
+            - (Vector2)checkpointScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
+            float newPosY = (float)newPos.y;
+            contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY - 100f);
+
+            var mapContentPanel = mapContent.GetComponent<RectTransform>();
+            var selectedSprite = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.GetComponent<CheckpointUI>().spriteOnMap;
+            if(selectedSprite != null)
+            {
+                Vector2 newMapPos = (Vector2)mapScrollRect.transform.InverseTransformPoint(mapContentPanel.position)
+            - (Vector2)mapScrollRect.transform.InverseTransformPoint(selectedSprite.transform.position);
+                mapContentPanel.anchoredPosition = new Vector2(newMapPos.x + 300f, newMapPos.y - 300f);
+            }
+            
+
+        }
     }
 
     public void SaveGame()
@@ -109,6 +138,17 @@ public class PauseMenuTransition : MonoBehaviour
         KnightSkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(false);
         GunnerSkillMenu.SetActive(false);
+    }
+
+    public void returnToMainPause()
+    {
+        CleanUpCheckpoint();
+        SkillMenu.SetActive(false);
+        KnightSkillMenu.SetActive(false);
+        EngineerSkillMenu.SetActive(false);
+        GunnerSkillMenu.SetActive(false);
+        MapMenu.SetActive(false);
+        PauseMenu.SetActive(true);
     }
 
     public void ReturnToBase()
@@ -157,6 +197,69 @@ public class PauseMenuTransition : MonoBehaviour
         EngineerSkillMenu.SetActive(true);
     }
 
+    public void OpenMapMenu()
+    {
+        PauseMenu.SetActive(false);
+        MapMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(GameObject.Find("BackButton"));
+        PopulateSpawnObjects();
+
+    }
+
+    public void PopulateSpawnObjects()
+    {
+        var checkpoints = roomManager.GetCheckpoints();
+        checkpointContent = GameObject.Find("CheckpointContent");
+        mapContent = GameObject.Find("MapContent");
+        checkpointScrollRect = GameObject.Find("CheckpointView").GetComponent<ScrollRect>();
+        mapScrollRect = GameObject.Find("MapView").GetComponent<ScrollRect>();
+        for (int i =0; i <checkpoints.Count; i++) {
+           CheckpointUIRef.GetComponent<CheckpointUI>().spawnObject = checkpoints[i];
+           var reference = Instantiate(CheckpointUIRef);
+           reference.transform.SetParent(checkpointContent.transform, false);
+           checkpointList.Add(reference);
+        }
+        AttachSpriteToCheckpoint();
+        
+    }
+
+    public void CleanUpCheckpoint()
+    {
+
+        if (checkpointList.Count <= 0) return;
+        for (int i=0; i < checkpointList.Count; i++)
+        {
+            Destroy(checkpointList[i]);
+            checkpointList.RemoveAt(i);
+            i--;
+
+        }
+        checkpointContent = null;
+        checkpointScrollRect = null;
+        mapContent = null;
+        mapScrollRect = null;
+    }
+
+    public void AttachSpriteToCheckpoint()
+    {
+        int mapChildrenCount = mapContent.transform.childCount;
+        for(int i =0; i < mapChildrenCount; i++)
+        {
+            if(mapContent.transform.GetChild(i).GetComponent<MapMarker>() != null)
+            {
+                var mapMarker = mapContent.transform.GetChild(i).GetComponent<MapMarker>();
+                for(int j = 0; j < checkpointList.Count; j++)
+                {
+                    var checkpointUI = checkpointList[j].GetComponent<CheckpointUI>();
+                    if (mapMarker.roomToMapTo == checkpointUI.spawnObject.roomName) checkpointUI.spriteOnMap = mapContent.transform.GetChild(i).gameObject;
+
+                }
+
+            }
+        }
+
+    }
 
 
 }

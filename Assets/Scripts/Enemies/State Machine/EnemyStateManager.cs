@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyStateManager : MonoBehaviour
+public class EnemyStateManager : MonoBehaviour, IStateMachine
 {
     // ----------------------------------------------
     // Adjustable in-editor settings for behaviors
@@ -142,6 +142,15 @@ public class EnemyStateManager : MonoBehaviour
     public void ResetEnemyState()
     {
         ChangeState(idleState);
-        
+    }
+
+    public string GetCurrentStateName() // Returns name (string) of current state
+    {
+        return currentState.stateName;
+    }
+
+    public EnemyState GetCurrentState() // Returns the state object of the current state
+    {
+        return currentState;
     }
 }
