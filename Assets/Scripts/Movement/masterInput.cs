@@ -279,7 +279,8 @@ public class masterInput : MonoBehaviour
             laserLine.enabled = true;
         }
         equippedWeapon = character.equippedWeapon.weaponMesh.GetComponent<weaponType>();
-        updateDistance(equippedWeapon.rangeModifier);
+        if(equippedWeapon != null)
+            updateDistance(equippedWeapon.rangeModifier);
     }
 
     // Update is called once per frame

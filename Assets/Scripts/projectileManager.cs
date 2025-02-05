@@ -1,3 +1,5 @@
+using AYellowpaper.SerializedCollections;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -8,7 +10,17 @@ public class projectileManager : MonoBehaviour
 {
     public static projectileManager Instance;
     public GameObject poolContainer;
-    public Dictionary<string, Queue<GameObject>> allPools = new Dictionary<string, Queue<GameObject>>();
+    //public Dictionary<string, Queue<GameObject>> allPools;
+
+
+    [SerializeField]
+    private List<ProjPoolData> poolList = new List<ProjPoolData>(); // Serialized in Unity Inspector
+
+    private Dictionary<string, Queue<GameObject>> allPools = new Dictionary<string, Queue<GameObject>>();
+    private Dictionary<string, GameObject> poolPrefabs = new Dictionary<string, GameObject>(); // For easy prefab access
+
+    //private GameObject poolContainer;
+
 
     //public GameObject projPrefab, projPrefab2, turretPrefab, dronePrefab, tankPrefab, mageProjOne, swordShotPrefab, swordShotIcePrefab, revolverPrefab;
     //private GameObject poolObj;
@@ -48,14 +60,39 @@ public class projectileManager : MonoBehaviour
 
     public void initializePool()
     {
-        
-        allPools = new Dictionary<string, Queue<GameObject>>();
+        allPools.Clear();
+        poolPrefabs.Clear();
+
+        foreach (var entry in poolList)
+        {
+            if (entry.prefab == null)
+            {
+                Debug.LogError($"Prefab for {entry.poolName} is missing!");
+                continue;
+            }
+
+            poolPrefabs[entry.poolName] = entry.prefab;
+            createNewPool(entry.poolName, entry.prefab, entry.size);
+        }
+        //allPools = new Dictionary<string, Queue<GameObject>>();
+        //poolPrefabs = new Dictionary<string, (GameObject, int)>();
+        /*
         DontDestroyOnLoad(gameObject);
 
-        poolObj = Instantiate(new GameObject("poolObjects"));
-        poolObj.transform.parent = this.transform;
+        poolContainer = Instantiate(new GameObject("poolObjects"));
+        poolContainer.transform.parent = this.transform;
 
-        createNewPool("bulletPool", projPrefab, poolSize);
+        foreach(var entry in poolPrefabs)
+        {
+            string poolName = entry.Key;
+            GameObject prefab = entry.Value.prefab;
+            int size = entry.Value.size;
+            createNewPool(poolName, prefab, size);
+
+        }
+        */
+
+        /*createNewPool("bulletPool", projPrefab, poolSize);
         createNewPool("pistolPool", projPrefab2, poolSize2);
         createNewPool("revolverPool", revolverPrefab, poolSize2);
         createNewPool("turretPool", turretPrefab, turretSize);
@@ -64,6 +101,7 @@ public class projectileManager : MonoBehaviour
         createNewPool("enemyMagePoolOne", mageProjOne, mageSizeOne);
         createNewPool("swordShotPool", swordShotPrefab, swordShotSize);
         createNewPool("swordShotIcePool", swordShotIcePrefab, swordShotSize);
+        */
     }
 
     public virtual void createNewPool(string poolName, GameObject prefab, int size)
@@ -88,20 +126,13 @@ public class projectileManager : MonoBehaviour
         }
     }
 
-    GameObject checkPoolPrefab(string poolName)
-    {
-        GameObject temp = null;
-        switch (poolName)
-        {
-            case "bulletPool":
-                temp = projPrefab;
-                break;
-            case "pistolPool":
-                temp = projPrefab2; break;
-
-        }
-        return temp;
-    }
+    //GameObject checkPoolPrefab(string poolName)
+    //{
+      //  GameObject temp = null;
+        //if(poolPrefabs.ContainsKey(poolName))
+         //   temp = poolPrefabs[poolName];
+        //return temp;
+    //}
 
     public GameObject getProjectile(string poolName, Vector3 position, Quaternion rotation)
     {
@@ -137,34 +168,51 @@ public class projectileManager : MonoBehaviour
         }
         */
 
+
         GameObject proj;
         if (allPools[poolName].Count > 0)
         {
+            print("Getting bullet");
+            //GameObject proj;
             proj = allPools[poolName].Dequeue();
+            proj.transform.position = position;
+            proj.transform.rotation = rotation;
+            proj.SetActive(true);
+
+            return proj;
+        }
+        else if (poolPrefabs.TryGetValue(poolName, out GameObject prefab))
+        {
+            proj = Instantiate(prefab, position, rotation); 
+            return proj;
         }
         else
         {
-            proj = Instantiate(Resources.Load<GameObject>(poolName)); // Load dynamically
+            Debug.Log("No prefab for bullet found");
+            return null;
         }
+            
 
-        proj.transform.position = position;
-        proj.transform.rotation = rotation;
-        proj.SetActive(true);
-        return proj;
+
+
     }
 
     public void updateProjectileDamage(string pool, int damageInc)
     {
-        Debug.Log("Updating projectiles in pool: " + pool + " for damage: " + damageInc);
-        Queue<GameObject> bulletQ;
-        if(!allPools.ContainsKey(pool))
+        if (!allPools.TryGetValue(pool, out Queue<GameObject> bulletQ))
         {
+            Debug.LogWarning($"Pool '{pool}' not found. Cannot update projectile damage.");
             return;
         }
-        allPools.TryGetValue(pool, out bulletQ);// [pool];
-        foreach(GameObject bullet in bulletQ)
+
+        Debug.Log($"Updating projectiles in pool: {pool} for damage: {damageInc}");
+
+        foreach (GameObject bullet in bulletQ)
         {
-            bullet.GetComponent<projectile>().damage = damageInc;
+            if (bullet != null)
+            {
+                bullet.GetComponent<projectile>().damage = damageInc;
+            }
         }
     }
 
@@ -173,5 +221,6 @@ public class projectileManager : MonoBehaviour
         projectile.SetActive(false);
         allPools[poolName].Enqueue(projectile);
     }
+
 
 }

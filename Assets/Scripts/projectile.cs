@@ -5,25 +5,28 @@ using UnityEngine;
 
 public abstract class projectile : MonoBehaviour
 {
-    private CharacterBase playerBase;
-    private masterInput masterInput;
+    protected CharacterBase playerBase;
+    protected masterInput masterInput;
 
     public float speed = 10f;
-    public const float maxLifeTime = 3f;
-    private float lifeTime;
+    public float maxLifeTime = 3f;
+    protected float lifeTime;
     public int damage = 0;
     Rigidbody rb;
     public LayerMask enemy;
+    protected int layerMask;
     masterInput input;
-    UIManager uiManager;
+    protected UIManager uiManager;
 
-    bool hitEnemy = false;
-    bool hitPlayer = false;
+    protected bool hitEnemy = false;
+    protected bool hitPlayer = false;
     public float bufferDistance;
-    Vector3 hitPoint = Vector3.zero;
-    bool stop = false;
+    protected Vector3 hitPoint = Vector3.zero;
+    protected bool stop = false;
 
     public string poolName = null;
+
+    protected string bulletHitEffect;
 
 
     //fire rune vars
@@ -41,11 +44,12 @@ public abstract class projectile : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        if(playerBase == null)
+            playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         stop = false;
         lifeTime = maxLifeTime;
-        Invoke(nameof(returnToPool), lifeTime);
-
+        //Invoke(nameof(returnToPool), lifeTime);
+        gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         GetDamage();
 
         /*
@@ -100,19 +104,20 @@ public abstract class projectile : MonoBehaviour
     private void OnDisable()
     {
         stop = true;
-        hitEnemy = false;
+        //hitEnemy = false;
         Vector3 hitPoint = Vector3.zero;
-        poolName = null;
+        //poolName = null;
     }
 
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
         input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
         GetDamage();
-        
-        
+        layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
+        playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+
     }
 
     public void GetDamage()
@@ -141,31 +146,20 @@ public abstract class projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!stop)
-        {
-            moveProj();
-            handleTime();
-        }
+        
 
 
     }
 
     private void FixedUpdate()
     {
-        if (hitPoint != Vector3.zero || hitEnemy)
-        {
-            checkDistance();
-        }
-        if(!stop)
-        { 
-            moveProj(); 
-        }
+        
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        onHit(collision);
-        returnToPool();
+        //onHit(collision);
+        //returnToPool();
         /*Debug.Log(collision.gameObject.name);
         if (poolName != "enemyMagePoolOne")
             return;
@@ -196,49 +190,25 @@ public abstract class projectile : MonoBehaviour
         */
     }
 
-    void checkDistance()
-    {
-        float step = speed * Time.fixedDeltaTime;
-        float distanceToHit = Vector3.Distance(transform.position, hitPoint);
-
-        if (distanceToHit <= step || distanceToHit <= bufferDistance)
-        {
-            playEffect(hitPoint);
-            // We've reached the hit point, stop the projectile
-            stop = true;
-
-            /*
-            if(gunnerFire)
-            {
-                gunnerFire = false;
-
-                Collider[] enemies = Physics.OverlapSphere(hitPoint, fireRad, enemy);
-                foreach (Collider enemy in enemies)
-                {
-                    enemy.gameObject.GetComponent<EnemyFrame>().takeDamage(fireDamage);
-                }
-            }
-            */
-            resetProjectile();
-            returnToPool();
-        }
-
-    }
-
-    void resetProjectile()
+    protected void resetProjectile()
     {
         if (rb != null)
         {
             rb.velocity = Vector3.zero;  
             rb.angularVelocity = Vector3.zero; 
         }
+        hitEnemy = false;
     }
 
-    void playEffect(Vector3 position)
+    protected void playEffect(Vector3 position)
     {
-        if((position != null || position != Vector3.zero) && poolName != "enemyMagePoolOne")
+        if(position != null || position != Vector3.zero)// && poolName != "enemyMagePoolOne")
         {
-            print("First if running");
+            EffectsManager.instance.getFromPool(bulletHitEffect, position, Quaternion.identity);
+            resetProjectile();
+            returnToPool();
+            //print("First if running");
+            /*
             switch (poolName)
             {
                 case "bulletPool":
@@ -270,12 +240,13 @@ public abstract class projectile : MonoBehaviour
                     print("Playing mage hit");
                     EffectsManager.instance.getFromPool("mageHitOne", position, Quaternion.identity);
                     break;
-            }
+            }*/
         }
+            
         
     }
 
-    void returnToPool()
+    protected void returnToPool()
     {
         stop = true;
         projectileManager.Instance.returnProjectile(poolName, gameObject);
@@ -307,14 +278,6 @@ public abstract class projectile : MonoBehaviour
         //transform.Translate(Vector3.forward * speed * Time.deltaTime);
     //}
 
-    void handleTime()
-    {
-        lifeTime -= Time.deltaTime;
-        if(lifeTime < 0)
-        {
-            returnToPool();
-        }
-    }
 
 
     //----------RUNE EFFECTS--------------

@@ -2,28 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class pistolBasicProj : projectile
+public class revolverProj : projectile
 {
-    
-
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void FixedUpdate()
     {
         //if (hitPoint != Vector3.zero)// || hitEnemy)
-        
+
         checkDistance();
-        
+
         if (!stop)
         {
             moveProj();
@@ -33,21 +31,22 @@ public class pistolBasicProj : projectile
     private void Awake()
     {
         bulletHitEffect = "bulletHitPool";
+        GetDamage();
     }
 
     private void OnEnable()
     {
         stop = false;
-        
+
         Rigidbody rb = GetComponent<Rigidbody>();
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-        
+
 
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         //RaycastHit hit;
-        
-        
+
+
     }
 
     protected override void moveProj()
@@ -115,7 +114,7 @@ public class pistolBasicProj : projectile
                 }
             }
             */
-            
+
         }
 
     }
@@ -128,4 +127,5 @@ public class pistolBasicProj : projectile
             returnToPool();
         }
     }
+
 }
