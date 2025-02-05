@@ -3294,12 +3294,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0067b7fb58997448988f5fa525cb800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstText: {fileID: 1873351334}
-  secondText: {fileID: 76897547}
-  thirdText: {fileID: 1525464883}
-  mat1Obj: {fileID: 1766215997}
-  mat2Obj: {fileID: 817935886}
-  mat3Obj: {fileID: 1061956991}
+  firstText: {fileID: 0}
+  secondText: {fileID: 0}
+  thirdText: {fileID: 0}
+  materialImages: []
+  strokes: []
+  itemCounts: []
+  onDeathDialogues: []
+  grid: {fileID: 0}
+  materialsRef: {fileID: 0}
+  itemsGrid: {fileID: 0}
 --- !u!1 &450256787
 GameObject:
   m_ObjectHideFlags: 0
@@ -3508,9 +3512,9 @@ MonoBehaviour:
   movementReference: {fileID: 0}
   healthRef: {fileID: 1986969145}
   dmgOverTimeActivated: 0
-  effectTickInterval: 10
   onDamaged: 0
   source: 0
+  effectTickInterval: 10
   iceStackMax: 0
 --- !u!114 &450256797
 MonoBehaviour:
@@ -5156,9 +5160,9 @@ MonoBehaviour:
   movementReference: {fileID: 0}
   healthRef: {fileID: 0}
   dmgOverTimeActivated: 0
-  effectTickInterval: 10
   onDamaged: 0
   source: 0
+  effectTickInterval: 10
   iceStackMax: 0
 --- !u!4 &728695370
 Transform:
@@ -5508,6 +5512,7 @@ MonoBehaviour:
   shakeEffect: {fileID: 0}
   weaponClass: {fileID: 0}
   lastGroundLocation: {x: 0, y: 0, z: 0}
+  targetRoom: {fileID: 0}
   masterInput: {fileID: 0}
   healthBar: {fileID: 0}
   delayedHealthBar: {fileID: 0}
@@ -5515,11 +5520,20 @@ MonoBehaviour:
   bubbleShield: 0
   transitioningRoom: 0
   transitionedRoom: 0
-  inRangeOfTerminal: 0
+  teleporting: 0
+  inDialogueBox: 0
+  inEvent: 0
+  isDying: 0
+  isTouchingGround: 0
+  isGettingKnockbacked: 0
+  usingTerminal: 0
+  teleportSpawnObject: {fileID: 0}
+  wallCollisionCounter: 0
   hand: {fileID: 807646276}
   wrist: {fileID: 0}
   leftHand: {fileID: 0}
   leftForearm: {fileID: 0}
+  maxHealth: 0
   swordAttackPoint: {fileID: 2120058737}
   toolAttackPoint: {fileID: 0}
 --- !u!95 &812922922
@@ -11825,8 +11839,12 @@ MonoBehaviour:
   target: {fileID: 0}
   positionTarget: {x: 0, y: 0, z: 0}
   smoothSpeed: 0.125
+  cameraPanning: 0
   yAxisLocked: 0
+  panYAxisLocked: 0
   lookAtLocked: 0
+  panLookAtLocked: 0
+  isCameraFar: 0
   lastYPos: 0
   followMode: 0
   offset: {x: 0, y: 7, z: -7}
@@ -12361,9 +12379,9 @@ MonoBehaviour:
   movementReference: {fileID: 0}
   healthRef: {fileID: 1986969145}
   dmgOverTimeActivated: 0
-  effectTickInterval: 10
   onDamaged: 0
   source: 0
+  effectTickInterval: 10
   iceStackMax: 4
 --- !u!4 &1022020577
 Transform:
@@ -12374,7 +12392,7 @@ Transform:
   m_GameObject: {fileID: 1022020566}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.98687255, z: -0, w: -0.16150095}
-  m_LocalPosition: {x: -0.61585903, y: -9.003912, z: 16.84586}
+  m_LocalPosition: {x: 11.94, y: -9.003912, z: 4.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16016,9 +16034,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 927807204}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 50, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1402598408
@@ -16433,9 +16451,9 @@ MonoBehaviour:
   movementReference: {fileID: 0}
   healthRef: {fileID: 1986969145}
   dmgOverTimeActivated: 0
-  effectTickInterval: 10
   onDamaged: 0
   source: 0
+  effectTickInterval: 10
   iceStackMax: 0
 --- !u!114 &1427238113
 MonoBehaviour:

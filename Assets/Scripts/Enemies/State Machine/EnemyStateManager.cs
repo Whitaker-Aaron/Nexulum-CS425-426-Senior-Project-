@@ -142,6 +142,15 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public void ResetEnemyState()
     {
         ChangeState(idleState);
-        
+    }
+
+    public string GetCurrentStateName() // Returns name (string) of current state
+    {
+        return currentState.stateName;
+    }
+
+    public EnemyState GetCurrentState() // Returns the state object of the current state
+    {
+        return currentState;
     }
 }
