@@ -147,6 +147,9 @@ public abstract class projectile : MonoBehaviour
         }
         else
         {
+            if (parent == null)
+                return;
+
             EnemyFrame frame = parent.GetComponent<EnemyFrame>();
             enemyInt inter = frame.GetEnemy().GetComponent<enemyInt>();
             if (inter != null)

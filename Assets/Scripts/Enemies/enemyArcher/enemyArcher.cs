@@ -40,11 +40,20 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     // Update is called once per frame
     void Update()
     {
-        if(enemyState != null && enemyState == enemyStateManager.chaseState)
+        gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+
+        enemyState = enemyStateManager.GetCurrentState();
+        print("Enemy state is: " + enemyState.stateName);
+        if(enemyState != null && enemyState.stateName == "Chase")
         {
+            print("Enemy can shoot bow");
             if (bow.canShoot)
             {
-                StartCoroutine(bow.Shoot());
+                if(bow.bulletCount <= 0)
+                    StartCoroutine(bow.Reload());
+                if(bow.bulletCount >= 1)
+                    StartCoroutine(bow.Shoot());
             }
         }
     }
