@@ -36,7 +36,7 @@ public class rifleBasic : weaponType
         canShoot = false;
 
         bulletCount--;
-        GameObject bullet = projectileManager.Instance.getProjectile("bulletPool", bulletSpawn.position, bulletSpawn.rotation);
+        GameObject bullet = projectileManager.Instance.getProjectile("riflePool", bulletSpawn.position, bulletSpawn.rotation);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
         EffectsManager.instance.getFromPool("rifleFlash", bulletSpawn.position, bulletSpawn.rotation);
         yield return new WaitForSeconds(fireRateTime);

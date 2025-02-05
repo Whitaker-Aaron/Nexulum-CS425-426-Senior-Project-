@@ -11,7 +11,7 @@ public abstract class weaponType : MonoBehaviour
     public int magSize;
     public int bulletCount;
     public float reloadTime;
-    public int damage;
+    public float rangeModifier;
     public bool canShoot = true;
     public bool isReloading = false;
     protected PlayerInput playerInput;
