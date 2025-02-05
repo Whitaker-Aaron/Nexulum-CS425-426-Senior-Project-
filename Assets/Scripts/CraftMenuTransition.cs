@@ -30,6 +30,12 @@ public class CraftMenuTransition : MonoBehaviour
     GameObject weaponsScrollContent;
     GameObject itemsScrollContent;
     GameObject runesScrollContent;
+
+    ScrollRect weaponsScrollRect;
+    ScrollRect runesScrollRect;
+    ScrollRect itemsScrollRect;
+
+    ScrollSelection curScrollSelection = ScrollSelection.none;
     
     void Start()
     {
@@ -48,7 +54,11 @@ public class CraftMenuTransition : MonoBehaviour
         itemsScrollContent = GameObject.Find("ItemsScrollContent");
         runesScrollContent = GameObject.Find("RunesScrollContent");
 
-        
+        weaponsScrollRect = weaponsScroll.GetComponent<ScrollRect>();
+        runesScrollRect = runesScroll.GetComponent<ScrollRect>();
+        itemsScrollRect = itemsScroll.GetComponent<ScrollRect>();
+
+
         //populateItemsScroll();
         //populateRunesScroll();
 
@@ -68,7 +78,37 @@ public class CraftMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+        if(curScrollSelection != ScrollSelection.none && EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "CraftRecipe(Clone)")
+        {
+            var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
+            RectTransform selectedItemRect = selectedItem.GetComponent<RectTransform>();
+            switch (curScrollSelection)
+            {
+                case ScrollSelection.items:
+                    var itemContentPanel = itemsScrollContent.GetComponent<RectTransform>();
+                    Vector2 newItemPos = (Vector2)itemsScrollRect.transform.InverseTransformPoint(itemContentPanel.position)
+                    - (Vector2)itemsScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
+                    float newItemPosY = (float)newItemPos.y;
+                    itemContentPanel.anchoredPosition = new Vector2(itemContentPanel.anchoredPosition.x, newItemPosY-150f);
+
+                    break;
+                case ScrollSelection.weapons:
+                    var weaponContentPanel = weaponsScrollContent.GetComponent<RectTransform>();
+                    Vector2 newWeaponPos = (Vector2)weaponsScrollRect.transform.InverseTransformPoint(weaponContentPanel.position)
+                    - (Vector2)weaponsScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
+                    float newWeaponPosY = (float)newWeaponPos.y;
+                    weaponContentPanel.anchoredPosition = new Vector2(weaponContentPanel.anchoredPosition.x, newWeaponPosY - 150f);
+                    break;
+                case ScrollSelection.runes:
+                    var runesContentPanel = runesScrollContent.GetComponent<RectTransform>();
+                    Vector2 newRunePos = (Vector2)runesScrollRect.transform.InverseTransformPoint(runesContentPanel.position)
+                    - (Vector2)runesScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
+                    float newRunePosY = (float)newRunePos.y;
+                    runesContentPanel.anchoredPosition = new Vector2(runesContentPanel.anchoredPosition.x, newRunePosY - 150f);
+                    break;
+            }
+        }
+        
         
     }
 
@@ -164,6 +204,7 @@ public class CraftMenuTransition : MonoBehaviour
     public void NavigateBackToMainSelection()
     {
         ResetScrolls();
+        curScrollSelection = ScrollSelection.none;
         mainButtons.SetActive(true);
         mainSelection.SetActive(true);
         weaponsScroll.SetActive(false);
@@ -190,6 +231,7 @@ public class CraftMenuTransition : MonoBehaviour
 
     public void NavigateToWeaponCraftMenu()
     {
+        curScrollSelection = ScrollSelection.weapons;
         EventSystem.current.SetSelectedGameObject(null);
         backButton.SetActive(false);
         backButton2.SetActive(true);
@@ -211,6 +253,7 @@ public class CraftMenuTransition : MonoBehaviour
 
     public void NavigateToRunesCraftMenu()
     {
+        curScrollSelection = ScrollSelection.runes;
         Debug.Log("Rune Button pressed");
         EventSystem.current.SetSelectedGameObject(null);
         backButton.SetActive(false);
@@ -231,6 +274,7 @@ public class CraftMenuTransition : MonoBehaviour
 
     public void NavigateToItemsCraftMenu()
     {
+        curScrollSelection = ScrollSelection.items;
         Debug.Log("Items Button pressed");
         EventSystem.current.SetSelectedGameObject(null);
         backButton.SetActive(false);
@@ -306,6 +350,14 @@ public class CraftMenuTransition : MonoBehaviour
                 }
             }
         }
+    }
+
+    enum ScrollSelection
+    {
+        none,
+        weapons,
+        items,
+        runes
     }
 
 

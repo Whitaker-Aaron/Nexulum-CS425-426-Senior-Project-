@@ -81,19 +81,22 @@ public class EnemyFrame : MonoBehaviour
         
         anim = GetComponent<EnemyAnimation>();
         enemyUIRef = GameObject.Find("DynamicEnemyUI");
+
+        if (!enemyReference.isInvincible)
+        {
+            healthRef = Instantiate(enemyHealth);
+            healthRef.transform.SetParent(enemyUIRef.transform, false);
+
+            enemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().health;
+            delayedEnemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().delayedHealth;
+
+            enemyHealthBar.maxValue = maxHealth;
+            delayedEnemyHealthBar.maxValue = maxHealth;
+
+            enemyHealthBar.value = health;
+            delayedEnemyHealthBar.value = health;
+        }
         
-
-        healthRef = Instantiate(enemyHealth);
-        healthRef.transform.SetParent(enemyUIRef.transform, false);
-
-        enemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().health;
-        delayedEnemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().delayedHealth;
-
-        enemyHealthBar.maxValue = maxHealth;
-        delayedEnemyHealthBar.maxValue = maxHealth;
-
-        enemyHealthBar.value = health;
-        delayedEnemyHealthBar.value = health;
 
         
 
@@ -140,6 +143,7 @@ public class EnemyFrame : MonoBehaviour
     //take damage function with given damage paramater - Spencer
     public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource, DamageType damageType)
     {
+        if (enemyReference.isInvincible) return;
         Debug.Log("Taken damage of type " + damageType);
         switch(damageType)
         {
