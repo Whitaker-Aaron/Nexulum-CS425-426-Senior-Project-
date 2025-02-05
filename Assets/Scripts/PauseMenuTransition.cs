@@ -32,6 +32,12 @@ public class PauseMenuTransition : MonoBehaviour
     LifetimeManager lifetimeManager;
     RoomManager roomManager;
 
+    GameObject checkpointContent = null;
+    ScrollRect checkpointScrollRect = null;
+
+    GameObject mapContent = null;
+    ScrollRect mapScrollRect = null;
+
     
 
 
@@ -96,7 +102,29 @@ public class PauseMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "CheckpointRoom(Clone)"
+            && checkpointContent != null && checkpointScrollRect != null && mapContent != null && mapScrollRect != null)
+        {
+            var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
+            RectTransform selectedItemRect = selectedItem.GetComponent<RectTransform>();
+
+            var contentPanel = checkpointContent.GetComponent<RectTransform>();
+            Vector2 newPos = (Vector2)checkpointScrollRect.transform.InverseTransformPoint(contentPanel.position)
+            - (Vector2)checkpointScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
+            float newPosY = (float)newPos.y;
+            contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY - 100f);
+
+            var mapContentPanel = mapContent.GetComponent<RectTransform>();
+            var selectedSprite = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.GetComponent<CheckpointUI>().spriteOnMap;
+            if(selectedSprite != null)
+            {
+                Vector2 newMapPos = (Vector2)mapScrollRect.transform.InverseTransformPoint(mapContentPanel.position)
+            - (Vector2)mapScrollRect.transform.InverseTransformPoint(selectedSprite.transform.position);
+                mapContentPanel.anchoredPosition = new Vector2(newMapPos.x + 300f, newMapPos.y - 300f);
+            }
+            
+
+        }
     }
 
     public void SaveGame()
@@ -182,13 +210,17 @@ public class PauseMenuTransition : MonoBehaviour
     public void PopulateSpawnObjects()
     {
         var checkpoints = roomManager.GetCheckpoints();
-        var checkpointContent = GameObject.Find("CheckpointContent");
-        for(int i =0; i <checkpoints.Count; i++) {
+        checkpointContent = GameObject.Find("CheckpointContent");
+        mapContent = GameObject.Find("MapContent");
+        checkpointScrollRect = GameObject.Find("CheckpointView").GetComponent<ScrollRect>();
+        mapScrollRect = GameObject.Find("MapView").GetComponent<ScrollRect>();
+        for (int i =0; i <checkpoints.Count; i++) {
            CheckpointUIRef.GetComponent<CheckpointUI>().spawnObject = checkpoints[i];
            var reference = Instantiate(CheckpointUIRef);
            reference.transform.SetParent(checkpointContent.transform, false);
            checkpointList.Add(reference);
         }
+        AttachSpriteToCheckpoint();
         
     }
 
@@ -203,6 +235,31 @@ public class PauseMenuTransition : MonoBehaviour
             i--;
 
         }
+        checkpointContent = null;
+        checkpointScrollRect = null;
+        mapContent = null;
+        mapScrollRect = null;
     }
+
+    public void AttachSpriteToCheckpoint()
+    {
+        int mapChildrenCount = mapContent.transform.childCount;
+        for(int i =0; i < mapChildrenCount; i++)
+        {
+            if(mapContent.transform.GetChild(i).GetComponent<MapMarker>() != null)
+            {
+                var mapMarker = mapContent.transform.GetChild(i).GetComponent<MapMarker>();
+                for(int j = 0; j < checkpointList.Count; j++)
+                {
+                    var checkpointUI = checkpointList[j].GetComponent<CheckpointUI>();
+                    if (mapMarker.roomToMapTo == checkpointUI.spawnObject.roomName) checkpointUI.spriteOnMap = mapContent.transform.GetChild(i).gameObject;
+
+                }
+
+            }
+        }
+
+    }
+
 
 }

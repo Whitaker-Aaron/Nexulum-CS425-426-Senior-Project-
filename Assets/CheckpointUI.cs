@@ -6,9 +6,10 @@ using TMPro;
 public class CheckpointUI : MonoBehaviour
 {
     [SerializeField] public GameObject goButton;
-    [SerializeField] GameObject roomName;
+    [SerializeField] public GameObject roomName;
     [SerializeField] GameObject roomNameShadow;
     [SerializeField] public RoomSpawnObject spawnObject;
+    [SerializeField] public GameObject spriteOnMap;
     // Start is called before the first frame update
     void Start()
     {
