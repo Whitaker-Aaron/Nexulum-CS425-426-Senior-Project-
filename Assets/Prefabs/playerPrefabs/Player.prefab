@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &180825945736037646
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3288735191653866400}
+  m_Layer: 0
+  m_Name: PlayerVision
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3288735191653866400
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180825945736037646}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.44, z: 0.61}
+  m_LocalScale: {x: 1, y: 1, z: 41.47}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8902603839232332483}
+  m_Father: {fileID: 5383847631840879953}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &438704181207515495
 GameObject:
   m_ObjectHideFlags: 0
@@ -4958,6 +4990,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5383847631840879953}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7951564459947226320
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8902603839232332483}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8902603839232332483
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7951564459947226320}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3288735191653866400}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8075072781684157408
 GameObject:
   m_ObjectHideFlags: 0
@@ -5161,6 +5224,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 39b86ae4f6cb17442bf8133d8bd4d350, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4307176532741541029}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 39b86ae4f6cb17442bf8133d8bd4d350, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3288735191653866400}
     - targetCorrespondingSourceObject: {fileID: 8727031758390269165, guid: 39b86ae4f6cb17442bf8133d8bd4d350, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5846181250270705426}
@@ -5254,7 +5320,6 @@ MonoBehaviour:
   weaponClass: {fileID: 0}
   lastGroundLocation: {x: 0, y: 0, z: 0}
   targetRoom: {fileID: 0}
-  masterInput: {fileID: 0}
   healthBar: {fileID: 0}
   delayedHealthBar: {fileID: 0}
   invul: 0
@@ -5262,13 +5327,19 @@ MonoBehaviour:
   transitioningRoom: 0
   transitionedRoom: 0
   teleporting: 0
+  inDialogueBox: 0
+  inEvent: 0
+  isDying: 0
+  isTouchingGround: 0
+  isGettingKnockbacked: 0
+  usingTerminal: 0
   teleportSpawnObject: {fileID: 0}
-  inRangeOfTerminal: 0
   wallCollisionCounter: 0
   hand: {fileID: 9208678921278773950}
   wrist: {fileID: 5698249890566877889}
   leftHand: {fileID: 6709786861545956428}
   leftForearm: {fileID: 2414462608869430091}
+  maxHealth: 0
   swordAttackPoint: {fileID: 8990343206346804218}
   toolAttackPoint: {fileID: 8990343206346804218}
 --- !u!114 &6793837362974835320
