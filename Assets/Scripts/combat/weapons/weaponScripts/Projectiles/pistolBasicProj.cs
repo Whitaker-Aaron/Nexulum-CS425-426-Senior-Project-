@@ -33,6 +33,7 @@ public class pistolBasicProj : projectile
     private void Awake()
     {
         bulletHitEffect = "bulletHitPool";
+        GetDamage(true);
     }
 
     private void OnEnable()
@@ -53,16 +54,6 @@ public class pistolBasicProj : projectile
     protected override void moveProj()
     {
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
-    }
-
-    protected override void onHit(Collision collision)
-    {
-        // Apply damage to enemy
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            hitEnemy = true;
-            //collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
-        }
     }
 
     void checkDistance()

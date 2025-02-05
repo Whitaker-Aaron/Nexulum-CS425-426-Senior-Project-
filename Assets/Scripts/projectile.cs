@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public abstract class projectile : MonoBehaviour
 {
     protected CharacterBase playerBase;
     protected masterInput masterInput;
+    public GameObject parent;
 
     public float speed = 10f;
     public float maxLifeTime = 3f;
@@ -41,6 +43,11 @@ public abstract class projectile : MonoBehaviour
         poolName = name;
     }
 
+    public void setParent(GameObject parentNew)
+    {
+        parent = parentNew;
+    }
+
 
     private void OnEnable()
     {
@@ -50,7 +57,7 @@ public abstract class projectile : MonoBehaviour
         lifeTime = maxLifeTime;
         //Invoke(nameof(returnToPool), lifeTime);
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-        GetDamage();
+        //GetDamage();
 
         /*
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
@@ -114,27 +121,46 @@ public abstract class projectile : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         //DontDestroyOnLoad(this);
         input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
-        GetDamage();
+        //GetDamage();
         layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
         playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
 
     }
 
-    public void GetDamage()
+    public void GetDamage(bool playerParent)
     {
-        playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
-
-        switch (playerBase.equippedWeapon.weaponClassType)
+        if(playerParent)
         {
-            case WeaponBase.weaponClassTypes.Knight:
-                break;
-            case WeaponBase.weaponClassTypes.Gunner:
-                damage = playerBase.gunnerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
-                break;
-            case WeaponBase.weaponClassTypes.Engineer:
-                damage = playerBase.engineerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
-                break;
+            playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+
+            switch (playerBase.equippedWeapon.weaponClassType)
+            {
+                case WeaponBase.weaponClassTypes.Knight:
+                    break;
+                case WeaponBase.weaponClassTypes.Gunner:
+                    damage = playerBase.gunnerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
+                    break;
+                case WeaponBase.weaponClassTypes.Engineer:
+                    damage = playerBase.engineerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
+                    break;
+            }
         }
+        else
+        {
+            EnemyFrame frame = parent.GetComponent<EnemyFrame>();
+            enemyInt inter = frame.GetEnemy().GetComponent<enemyInt>();
+            if (inter != null)
+            {
+                switch(inter)
+                {
+                    case enemyArcher:
+                        damage = frame.gameObject.GetComponent<enemyArcher>().damage;
+                        break;
+                }
+            }
+        }
+        
+
     }
 
     // Start is called before the first frame update
@@ -273,7 +299,6 @@ public abstract class projectile : MonoBehaviour
 
     protected abstract void moveProj();
 
-    protected abstract void onHit(Collision collision);
     //{
         //transform.Translate(Vector3.forward * speed * Time.deltaTime);
     //}

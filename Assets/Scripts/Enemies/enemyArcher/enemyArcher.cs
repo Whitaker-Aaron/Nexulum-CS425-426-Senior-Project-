@@ -5,6 +5,15 @@ using UnityEngine;
 public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 {
     private bool _isAttacking;
+    private EnemyState enemyState;
+    private EnemyStateManager enemyStateManager;
+
+    public int damage;
+
+    public GameObject bowPrefab;
+    private bow bow;
+    public Transform arrowSpawn;
+
     public bool isAttacking
     {
         get { return _isAttacking; }
@@ -21,14 +30,25 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     // Start is called before the first frame update
     void Start()
     {
-        
+        enemyStateManager = gameObject.GetComponent<EnemyStateManager>();
+        enemyState = enemyStateManager.GetCurrentState();
+        bow = bowPrefab.GetComponent<bow>();
+        bow.setArcher(this);
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(enemyState != null && enemyState == enemyStateManager.chaseState)
+        {
+            if (bow.canShoot)
+            {
+                StartCoroutine(bow.Shoot());
+            }
+        }
     }
+
 
     public enemyInt getType()
     {
