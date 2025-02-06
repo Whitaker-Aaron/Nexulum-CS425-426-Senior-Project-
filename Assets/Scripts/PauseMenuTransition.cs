@@ -112,7 +112,8 @@ public class PauseMenuTransition : MonoBehaviour
             Vector2 newPos = (Vector2)checkpointScrollRect.transform.InverseTransformPoint(contentPanel.position)
             - (Vector2)checkpointScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
             float newPosY = (float)newPos.y;
-            contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY - 100f);
+            if(newPosY-100f <= 0) contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY - 100f);
+
 
             var mapContentPanel = mapContent.GetComponent<RectTransform>();
             var selectedSprite = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.GetComponent<CheckpointUI>().spriteOnMap;
@@ -120,7 +121,7 @@ public class PauseMenuTransition : MonoBehaviour
             {
                 Vector2 newMapPos = (Vector2)mapScrollRect.transform.InverseTransformPoint(mapContentPanel.position)
             - (Vector2)mapScrollRect.transform.InverseTransformPoint(selectedSprite.transform.position);
-                mapContentPanel.anchoredPosition = new Vector2(newMapPos.x + 300f, newMapPos.y - 300f);
+                mapContentPanel.anchoredPosition = new Vector2(newMapPos.x, newMapPos.y);
             }
             
 
