@@ -7,12 +7,14 @@ public class EnemyChaseState : EnemyNeutralState
 
         stateContext.CustomDebugLog("Entered " + stateName + " state");
 
-        stateContext.agent.isStopped = false;
+        // Enemy should be able to move if chasing, unless forcibly stopped
+        stateContext.agent.isStopped = stateContext.movementPaused;
     }
 
     public override void RunState()
     {
-        
+        stateContext.agent.isStopped = stateContext.movementPaused;
+
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) {
             stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, false);
         }
