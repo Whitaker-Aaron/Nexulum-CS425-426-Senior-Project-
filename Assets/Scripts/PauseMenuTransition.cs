@@ -38,6 +38,8 @@ public class PauseMenuTransition : MonoBehaviour
     GameObject mapContent = null;
     ScrollRect mapScrollRect = null;
 
+    Vector2 initialMapPos;
+
     
 
 
@@ -63,6 +65,7 @@ public class PauseMenuTransition : MonoBehaviour
         ReturnToBaseButton = GameObject.Find("ReturnToBaseButton");
         SaveButton = GameObject.Find("SaveButton");
 
+        
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(MapButton);
@@ -102,6 +105,15 @@ public class PauseMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name != "CheckpointRoom(Clone)")
+        {
+            if (initialMapPos != Vector2.zero)
+            {
+                var mapContentPanel = mapContent.GetComponent<RectTransform>();
+                mapContentPanel.anchoredPosition = initialMapPos;
+            }
+            return;
+        }
         if(EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "CheckpointRoom(Clone)"
             && checkpointContent != null && checkpointScrollRect != null && mapContent != null && mapScrollRect != null)
         {
@@ -215,6 +227,10 @@ public class PauseMenuTransition : MonoBehaviour
         mapContent = GameObject.Find("MapContent");
         checkpointScrollRect = GameObject.Find("CheckpointView").GetComponent<ScrollRect>();
         mapScrollRect = GameObject.Find("MapView").GetComponent<ScrollRect>();
+
+        var mapContentPanel = mapContent.GetComponent<RectTransform>();
+        initialMapPos = mapContentPanel.anchoredPosition;
+
         for (int i =0; i <checkpoints.Count; i++) {
            CheckpointUIRef.GetComponent<CheckpointUI>().spawnObject = checkpoints[i];
            var reference = Instantiate(CheckpointUIRef);
@@ -239,6 +255,7 @@ public class PauseMenuTransition : MonoBehaviour
         checkpointContent = null;
         checkpointScrollRect = null;
         mapContent = null;
+        initialMapPos = Vector2.zero;
         mapScrollRect = null;
     }
 
