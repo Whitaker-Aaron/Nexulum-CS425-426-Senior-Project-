@@ -47,11 +47,11 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     void Update()
     {
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-
+        checkDistance();
 
         enemyState = enemyStateManager.GetCurrentState();
         print("Enemy state is: " + enemyState.stateName);
-        if(enemyState != null && enemyState.stateName == "Chase" && (inRange && playerObj != null))
+        if((inRange && playerObj != null) && enemyState != null && (enemyState.stateName == "Chase" || enemyState.stateName == "Search"))
         {
             gameObject.transform.LookAt(playerObj.transform.position, Vector3.up);
             print("Enemy can shoot bow");
@@ -78,7 +78,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 
     void checkDistance()
     {
-        Collider[] objs = Physics.OverlapSphere(gameObject.transform.position, detectionRange, Player);
+        Collider[] objs = Physics.OverlapSphere(gameObject.transform.position + Vector3.up, detectionRange, Player);
 
         foreach(Collider obj in objs)
         {
@@ -104,6 +104,11 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     void assignPlayer(Collider obj)
     {
         playerObj = obj.gameObject;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(gameObject.transform.position + Vector3.up, detectionRange);
     }
 
 }

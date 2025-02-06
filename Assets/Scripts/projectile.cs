@@ -220,7 +220,9 @@ public abstract class projectile : MonoBehaviour
             rb.velocity = Vector3.zero;  
             rb.angularVelocity = Vector3.zero; 
         }
+        returnToPool();
         hitEnemy = false;
+
     }
 
     protected void playEffect(Vector3 position)
@@ -229,7 +231,7 @@ public abstract class projectile : MonoBehaviour
         {
             EffectsManager.instance.getFromPool(bulletHitEffect, position, Quaternion.identity);
             resetProjectile();
-            returnToPool();
+            
             //print("First if running");
             /*
             switch (poolName)
