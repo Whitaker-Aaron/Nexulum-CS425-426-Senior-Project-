@@ -135,6 +135,7 @@ public class masterInput : MonoBehaviour
 
     //laser
     public bool shootingLaser = false;
+    public float shootingRange;
 
     //grenade
     public bool throwingGrenade = false;
@@ -278,6 +279,8 @@ public class masterInput : MonoBehaviour
             laserLine.enabled = true;
         }
         equippedWeapon = character.equippedWeapon.weaponMesh.GetComponent<weaponType>();
+        if(equippedWeapon != null)
+            updateDistance(equippedWeapon.rangeModifier);
     }
 
     // Update is called once per frame
@@ -599,19 +602,21 @@ public class masterInput : MonoBehaviour
 
     IEnumerator updateWeaponWait()
     {
-        yield return new WaitForSeconds(.2f);
+        yield return new WaitForSeconds(.05f);
         
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-            print("calling reload in UWW");
+            //print("calling reload in UWW");
             StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Reload());
             animationControl.gunnerReload(equippedWeapon.reloadTime);
+            updateDistance(equippedWeapon.rangeModifier);
             yield break;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             StartCoroutine(equippedWeapon.Reload());
             animationControl.engineerReload(equippedWeapon.reloadTime);
+            updateDistance(equippedWeapon.rangeModifier);
             yield break;
         }
         else
@@ -776,6 +781,11 @@ public class masterInput : MonoBehaviour
 
     //--------------------Gunner functions-------------------
 
+    public void updateDistance(float modifier)
+    {
+        shootingRange = damageDropOffDistance * modifier;
+    }
+
     void renderLine()
     {
         if(currentClass == WeaponBase.weaponClassTypes.Knight)
@@ -817,11 +827,11 @@ public class masterInput : MonoBehaviour
                     laserLine.SetPosition(1, hit.point);
 
 
-                if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) > damageDropOffDistance)
+                if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) > shootingRange)
                 {
                     laserLine.startColor = Color.red;
                 }
-                else if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) < damageDropOffDistance)
+                else if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) <= shootingRange)
                 {
                     laserLine.startColor = Color.green;
                 }
