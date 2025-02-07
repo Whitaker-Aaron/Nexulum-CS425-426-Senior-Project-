@@ -34,7 +34,8 @@ public class EnemyLOS : MonoBehaviour
     [SerializeField] private bool canSeeThroughWalls = false;
 
     // Debugging
-    [SerializeField] private float distancetotarget;
+    [SerializeField] public float distancetotarget;
+
     [SerializeField] private Vector3 headingtotarget;
     public Vector3 myHeading;
 
@@ -152,6 +153,11 @@ public class EnemyLOS : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public float GetDistanceToTarget()
+    {
+        return distancetotarget;
     }
 
     void OnDrawGizmosSelected()
