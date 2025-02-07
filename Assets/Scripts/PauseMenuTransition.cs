@@ -39,6 +39,9 @@ public class PauseMenuTransition : MonoBehaviour
     ScrollRect mapScrollRect = null;
 
     Vector2 initialMapPos;
+    string curRoom;
+    
+    Vector3 curRoomCoordinates;
 
     
 
@@ -46,6 +49,13 @@ public class PauseMenuTransition : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    private void OnEnable()
+    {
+        Debug.Log("Current room at pause: " + roomManager.currentRoom.roomName);
+        curRoom = roomManager.currentRoom.roomName;
         
     }
 
@@ -227,15 +237,22 @@ public class PauseMenuTransition : MonoBehaviour
         mapContent = GameObject.Find("MapContent");
         checkpointScrollRect = GameObject.Find("CheckpointView").GetComponent<ScrollRect>();
         mapScrollRect = GameObject.Find("MapView").GetComponent<ScrollRect>();
+        var disabledPanel = GameObject.Find("CheckpointsDisabledPanel");
+        if (roomManager.IsCheckpoint()) disabledPanel.SetActive(false);
+        else disabledPanel.SetActive(true);
 
         var mapContentPanel = mapContent.GetComponent<RectTransform>();
         initialMapPos = mapContentPanel.anchoredPosition;
 
         for (int i =0; i <checkpoints.Count; i++) {
            CheckpointUIRef.GetComponent<CheckpointUI>().spawnObject = checkpoints[i];
+           var button = CheckpointUIRef.GetComponent<CheckpointUI>().goButton.GetComponent<Button>();
+           if (roomManager.IsCheckpoint()) button.interactable = true;
+           else button.interactable = false;
            var reference = Instantiate(CheckpointUIRef);
            reference.transform.SetParent(checkpointContent.transform, false);
            checkpointList.Add(reference);
+           
         }
         AttachSpriteToCheckpoint();
         
@@ -261,6 +278,10 @@ public class PauseMenuTransition : MonoBehaviour
 
     public void AttachSpriteToCheckpoint()
     {
+        var curRoomPanel = GameObject.Find("CurrentRoomPanel");
+        if (curRoom == "BaseCamp") curRoomPanel.SetActive(false);
+        else curRoomPanel.SetActive(true);
+
         int mapChildrenCount = mapContent.transform.childCount;
         for(int i =0; i < mapChildrenCount; i++)
         {
@@ -271,6 +292,22 @@ public class PauseMenuTransition : MonoBehaviour
                 {
                     var checkpointUI = checkpointList[j].GetComponent<CheckpointUI>();
                     if (mapMarker.roomToMapTo == checkpointUI.spawnObject.roomName) checkpointUI.spriteOnMap = mapContent.transform.GetChild(i).gameObject;
+                    if(mapMarker.roomToMapTo == curRoom)
+                    {
+                        var roomTransPos = mapContent.transform.GetChild(i).transform.position;
+                        curRoomPanel.transform.position = new Vector3(roomTransPos.x - 145, roomTransPos.y + 50, 0);
+
+                        var mapContentPanel = mapContent.GetComponent<RectTransform>();
+     
+                        if (roomTransPos != null)
+                        {
+                            Vector2 newMapPos = (Vector2)mapScrollRect.transform.InverseTransformPoint(mapContentPanel.position)
+                        - (Vector2)mapScrollRect.transform.InverseTransformPoint(roomTransPos);
+                            mapContentPanel.anchoredPosition = new Vector2(newMapPos.x, newMapPos.y);
+                        }
+                        initialMapPos = mapContentPanel.anchoredPosition;
+
+                    }
 
                 }
 
