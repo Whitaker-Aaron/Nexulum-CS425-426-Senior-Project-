@@ -3,27 +3,30 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class projectile : MonoBehaviour
+public abstract class projectile : MonoBehaviour
 {
-    private CharacterBase playerBase;
-    private masterInput masterInput;
+    protected CharacterBase playerBase;
+    protected masterInput masterInput;
 
     public float speed = 10f;
-    public const float maxLifeTime = 3f;
-    private float lifeTime;
+    public float maxLifeTime = 3f;
+    protected float lifeTime;
     public int damage = 0;
     Rigidbody rb;
     public LayerMask enemy;
+    protected int layerMask;
     masterInput input;
-    UIManager uiManager;
+    protected UIManager uiManager;
 
-    bool hitEnemy = false;
-    bool hitPlayer = false;
+    protected bool hitEnemy = false;
+    protected bool hitPlayer = false;
     public float bufferDistance;
-    Vector3 hitPoint = Vector3.zero;
-    bool stop = false;
+    protected Vector3 hitPoint = Vector3.zero;
+    protected bool stop = false;
 
     public string poolName = null;
+
+    protected string bulletHitEffect;
 
 
     //fire rune vars
@@ -41,10 +44,15 @@ public class projectile : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        if(playerBase == null)
+            playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         stop = false;
         lifeTime = maxLifeTime;
+        //Invoke(nameof(returnToPool), lifeTime);
+        gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         GetDamage();
+
+        /*
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         int layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
@@ -62,12 +70,12 @@ public class projectile : MonoBehaviour
             {
                 hitEnemy = true;
                 int updatedDamage = damage;
-                if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistance)
+                if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)
                 {
                     updatedDamage = damage / masterInput.instance.gunnerDmgMod;
                     
                 }
-                else if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.damageDropOffDistanceEngr)
+                else if(playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)
                 {
                     updatedDamage = damage / masterInput.instance.engrDmgMod;
                     
@@ -89,25 +97,27 @@ public class projectile : MonoBehaviour
             }
             
         }
+        */
 
     }
 
     private void OnDisable()
     {
         stop = true;
-        hitEnemy = false;
+        //hitEnemy = false;
         Vector3 hitPoint = Vector3.zero;
-        poolName = null;
+        //poolName = null;
     }
 
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
         input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
         GetDamage();
-        
-        
+        layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
+        playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+
     }
 
     public void GetDamage()
@@ -136,26 +146,21 @@ public class projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!stop)
-        {
-            moveProj();
-            handleTime();
-        }
+        
 
 
     }
 
     private void FixedUpdate()
     {
-        if ((hitPoint != Vector3.zero || hitEnemy) && poolName != "enemyMagePoolOne")
-        {
-            checkDistance();
-        }
+        
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name);
+        //onHit(collision);
+        //returnToPool();
+        /*Debug.Log(collision.gameObject.name);
         if (poolName != "enemyMagePoolOne")
             return;
         if (collision.gameObject.tag == "material") return;
@@ -182,68 +187,47 @@ public class projectile : MonoBehaviour
         stop = true;
         resetProjectile();
         returnToPool();
+        */
     }
 
-    void checkDistance()
+    protected void resetProjectile()
     {
-        float step = speed * Time.fixedDeltaTime;
-        float distanceToHit = Vector3.Distance(transform.position, hitPoint);
-
-        if (distanceToHit <= step || distanceToHit <= bufferDistance)
-        {
-            playEffect(hitPoint);
-            // We've reached the hit point, stop the projectile
-            stop = true;
-
-            /*
-            if(gunnerFire)
-            {
-                gunnerFire = false;
-
-                Collider[] enemies = Physics.OverlapSphere(hitPoint, fireRad, enemy);
-                foreach (Collider enemy in enemies)
-                {
-                    enemy.gameObject.GetComponent<EnemyFrame>().takeDamage(fireDamage);
-                }
-            }
-            */
-            resetProjectile();
-            returnToPool();
-        }
-
-    }
-
-    void resetProjectile()
-    {
-        // Reset any other projectile properties
         if (rb != null)
         {
-            rb.velocity = Vector3.zero;  // Reset velocity
-            rb.angularVelocity = Vector3.zero;  // Reset rotation
+            rb.velocity = Vector3.zero;  
+            rb.angularVelocity = Vector3.zero; 
         }
+        hitEnemy = false;
     }
 
-    void playEffect(Vector3 position)
+    protected void playEffect(Vector3 position)
     {
-        if((position != null || position != Vector3.zero) && poolName != "enemyMagePoolOne")
+        if(position != null || position != Vector3.zero)// && poolName != "enemyMagePoolOne")
         {
-            print("First if running");
+            EffectsManager.instance.getFromPool(bulletHitEffect, position, Quaternion.identity);
+            resetProjectile();
+            returnToPool();
+            //print("First if running");
+            /*
             switch (poolName)
             {
                 case "bulletPool":
-                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
                 case "pistolPool":
-                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
+                    break;
+                case "revolverPool":
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
                 case "turretPool":
-                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
                 case "dronePool":
-                    EffectsManager.instance.getFromPool("bulletHitPool", position);
+                    EffectsManager.instance.getFromPool("bulletHitPool", position, Quaternion.identity);
                     break;
                 case "tankPool":
-                    EffectsManager.instance.getFromPool("tankHitPool", position);
+                    EffectsManager.instance.getFromPool("tankHitPool", position, Quaternion.identity);
                     break;
             }
         }
@@ -254,19 +238,25 @@ public class projectile : MonoBehaviour
             {
                 case "enemyMagePoolOne":
                     print("Playing mage hit");
-                    EffectsManager.instance.getFromPool("mageHitOne", position);
+                    EffectsManager.instance.getFromPool("mageHitOne", position, Quaternion.identity);
                     break;
-            }
+            }*/
         }
+            
         
     }
 
-    void returnToPool()
+    protected void returnToPool()
     {
+        stop = true;
+        projectileManager.Instance.returnProjectile(poolName, gameObject);
+        /*
         if(poolName == "bulletPool")
             projectileManager.Instance.returnProjectile("bulletPool", gameObject);
         else if(poolName == "pistolPool")
             projectileManager.Instance.returnProjectile("pistolPool", gameObject);
+        else if (poolName == "revolverPool")
+            projectileManager.Instance.returnProjectile("revolverPool", gameObject);
         else if(poolName == "turretPool")
             projectileManager.Instance.returnProjectile("turretPool", gameObject);
         else if (poolName == "dronePool")
@@ -277,22 +267,17 @@ public class projectile : MonoBehaviour
             projectileManager.Instance.returnProjectile("enemyMagePoolOne", gameObject);
         else
             projectileManager.Instance.returnProjectile("bulletPool", gameObject);
+        */
     }
 
 
-    void moveProj()
-    {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-    }
+    protected abstract void moveProj();
 
-    void handleTime()
-    {
-        lifeTime -= Time.deltaTime;
-        if(lifeTime < 0)
-        {
-            returnToPool();
-        }
-    }
+    protected abstract void onHit(Collision collision);
+    //{
+        //transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    //}
+
 
 
     //----------RUNE EFFECTS--------------

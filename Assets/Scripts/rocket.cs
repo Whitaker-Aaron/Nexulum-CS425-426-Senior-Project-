@@ -34,13 +34,13 @@ public class rocket : MonoBehaviour
 
         if(fireB)
         {
-            EffectsManager.instance.getFromPool("rocketFireCircle", gameObject.transform.position);
+            EffectsManager.instance.getFromPool("rocketFireCircle", gameObject.transform.position, Quaternion.identity);
             GameObject tempAura = Instantiate(rocketFireAura, gameObject.transform.position, Quaternion.identity);
             tempAura.GetComponent<areaOfEffect>().startCheck(gameObject.transform.position, fireRadius, fireDmg, fireT, fireR, abilityTime);
         }
         else
         {
-            EffectsManager.instance.getFromPool("rocketHit", gameObject.transform.position);
+            EffectsManager.instance.getFromPool("rocketHit", gameObject.transform.position, Quaternion.identity);
         }
         
         

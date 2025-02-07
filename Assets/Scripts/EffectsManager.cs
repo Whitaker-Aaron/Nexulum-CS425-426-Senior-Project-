@@ -54,6 +54,9 @@ public class EffectsManager : MonoBehaviour
         
 
         createNewPool("bulletHitPool",getPrefab("bulletHit"), bulletPoolSize);
+        createNewPool("pistolFlash", getPrefab("pistolFlash"), 4);
+        createNewPool("rifleFlash", getPrefab("rifleFlash"), 12);
+        createNewPool("revolverFlash", getPrefab("revolverFlash"), 8);
         createNewPool("tankHitPool", getPrefab("tankHit"), tankPoolSize);
         createNewPool("mageHitOne", getPrefab("mageHit"), magePoolSize);
         createNewPool("caPool", getPrefab("caStart"), 3);
@@ -185,7 +188,7 @@ public class EffectsManager : MonoBehaviour
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         temp.transform.position += new Vector3(0, 1, 0);
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
-                        //DontDestroyOnLoad(temp.gameObject);
+                        DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
                         temp.SetActive(false);
                         //temp.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform, false);
@@ -272,18 +275,28 @@ public class EffectsManager : MonoBehaviour
     }
 
 
-    public void getFromPool(string poolName, Vector3 position)
+    public void getFromPool(string poolName, Vector3 position, Quaternion rotation)
     {
         if (allPools[poolName].Count > 0)
         {
             GameObject obj = allPools[poolName].Dequeue();
-            if (poolName != "bubbleShield" && poolName != "earthShield")
-                obj.transform.position = position;
-            else
+            //if (poolName != "bubbleShield" && poolName != "earthShield")
+            //obj.transform.position = position;
+            //else
+            //{
+            //obj.transform.position = position;
+            //obj.transform.rotation = rotation;
+            //}
+            if (poolName == "pistolFlash" || poolName == "rifleFlash" || poolName == "revolverFlash")
                 obj.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+
+
+            obj.transform.position = position;
+            obj.transform.rotation = rotation;
+            //obj.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
             //if(poolName == "bubbleShield" || poolName == "earthShield")
             //{
-                //obj.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform);
+            //obj.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform);
             //}
             obj.SetActive(true);
             obj.GetComponent<ParticleSystem>().Play();

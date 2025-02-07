@@ -146,7 +146,12 @@ public class CraftRecipePrefab : MonoBehaviour
         {
             hasEnough = false;
         }
-        currentMaterialObjects[index].GetComponent<materialRequirementsWrapper>().amountHas.GetComponent<TMP_Text>().text =  curAmount.ToString();
+        //currentMaterialObjects[index].GetComponent<materialRequirementsWrapper>().amountHas.GetComponent<TMP_Text>().text =  curAmount.ToString();
+        currentMaterialObjects[index].GetComponent<materialRequirementsWrapper>().amountHas.GetComponent<TMP_Text>().text = curAmount.ToString() + "/" + requiredAmount.ToString();
+        Color32 red = new Color32(0xE4, 0x3c, 0x54, 0xFF);
+        Color32 white = new Color32(0xFF, 0xFF, 0xFF, 0xFF);
+        if (!hasEnough) currentMaterialObjects[index].GetComponent<materialRequirementsWrapper>().amountHas.GetComponent<TMP_Text>().color = red;
+        else currentMaterialObjects[index].GetComponent<materialRequirementsWrapper>().amountHas.GetComponent<TMP_Text>().color = white;
         return hasEnough;
     }
 

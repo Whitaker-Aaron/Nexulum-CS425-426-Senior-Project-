@@ -44,7 +44,7 @@ public class grenade : MonoBehaviour
         if (isEarth)
         {
 
-            EffectsManager.instance.getFromPool("earthGrenade", gameObject.transform.position);
+            EffectsManager.instance.getFromPool("earthGrenade", gameObject.transform.position, Quaternion.identity);
             enemies = Physics.OverlapSphere(gameObject.transform.position, earthBlastRadius, enemy);
             foreach (Collider c in enemies)
             {

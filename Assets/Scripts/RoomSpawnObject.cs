@@ -6,6 +6,7 @@ using UnityEngine;
 public class RoomSpawnObject : ScriptableObject
 {
     [SerializeField] public string roomName;
+    [SerializeField] public string stylizedRoomName;
     [SerializeField] public Vector3 spawnPosition;
     [SerializeField] public int sceneNum;
 }

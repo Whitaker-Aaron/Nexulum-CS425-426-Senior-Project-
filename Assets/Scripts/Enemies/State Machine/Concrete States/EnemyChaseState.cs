@@ -6,6 +6,7 @@ public class EnemyChaseState : EnemyNeutralState
         this.stateName = "Chase";
 
         stateContext.CustomDebugLog("Entered " + stateName + " state");
+        stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, false);
 
         // Enemy should be able to move if chasing, unless forcibly stopped
         stateContext.agent.isStopped = stateContext.movementPaused;
