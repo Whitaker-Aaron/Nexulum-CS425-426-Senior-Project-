@@ -17,9 +17,9 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Debugging
     public float currentSpeed;
 
-    // Timer-related variables
-    public bool movementPaused = true;
-    public float waitTime = 0;
+    // Movement pausing
+    public bool movementPaused = false;
+    // public float waitTime = 0;
 
     // ----------------------------------------------
     // Components
@@ -67,8 +67,6 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public void Update()
     {
         agent.speed = currentSpeed;
-
-        //
 
         if (currentState != null)
         {
@@ -159,10 +157,18 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
         return currentState;
     }
 
-    public IEnumerator PauseMovement(float seconds)
+    public void PauseMovementFor(float seconds)
     {
-        movementPaused = true;
-        yield return new WaitForSeconds(seconds);
-        movementPaused = false;
+        StartCoroutine(StopFor(seconds));
+    }
+
+    private IEnumerator StopFor(float s)
+    {
+        if (!movementPaused)
+        {
+            movementPaused = true;
+            yield return new WaitForSeconds(s);
+            movementPaused = false;
+        }
     }
 }
