@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class pistolBasicProj : projectile
+public class turretProj : projectile
 {
-    
-
     // Start is called before the first frame update
     void Start()
     {
@@ -21,9 +19,9 @@ public class pistolBasicProj : projectile
     private void FixedUpdate()
     {
         //if (hitPoint != Vector3.zero)// || hitEnemy)
-        
+
         checkDistance();
-        
+
         if (!stop)
         {
             moveProj();
@@ -39,16 +37,15 @@ public class pistolBasicProj : projectile
     private void OnEnable()
     {
         stop = false;
-        
+
         Rigidbody rb = GetComponent<Rigidbody>();
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-        
+
 
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         //RaycastHit hit;
-        GetDamage("Player");
-
+        GetDamage("Ability-Turret");
 
     }
 
@@ -107,7 +104,7 @@ public class pistolBasicProj : projectile
                 }
             }
             */
-            
+
         }
 
     }

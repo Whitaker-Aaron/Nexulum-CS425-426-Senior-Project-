@@ -45,6 +45,7 @@ public class rifleProj : projectile
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         //RaycastHit hit;
+        GetDamage("Player");
 
 
     }

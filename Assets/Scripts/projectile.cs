@@ -8,6 +8,7 @@ public abstract class projectile : MonoBehaviour
 {
     protected CharacterBase playerBase;
     protected masterInput masterInput;
+    protected enemyProjectileDamage enemyProjectileDamage;
     public GameObject parent;
 
     public float speed = 10f;
@@ -124,6 +125,7 @@ public abstract class projectile : MonoBehaviour
         //GetDamage();
         layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
         playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        enemyProjectileDamage = masterInput.instance.gameObject.GetComponent<enemyProjectileDamage>();
 
     }
 
@@ -142,6 +144,20 @@ public abstract class projectile : MonoBehaviour
                     break;
                 case WeaponBase.weaponClassTypes.Engineer:
                     damage = playerBase.engineerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
+                    break;
+            }
+        }
+        else if(name.StartsWith("Ability-"))
+        {
+            string[] parts = name.Split('-', 2);
+            switch(parts[1])
+            {
+                case null:
+                    Debug.LogError("cant get damage for proj in: " + poolName);
+                    return;
+
+                case "Turret":
+                    damage = playerBase.weaponClass.turretAttack;
                     break;
             }
         }
