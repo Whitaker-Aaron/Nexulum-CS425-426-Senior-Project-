@@ -16,7 +16,9 @@ public class EnemyChaseState : EnemyNeutralState
     {
         stateContext.agent.isStopped = stateContext.movementPaused;
 
-        if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) {
+        //if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) {
+        if (false)
+        {
             stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, false);
         }
         else
