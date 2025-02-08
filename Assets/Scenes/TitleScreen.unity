@@ -2046,6 +2046,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 207238769}
   m_CullTransparentMesh: 1
+--- !u!1001 &216494788
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2193456159803961, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_Name
+      value: bulletHit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.228514
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -13.759365
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769634382962725039, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a8f5f64c7156227408f33be5478c5501, type: 3}
 --- !u!1 &230346956
 GameObject:
   m_ObjectHideFlags: 0
@@ -14696,8 +14753,16 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: animTime
+      value: 0.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: engrDmgMod
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: animTimeTwo
+      value: 0.17
       objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: bulletSpawn
@@ -14705,7 +14770,7 @@ PrefabInstance:
       objectReference: {fileID: 5140840072043349459}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: engAnimTime
-      value: 0.13
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: gunnerDmgMod
@@ -14713,7 +14778,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: engAnimTimeTwo
-      value: 0.14
+      value: 0.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: nextAttackTime
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: toolAttackPoint
@@ -14727,6 +14796,10 @@ PrefabInstance:
       propertyPath: swordAttackPoint
       value: 
       objectReference: {fileID: 3266306154456625404}
+    - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: engNextAttackTime
+      value: 0.17
+      objectReference: {fileID: 0}
     - target: {fileID: 1761969504540647581, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: pistolBulletSpawn
       value: 
@@ -34930,3 +35003,4 @@ SceneRoots:
   - {fileID: 1596000215}
   - {fileID: 240381278}
   - {fileID: 4198618468074017717}
+  - {fileID: 216494788}

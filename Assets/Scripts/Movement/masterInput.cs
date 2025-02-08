@@ -748,6 +748,7 @@ public class masterInput : MonoBehaviour
     {
         sword = newSword.weaponMesh;
     }
+    /*
     IEnumerator wait(float animationTime)
     {
         //isAttacking = true;
@@ -758,20 +759,31 @@ public class masterInput : MonoBehaviour
             animationControl.resetEngineer();
         //isAttacking = false;
         yield break;
+    }*/
+
+    IEnumerator wait(float animationTime)
+    {
+        yield return new WaitForSeconds(animationTime);
+
+        // Only reset if no further inputs were registered
+        if (noOfClicks >= 0)
+        {
+            if (currentClass == WeaponBase.weaponClassTypes.Knight)
+                animationControl.resetKnight();
+            if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+                animationControl.resetEngineer();
+        }
     }
 
     IEnumerator waitAttack(float animationTime)
     {
-        isAttacking = true;
-
-        //if(currentClass == WeaponBase.weaponClassTypes.Engineer)
-        //{
-            //StartCoroutine(waitShoot(animationTime * 4));
-        //}
         yield return new WaitForSeconds(animationTime);
-        //animationControl.resetKnight();
-        isAttacking = false;
-        yield break;
+
+        // Ensure isAttacking is only reset if no new input has occurred
+        if (Time.time - lastClickedTime > engNextAttackTime * 0.5f)
+        {
+            isAttacking = false;
+        }
     }
 
     
@@ -960,6 +972,30 @@ public class masterInput : MonoBehaviour
     }
 
     //-----------------------------------------------------------------
+
+    private IEnumerator PerformAttack(float attackTime, GameObject effect, int attackStage)
+    {
+        effect.GetComponent<ParticleSystem>()?.Play();
+
+        switch (attackStage)
+        {
+            case 1:
+                StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, swordAttackPoint, toolAttackRadius, layer));
+                animationControl.engAttackOne(attackTime);
+                break;
+            case 2:
+                StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+                animationControl.engAttackTwo(attackTime);
+                break;
+            case 3:
+                StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+                animationControl.engAttackThree();
+                break;
+        }
+
+        StartCoroutine(wait(attackTime));        // Handles animation reset
+        yield return StartCoroutine(waitAttack(attackTime * 2));  // Controls `isAttacking`
+    }
 
     private void runLogic()
     {
@@ -1172,83 +1208,55 @@ public class masterInput : MonoBehaviour
                 StartCoroutine(repairWait());
             }
 
-            if (Time.time - lastClickedTime > engMaxComboDelay)
+            if (Time.time - lastClickedTime > engMaxComboDelay);
             {
                 noOfClicks = 0;
             }
-            if (Time.time > lastClickedTime + engNextAttackTime && isAttacking == false && shooting == false && !pistolReloading && !repairing)// && Time.time > engCooldown)//&& isAttacking == false)
+
+            if (Time.time > lastClickedTime + engNextAttackTime && !isAttacking && !shooting && !pistolReloading && !repairing)
             {
-                if (shooting)
-                    return;
+                if (!playerInput.actions["RightClick"].triggered) return;
 
-                if (playerInput.actions["RightClick"].triggered)
+                // Register attack input
+                isAttacking = true;
+                lastClickedTime = Time.time;
+                noOfClicks = Mathf.Clamp(noOfClicks + 1, 1, 3); // Ensure noOfClicks never resets prematurely
+
+                var currentAnim = animationControl.getAnimationInfo();
+
+                // Attack 1 - Ensures a follow-up can be registered right as animation ends
+                if (noOfClicks == 1 && currentAnim.normalizedTime > engAnimTime)
                 {
-                    if (shooting)
-                        return;
-                    isAttacking = true;
-                    print("click: " + noOfClicks);
-
-                    lastClickedTime = Time.time;
-
-                    noOfClicks++;
-
-
-                    if (noOfClicks == 1 && !animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > engAnimTime)
+                    if ((currentAnim.IsName("engWaitTwo") && currentAnim.normalizedTime > 0.9f) ||
+                        (currentAnim.IsName("engAttackThree") && currentAnim.normalizedTime > engAnimTimeThree))
                     {
-                        if (animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > .9f)
-                        {
-                            noOfClicks = 0;
-                            return;
-                        }
-                        if (animationControl.getAnimationInfo().IsName("engAttackThree") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeThree)
-                        {
-                            noOfClicks = 0;
-                            return;
-                        }
-                        engNextAttackTime = engAnimTime;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTime, swordAttackPoint, toolAttackRadius, layer));
-                        animationControl.engAttackOne(engAnimTime);
-                        StartCoroutine(waitAttack(engAnimTime * 2));
-                        StartCoroutine(wait(engAnimTime));
-                        ES1.GetComponent<ParticleSystem>().Play();
-                    }
-                    noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
-
-                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeTwo)
-                    {
-                        print("animate two");
-                        engNextAttackTime = engAnimTimeTwo;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
-                        animationControl.engAttackTwo(engAnimTimeTwo);
-                        StartCoroutine(wait(engAnimTimeTwo));
-                        StartCoroutine(waitAttack(engAnimTimeTwo * 2));
-                        ES2.GetComponent<ParticleSystem>().Play();
-                    }
-
-                    if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("engWaitTwo"))
-                    {
-                        print("animate three");
-                        engNextAttackTime = engAnimTimeThree;
                         noOfClicks = 0;
-                        engCooldown = Time.time + cooldown;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
-                        animationControl.engAttackThree();
-                        StartCoroutine(wait(engAnimTimeThree));
-                        StartCoroutine(waitAttack(engAnimTimeThree * 2));
-                        engNextAttackTime = engAnimTime;
-                        ES3.GetComponent<ParticleSystem>().Play();
-
-                    }
-                    else
-                    {
-                        if (Time.time - lastClickedTime > engMaxComboDelay)
-                            animationControl.resetEngineer();
-                        if (noOfClicks >= 3)
-                            noOfClicks = 0;
+                        isAttacking = false;
+                        return;
                     }
 
+                    engNextAttackTime = engAnimTime;
+                    StartCoroutine(PerformAttack(engAnimTime, ES1, 1));
                 }
 
+                // Attack 2 - Ensures input right as attack one ends is detected
+                else if (noOfClicks == 2 &&
+                        (currentAnim.IsName("engWaitOne") || currentAnim.IsName("engAttackOne")) &&
+                        currentAnim.normalizedTime > engAnimTimeTwo - 0.1f) // Extended input buffer
+                {
+                    engNextAttackTime = engAnimTimeTwo;
+                    StartCoroutine(PerformAttack(engAnimTimeTwo, ES2, 2));
+                }
+
+                // Attack 3 - Ensures combo finishes correctly
+                else if (noOfClicks == 3 && currentAnim.IsName("engWaitTwo"))
+                {
+                    engNextAttackTime = engAnimTimeThree;
+                    noOfClicks = 0;
+                    engCooldown = Time.time + cooldown;
+
+                    StartCoroutine(PerformAttack(engAnimTimeThree, ES3, 3));
+                }
             }
 
 
