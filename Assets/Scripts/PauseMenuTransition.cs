@@ -38,12 +38,24 @@ public class PauseMenuTransition : MonoBehaviour
     GameObject mapContent = null;
     ScrollRect mapScrollRect = null;
 
+    Vector2 initialMapPos;
+    string curRoom;
+    
+    Vector3 curRoomCoordinates;
+
     
 
 
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    private void OnEnable()
+    {
+        Debug.Log("Current room at pause: " + roomManager.currentRoom.roomName);
+        curRoom = roomManager.currentRoom.roomName;
         
     }
 
@@ -63,6 +75,7 @@ public class PauseMenuTransition : MonoBehaviour
         ReturnToBaseButton = GameObject.Find("ReturnToBaseButton");
         SaveButton = GameObject.Find("SaveButton");
 
+        
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(MapButton);
@@ -102,6 +115,15 @@ public class PauseMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name != "CheckpointRoom(Clone)")
+        {
+            if (initialMapPos != Vector2.zero)
+            {
+                var mapContentPanel = mapContent.GetComponent<RectTransform>();
+                mapContentPanel.anchoredPosition = initialMapPos;
+            }
+            return;
+        }
         if(EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "CheckpointRoom(Clone)"
             && checkpointContent != null && checkpointScrollRect != null && mapContent != null && mapScrollRect != null)
         {
@@ -112,7 +134,8 @@ public class PauseMenuTransition : MonoBehaviour
             Vector2 newPos = (Vector2)checkpointScrollRect.transform.InverseTransformPoint(contentPanel.position)
             - (Vector2)checkpointScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
             float newPosY = (float)newPos.y;
-            contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY - 100f);
+            if(newPosY-100f <= 0) contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY - 100f);
+
 
             var mapContentPanel = mapContent.GetComponent<RectTransform>();
             var selectedSprite = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.GetComponent<CheckpointUI>().spriteOnMap;
@@ -120,7 +143,7 @@ public class PauseMenuTransition : MonoBehaviour
             {
                 Vector2 newMapPos = (Vector2)mapScrollRect.transform.InverseTransformPoint(mapContentPanel.position)
             - (Vector2)mapScrollRect.transform.InverseTransformPoint(selectedSprite.transform.position);
-                mapContentPanel.anchoredPosition = new Vector2(newMapPos.x + 300f, newMapPos.y - 300f);
+                mapContentPanel.anchoredPosition = new Vector2(newMapPos.x, newMapPos.y);
             }
             
 
@@ -214,11 +237,22 @@ public class PauseMenuTransition : MonoBehaviour
         mapContent = GameObject.Find("MapContent");
         checkpointScrollRect = GameObject.Find("CheckpointView").GetComponent<ScrollRect>();
         mapScrollRect = GameObject.Find("MapView").GetComponent<ScrollRect>();
+        var disabledPanel = GameObject.Find("CheckpointsDisabledPanel");
+        if (roomManager.IsCheckpoint()) disabledPanel.SetActive(false);
+        else disabledPanel.SetActive(true);
+
+        var mapContentPanel = mapContent.GetComponent<RectTransform>();
+        initialMapPos = mapContentPanel.anchoredPosition;
+
         for (int i =0; i <checkpoints.Count; i++) {
            CheckpointUIRef.GetComponent<CheckpointUI>().spawnObject = checkpoints[i];
+           var button = CheckpointUIRef.GetComponent<CheckpointUI>().goButton.GetComponent<Button>();
+           if (roomManager.IsCheckpoint()) button.interactable = true;
+           else button.interactable = false;
            var reference = Instantiate(CheckpointUIRef);
            reference.transform.SetParent(checkpointContent.transform, false);
            checkpointList.Add(reference);
+           
         }
         AttachSpriteToCheckpoint();
         
@@ -238,11 +272,16 @@ public class PauseMenuTransition : MonoBehaviour
         checkpointContent = null;
         checkpointScrollRect = null;
         mapContent = null;
+        initialMapPos = Vector2.zero;
         mapScrollRect = null;
     }
 
     public void AttachSpriteToCheckpoint()
     {
+        var curRoomPanel = GameObject.Find("CurrentRoomPanel");
+        if (curRoom == "BaseCamp") curRoomPanel.SetActive(false);
+        else curRoomPanel.SetActive(true);
+
         int mapChildrenCount = mapContent.transform.childCount;
         for(int i =0; i < mapChildrenCount; i++)
         {
@@ -253,6 +292,22 @@ public class PauseMenuTransition : MonoBehaviour
                 {
                     var checkpointUI = checkpointList[j].GetComponent<CheckpointUI>();
                     if (mapMarker.roomToMapTo == checkpointUI.spawnObject.roomName) checkpointUI.spriteOnMap = mapContent.transform.GetChild(i).gameObject;
+                    if(mapMarker.roomToMapTo == curRoom)
+                    {
+                        var roomTransPos = mapContent.transform.GetChild(i).transform.position;
+                        curRoomPanel.transform.position = new Vector3(roomTransPos.x - 145, roomTransPos.y + 50, 0);
+
+                        var mapContentPanel = mapContent.GetComponent<RectTransform>();
+     
+                        if (roomTransPos != null)
+                        {
+                            Vector2 newMapPos = (Vector2)mapScrollRect.transform.InverseTransformPoint(mapContentPanel.position)
+                        - (Vector2)mapScrollRect.transform.InverseTransformPoint(roomTransPos);
+                            mapContentPanel.anchoredPosition = new Vector2(newMapPos.x, newMapPos.y);
+                        }
+                        initialMapPos = mapContentPanel.anchoredPosition;
+
+                    }
 
                 }
 
