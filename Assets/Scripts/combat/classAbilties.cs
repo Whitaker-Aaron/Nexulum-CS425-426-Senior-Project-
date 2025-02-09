@@ -272,7 +272,7 @@ public class classAbilties : MonoBehaviour
             }
 
             
-            StartCoroutine(abilitiesCooldown(3, ka3Time));
+            acc3 = StartCoroutine(abilitiesCooldown(3, ka3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
@@ -301,13 +301,13 @@ public class classAbilties : MonoBehaviour
                 StartCoroutine(laserStop());
             }
             
-            StartCoroutine(abilitiesCooldown(3, ga3Time));
+            acc3 = StartCoroutine(abilitiesCooldown(3, ga3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
-            StartCoroutine(abilitiesCooldown(3, ea3Time));
+            acc3 = StartCoroutine(abilitiesCooldown(3, ea3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
     }

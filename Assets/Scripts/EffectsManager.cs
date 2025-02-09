@@ -70,6 +70,7 @@ public class EffectsManager : MonoBehaviour
         createNewPool("grenade", getPrefab("grenade"), 4);
         createNewPool("earthGrenade", getPrefab("grenadeEarth"), 4);
         createNewPool("swordShotExplodeHit", getPrefab("swordShotExplode"), swordShotSize);
+        createNewPool("archerHitPool", getPrefab("archerHit"), 4);
     }
 
 
@@ -103,9 +104,10 @@ public class EffectsManager : MonoBehaviour
                     if (poolName == "bubbleShield" || poolName == "earthShield")
                     {
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
-                        if(poolName == "earthShield")
-                            temp.transform.position += new Vector3(0,1,0);
+                        //if(poolName == "earthShield")
+                            //temp.transform.position += new Vector3(0,1,0);
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+                        temp.transform.position += new Vector3(0, 1, 0);
                     }
                     else
                         temp.transform.parent = poolObj.transform;
@@ -137,6 +139,7 @@ public class EffectsManager : MonoBehaviour
                         GameObject temp = Instantiate(getPrefab("bsLoop"));
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+                        temp.transform.position += new Vector3(0, 1, 0);
                         //DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
                         temp.SetActive(false);
@@ -177,6 +180,7 @@ public class EffectsManager : MonoBehaviour
                         GameObject temp = Instantiate(getPrefab("bsEnd"));
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+                        temp.transform.position += new Vector3(0, 1, 0);
                         //DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
                         temp.SetActive(false);
@@ -188,7 +192,7 @@ public class EffectsManager : MonoBehaviour
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         temp.transform.position += new Vector3(0, 1, 0);
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
-                        DontDestroyOnLoad(temp.gameObject);
+                        //DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
                         temp.SetActive(false);
                         //temp.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform, false);

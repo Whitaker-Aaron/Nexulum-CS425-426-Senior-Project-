@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ public abstract class projectile : MonoBehaviour
 {
     protected CharacterBase playerBase;
     protected masterInput masterInput;
+    protected enemyProjectileDamage enemyProjectileDamage;
+    public GameObject parent;
 
     public float speed = 10f;
     public float maxLifeTime = 3f;
@@ -41,6 +44,11 @@ public abstract class projectile : MonoBehaviour
         poolName = name;
     }
 
+    public void setParent(GameObject parentNew)
+    {
+        parent = parentNew;
+    }
+
 
     private void OnEnable()
     {
@@ -50,7 +58,7 @@ public abstract class projectile : MonoBehaviour
         lifeTime = maxLifeTime;
         //Invoke(nameof(returnToPool), lifeTime);
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-        GetDamage();
+        //GetDamage();
 
         /*
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
@@ -114,27 +122,58 @@ public abstract class projectile : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         //DontDestroyOnLoad(this);
         input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
-        GetDamage();
+        //GetDamage();
         layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
         playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        enemyProjectileDamage = masterInput.instance.gameObject.GetComponent<enemyProjectileDamage>();
 
     }
 
-    public void GetDamage()
+    public void GetDamage(string name)
     {
-        playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
-
-        switch (playerBase.equippedWeapon.weaponClassType)
+        if(name == "Player")
         {
-            case WeaponBase.weaponClassTypes.Knight:
-                break;
-            case WeaponBase.weaponClassTypes.Gunner:
-                damage = playerBase.gunnerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
-                break;
-            case WeaponBase.weaponClassTypes.Engineer:
-                damage = playerBase.engineerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
-                break;
+            playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+
+            switch (playerBase.equippedWeapon.weaponClassType)
+            {
+                case WeaponBase.weaponClassTypes.Knight:
+                    break;
+                case WeaponBase.weaponClassTypes.Gunner:
+                    damage = playerBase.gunnerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
+                    break;
+                case WeaponBase.weaponClassTypes.Engineer:
+                    damage = playerBase.engineerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
+                    break;
+            }
         }
+        else if(name.StartsWith("Ability-"))
+        {
+            string[] parts = name.Split('-', 2);
+            switch(parts[1])
+            {
+                case null:
+                    Debug.LogError("cant get damage for proj in: " + poolName);
+                    return;
+
+                case "Turret":
+                    damage = playerBase.weaponClass.turretAttack;
+                    break;
+            }
+        }
+        else
+        {
+            
+            switch(name)
+            {
+                case "Archer":
+                    damage = enemyProjectileDamage.instance.getDamage("Archer");
+                    break;
+            }
+            
+        }
+        
+
     }
 
     // Start is called before the first frame update
@@ -197,7 +236,9 @@ public abstract class projectile : MonoBehaviour
             rb.velocity = Vector3.zero;  
             rb.angularVelocity = Vector3.zero; 
         }
+        returnToPool();
         hitEnemy = false;
+
     }
 
     protected void playEffect(Vector3 position)
@@ -206,7 +247,7 @@ public abstract class projectile : MonoBehaviour
         {
             EffectsManager.instance.getFromPool(bulletHitEffect, position, Quaternion.identity);
             resetProjectile();
-            returnToPool();
+            
             //print("First if running");
             /*
             switch (poolName)
@@ -273,7 +314,6 @@ public abstract class projectile : MonoBehaviour
 
     protected abstract void moveProj();
 
-    protected abstract void onHit(Collision collision);
     //{
         //transform.Translate(Vector3.forward * speed * Time.deltaTime);
     //}
