@@ -10,6 +10,7 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
 
     public RoomInformation currentRoom;
     public List<RoomPersistenceData> allRoomData;
+    public List<RoomPersistenceData> allVisitedRoomsData;
     public List<RoomSpawnObject> currentRoomsCanTravelTo;
 
     void Start()
@@ -30,6 +31,17 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
     public void SetRoom(RoomInformation newRoom)
     {
         currentRoom = newRoom;
+        if (newRoom.roomData != null && !newRoom.roomData.hasVisited)
+        {
+            newRoom.roomData.hasVisited = true;
+            allVisitedRoomsData.Add(newRoom.roomData);
+
+            if (newRoom.isCheckpoint && newRoom.roomData.spawnObject != null)
+            {
+                newRoom.roomData.isCheckpoint = newRoom.isCheckpoint;
+                currentRoomsCanTravelTo.Add(newRoom.roomData.spawnObject);
+            }
+        }
     }
 
     public void SaveData(ref SaveData data)
@@ -41,6 +53,8 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
             {
                 var tempRoomData = new RoomSaveData();
                 tempRoomData.roomName = allRoomData[i].roomName;
+                tempRoomData.hasVisited = allRoomData[i].hasVisited;
+                tempRoomData.isCheckpoint = allRoomData[i].isCheckpoint;
                 if (allRoomData[i].lockedDoors != null && allRoomData[i].lockedDoors.Count > 0)
                 {
                     foreach (var door in allRoomData[i].lockedDoors)
@@ -91,6 +105,7 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
                         trigger[triggerKey] = false;
                     }
                 }
+                allRoomData[i].hasVisited = false;
             }
         }
         else if(allRoomData != null && allRoomData.Count > 0)
@@ -101,8 +116,14 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
                     {
                         if (data.roomData[j].roomName == allRoomData[i].roomName)
                         {
-                            //LOAD LOCKED DOORS FROM SAVE DATA 
-                            if (data.roomData[j].lockedDoors != null && data.roomData[j].lockedDoors.Count > 0 && 
+                        allRoomData[i].hasVisited = data.roomData[j].hasVisited;
+                        allRoomData[i].isCheckpoint = data.roomData[j].isCheckpoint;
+                        if (allRoomData[i].hasVisited == true) allVisitedRoomsData.Add(allRoomData[i]);
+                        if (allRoomData[i].hasVisited == true && 
+                            allRoomData[i].isCheckpoint && allRoomData[i].spawnObject != null) currentRoomsCanTravelTo.Add(allRoomData[i].spawnObject);
+
+                        //LOAD LOCKED DOORS FROM SAVE DATA 
+                        if (data.roomData[j].lockedDoors != null && data.roomData[j].lockedDoors.Count > 0 && 
                                 allRoomData[i].lockedDoors != null && allRoomData[i].lockedDoors.Count > 0)
                             {
                                 foreach (var door in data.roomData[j].lockedDoors)
