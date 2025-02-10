@@ -18,6 +18,7 @@ public class EnemyHead : MonoBehaviour, enemyInt
     private float lastYPosition; // Store last valid floating position
     public float floatSpeed = 2f;
     public float floatHeight = 0.5f;
+    public int attackDamage = 20;
     private float timeOffset;
 
     void Start()
@@ -138,8 +139,8 @@ public class EnemyHead : MonoBehaviour, enemyInt
         foreach (Collider player in playerInRange)
         {
             //attack player commands
-            Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
-            if (player.tag == "Player") playerRef.takeDamage(attackDamage, knockBackDir);
+            Vector3 knockBackDir = playerObj.transform.position - gameObject.transform.position;
+            if (player.tag == "Player") player.takeDamage(attackDamage, knockBackDir);
             Debug.Log(player.tag);
 
         }
