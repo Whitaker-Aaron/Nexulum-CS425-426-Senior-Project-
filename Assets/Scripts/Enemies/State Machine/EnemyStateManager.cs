@@ -17,6 +17,10 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Debugging
     public float currentSpeed;
 
+    // Movement pausing
+    public bool movementPaused = false;
+    // public float waitTime = 0;
+
     // ----------------------------------------------
     // Components
     // ----------------------------------------------
@@ -97,7 +101,6 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public void MoveTo(Vector3 position, bool enablePrediction = false)
     {
         Vector3 directionToPos = (position - enemyLOS.selfPos).normalized;
-
         agent.SetDestination(position);
     }
 
@@ -142,6 +145,30 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public void ResetEnemyState()
     {
         ChangeState(idleState);
-        
+    }
+
+    public string GetCurrentStateName() // Returns name (string) of current state
+    {
+        return currentState.stateName;
+    }
+
+    public EnemyState GetCurrentState() // Returns the state object of the current state
+    {
+        return currentState;
+    }
+
+    public void PauseMovementFor(float seconds)
+    {
+        StartCoroutine(StopFor(seconds));
+    }
+
+    private IEnumerator StopFor(float s)
+    {
+        if (!movementPaused)
+        {
+            movementPaused = true;
+            yield return new WaitForSeconds(s);
+            movementPaused = false;
+        }
     }
 }

@@ -56,6 +56,7 @@ public class EffectsManager : MonoBehaviour
         createNewPool("bulletHitPool",getPrefab("bulletHit"), bulletPoolSize);
         createNewPool("pistolFlash", getPrefab("pistolFlash"), 4);
         createNewPool("rifleFlash", getPrefab("rifleFlash"), 12);
+        createNewPool("revolverFlash", getPrefab("revolverFlash"), 8);
         createNewPool("tankHitPool", getPrefab("tankHit"), tankPoolSize);
         createNewPool("mageHitOne", getPrefab("mageHit"), magePoolSize);
         createNewPool("caPool", getPrefab("caStart"), 3);
@@ -187,7 +188,7 @@ public class EffectsManager : MonoBehaviour
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         temp.transform.position += new Vector3(0, 1, 0);
                         temp.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
-                        //DontDestroyOnLoad(temp.gameObject);
+                        DontDestroyOnLoad(temp.gameObject);
                         allPools[poolName].Enqueue(temp);
                         temp.SetActive(false);
                         //temp.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform, false);
@@ -286,7 +287,7 @@ public class EffectsManager : MonoBehaviour
             //obj.transform.position = position;
             //obj.transform.rotation = rotation;
             //}
-            if (poolName == "pistolFlash" || poolName == "rifleFlash")
+            if (poolName == "pistolFlash" || poolName == "rifleFlash" || poolName == "revolverFlash")
                 obj.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
 
 
