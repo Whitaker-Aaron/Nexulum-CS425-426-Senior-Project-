@@ -8,6 +8,7 @@ public class EnemyHead : MonoBehaviour, enemyInt
     private EnemyStateManager estate;
     private GameObject playerObj;
     public Transform attackPoint;
+    CharacterBase playerRef;
 
     public float visionDistance = 10f; // How far the player can "look"
     private bool canMove = true;
@@ -138,12 +139,21 @@ public class EnemyHead : MonoBehaviour, enemyInt
 
         foreach (Collider player in playerInRange)
         {
-            //attack player commands
-            Vector3 knockBackDir = playerObj.transform.position - gameObject.transform.position;
-            if (player.tag == "Player") player.takeDamage(attackDamage, knockBackDir);
-            Debug.Log(player.tag);
-
+            if (player.CompareTag("Player"))
+            {
+                // Ensure we get the CharacterBase component
+                playerRef = player.GetComponent<CharacterBase>();
+                if (playerRef != null)
+                {
+                    Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
+                    playerRef.takeDamage(attackDamage, knockBackDir);
+                }
+                else
+                {
+                    Debug.LogError("CharacterBase component not found on Player!");
+                }
+            }
         }
-
     }
+
 }
