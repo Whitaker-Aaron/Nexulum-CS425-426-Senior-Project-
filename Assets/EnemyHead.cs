@@ -1,22 +1,31 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
 
 public class EnemyHead : MonoBehaviour, enemyInt
 {
     public Transform player; // Reference to the player's transform
+    private EnemyStateManager estate;
+    private GameObject playerObj;
+    public Transform attackPoint;
+
     public float visionDistance = 10f; // How far the player can "look"
     private bool canMove = true;
     private bool _isAttacking;
-
+    public LayerMask Player;
+    public float attackRange = .5f;
     private Vector3 startPos;
+    private float lastYPosition; // Store last valid floating position
     public float floatSpeed = 2f;
     public float floatHeight = 0.5f;
+    private float timeOffset;
 
     void Start()
     {
         // Automatically find the Player if not set in Inspector
         if (player == null)
         {
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
             {
                 player = playerObj.transform;
@@ -27,7 +36,21 @@ public class EnemyHead : MonoBehaviour, enemyInt
             }
         }
 
+        estate = GetComponent<EnemyStateManager>();
+        if (estate == null)
+        {
+            Debug.LogError("EnemyStateManager not found on EnemyHead!");
+        }
+
         startPos = transform.position;
+        lastYPosition = startPos.y; // Initialize lastYPosition
+        StartCoroutine(StartFloatingAfterDelay(0.5f)); // Delay floating for a smoother start
+    }
+
+    IEnumerator StartFloatingAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        timeOffset = Time.time;
     }
 
     void Update()
@@ -35,22 +58,35 @@ public class EnemyHead : MonoBehaviour, enemyInt
         if (player != null)
         {
             CheckIfPlayerIsLooking();
+            attackPlayer();
         }
 
+        // Ensure estate is valid before accessing it
+        if (estate != null)
+        {
+            estate.movementPaused = !canMove;
+        }
+
+        // Only apply floating effect if movement is allowed
         if (canMove)
         {
             ApplyFloatingEffect();
+        }
+        else
+        {
+            // Maintain last valid Y position to prevent spazzing
+            transform.position = new Vector3(transform.position.x, lastYPosition, transform.position.z);
         }
     }
 
     void CheckIfPlayerIsLooking()
     {
         RaycastHit hit;
+        Vector3 origin = masterInput.instance.bulletSpawn.position;
+        Vector3 direction = masterInput.instance.bulletSpawn.forward;
 
-        // Cast a Ray from the Player in their forward direction
-        if (Physics.Raycast(player.position, player.forward, out hit, visionDistance))
+        if (Physics.Raycast(origin, direction, out hit, visionDistance))
         {
-            // If the Ray hits THIS enemy, freeze movement
             if (hit.collider.gameObject == gameObject)
             {
                 canMove = false;
@@ -59,15 +95,20 @@ public class EnemyHead : MonoBehaviour, enemyInt
             }
         }
 
-        // If not hit, allow movement again
+        // Only reset movement if the player is no longer looking
         canMove = true;
     }
 
     void ApplyFloatingEffect()
     {
-        float newY = startPos.y + Mathf.Sin(Time.time * floatSpeed) * floatHeight;
+        if (timeOffset == 0) return; // Prevent floating before the delay is over
+
+        float elapsedTime = (Time.time - timeOffset);
+        float newY = startPos.y + Mathf.Sin(elapsedTime * floatSpeed) * floatHeight;
+        lastYPosition = newY; // Store last valid position before freezing
         transform.position = new Vector3(transform.position.x, newY, transform.position.z);
     }
+
     public void onDeath()
     {
         // Unkillable enemy
@@ -90,4 +131,18 @@ public class EnemyHead : MonoBehaviour, enemyInt
         }
     }
 
+    void attackPlayer()
+    {
+        Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
+
+        foreach (Collider player in playerInRange)
+        {
+            //attack player commands
+            Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
+            if (player.tag == "Player") playerRef.takeDamage(attackDamage, knockBackDir);
+            Debug.Log(player.tag);
+
+        }
+
+    }
 }
