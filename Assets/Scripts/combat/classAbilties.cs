@@ -18,6 +18,7 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements.Experimental;
 
 public class classAbilties : MonoBehaviour
 {
@@ -34,6 +35,15 @@ public class classAbilties : MonoBehaviour
     private PlayerInput playerInput;
     private bool usingMouseInput = false;
 
+    bool isGamepadLooking = false;
+    bool isMouseLooking = false;
+    bool casting = false;
+    public float minPlacementDistance = .5f;
+    public float maxPlacementDistance = 2.5f;
+    public Vector3 spawnOffset = new Vector3(0, .2f, 0);
+
+    Vector3 lookPos = Vector3.zero;
+    Vector3 lookDir = Vector3.zero;
 
     //Knight
     [HideInInspector] public bool bubble = false;
@@ -116,6 +126,9 @@ public class classAbilties : MonoBehaviour
 
     private GameObject[] placedTowers;
     private int totalTowerCount;
+
+    [SerializeField] private GameObject clonePrefab;
+    public GameObject currentClone;
 
 
     //cooldown rates
@@ -259,7 +272,7 @@ public class classAbilties : MonoBehaviour
             }
 
             
-            StartCoroutine(abilitiesCooldown(3, ka3Time));
+            acc3 = StartCoroutine(abilitiesCooldown(3, ka3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
@@ -288,18 +301,21 @@ public class classAbilties : MonoBehaviour
                 StartCoroutine(laserStop());
             }
             
-            StartCoroutine(abilitiesCooldown(3, ga3Time));
+            acc3 = StartCoroutine(abilitiesCooldown(3, ga3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
-            StartCoroutine(abilitiesCooldown(3, ea3Time));
+            currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
+            acc3 = StartCoroutine(abilitiesCooldown(3, ea3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
     }
 
     IEnumerator abilitiesCooldown(int ability, float time)
     {
+        if (turretNumCount == turretMaxQuantity || teslaNumCount == teslaMaxQuantity)
+            yield break;
         yield return StartCoroutine(uiManager.StartCooldownSlider(ability, (0.98f/time)));
         //yield return new WaitForSeconds(time);
 
@@ -331,6 +347,9 @@ public class classAbilties : MonoBehaviour
         yield break;
     }
 
+
+    
+
     //Knight
 
     IEnumerator bubbleShield()
@@ -341,19 +360,19 @@ public class classAbilties : MonoBehaviour
 
         if(earthBool)
         {
-            EffectsManager.instance.getFromPool("earthShield", Vector3.zero);
+            EffectsManager.instance.getFromPool("earthShield", Vector3.zero, Quaternion.identity);
             yield return new WaitForSeconds(.5f);
-            EffectsManager.instance.getFromPool("earthShield", Vector3.zero);
+            EffectsManager.instance.getFromPool("earthShield", Vector3.zero, Quaternion.identity);
             yield return new WaitForSeconds(bubbleTime);
-            EffectsManager.instance.getFromPool("earthShield", Vector3.zero);
+            EffectsManager.instance.getFromPool("earthShield", Vector3.zero, Quaternion.identity);
         }
         else
         {
-            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero);
+            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero, Quaternion.identity);
             yield return new WaitForSeconds(.5f);
-            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero);
+            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero, Quaternion.identity);
             yield return new WaitForSeconds(bubbleTime);
-            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero);
+            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero, Quaternion.identity);
         }
         //Instantiate(knightBubblePrefab, player.transform.position, Quaternion.identity);
         //currentShield.transform.SetParent(player.transform, false);
@@ -385,22 +404,22 @@ public class classAbilties : MonoBehaviour
         //GameObject tempEffect = Instantiate(combatAuraEffectStart, currentAura, Quaternion.identity);
         if(!fireBool)
         {
-            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0));
+            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
             yield return new WaitForSeconds(.3f);
-            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0));
+            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
             yield return new WaitForSeconds(auraTime);
-            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0));
+            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
             checkingAura = false;
             activatedAura = false;
             currentAura = Vector3.zero;
         }
         else
         {
-            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0));
+            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
             yield return new WaitForSeconds(.3f);
-            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0));
+            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
             yield return new WaitForSeconds(auraTime);
-            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0));
+            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
             checkingAura = false;
             activatedAura = false;
             currentAura = Vector3.zero;
@@ -580,7 +599,132 @@ public class classAbilties : MonoBehaviour
 
     //Engineer
 
-   
+    public void mouseTurretPlace(InputAction.CallbackContext context)
+    {
+
+
+        if (casting && currentTurret != null)
+        {
+
+            if (masterInput.instance.inputPaused || isGamepadLooking)
+                return;
+
+            isMouseLooking = true;
+            isGamepadLooking = false;
+
+            Vector2 mousePosition = context.ReadValue<Vector2>();
+
+            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100, ground))
+            {
+                lookPos = hit.point;
+            }
+
+
+            float distanceFromPlayer = Vector3.Distance(player.transform.position, lookPos);
+            Vector3 direction = (lookPos - player.transform.position).normalized;
+
+            if (distanceFromPlayer <= maxPlacementDistance && distanceFromPlayer > minPlacementDistance)
+            {
+                currentTurret.transform.position = lookPos + spawnOffset;
+                currentTurret.transform.rotation = player.transform.rotation;
+            }
+            else if (distanceFromPlayer <= minPlacementDistance)
+            {
+                currentTurret.transform.position = player.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
+                currentTurret.transform.position = new Vector3(
+                    currentTurret.transform.position.x,
+                    spawnOffset.y,
+                    currentTurret.transform.position.z
+                );
+                currentTurret.transform.rotation = player.transform.rotation;
+            }
+            else
+            {
+                currentTurret.transform.position = player.transform.position + direction * maxPlacementDistance + spawnOffset;
+                currentTurret.transform.rotation = player.transform.rotation;
+            }
+        }
+
+
+
+
+    }
+
+    public void gamepadTurretPlace(InputAction.CallbackContext context)
+    {
+
+        //Vector3 mousePos = Vector3.zero;
+        //RaycastHit hit;
+
+        // Determine input type (mouse vs. gamepad)
+        if (playerInput.actions["MouseLook"].triggered)
+        {
+            isMouseLooking = true; // Set flag for mouse input
+            isGamepadLooking = false;
+        }
+        else if (Mathf.Abs(playerInput.actions["GamePadLook"].ReadValue<Vector2>().magnitude) > 0.1f) // Check for joystick movement
+        {
+            isMouseLooking = false; // Set flag for gamepad input
+            isGamepadLooking = true;
+        }
+
+        if (masterInput.instance.inputPaused || isMouseLooking)
+            return;
+        else if (casting && currentTurret != null)
+        {
+            Vector2 rightStickInput = context.ReadValue<Vector2>();
+
+            if (rightStickInput != Vector2.zero)
+            {
+                Vector3 playerForward = Camera.main.transform.forward;
+                Vector3 playerRight = Camera.main.transform.right;
+
+                // Ignore Y axis to keep player level
+                playerForward.y = 0;
+                playerRight.y = 0;
+
+                // Normalize camera directions
+                playerForward.Normalize();
+                playerRight.Normalize();
+
+                Vector3 lookDirection = (playerRight * rightStickInput.x) + (playerForward * rightStickInput.y);
+
+                lookPos = player.transform.position + lookDirection * 2.5f; // Adjust distance as needed
+            }
+
+            float distanceFromPlayer = Vector3.Distance(player.transform.position, lookPos);
+            Vector3 direction = (lookPos - player.transform.position).normalized;
+
+            // Position the turret based on distance from player
+            if (distanceFromPlayer <= maxPlacementDistance && distanceFromPlayer > minPlacementDistance)
+            {
+                currentTurret.transform.position = lookPos + spawnOffset;
+                currentTurret.transform.rotation = player.transform.rotation;
+            }
+            else if (distanceFromPlayer <= minPlacementDistance)
+            {
+                currentTurret.transform.position = player.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
+                currentTurret.transform.position = new Vector3(
+                    currentTurret.transform.position.x,
+                    spawnOffset.y,
+                    currentTurret.transform.position.z
+                );
+                currentTurret.transform.rotation = player.transform.rotation;
+            }
+            else
+            {
+                currentTurret.transform.position = player.transform.position + direction * maxPlacementDistance + spawnOffset;
+                currentTurret.transform.rotation = player.transform.rotation;
+            }
+        }
+        else
+            return;
+
+    }
+
     void removeAllTowers()
     {
         for (int i = placedTowers.Length; i >= 0; i--) // Start from the end of the list
@@ -620,17 +764,6 @@ public class classAbilties : MonoBehaviour
 
     void activateTesla()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit hit;
-
-        
-        if (Physics.Raycast(ray, out hit, 100, ground))
-        {
-            mousePos = hit.point;
-            
-        }
-
         if (instant)
         {
             instant = false;
@@ -773,59 +906,16 @@ public class classAbilties : MonoBehaviour
 
     void activateTurret()
     {
-        Vector3 mousePos = Vector3.zero;
-        RaycastHit hit;
-
-        // Determine input type (mouse vs. gamepad)
-        if (playerInput.actions["MouseLook"].triggered)
-        {
-            usingMouseInput = true; // Set flag for mouse input
-        }
-        else if (Mathf.Abs(playerInput.actions["GamePadLook"].ReadValue<Vector2>().magnitude) > 0.1f) // Check for joystick movement
-        {
-            usingMouseInput = false; // Set flag for gamepad input
-        }
-
-
-        // Handle mouse input
-        if (usingMouseInput)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 100, ground))
-            {
-                mousePos = hit.point;
-            }
-        }
-        else // Handle gamepad input
-        {
-            Vector2 inputLook = playerInput.actions["GamePadLook"].ReadValue<Vector2>(); // Get joystick input
-            Debug.Log($"Gamepad Input: {inputLook}"); // Log the joystick input values
-
-            float distance = Mathf.Clamp(inputLook.magnitude, playerRad, turretPlacementRadius); // Clamp the distance
-
-            if (inputLook != Vector2.zero) // Check for valid input
-            {
-                // Normalize the joystick input to get direction
-                Vector3 directionT = new Vector3(inputLook.x, 0, inputLook.y).normalized;
-
-                // Calculate the desired turret position based on player position and input direction
-                mousePos = player.transform.position + directionT * distance;
-            }
-            else
-            {
-                // Default to player position if no input
-                mousePos = player.transform.position;
-            }
-        }
-
-        // Instantiate the transparent turret if instant is true
         if (instant)
         {
             instant = false;
             if (turretTransparentPrefab != null) 
             {
                 currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position + new Vector3(2.5f,0,0), player.transform.rotation);
-                currentTurret.transform.position = player.transform.position + new Vector3(0, 0, 5);
+                
+                currentTurret.transform.position = player.transform.position + new Vector3(0, .75f, 2.5f);
+                currentTurret.transform.parent = player.transform;
+                casting = true;
             }
             else
             {
@@ -840,35 +930,11 @@ public class classAbilties : MonoBehaviour
             return; // Exit if currentTurret is null
         }
 
-        float distanceFromPlayer = Vector3.Distance(player.transform.position, mousePos);
-        Vector3 direction = (mousePos - player.transform.position).normalized;
-
-        if (distanceFromPlayer <= turretPlacementRadius && distanceFromPlayer > playerRad)
-        {
-            currentTurret.transform.position = mousePos;
-        }
-        else if (distanceFromPlayer <= playerRad)
-        {
-            currentTurret.transform.position = player.transform.position + direction * (playerRad + 0.1f); // Small buffer to avoid overlap
-            currentTurret.transform.position = new Vector3(
-                currentTurret.transform.position.x,
-                Mathf.Max(currentTurret.transform.position.y, player.transform.position.y + 0.03f), // Ensure turret stays above player
-                currentTurret.transform.position.z
-            );
-        }
-        else
-        {
-            currentTurret.transform.position = player.transform.position + direction * turretPlacementRadius;
-        }
-
-        // Ensure turret faces the same direction as the player
-        currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward); // Match turret rotation to player's forward direction
-
-        // Handle the Attack action
         if (playerInput.actions["Attack"].triggered)
         {
             if (currentTurret != null) 
             {
+                casting = false;
                 placing = false; 
                 instant = true;
                 Quaternion rot = currentTurret.transform.rotation; 
@@ -879,7 +945,7 @@ public class classAbilties : MonoBehaviour
                 // Instantiate the final turret
                 if (turretPrefab != null) // Check if turretPrefab is assigned
                 {
-                    currentTurret = Instantiate(turretPrefab, pos + new Vector3(0, turretSpawnHeight, 0), rot);
+                    currentTurret = Instantiate(turretPrefab, pos, rot);
                     StartCoroutine(playerInputWait()); // Wait for input
                 }
                 else
@@ -893,67 +959,6 @@ public class classAbilties : MonoBehaviour
             turretNumCount += 1;
             totalTowerCount += 1;
         }
-
-
-        /*
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit hit;
-
-
-        if (Physics.Raycast(ray, out hit, 100, ground))
-        {
-            mousePos = hit.point;
-
-        }
-
-        if (instant)
-        {
-            instant = false;
-            currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position, Quaternion.LookRotation(player.transform.forward));
-        }
-
-        float distance = Vector3.Distance(player.transform.position, mousePos);
-        Vector3 direction = (mousePos - player.transform.position).normalized;
-
-        if (distance <= turretPlacementRadius && distance > playerRad)
-        {
-            currentTurret.gameObject.transform.position = mousePos;
-            currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-        }
-        else if (distance <= playerRad)
-        {
-            currentTurret.transform.position = player.transform.position + direction * (playerRad + 0.1f);  // Small buffer to avoid overlap
-
-            // Ensure the turret stays above the ground to avoid going under the player
-            currentTurret.transform.position = new Vector3(
-                currentTurret.transform.position.x,
-                Mathf.Max(currentTurret.transform.position.y, player.transform.position.y + 0.03f),  // Ensure turret stays slightly above player's Y position
-                currentTurret.transform.position.z
-            );
-            currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-        }
-        else
-        {
-            currentTurret.gameObject.transform.position = player.transform.position + direction * turretPlacementRadius;
-            currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-        }
-
-        if (playerInput.actions["Attack"].triggered)
-        {
-            if (currentTurret != null)// && distance <= turretPlacementRadius)
-            {
-                placing = false;
-                Quaternion rot = currentTurret.transform.rotation;
-                Vector3 pos = currentTurret.transform.position;
-                Destroy(currentTurret);
-                currentTurret = Instantiate(turretPrefab, pos + new Vector3(0, turretSpawnHeight, 0), rot);
-                StartCoroutine(playerInputWait());
-            }
-            gameObject.GetComponent<masterInput>().abilityInUse = false;
-            placedTowers.Add(totalTowerCount, currentTurret);
-        }
-        */
     }
 
     //-------------------------------------------

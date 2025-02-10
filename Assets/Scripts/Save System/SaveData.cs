@@ -10,6 +10,7 @@ public class SaveData
     public bool isNewFile = true;
     public int maxPlayerHealth;
     public int playerHealth;
+    public int florentineAmount;
     public string equippedWeapon;
     public string[] equippedRunes;
 
@@ -25,6 +26,7 @@ public class SaveData
     {
         maxPlayerHealth = 100;
         playerHealth = 100;
+        florentineAmount = 0;
         equippedWeapon = "Dagger";
 
         materialInventory = new CraftMaterialSaveData[50];

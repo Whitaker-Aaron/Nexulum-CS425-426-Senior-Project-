@@ -34,7 +34,8 @@ public class EnemyLOS : MonoBehaviour
     [SerializeField] private bool canSeeThroughWalls = false;
 
     // Debugging
-    [SerializeField] private float distancetotarget;
+    [SerializeField] public float distancetotarget;
+
     [SerializeField] private Vector3 headingtotarget;
     public Vector3 myHeading;
 
@@ -95,13 +96,14 @@ public class EnemyLOS : MonoBehaviour
             float targetangle = Vector3.Angle(headingtotarget, transform.forward);
 
             RaycastHit hit;
-
-            if ((distancetotarget <= detectionRange) && (targetangle <= visionAngle) && canSeeThroughWalls)
+            //(targetangle <= visionAngle)
+            //(distancetotarget <= detectionRange) && 
+            if ((distancetotarget <= detectionRange) && canSeeThroughWalls)
             {
                 isTargetSpotted = true;
                 return currentTarget.tag;
             }
-            else if ((distancetotarget <= detectionRange) && (targetangle <= visionAngle) && !canSeeThroughWalls)
+            else if ((distancetotarget <= detectionRange) && !canSeeThroughWalls)
             {
                 Physics.Raycast(origin: selfPos, direction: headingtotarget.normalized, hitInfo: out hit, maxDistance: detectionRange); // Determine if target is obstructed
                 //Debug.Log("Ray hit: " + hit.collider.tag);
@@ -151,6 +153,11 @@ public class EnemyLOS : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public float GetDistanceToTarget()
+    {
+        return distancetotarget;
     }
 
     void OnDrawGizmosSelected()

@@ -8,5 +8,7 @@ public class Enemy : ScriptableObject
     public string enemyName;
     public int baseHealth;
     public int droppedExperience;
+    public float healthBarOffset;
+    public bool isInvincible;
 }
 

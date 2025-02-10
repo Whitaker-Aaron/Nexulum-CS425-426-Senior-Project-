@@ -95,7 +95,7 @@ public class spellCastManager : MonoBehaviour
         // Determine input type (mouse vs. gamepad)
         if (playerInput.actions["MouseLook"].triggered)
         {
-            isMouseLooking = true; // Set flag for mouse input
+            isMouseLooking = true; 
             isGamepadLooking = false;
         }
         else if (Mathf.Abs(playerInput.actions["GamePadLook"].ReadValue<Vector2>().magnitude) > 0.1f) // Check for joystick movement

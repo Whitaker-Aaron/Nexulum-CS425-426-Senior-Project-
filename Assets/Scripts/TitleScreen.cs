@@ -48,6 +48,6 @@ public class TitleScreen : MonoBehaviour
     public void OnNew()
     {
         SaveManager.NewGame();
-        LifetimeManager.StartGame();
+        StartCoroutine(LifetimeManager.StartNewGame());
     }
 }
