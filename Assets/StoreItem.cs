@@ -9,8 +9,8 @@ public class StoreItem : MonoBehaviour
     [SerializeField] GameObject materialRequirementObject;
     [SerializeField] public CraftRecipe craftRecipe;
     [SerializeField] GameObject materialContainer;
-    [SerializeField] GameObject storeItemName;
-    [SerializeField] GameObject storeItemNameShadow;
+    [SerializeField] public GameObject storeItemName;
+    [SerializeField] public GameObject storeItemNameShadow;
     [SerializeField] public GameObject purchaseButton;
     [SerializeField] GameObject disabledPanel;
     List<GameObject> currentMaterialObjects = new List<GameObject>();
@@ -24,5 +24,12 @@ public class StoreItem : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public enum StoreItemType
+    {
+        Recipe,
+        Item,
+        Weapon
     }
 }

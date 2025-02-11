@@ -315,7 +315,7 @@ public class MenuManager : MonoBehaviour
         Destroy(currentMenuObject);
         currentMenuObject = Instantiate(baseShopMenuReference);
         currentMenuObject.transform.SetParent(canvas.transform, false);
-        //populateBaseInventoryMaterials();
+        populateBaseShopOptions(StoreItem.StoreItemType.Recipe);
         //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
     }
 
@@ -462,16 +462,28 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void populateBaseShopOptions()
+    public void populateBaseShopOptions(StoreItem.StoreItemType type)
     {
+        var curFlorentine = character.GetFlorentine();
         if (currentMenuObject != null)
         {
             var container = GameObject.Find("StoreOptionLayout").GetComponent<VerticalLayoutGroup>();
-            var recipes = returnRecipesInShop();
-            for(int i =0; i < recipes.Count; i++)
+            switch (type)
             {
-                var shopItem = shopOptionObject.GetComponent<StoreItem>();
+                case StoreItem.StoreItemType.Recipe:
+                    var recipes = returnRecipesInShop();
+                    for (int i = 0; i < recipes.Count; i++)
+                    {
+                        var shopItem = shopOptionObject.GetComponent<StoreItem>();
+                        shopItem.craftRecipe = recipes[i];
+                        shopItem.storeItemName.GetComponent<TMP_Text>().text = recipes[i].recipeName;
+                        shopItem.storeItemNameShadow.GetComponent<TMP_Text>().text = recipes[i].recipeName;
+                        var curShop = Instantiate(shopOptionObject);
+                        curShop.transform.SetParent(container.transform, false);
+                    }
+                    break;
             }
+            
         }
     }
 
