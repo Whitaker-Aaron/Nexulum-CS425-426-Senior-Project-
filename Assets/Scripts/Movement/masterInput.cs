@@ -744,6 +744,60 @@ public class masterInput : MonoBehaviour
 
     //----------------Knight Functions------------------
 
+    Queue<string> knightCombo = new Queue<string>();
+    int maxComboLength = 3;
+
+    float attackHoldTime = 0f;
+    float heavyAttackThreshold = 0.4f; // Holding for 0.4s triggers a heavy attack
+    bool attackButtonHeld = false;
+
+    public float lightAttackTime;
+    public float heavyAttackTime;
+
+    void AddKnightAttack(string attackType)
+    {
+        if (knightCombo.Count >= maxComboLength) return;
+
+        knightCombo.Enqueue(attackType);
+
+        if (!isAttacking) // Start attack sequence if not already attacking
+            ExecuteKnightAttack();
+    }
+
+    void ExecuteKnightAttack()
+    {
+        if (knightCombo.Count == 0)
+        {
+            isAttacking = false;
+            return;
+        }
+
+        string attack = knightCombo.Dequeue();
+        isAttacking = true;
+
+        float attackDuration = (attack == "L") ? lightAttackTime : heavyAttackTime;
+
+        if (attack == "L")
+            animationControl.knightAttackOne(attackDuration);
+        else
+            animationControl.knightAttackTwo(attackDuration);
+
+        StartCoroutine(CompleteKnightAttack(attackDuration));
+    }
+
+    IEnumerator CompleteKnightAttack(float attackTime)
+    {
+        yield return new WaitForSeconds(attackTime * 0.9f); // Buffer for next attack
+
+        if (knightCombo.Count > 0)
+            ExecuteKnightAttack();
+        else
+        {
+            yield return new WaitForSeconds(attackTime * 0.1f);
+            isAttacking = false;
+        }
+    }
+
     public void changeSword(WeaponBase newSword)
     {
         sword = newSword.weaponMesh;
@@ -895,6 +949,86 @@ public class masterInput : MonoBehaviour
     */
 
     //----------------------Engineer Functions------------------------
+
+    int engineerAttackStage = 0;
+    Queue<int> engrCombo = new Queue<int>();
+    int comboAttackCounter = 0;
+
+
+    public float lightEngrAttackTime;
+    //public float[] engineerAttackTimes;
+
+    void resetComboCounter()
+    {
+        while (Time.time < nextAttackTime && !animationControl.getAnimationInfo().IsName("engAttackThree"))
+            continue;
+
+        comboAttackCounter = 0;
+        engrCombo.Clear();
+
+        return;
+    }
+
+    void AddEngrAttack(int attackType)
+    {
+        
+        if (comboAttackCounter == 3)
+        {
+            resetComboCounter();
+            return;
+        }
+        if (knightCombo.Count >= maxComboLength) return;
+
+        comboAttackCounter++;
+        lastClickedTime = Time.time;
+        nextAttackTime = Time.time + engMaxComboDelay;
+
+        engrCombo.Enqueue(attackType);
+
+        if (!isAttacking) // Start attack sequence if not already attacking
+            ExecuteEngrAttack();
+    }
+
+    void ExecuteEngrAttack()
+    {
+        if (engrCombo.Count == 0)
+        {
+            isAttacking = false;
+            return;
+        }
+
+        int attack = engrCombo.Dequeue();
+        isAttacking = true;
+
+
+            if (attack == 1 && animationControl.getAnimationInfo().IsName("Locomotion"))
+            animationControl.engAttackOne(lightEngrAttackTime);
+        else if(attack == 2)// && animationControl.getAnimationInfo().IsName("engWaitOne"))
+            animationControl.engAttackTwo(lightEngrAttackTime);
+        else if(attack == 3)// && animationControl.getAnimationInfo().IsName("engWaitTwo"))
+            animationControl.engAttackThree();
+
+        StartCoroutine(CompleteEngrAttack(lightEngrAttackTime));
+    }
+
+    IEnumerator CompleteEngrAttack(float attackTime)
+    {
+        yield return new WaitForSeconds(attackTime * 0.4f); // Buffer for next attack
+
+        if (engrCombo.Count > 0)
+            ExecuteEngrAttack();
+        else
+        {
+            yield return new WaitForSeconds(attackTime * 0.1f);
+            isAttacking = false;
+            comboAttackCounter = 0;
+        }
+
+            yield break;
+    }
+
+
+
     /*IEnumerator waitShoot(float shootTime)
     {
         canPistolShoot = false;
@@ -973,6 +1107,7 @@ public class masterInput : MonoBehaviour
 
     //-----------------------------------------------------------------
 
+    /*
     private IEnumerator PerformAttack(float attackTime, GameObject effect, int attackStage)
     {
         effect.GetComponent<ParticleSystem>()?.Play();
@@ -996,6 +1131,37 @@ public class masterInput : MonoBehaviour
         StartCoroutine(wait(attackTime));        // Handles animation reset
         yield return StartCoroutine(waitAttack(attackTime * 2));  // Controls `isAttacking`
     }
+    */
+
+    void HandleAttackInput()
+    {
+        if (isAttacking || isReloading || repairing) return;
+
+        if (currentClass == WeaponBase.weaponClassTypes.Knight)
+        {
+            if (playerInput.actions["Attack"].WasPressedThisFrame())
+            {
+                attackHoldTime = Time.time;
+                attackButtonHeld = true;
+            }
+
+            if (playerInput.actions["Attack"].WasReleasedThisFrame())
+            {
+                attackButtonHeld = false;
+
+                float holdDuration = Time.time - attackHoldTime;
+                if (holdDuration >= heavyAttackThreshold)
+                    AddKnightAttack("H"); // Heavy attack if held long enough
+                else
+                    AddKnightAttack("L"); // Light attack for a quick tap
+            }
+        }
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            //if (playerInput.actions["Attack"].triggered)
+                //ExecuteEngineerAttack();
+        }
+    }
 
     private void runLogic()
     {
@@ -1004,6 +1170,24 @@ public class masterInput : MonoBehaviour
         //KNIGHT LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
+
+            if (playerInput.actions["Attack"].WasPressedThisFrame())
+            {
+                attackHoldTime = Time.time;
+                attackButtonHeld = true;
+            }
+
+            if (playerInput.actions["Attack"].WasReleasedThisFrame())
+            {
+                attackButtonHeld = false;
+
+                float holdDuration = Time.time - attackHoldTime;
+                if (holdDuration >= heavyAttackThreshold)
+                    AddKnightAttack("H"); // Heavy attack if held long enough
+                else
+                    AddKnightAttack("L"); // Light attack for a quick tap
+            }
+            /*
             if (Time.time - lastClickedTime > maxComboDelay)
             {
                 noOfClicks = 0;
@@ -1070,6 +1254,7 @@ public class masterInput : MonoBehaviour
                     }
                 }
             }
+            */
 
             if (playerInput.actions["RightClick"].triggered)
             {
@@ -1145,8 +1330,8 @@ public class masterInput : MonoBehaviour
         {
             if (playerInput.actions["attack"].IsPressed() && playerInput.actions["RightClick"].IsPressed())
             {
-                isAttacking = true;
-                StartCoroutine(waitAttack(.03f));
+                //isAttacking = true;
+                //StartCoroutine(waitAttack(.03f));
             }
 
             if (((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize)) && equippedWeapon.canShoot && equippedWeapon.isReloading == false)//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
@@ -1157,8 +1342,9 @@ public class masterInput : MonoBehaviour
             }
 
 
+            if (playerInput.actions["RightClick"].triggered && comboAttackCounter < 3)
+                AddEngrAttack(comboAttackCounter + 1);
 
-            
 
             if (playerInput.actions["attack"].WasPressedThisFrame() && !isAttacking)
             {
@@ -1208,6 +1394,7 @@ public class masterInput : MonoBehaviour
                 StartCoroutine(repairWait());
             }
 
+            /*
             if (Time.time - lastClickedTime > engMaxComboDelay);
             {
                 noOfClicks = 0;
@@ -1258,7 +1445,7 @@ public class masterInput : MonoBehaviour
                     StartCoroutine(PerformAttack(engAnimTimeThree, ES3, 3));
                 }
             }
-
+            */
 
 
         }

@@ -137,6 +137,11 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         //print("animation: " + animName);
         
         animator.Play(animName, index);
+        if (masterInput.instance.currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(2).length * .9f);
+            animator.SetBool("engAttack1", false);
+        }
         yield break;
     }
 
@@ -234,11 +239,11 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     public void engAttackOne(float time)
     {
-        if (getAnimationInfo().IsName("engAttackTwo") || getAnimationInfo().IsName("engAttackThree"))
-            return;
+        //if (getAnimationInfo().IsName("engAttackTwo") || getAnimationInfo().IsName("engAttackThree"))
+          //  return;
         animator.SetBool("engAttack1", true);
         animator.Play("engAttackOne", 2);
-        StartCoroutine(attackWait(time, "engWaitOne", 2));
+        StartCoroutine(attackWait(animator.GetCurrentAnimatorClipInfo(2).Length * .9f, "engWaitOne", 2));
     }
 
     public void engAttackTwo(float time)
@@ -248,7 +253,7 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         animator.SetBool("engAttack1", false);
 
 
-        StartCoroutine(attackWait(time * 2f, "engWaitTwo", 2));
+        StartCoroutine(attackWait(animator.GetCurrentAnimatorClipInfo(2).Length, "engWaitTwo", 2));
     }
 
     public void engAttackThree()
