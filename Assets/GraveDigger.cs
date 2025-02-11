@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.AI;
 
 public class GraveDigger : MonoBehaviour, enemyInt
 {
@@ -18,7 +19,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
 
     public GameObject skeletonPrefab1; // First skeleton prefab
     public GameObject skeletonPrefab2; // Second skeleton prefab
-    private float spawnInterval = 45f; // Time in seconds between spawns
+    private float spawnInterval = 30f; // Time in seconds between spawns
 
     private bool isSpawning = true;
 
@@ -44,7 +45,6 @@ public class GraveDigger : MonoBehaviour, enemyInt
             Debug.LogError("EnemyStateManager not found on EnemyHead!");
         }
 
-        SpawnSkeletons(); 
         StartCoroutine(SpawnSkeletonsRoutine());
     }
 
@@ -69,11 +69,14 @@ public class GraveDigger : MonoBehaviour, enemyInt
     {
         if (skeletonPrefab1 != null && skeletonPrefab2 != null)
         {
-            Vector3 spawnPosition1 = new Vector3(transform.position.x + 5, transform.position.y, transform.position.z);
-            Vector3 spawnPosition2 = new Vector3(transform.position.x - 5, transform.position.y, transform.position.z);
+            Vector3 spawnPosition1 = new Vector3(transform.position.x + 5f, transform.position.y + 1f, transform.position.z);
+            Vector3 spawnPosition2 = new Vector3(transform.position.x - 5f, transform.position.y + 1f, transform.position.z);
 
             Instantiate(skeletonPrefab1, spawnPosition1, Quaternion.identity);
             Instantiate(skeletonPrefab2, spawnPosition2, Quaternion.identity);
+            skeletonPrefab1.GetComponent<NavMeshAgent>().Warp(skeletonPrefab1.transform.position);
+            skeletonPrefab2.GetComponent<NavMeshAgent>().Warp(skeletonPrefab2.transform.position);
+
         }
         else
         {
