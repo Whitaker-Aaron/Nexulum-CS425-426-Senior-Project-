@@ -218,6 +218,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     }
 
+    public float GetFlorentine()
+    {
+        return florentineAmount;
+    }
+
     public IEnumerator MoveForward()
     {
         var changeAmount = new Vector3(0.0f, 0.0f, 2.5f);

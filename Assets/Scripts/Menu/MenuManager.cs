@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] GameObject materialsMenuReference;
     [SerializeField] GameObject totalMaterialMenuReference;
+    [SerializeField] GameObject baseShopMenuReference;
     [SerializeField] GameObject terminalMenuReference;
     [SerializeField] GameObject craftMenuReference;
     [SerializeField] GameObject itemsMenuReference;
@@ -21,8 +22,10 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject DepositScrollContent;
     [SerializeField] GameObject WithdrawScrollContent;
     [SerializeField] GameObject ChestWithdrawObject;
+    [SerializeField] GameObject shopOptionObject;
 
     [SerializeField] GameObject craftListsReference;
+    [SerializeField] GameObject shopOptionsReference;
     [SerializeField] GameObject pauseMenuReference;
 
     List<GameObject> currentMaterials = new List<GameObject>();
@@ -276,6 +279,11 @@ public class MenuManager : MonoBehaviour
         return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().allRecipes;
     }
 
+    public List<CraftRecipe> returnRecipesInShop()
+    {
+        return shopOptionsReference.GetComponent<ShopCraftRecipes>().getRecipes();
+    }
+
     public void navigateToMaterialMenu()
     {
         if(menuActive) {
@@ -297,6 +305,17 @@ public class MenuManager : MonoBehaviour
         currentMenuObject = Instantiate(totalMaterialMenuReference);
         currentMenuObject.transform.SetParent(canvas.transform, false);
         populateBaseInventoryMaterials();
+        //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+    }
+
+    public void navigateToBaseShopMenu()
+    {
+        Debug.Log("Navigating to Base Shop Menu");
+        //Instantiate();
+        Destroy(currentMenuObject);
+        currentMenuObject = Instantiate(baseShopMenuReference);
+        currentMenuObject.transform.SetParent(canvas.transform, false);
+        populateBaseShopOptions(StoreItem.StoreItemType.Recipe);
         //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
     }
 
@@ -440,6 +459,31 @@ public class MenuManager : MonoBehaviour
                 i--;
             }
             populateBaseInventoryMaterials();
+        }
+    }
+
+    public void populateBaseShopOptions(StoreItem.StoreItemType type)
+    {
+        var curFlorentine = character.GetFlorentine();
+        if (currentMenuObject != null)
+        {
+            var container = GameObject.Find("StoreOptionLayout").GetComponent<VerticalLayoutGroup>();
+            switch (type)
+            {
+                case StoreItem.StoreItemType.Recipe:
+                    var recipes = returnRecipesInShop();
+                    for (int i = 0; i < recipes.Count; i++)
+                    {
+                        var shopItem = shopOptionObject.GetComponent<StoreItem>();
+                        shopItem.craftRecipe = recipes[i];
+                        shopItem.storeItemName.GetComponent<TMP_Text>().text = recipes[i].recipeName;
+                        shopItem.storeItemNameShadow.GetComponent<TMP_Text>().text = recipes[i].recipeName;
+                        var curShop = Instantiate(shopOptionObject);
+                        curShop.transform.SetParent(container.transform, false);
+                    }
+                    break;
+            }
+            
         }
     }
 

@@ -337,7 +337,7 @@ public class masterInput : MonoBehaviour
         player.transform.rotation = Quaternion.Euler(0.0f, player.transform.eulerAngles.y, 0.0f);
         if (inputPaused)
         {
-            animationControl.updatePlayerAnimation(Vector3.zero);
+            if(!character.transitioningRoom) animationControl.updatePlayerAnimation(Vector3.zero);
             audioManager.PauseFootsteps("TestWalk");
             return;
 
@@ -345,8 +345,8 @@ public class masterInput : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(horizontal, 0, vertical);
-
-        animationControl.updatePlayerAnimation(movement);
+        Debug.Log("Player movement vector:" + movement);
+        if (!character.transitioningRoom)  animationControl.updatePlayerAnimation(movement);
 
         
             
@@ -414,7 +414,7 @@ public class masterInput : MonoBehaviour
             {
                 movement.Normalize();
             }
-            animationControl.updatePlayerAnimation(movement);
+            if (!character.transitioningRoom) animationControl.updatePlayerAnimation(movement);
             // Here we add an offset rotation to correct any small misalignment
             //Quaternion playerOffset = Quaternion.Euler(0, player.transform.eulerAngles.y - camera.transform.eulerAngles.y, 0);
             //movement = playerOffset * movement;
@@ -431,12 +431,17 @@ public class masterInput : MonoBehaviour
         }
 
         // Update player animation with the correct movement direction
-        animationControl.updatePlayerAnimation(movement);
+        if (!character.transitioningRoom) animationControl.updatePlayerAnimation(movement);
     }
 
 
 
     //--------------------USER DEFINED FUNCTIONS----------------------
+
+    public PlayerAnimation GetAnimationControl()
+    {
+        return animationControl;
+    }
 
     public void OnMouseLook(InputAction.CallbackContext context)
     {

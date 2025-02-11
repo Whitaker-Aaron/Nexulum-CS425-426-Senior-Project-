@@ -139,7 +139,7 @@ public class PauseMenuTransition : MonoBehaviour
             - (Vector2)checkpointScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
             float newPosY = (float)newPos.y;
             //if(newPosY-100f <= 0)
-            contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY-200f);
+            contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY-100f);
 
             Canvas.ForceUpdateCanvases();
             var mapContentPanel = mapContent.GetComponent<RectTransform>();
