@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] GameObject materialsMenuReference;
     [SerializeField] GameObject totalMaterialMenuReference;
+    [SerializeField] GameObject baseShopMenuReference;
     [SerializeField] GameObject terminalMenuReference;
     [SerializeField] GameObject craftMenuReference;
     [SerializeField] GameObject itemsMenuReference;
@@ -297,6 +298,17 @@ public class MenuManager : MonoBehaviour
         currentMenuObject = Instantiate(totalMaterialMenuReference);
         currentMenuObject.transform.SetParent(canvas.transform, false);
         populateBaseInventoryMaterials();
+        //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+    }
+
+    public void navigateToBaseShopMenu()
+    {
+        Debug.Log("Navigating to Base Shop Menu");
+        //Instantiate();
+        Destroy(currentMenuObject);
+        currentMenuObject = Instantiate(baseShopMenuReference);
+        currentMenuObject.transform.SetParent(canvas.transform, false);
+        //populateBaseInventoryMaterials();
         //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
     }
 
