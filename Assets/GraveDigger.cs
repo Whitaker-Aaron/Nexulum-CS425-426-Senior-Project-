@@ -1,23 +1,33 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
 
 public class GraveDigger : MonoBehaviour, enemyInt
 {
     public Transform player; // Reference to the player's transform
-    public float visionDistance = 10f; // How far the player can "look"
-    private bool canMove = true;
-    private bool _isAttacking;
+    private EnemyStateManager estate;
+    private GameObject playerObj;
+    public Transform attackPoint;
+    CharacterBase playerRef;
 
-    private Vector3 startPos;
-    public float floatSpeed = 2f;
-    public float floatHeight = 0.5f;
+    private bool _isAttacking;
+    public LayerMask Player;
+    public float attackRange = .5f;
+    public int attackDamage = 20;
+    private float timeOffset;
+
+    public GameObject skeletonPrefab1; // First skeleton prefab
+    public GameObject skeletonPrefab2; // Second skeleton prefab
+    private float spawnInterval = 45f; // Time in seconds between spawns
+
+    private bool isSpawning = true;
 
     void Start()
     {
         // Automatically find the Player if not set in Inspector
         if (player == null)
         {
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
             {
                 player = playerObj.transform;
@@ -28,17 +38,52 @@ public class GraveDigger : MonoBehaviour, enemyInt
             }
         }
 
-        startPos = transform.position;
+        estate = GetComponent<EnemyStateManager>();
+        if (estate == null)
+        {
+            Debug.LogError("EnemyStateManager not found on EnemyHead!");
+        }
+
+        SpawnSkeletons(); 
+        StartCoroutine(SpawnSkeletonsRoutine());
     }
 
     void Update()
     {
-       
+        if (player != null)
+        {
+            attackPlayer();
+        }
+    }
+
+    IEnumerator SpawnSkeletonsRoutine()
+    {
+        while (isSpawning)
+        {
+            yield return new WaitForSeconds(spawnInterval);
+            SpawnSkeletons();
+        }
+    }
+
+    void SpawnSkeletons()
+    {
+        if (skeletonPrefab1 != null && skeletonPrefab2 != null)
+        {
+            Vector3 spawnPosition1 = new Vector3(transform.position.x + 5, transform.position.y, transform.position.z);
+            Vector3 spawnPosition2 = new Vector3(transform.position.x - 5, transform.position.y, transform.position.z);
+
+            Instantiate(skeletonPrefab1, spawnPosition1, Quaternion.identity);
+            Instantiate(skeletonPrefab2, spawnPosition2, Quaternion.identity);
+        }
+        else
+        {
+            Debug.LogError("Skeleton prefabs are not assigned!");
+        }
     }
 
     public void onDeath()
     {
-        // Unkillable enemy
+        isSpawning = false;
     }
 
     public enemyInt getType()
@@ -58,4 +103,26 @@ public class GraveDigger : MonoBehaviour, enemyInt
         }
     }
 
+    void attackPlayer()
+    {
+        Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
+
+        foreach (Collider player in playerInRange)
+        {
+            if (player.CompareTag("Player"))
+            {
+                // Ensure we get the CharacterBase component
+                playerRef = player.GetComponent<CharacterBase>();
+                if (playerRef != null)
+                {
+                    Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
+                    playerRef.takeDamage(attackDamage, knockBackDir);
+                }
+                else
+                {
+                    Debug.LogError("CharacterBase component not found on Player!");
+                }
+            }
+        }
+    }
 }

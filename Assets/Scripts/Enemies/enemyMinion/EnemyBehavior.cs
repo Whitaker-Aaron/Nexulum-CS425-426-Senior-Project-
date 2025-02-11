@@ -36,6 +36,7 @@ public class EnemyBehavior : MonoBehaviour
     
     void Awake()
     {
+        enemyAnim = GetComponent<EnemyAnimation>();
         target = GameObject.FindWithTag("Player");
     }
 
