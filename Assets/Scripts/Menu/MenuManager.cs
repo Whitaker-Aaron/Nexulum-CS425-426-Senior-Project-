@@ -22,8 +22,10 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject DepositScrollContent;
     [SerializeField] GameObject WithdrawScrollContent;
     [SerializeField] GameObject ChestWithdrawObject;
+    [SerializeField] GameObject shopOptionObject;
 
     [SerializeField] GameObject craftListsReference;
+    [SerializeField] GameObject shopOptionsReference;
     [SerializeField] GameObject pauseMenuReference;
 
     List<GameObject> currentMaterials = new List<GameObject>();
@@ -277,6 +279,11 @@ public class MenuManager : MonoBehaviour
         return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().allRecipes;
     }
 
+    public List<CraftRecipe> returnRecipesInShop()
+    {
+        return shopOptionsReference.GetComponent<ShopCraftRecipes>().getRecipes();
+    }
+
     public void navigateToMaterialMenu()
     {
         if(menuActive) {
@@ -452,6 +459,19 @@ public class MenuManager : MonoBehaviour
                 i--;
             }
             populateBaseInventoryMaterials();
+        }
+    }
+
+    public void populateBaseShopOptions()
+    {
+        if (currentMenuObject != null)
+        {
+            var container = GameObject.Find("StoreOptionLayout").GetComponent<VerticalLayoutGroup>();
+            var recipes = returnRecipesInShop();
+            for(int i =0; i < recipes.Count; i++)
+            {
+                var shopItem = shopOptionObject.GetComponent<StoreItem>();
+            }
         }
     }
 

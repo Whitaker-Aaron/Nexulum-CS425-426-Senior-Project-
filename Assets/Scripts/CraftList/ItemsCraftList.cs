@@ -17,5 +17,15 @@ public class ItemsCraftList : MonoBehaviour
     {
 
     }
+    
+    public List<CraftRecipe> getAllRecipes()
+    {
+        return allRecipes;
+    }
+
+    public List<CraftRecipe> getAccessibleRecipes()
+    {
+        return accessibleRecipes;
+    }
 
 }
