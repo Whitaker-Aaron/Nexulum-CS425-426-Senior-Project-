@@ -1003,8 +1003,29 @@ public class masterInput : MonoBehaviour
     private IEnumerator HandleComboAttack(float attackTime, int attackStage, bool isHeavy)
     {
         //effect.GetComponent<ParticleSystem>()?.Play();
+        if(currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            switch (attackStage)
+            {
+                case 1:
+                    animationControl.engAttackOne(animTime);
+                    ES1.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 2:
+                    animationControl.engAttackTwo(animTime);
+                    ES2.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 3:
+                    animationControl.engAttackThree();
+                    ES3.GetComponent<ParticleSystem>().Play();
+                    break;
+            }
+            StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+            StartCoroutine(wait(attackTime * 2));
+            yield return StartCoroutine(waitAttack(attackTime * 2));
+        }
 
-        if (isHeavy)
+        if (isHeavy && currentClass == WeaponBase.weaponClassTypes.Knight)
         {
             // Trigger Heavy Attack Animations and Effects
             switch (attackStage)
@@ -1022,9 +1043,12 @@ public class masterInput : MonoBehaviour
                     SS1.GetComponent<ParticleSystem>().Play();
                     break;
             }
+            sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
         }
         else
         {
+            if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+                yield break;
             // Trigger Light Attack Animations and Effects
             switch (attackStage)
             {
@@ -1133,7 +1157,8 @@ public class masterInput : MonoBehaviour
     // Engineer Logic with Light and Heavy Attacks
     private void runEngineerAttackLogic()
     {
-        if (playerInput.actions["attack"].WasPressedThisFrame() || playerInput.actions["attack"].IsPressed())
+        /*
+        if ((playerInput.actions["RightClick"].WasPressedThisFrame() || playerInput.actions["RightClick"].IsPressed()) && !isAttacking)
         {
             isAttacking = true;
 
@@ -1145,7 +1170,24 @@ public class masterInput : MonoBehaviour
                 StartCoroutine(HandleComboAttack(animTime, attackStage, false));
             }
             // Reset after a delay
-            StartCoroutine(wait(attackTime));
+            //StartCoroutine(wait(attackTime));
+        }*/
+
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            noOfClicks = 0;
+        }
+
+        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
+        {
+            if (playerInput.actions["RightClick"].triggered)
+            {
+                lastClickedTime = Time.time;
+                noOfClicks++;
+
+                // Start tracking attack hold time
+                StartCoroutine(HandleComboAttack(attackTime, noOfClicks, false));
+            }
         }
     }
 
@@ -1356,9 +1398,10 @@ public class masterInput : MonoBehaviour
 
             }
 
+            runEngineerAttackLogic();
 
 
-            
+
 
             if (playerInput.actions["attack"].WasPressedThisFrame() && !isAttacking)
             {
@@ -1407,7 +1450,7 @@ public class masterInput : MonoBehaviour
             {
                 StartCoroutine(repairWait());
             }
-
+            /*
             if (Time.time - lastClickedTime > engMaxComboDelay)
             {
                 noOfClicks = 0;
@@ -1457,7 +1500,8 @@ public class masterInput : MonoBehaviour
 
                     //StartCoroutine(PerformAttack(engAnimTimeThree, ES3, 3));
                 }
-            }
+            
+            }*/
 
 
 
