@@ -967,8 +967,6 @@ GameObject:
   - component: {fileID: 1709201507503199683}
   - component: {fileID: 2783746137854272819}
   - component: {fileID: 6785592048284984911}
-  - component: {fileID: 6834488285364462507}
-  - component: {fileID: 9014155252250330612}
   m_Layer: 5
   m_Name: StoreItem
   m_TagString: Untagged
@@ -1080,44 +1078,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
---- !u!114 &6834488285364462507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4408834667872987749}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 002eb178bb3ee0b438dea254efa0ba56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  materialRequirementObject: {fileID: 251070956553156952, guid: c1cb6121414da894eaf6b1899e44f23f, type: 3}
-  craftRecipe: {fileID: 0}
-  materialContainer: {fileID: 496368631250177710}
-  craftRecipeName: {fileID: 5829604162302093272}
-  craftRecipeShadow: {fileID: 5417468831559303253}
-  craftButton: {fileID: 5446548644401276504}
-  disabledPanel: {fileID: 2249878085591771909}
---- !u!114 &9014155252250330612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4408834667872987749}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12fa29c9b8ce1464883155e354a260df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  materialRequirementObject: {fileID: 0}
-  craftRecipe: {fileID: 0}
-  materialContainer: {fileID: 0}
-  storeItemName: {fileID: 0}
-  storeItemNameShadow: {fileID: 0}
-  purchaseButton: {fileID: 0}
-  disabledPanel: {fileID: 0}
 --- !u!1 &5417468831559303253
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,7 +1332,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6834488285364462507}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CraftRecipePrefab, Assembly-CSharp
         m_MethodName: AddToInventory
         m_Mode: 1
@@ -1504,7 +1464,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6834488285364462507}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CraftRecipePrefab, Assembly-CSharp
         m_MethodName: AddToInventory
         m_Mode: 1

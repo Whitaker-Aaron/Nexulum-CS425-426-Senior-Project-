@@ -153,7 +153,11 @@ public class MenuManager : MonoBehaviour
 
             if (GameObject.FindGameObjectWithTag("CraftLists") != null)
             {
-                Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+                //Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+            }
+            if(GameObject.FindGameObjectWithTag("ShopOptions") != null)
+            {
+                Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
             }
             if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
@@ -236,7 +240,11 @@ public class MenuManager : MonoBehaviour
     {
         if (GameObject.FindGameObjectWithTag("CraftLists") != null)
         {
-            Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+            //Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+        }
+        if (GameObject.FindGameObjectWithTag("ShopOptions") != null)
+        {
+            Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
         }
         if (GameObject.FindGameObjectWithTag("MainMenu") != null)
         {
@@ -265,23 +273,38 @@ public class MenuManager : MonoBehaviour
 
     public List<CraftRecipe> returnWeaponsCraftList()
     {
-        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<WeaponCraftList>().allRecipes;
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<WeaponCraftList>().accessibleRecipes;
         
+    }
+
+    public void addToWeaponsCraftList(CraftRecipe recipeToAdd)
+    {
+        GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<WeaponCraftList>().addToAccessibleRecipes(recipeToAdd);
+    }
+
+    public void addToItemsCraftList(CraftRecipe recipeToAdd)
+    {
+        GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<ItemsCraftList>().addToAccessibleRecipes(recipeToAdd);
+    }
+
+    public void addToRunesCraftList(CraftRecipe recipeToAdd)
+    {
+        GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().addToAccessibleRecipes(recipeToAdd);
     }
 
     public List<CraftRecipe> returnItemsCraftList()
     {
-        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<ItemsCraftList>().allRecipes;
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<ItemsCraftList>().accessibleRecipes;
     }
 
     public List<CraftRecipe> returnRunesCraftList()
     {
-        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().allRecipes;
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().accessibleRecipes;
     }
 
     public List<CraftRecipe> returnRecipesInShop()
     {
-        return shopOptionsReference.GetComponent<ShopCraftRecipes>().getRecipes();
+        return GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopCraftRecipes>().getRecipes();
     }
 
     public void navigateToMaterialMenu()
@@ -308,10 +331,27 @@ public class MenuManager : MonoBehaviour
         //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
     }
 
+    public void AddToAvailableCraftRecipes(CraftRecipe recipeToAdd)
+    {
+        switch(recipeToAdd.type)
+        {
+            case CraftRecipe.CraftTypes.Weapon:
+                addToWeaponsCraftList(recipeToAdd);
+                break;
+            case CraftRecipe.CraftTypes.Rune:
+                addToRunesCraftList(recipeToAdd);
+                break;
+            case CraftRecipe.CraftTypes.Item:
+                addToItemsCraftList(recipeToAdd);
+                break;
+        }
+    }
+
     public void navigateToBaseShopMenu()
     {
         Debug.Log("Navigating to Base Shop Menu");
-        //Instantiate();
+        Instantiate(shopOptionsReference);
+        //Instantiate(craftListsReference);
         Destroy(currentMenuObject);
         currentMenuObject = Instantiate(baseShopMenuReference);
         currentMenuObject.transform.SetParent(canvas.transform, false);
@@ -325,7 +365,7 @@ public class MenuManager : MonoBehaviour
         if (menuActive)
         {
             Debug.Log("Navigating to Craft Menu");
-            Instantiate(craftListsReference);
+            //Instantiate(craftListsReference);
             Destroy(currentMenuObject);
             currentMenuObject = Instantiate(craftMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform, false);
@@ -352,7 +392,7 @@ public class MenuManager : MonoBehaviour
         if (menuActive)
         {
             Debug.Log("Navigating to Equip Menu");
-            Instantiate(craftListsReference);
+            //Instantiate(craftListsReference);
             Destroy(currentMenuObject);
             currentMenuObject = Instantiate(equipMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform, false);
@@ -478,6 +518,18 @@ public class MenuManager : MonoBehaviour
                         shopItem.craftRecipe = recipes[i];
                         shopItem.storeItemName.GetComponent<TMP_Text>().text = recipes[i].recipeName;
                         shopItem.storeItemNameShadow.GetComponent<TMP_Text>().text = recipes[i].recipeName;
+                        shopItem.florentineRequiredAmount.GetComponent<Text>().text = recipes[i].shopCost.ToString();
+                        shopItem.storeType = type;
+                        if(curFlorentine >= recipes[i].shopCost)
+                        {
+                            shopItem.purchaseButton.GetComponent<Button>().interactable = true;
+                            shopItem.disabledPanel.SetActive(false);
+                        }
+                        else
+                        {
+                            shopItem.purchaseButton.GetComponent<Button>().interactable = false;
+                            shopItem.disabledPanel.SetActive(true);
+                        }
                         var curShop = Instantiate(shopOptionObject);
                         curShop.transform.SetParent(container.transform, false);
                     }

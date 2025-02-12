@@ -5,7 +5,7 @@ using UnityEngine;
 public class WeaponCraftList : MonoBehaviour
 {
     [SerializeField] public List<CraftRecipe> allRecipes = new List<CraftRecipe>();
-    List<CraftRecipe> accessibleRecipes = new List<CraftRecipe>();
+    public List<CraftRecipe> accessibleRecipes = new List<CraftRecipe>();
     // Start is called before the first frame update
     void Start()
     {
@@ -16,5 +16,11 @@ public class WeaponCraftList : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void addToAccessibleRecipes(CraftRecipe recipeToAdd)
+    {
+        Debug.Log(recipeToAdd.recipeName + "being added to weapons craft list");
+        accessibleRecipes.Add(recipeToAdd);
     }
 }
