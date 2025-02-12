@@ -761,6 +761,7 @@ public class masterInput : MonoBehaviour
         yield break;
     }*/
 
+    /*
     IEnumerator wait(float animationTime)
     {
         yield return new WaitForSeconds(animationTime);
@@ -780,11 +781,11 @@ public class masterInput : MonoBehaviour
         yield return new WaitForSeconds(animationTime);
 
         // Ensure isAttacking is only reset if no new input has occurred
-        if (Time.time - lastClickedTime > engNextAttackTime * 0.5f)
+        if (Time.time - lastClickedTime > engNextAttackTime)
         {
             isAttacking = false;
         }
-    }
+    }*/
 
     
 
@@ -972,7 +973,7 @@ public class masterInput : MonoBehaviour
     }
 
     //-----------------------------------------------------------------
-
+    /*
     private IEnumerator PerformAttack(float attackTime, GameObject effect, int attackStage)
     {
         effect.GetComponent<ParticleSystem>()?.Play();
@@ -996,6 +997,203 @@ public class masterInput : MonoBehaviour
         StartCoroutine(wait(attackTime));        // Handles animation reset
         yield return StartCoroutine(waitAttack(attackTime * 2));  // Controls `isAttacking`
     }
+    */
+    public float attackTime = .5f;
+
+    private IEnumerator HandleComboAttack(float attackTime, int attackStage, bool isHeavy)
+    {
+        //effect.GetComponent<ParticleSystem>()?.Play();
+
+        if (isHeavy)
+        {
+            // Trigger Heavy Attack Animations and Effects
+            switch (attackStage)
+            {
+                case 1:
+                    animationControl.knightHeavyOne(animTime);
+                    SS1.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 2:
+                    animationControl.knightHeavyTwo(animTime);
+                    SS1.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 3:
+                    animationControl.knightHeavyThree();
+                    SS1.GetComponent<ParticleSystem>().Play();
+                    break;
+            }
+        }
+        else
+        {
+            // Trigger Light Attack Animations and Effects
+            switch (attackStage)
+            {
+                case 1:
+                    
+                    animationControl.knightAttackOne(animTime);
+                    SS1.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 2:
+                    animationControl.knightAttackTwo(animTime);
+                    SS2.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 3:
+                    animationControl.knightAttackThree();
+                    SS3.GetComponent<ParticleSystem>().Play();
+                    break;
+            }
+            sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
+        }
+
+        // Wait for animation and reset logic
+        StartCoroutine(wait(attackTime));
+        yield return StartCoroutine(waitAttack(attackTime * 2));
+    }
+
+    private void runKnightAttackLogic()
+    {
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            noOfClicks = 0;
+        }
+
+        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
+        {
+            if (playerInput.actions["attack"].triggered)
+            {
+                lastClickedTime = Time.time;
+                noOfClicks++;
+
+                // Start tracking attack hold time
+                StartCoroutine(DetectHeavyAttack(noOfClicks));
+            }
+        }
+    }
+
+    private IEnumerator DetectHeavyAttack(int attackStage)
+    {
+        float pressStartTime = Time.time;
+        bool isHeavy = false;
+
+        // Wait while button is still being held, up to a threshold
+        while (playerInput.actions["attack"].IsPressed())
+        {
+            if (Time.time - pressStartTime > 0.3f) // Adjust this value for heavy attack threshold
+            {
+                isHeavy = true;
+                break;
+            }
+            yield return null; // Wait for next frame
+        }
+
+        // Execute attack after determining light or heavy
+        StartCoroutine(HandleComboAttack(isHeavy ? animTime : animTimeTwo, attackStage, isHeavy));
+    }
+
+    // Knight Logic with Light and Heavy Attacks
+    /*
+    private void runKnightAttackLogic()
+    {
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            noOfClicks = 0;
+        }
+
+        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
+        {
+            if (playerInput.actions["attack"].triggered)
+            {
+                lastClickedTime = Time.time;
+
+                // Light or Heavy Attack based on input
+                bool isHeavy = playerInput.actions["attack"].IsPressed();
+                noOfClicks++;
+
+                if (noOfClicks == 1)
+                {
+                    StartCoroutine(HandleComboAttack(animTime, 1, isHeavy));
+                }
+
+                if (noOfClicks >= 2)
+                {
+                    nextAttackTime = animTimeTwo;
+                    StartCoroutine(HandleComboAttack(animTimeTwo, 2, isHeavy));
+                }
+
+                if (noOfClicks >= 3)
+                {
+                    noOfClicks = 0;
+                    cooldownTime = Time.time + cooldown;
+                    StartCoroutine(HandleComboAttack(animTimeThree, 3, isHeavy));
+                }
+            }
+        }
+    }*/
+
+    // Engineer Logic with Light and Heavy Attacks
+    private void runEngineerAttackLogic()
+    {
+        if (playerInput.actions["attack"].WasPressedThisFrame() || playerInput.actions["attack"].IsPressed())
+        {
+            isAttacking = true;
+
+            int attackStage = noOfClicks + 1;
+
+            if (attackStage <= 3)
+            {
+                // Handle Heavy Attack
+                StartCoroutine(HandleComboAttack(animTime, attackStage, false));
+            }
+            // Reset after a delay
+            StartCoroutine(wait(attackTime));
+        }
+    }
+
+    // Combo Input Logic to Track Timing
+    private IEnumerator wait(float animationTime)
+    {
+        yield return new WaitForSeconds(animationTime);
+
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            noOfClicks = 0; // Reset Combo if no input in time
+        }
+
+        if (currentClass == WeaponBase.weaponClassTypes.Knight)
+            animationControl.resetKnight();
+
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+            animationControl.resetEngineer();
+    }
+
+    private IEnumerator waitAttack(float animationTime)
+    {
+        yield return new WaitForSeconds(animationTime);
+
+        // Reset attacking state if no new input occurred
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            isAttacking = false;
+        }
+    }
+
+    // Logic for Heavy Attack Input
+    private void HandleHeavyAttackInput()
+    {
+        if (playerInput.actions["attack"].IsPressed())
+        {
+            float holdTime = Time.time - lastClickedTime;
+
+            // Check if the hold time is long enough to trigger a heavy attack
+            //if (holdTime > heavyAttackThreshold)
+            //{
+            //    StartCoroutine(PerformHeavyAttack());
+            //}
+        }
+    }
+
+
+
 
     private void runLogic()
     {
@@ -1004,6 +1202,8 @@ public class masterInput : MonoBehaviour
         //KNIGHT LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
+            runKnightAttackLogic();
+            /*
             if (Time.time - lastClickedTime > maxComboDelay)
             {
                 noOfClicks = 0;
@@ -1069,7 +1269,7 @@ public class masterInput : MonoBehaviour
                             animationControl.resetKnight();
                     }
                 }
-            }
+            }*/
 
             if (playerInput.actions["RightClick"].triggered)
             {
@@ -1208,7 +1408,7 @@ public class masterInput : MonoBehaviour
                 StartCoroutine(repairWait());
             }
 
-            if (Time.time - lastClickedTime > engMaxComboDelay);
+            if (Time.time - lastClickedTime > engMaxComboDelay)
             {
                 noOfClicks = 0;
             }
@@ -1236,7 +1436,7 @@ public class masterInput : MonoBehaviour
                     }
 
                     engNextAttackTime = engAnimTime;
-                    StartCoroutine(PerformAttack(engAnimTime, ES1, 1));
+                    //StartCoroutine(PerformAttack(engAnimTime, ES1, 1));
                 }
 
                 // Attack 2 - Ensures input right as attack one ends is detected
@@ -1245,7 +1445,7 @@ public class masterInput : MonoBehaviour
                         currentAnim.normalizedTime > engAnimTimeTwo - 0.1f) // Extended input buffer
                 {
                     engNextAttackTime = engAnimTimeTwo;
-                    StartCoroutine(PerformAttack(engAnimTimeTwo, ES2, 2));
+                    //StartCoroutine(PerformAttack(engAnimTimeTwo, ES2, 2));
                 }
 
                 // Attack 3 - Ensures combo finishes correctly
@@ -1255,7 +1455,7 @@ public class masterInput : MonoBehaviour
                     noOfClicks = 0;
                     engCooldown = Time.time + cooldown;
 
-                    StartCoroutine(PerformAttack(engAnimTimeThree, ES3, 3));
+                    //StartCoroutine(PerformAttack(engAnimTimeThree, ES3, 3));
                 }
             }
 
