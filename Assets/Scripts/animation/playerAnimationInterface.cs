@@ -11,6 +11,12 @@ public interface PlayerAnimation
     void knightAttackTwo(float time);
     void knightAttackThree();
 
+    public void knightHeavyOne(float time);
+
+    public void knightHeavyTwo(float time);
+
+    public void knightHeavyThree();
+
     void knightShootSwords();
     void resetKnight();
 

@@ -272,7 +272,7 @@ public class classAbilties : MonoBehaviour
             }
 
             
-            StartCoroutine(abilitiesCooldown(3, ka3Time));
+            acc3 = StartCoroutine(abilitiesCooldown(3, ka3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingLaser)
@@ -301,13 +301,13 @@ public class classAbilties : MonoBehaviour
                 StartCoroutine(laserStop());
             }
             
-            StartCoroutine(abilitiesCooldown(3, ga3Time));
+            acc3 = StartCoroutine(abilitiesCooldown(3, ga3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
-            StartCoroutine(abilitiesCooldown(3, ea3Time));
+            acc3 = StartCoroutine(abilitiesCooldown(3, ea3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
     }
@@ -360,19 +360,19 @@ public class classAbilties : MonoBehaviour
 
         if(earthBool)
         {
-            EffectsManager.instance.getFromPool("earthShield", Vector3.zero, Quaternion.identity);
+            EffectsManager.instance.getFromPool("earthShield", player.transform.position, Quaternion.identity, true, false);
             yield return new WaitForSeconds(.5f);
-            EffectsManager.instance.getFromPool("earthShield", Vector3.zero, Quaternion.identity);
+            EffectsManager.instance.getFromPool("earthShield", player.transform.position, Quaternion.identity, true, false);
             yield return new WaitForSeconds(bubbleTime);
-            EffectsManager.instance.getFromPool("earthShield", Vector3.zero, Quaternion.identity);
+            EffectsManager.instance.getFromPool("earthShield", player.transform.position, Quaternion.identity, true, false);
         }
         else
         {
-            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero, Quaternion.identity);
+            EffectsManager.instance.getFromPool("bubbleShield", player.transform.position, Quaternion.identity, true, false);
             yield return new WaitForSeconds(.5f);
-            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero, Quaternion.identity);
+            EffectsManager.instance.getFromPool("bubbleShield", player.transform.position, Quaternion.identity, true, false);
             yield return new WaitForSeconds(bubbleTime);
-            EffectsManager.instance.getFromPool("bubbleShield", Vector3.zero, Quaternion.identity);
+            EffectsManager.instance.getFromPool("bubbleShield", player.transform.position, Quaternion.identity, true, false);
         }
         //Instantiate(knightBubblePrefab, player.transform.position, Quaternion.identity);
         //currentShield.transform.SetParent(player.transform, false);
@@ -404,22 +404,22 @@ public class classAbilties : MonoBehaviour
         //GameObject tempEffect = Instantiate(combatAuraEffectStart, currentAura, Quaternion.identity);
         if(!fireBool)
         {
-            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
+            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity, false, false);
             yield return new WaitForSeconds(.3f);
-            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
+            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity, false, false);
             yield return new WaitForSeconds(auraTime);
-            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
+            EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity, false, false);
             checkingAura = false;
             activatedAura = false;
             currentAura = Vector3.zero;
         }
         else
         {
-            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
+            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity, false, false);
             yield return new WaitForSeconds(.3f);
-            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
+            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity, false, false);
             yield return new WaitForSeconds(auraTime);
-            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity);
+            EffectsManager.instance.getFromPool("faPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity, false, false);
             checkingAura = false;
             activatedAura = false;
             currentAura = Vector3.zero;

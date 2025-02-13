@@ -415,6 +415,11 @@ public class EnemyFrame : MonoBehaviour
         }
     }
 
+    public Enemy GetEnemy()
+    {
+        return enemyReference;
+    }
+
     public enum DamageSource
     {
         Player,
