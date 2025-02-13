@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemsCraftList : MonoBehaviour
 {
     [SerializeField] public List<CraftRecipe> allRecipes = new List<CraftRecipe>();
-    List<CraftRecipe> accessibleRecipes = new List<CraftRecipe>();
+    public List<CraftRecipe> accessibleRecipes = new List<CraftRecipe>();
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +26,11 @@ public class ItemsCraftList : MonoBehaviour
     public List<CraftRecipe> getAccessibleRecipes()
     {
         return accessibleRecipes;
+    }
+
+    public void addToAccessibleRecipes(CraftRecipe recipeToAdd)
+    {
+        accessibleRecipes.Add(recipeToAdd);
     }
 
 }

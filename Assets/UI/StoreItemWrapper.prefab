@@ -65,12 +65,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialRequirementObject: {fileID: 0}
-  craftRecipe: {fileID: 0}
+  craftRecipe: {fileID: 11400000, guid: cf4328a6dd8046a46b9daa3b46b8a059, type: 2}
   materialContainer: {fileID: 0}
-  storeItemName: {fileID: 0}
-  storeItemNameShadow: {fileID: 0}
-  purchaseButton: {fileID: 0}
-  disabledPanel: {fileID: 0}
+  storeItemName: {fileID: 3643318357724078292}
+  storeItemNameShadow: {fileID: 2974618294436087641}
+  florentineRequiredAmount: {fileID: 6946952679841691427}
+  purchaseButton: {fileID: 3026216113479770452}
+  disabledPanel: {fileID: 9029836643695602697}
+  storeType: 0
 --- !u!1001 &7091270174693263116
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -79,9 +81,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4451700347458594811}
     m_Modifications:
+    - target: {fileID: 2249878085591771909, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4408834667872987749, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
       propertyPath: m_Name
       value: StoreItem
+      objectReference: {fileID: 0}
+    - target: {fileID: 5052368526509010176, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+      propertyPath: m_text
+      value: Revolver
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175363983197315669, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7527271946118245780}
+    - target: {fileID: 5175363983197315669, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: onPurchase
+      objectReference: {fileID: 0}
+    - target: {fileID: 5175363983197315669, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: StoreItem, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5245817506076766156, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
       propertyPath: m_Pivot.x
@@ -163,14 +185,47 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5813522958256191871, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+      propertyPath: m_Text
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 6771855897356127239, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+      propertyPath: m_text
+      value: Revolver
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 9014155252250330612, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+--- !u!1 &2974618294436087641 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5417468831559303253, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3026216113479770452 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5446548644401276504, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3073042217448843456 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5245817506076766156, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3643318357724078292 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5829604162302093272, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6946952679841691427 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 144616569564262447, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9029836643695602697 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2249878085591771909, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
   m_PrefabInstance: {fileID: 7091270174693263116}
   m_PrefabAsset: {fileID: 0}

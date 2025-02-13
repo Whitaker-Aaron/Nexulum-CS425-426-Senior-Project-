@@ -95,29 +95,49 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void UpdateFlorentine(int amount)
+    public void UpdateFlorentine(int amount, string dir="None")
     {
         //var text = florentineUI.GetComponent<TMP_Text>();
         //text.text = amount.ToString();
         if (currentFlorentineAnimator != null) StopCoroutine(currentFlorentineAnimator);
-        currentFlorentineAnimator = StartCoroutine(AnimateFlorentine(amount));
+        currentFlorentineAnimator = StartCoroutine(AnimateFlorentine(amount, dir));
     }
 
-    public IEnumerator AnimateFlorentine(int amount)
+    public IEnumerator AnimateFlorentine(int amount, string dir)
     {
         bool finished = false;
         var text = florentineUI.GetComponent<TMP_Text>();
         while (!finished)
         {
             var textInt = int.Parse(text.text);
-            if(textInt >= amount)
+            if(dir == "Up")
             {
+                if (textInt >= amount)
+                {
+                    text.text = amount.ToString();
+                    finished = true;
+                    break;
+                }
+                var rate = (int)(200 * Time.deltaTime);
+                text.text = (textInt + rate).ToString();
+            }
+            else if(dir == "Down")
+            {
+                if (textInt <= amount)
+                {
+                    text.text = amount.ToString();
+                    finished = true;
+                    break;
+                }
+                var rate = (int)(200 * Time.deltaTime);
+                text.text = (textInt - rate).ToString();
+            }
+            else if(dir == "None"){
                 text.text = amount.ToString();
                 finished = true;
                 break;
             }
-            var rate = (int)(200 * Time.deltaTime);
-            text.text = (textInt + rate).ToString();
+            
             yield return null;
             
         }
