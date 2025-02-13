@@ -279,7 +279,7 @@ public class EffectsManager : MonoBehaviour
     }
 
 
-    public void getFromPool(string poolName, Vector3 position, Quaternion rotation)
+    public void getFromPool(string poolName, Vector3 position, Quaternion rotation, bool isParented, bool ignorePlayerLoc)
     {
         if (allPools[poolName].Count > 0)
         {
@@ -291,12 +291,25 @@ public class EffectsManager : MonoBehaviour
             //obj.transform.position = position;
             //obj.transform.rotation = rotation;
             //}
-            if (poolName == "pistolFlash" || poolName == "rifleFlash" || poolName == "revolverFlash")
+            if (isParented)
+            {
                 obj.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
+                if (ignorePlayerLoc)
+                {
+                    obj.transform.rotation = rotation;
+                }
+                else
+                {
+                    obj.transform.position = position;
+                    obj.transform.rotation = rotation;
+                }
+            }
+            else
+            {
+                obj.transform.position = position;
+                obj.transform.rotation = rotation;
+            }
 
-
-            obj.transform.position = position;
-            obj.transform.rotation = rotation;
             //obj.transform.parent = GameObject.FindGameObjectWithTag("Player").transform;
             //if(poolName == "bubbleShield" || poolName == "earthShield")
             //{
@@ -306,32 +319,32 @@ public class EffectsManager : MonoBehaviour
             obj.GetComponent<ParticleSystem>().Play();
 
             if (poolName != "bubbleShield" && poolName != "earthShield")
-                StartCoroutine(returnToPool(poolName, obj.GetComponent<ParticleSystem>().main.duration + .03f, obj));
+                StartCoroutine(returnToPool(poolName, obj.GetComponent<ParticleSystem>().main.duration + .03f, obj, isParented));
             else
             {
                 print("poolCount = " + allPools[poolName].Count);
                 if (allPools[poolName].Count == 1)
                 {
-                    StartCoroutine(returnToPool(poolName, classAbilties.instance.bubbleTime, obj));
+                    StartCoroutine(returnToPool(poolName, classAbilties.instance.bubbleTime, obj, isParented));
                 }
                 else
-                    StartCoroutine(returnToPool(poolName, obj.GetComponent<ParticleSystem>().main.duration + .01f, obj));
+                    StartCoroutine(returnToPool(poolName, obj.GetComponent<ParticleSystem>().main.duration + .01f, obj, isParented));
             }
         }
         else
         {
             GameObject newObj = Instantiate(checkPoolPrefab(poolName));
             newObj.GetComponent<ParticleSystem>().Play();
-            StartCoroutine(returnToPool(poolName, newObj.GetComponent<ParticleSystem>().main.duration + .03f, newObj));
+            StartCoroutine(returnToPool(poolName, newObj.GetComponent<ParticleSystem>().main.duration + .03f, newObj, isParented));
 
         }
     }
 
-    IEnumerator returnToPool(string poolName, float time, GameObject effect)
+    IEnumerator returnToPool(string poolName, float time, GameObject effect, bool isParented)
     {
         yield return new WaitForSeconds(time);
         effect.SetActive(false);
-        if (poolName != "bubbleShield" && poolName != "earthShield")
+        if (!isParented)
             effect.transform.position = Vector3.zero;
         allPools[poolName].Enqueue(effect);
         yield break;

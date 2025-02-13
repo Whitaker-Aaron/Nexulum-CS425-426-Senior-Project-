@@ -245,7 +245,7 @@ public abstract class projectile : MonoBehaviour
     {
         if(position != null || position != Vector3.zero)// && poolName != "enemyMagePoolOne")
         {
-            EffectsManager.instance.getFromPool(bulletHitEffect, position, Quaternion.identity);
+            EffectsManager.instance.getFromPool(bulletHitEffect, position, Quaternion.identity, false, false);
             resetProjectile();
             
             //print("First if running");
