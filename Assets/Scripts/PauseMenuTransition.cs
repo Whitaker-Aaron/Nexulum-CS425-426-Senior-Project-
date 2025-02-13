@@ -115,14 +115,18 @@ public class PauseMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name != "CheckpointRoom(Clone)")
+        if (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.name == "Scrollbar Vertical"
+            || EventSystem.current.currentSelectedGameObject.name == "Scrollbar Horizontal")
+        {
+            return;
+        }
+        else if (EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name != "CheckpointRoom(Clone)")
         {
             if (initialMapPos != Vector2.zero)
             {
                 var mapContentPanel = mapContent.GetComponent<RectTransform>();
                 mapContentPanel.anchoredPosition = initialMapPos;
             }
-            return;
         }
         if(EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "CheckpointRoom(Clone)"
             && checkpointContent != null && checkpointScrollRect != null && mapContent != null && mapScrollRect != null)
@@ -134,9 +138,10 @@ public class PauseMenuTransition : MonoBehaviour
             Vector2 newPos = (Vector2)checkpointScrollRect.transform.InverseTransformPoint(contentPanel.position)
             - (Vector2)checkpointScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
             float newPosY = (float)newPos.y;
-            if(newPosY-100f <= 0) contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY - 100f);
+            //if(newPosY-100f <= 0)
+            contentPanel.anchoredPosition = new Vector2(contentPanel.anchoredPosition.x, newPosY-100f);
 
-
+            Canvas.ForceUpdateCanvases();
             var mapContentPanel = mapContent.GetComponent<RectTransform>();
             var selectedSprite = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.GetComponent<CheckpointUI>().spriteOnMap;
             if(selectedSprite != null)
@@ -255,7 +260,59 @@ public class PauseMenuTransition : MonoBehaviour
            
         }
         AttachSpriteToCheckpoint();
+        ActivateRoomOnMap();
         
+    }
+    public void ActivateRoomOnMap()
+    {
+        var allVisitedRooms = roomManager.allVisitedRoomsData;
+        int mapChildrenCount = mapContent.transform.childCount;
+        var curRoomPanel = GameObject.Find("CurrentRoomPanel");
+        var noMapDataPanel = GameObject.Find("NoMapDataFound");
+        if (curRoom == "BaseCamp") curRoomPanel.SetActive(false);
+        else curRoomPanel.SetActive(true);
+        bool roomsFound = false;
+
+        for (int i = 0; i < mapChildrenCount; i++)
+        {
+            
+            bool roomVisited = false;
+            if (mapContent.transform.GetChild(i).GetComponent<MapMarker>() != null)
+            {
+                
+                var mapRoomName = mapContent.transform.GetChild(i).GetComponent<MapMarker>().roomToMapTo;
+                for (int j = 0; j < allVisitedRooms.Count; j++)
+                {
+                    if(mapRoomName == allVisitedRooms[j].roomName)
+                    {
+                        roomsFound = true;
+                        roomVisited = true;
+                        mapContent.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                    if (mapRoomName == curRoom)
+                    {
+                        var roomTransPos = mapContent.transform.GetChild(i).transform.position;
+                        curRoomPanel.transform.position = new Vector3(roomTransPos.x - 145, roomTransPos.y + 50, 0);
+
+                        var mapContentPanel = mapContent.GetComponent<RectTransform>();
+
+                        if (roomTransPos != null)
+                        {
+                            Vector2 newMapPos = (Vector2)mapScrollRect.transform.InverseTransformPoint(mapContentPanel.position)
+                        - (Vector2)mapScrollRect.transform.InverseTransformPoint(roomTransPos);
+                            mapContentPanel.anchoredPosition = new Vector2(newMapPos.x, newMapPos.y);
+                        }
+                        initialMapPos = mapContentPanel.anchoredPosition;
+
+                    }
+                }
+                if (!roomVisited) mapContent.transform.GetChild(i).gameObject.SetActive(false);
+            }
+            
+        }
+        if(roomsFound) noMapDataPanel.SetActive(false);
+        else noMapDataPanel.SetActive(true);
+
     }
 
     public void CleanUpCheckpoint()
@@ -276,12 +333,9 @@ public class PauseMenuTransition : MonoBehaviour
         mapScrollRect = null;
     }
 
+
     public void AttachSpriteToCheckpoint()
     {
-        var curRoomPanel = GameObject.Find("CurrentRoomPanel");
-        if (curRoom == "BaseCamp") curRoomPanel.SetActive(false);
-        else curRoomPanel.SetActive(true);
-
         int mapChildrenCount = mapContent.transform.childCount;
         for(int i =0; i < mapChildrenCount; i++)
         {
@@ -292,22 +346,7 @@ public class PauseMenuTransition : MonoBehaviour
                 {
                     var checkpointUI = checkpointList[j].GetComponent<CheckpointUI>();
                     if (mapMarker.roomToMapTo == checkpointUI.spawnObject.roomName) checkpointUI.spriteOnMap = mapContent.transform.GetChild(i).gameObject;
-                    if(mapMarker.roomToMapTo == curRoom)
-                    {
-                        var roomTransPos = mapContent.transform.GetChild(i).transform.position;
-                        curRoomPanel.transform.position = new Vector3(roomTransPos.x - 145, roomTransPos.y + 50, 0);
-
-                        var mapContentPanel = mapContent.GetComponent<RectTransform>();
-     
-                        if (roomTransPos != null)
-                        {
-                            Vector2 newMapPos = (Vector2)mapScrollRect.transform.InverseTransformPoint(mapContentPanel.position)
-                        - (Vector2)mapScrollRect.transform.InverseTransformPoint(roomTransPos);
-                            mapContentPanel.anchoredPosition = new Vector2(newMapPos.x, newMapPos.y);
-                        }
-                        initialMapPos = mapContentPanel.anchoredPosition;
-
-                    }
+                    
 
                 }
 

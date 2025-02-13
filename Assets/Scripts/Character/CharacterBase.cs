@@ -200,7 +200,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
             florentineAmount = 9999;
         }
-        uiManager.UpdateFlorentine((int)florentineAmount);
+        uiManager.UpdateFlorentine((int)florentineAmount, "Up");
         
     }
 
@@ -214,8 +214,13 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
             florentineAmount = 0;
         }
-        uiManager.UpdateFlorentine((int)florentineAmount);
+        uiManager.UpdateFlorentine((int)florentineAmount, "Down");
 
+    }
+
+    public float GetFlorentine()
+    {
+        return florentineAmount;
     }
 
     public IEnumerator MoveForward()

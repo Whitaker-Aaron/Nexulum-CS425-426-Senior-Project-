@@ -6,6 +6,8 @@ using UnityEngine;
 public class RoomSaveData
 {
     public string roomName;
+    public bool hasVisited;
+    public bool isCheckpoint;
     public List<LockedDoorSaveData> lockedDoors = new List<LockedDoorSaveData>();
     public List<EventTriggerSaveData> eventTriggers = new List<EventTriggerSaveData>();
     

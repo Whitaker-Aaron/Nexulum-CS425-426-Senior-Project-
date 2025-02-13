@@ -20,6 +20,11 @@ public class TerminalMenuTransition : MonoBehaviour
         menuManager.navigateToBaseMaterialsMenu();
     }
 
+    public void TransitionToShop()
+    {
+        menuManager.navigateToBaseShopMenu();
+    }
+
     public void OnBackButton()
     {
         menuManager.CloseMenu();
