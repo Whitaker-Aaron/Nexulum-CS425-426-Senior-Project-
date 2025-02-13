@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class turretProj : projectile
+public class mageProj : projectile
 {
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void FixedUpdate()
@@ -31,7 +31,7 @@ public class turretProj : projectile
     private void Awake()
     {
         bulletHitEffect = "bulletHitPool";
-        GetDamage("Ability-Turret");
+        GetDamage("Mage");
     }
 
     private void OnEnable()
@@ -45,7 +45,8 @@ public class turretProj : projectile
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
 
         //RaycastHit hit;
-        GetDamage("Ability-Turret");
+        GetDamage("Mage");
+
 
     }
 
@@ -65,11 +66,10 @@ public class turretProj : projectile
         float step = speed * Time.fixedDeltaTime;
         float distanceToHit = Vector3.Distance(transform.position, hitPoint);
 
-        if ((distanceToHit <= step || distanceToHit <= bufferDistance || hitEnemy) && hitPoint != null)
+        if ((distanceToHit <= step || distanceToHit <= bufferDistance) && hitPoint != null)
         {
             if (hit.collider.gameObject.tag == "Enemy")
             {
-                GetDamage("Ability-Turret");
                 hitEnemy = true;
                 int updatedDamage = damage;
                 //if (playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)
@@ -77,17 +77,18 @@ public class turretProj : projectile
                 //    updatedDamage = damage / masterInput.instance.gunnerDmgMod;
 
                 //}
-                if (playerBase == null)
-                    playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
-                if (Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)// && playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
-                {
-                    updatedDamage = damage / masterInput.instance.engrDmgMod;
-
-                }
 
                 hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(updatedDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
                 uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
 
+            }
+            if(hit.collider.gameObject.tag == "Player")
+            {
+                hitPlayer = true;
+                int updatedDamage = damage;
+
+                hit.collider.gameObject.GetComponent<CharacterBase>().takeDamage(updatedDamage, gameObject.transform.forward);
+                uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
             }
             playEffect(hitPoint);
             // We've reached the hit point, stop the projectile

@@ -150,6 +150,8 @@ public abstract class projectile : MonoBehaviour
         else if(name.StartsWith("Ability-"))
         {
             string[] parts = name.Split('-', 2);
+            print(parts[0]);
+            print(parts[1]);
             switch(parts[1])
             {
                 case null:
@@ -157,7 +159,7 @@ public abstract class projectile : MonoBehaviour
                     return;
 
                 case "Turret":
-                    damage = playerBase.weaponClass.turretAttack;
+                    damage = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().engineerObject.turretAttack;
                     break;
             }
         }
@@ -168,6 +170,9 @@ public abstract class projectile : MonoBehaviour
             {
                 case "Archer":
                     damage = enemyProjectileDamage.instance.getDamage("Archer");
+                    break;
+                case "Mage":
+                    damage = enemyProjectileDamage.instance.getDamage("Mage");
                     break;
             }
             
