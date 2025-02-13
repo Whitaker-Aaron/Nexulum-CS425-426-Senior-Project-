@@ -19,7 +19,10 @@ public class GraveDigger : MonoBehaviour, enemyInt
 
     public GameObject skeletonPrefab1; // First skeleton prefab
     public GameObject skeletonPrefab2; // Second skeleton prefab
-    private float spawnInterval = 30f; // Time in seconds between spawns
+    public GameObject smokeEffectPrefab; // Smoke effect prefab
+
+    private float firstSpawnDelay = 5f; // Initial delay before first spawn
+    private float spawnInterval = 45f; // Time in seconds between spawns
 
     private bool isSpawning = true;
 
@@ -58,6 +61,11 @@ public class GraveDigger : MonoBehaviour, enemyInt
 
     IEnumerator SpawnSkeletonsRoutine()
     {
+        // First spawn after initial delay
+        yield return new WaitForSeconds(firstSpawnDelay);
+        SpawnSkeletons();
+
+        // Continue spawning at regular intervals
         while (isSpawning)
         {
             yield return new WaitForSeconds(spawnInterval);
@@ -72,11 +80,24 @@ public class GraveDigger : MonoBehaviour, enemyInt
             Vector3 spawnPosition1 = new Vector3(transform.position.x + 5f, transform.position.y + 1f, transform.position.z);
             Vector3 spawnPosition2 = new Vector3(transform.position.x - 5f, transform.position.y + 1f, transform.position.z);
 
-            Instantiate(skeletonPrefab1, spawnPosition1, Quaternion.identity);
-            Instantiate(skeletonPrefab2, spawnPosition2, Quaternion.identity);
-            skeletonPrefab1.GetComponent<NavMeshAgent>().Warp(skeletonPrefab1.transform.position);
-            skeletonPrefab2.GetComponent<NavMeshAgent>().Warp(skeletonPrefab2.transform.position);
+            // Spawn smoke effect at both locations
+            if (smokeEffectPrefab != null)
+            {
+                Instantiate(smokeEffectPrefab, spawnPosition1, Quaternion.identity);
+                Instantiate(smokeEffectPrefab, spawnPosition2, Quaternion.identity);
+            }
+            else
+            {
+                Debug.LogError("Smoke effect prefab is not assigned!");
+            }
 
+            // Spawn skeletons
+            GameObject skeleton1 = Instantiate(skeletonPrefab1, spawnPosition1, Quaternion.identity);
+            GameObject skeleton2 = Instantiate(skeletonPrefab2, spawnPosition2, Quaternion.identity);
+
+            // Warp skeletons to ensure proper positioning
+            skeleton1.GetComponent<NavMeshAgent>().Warp(skeleton1.transform.position);
+            skeleton2.GetComponent<NavMeshAgent>().Warp(skeleton2.transform.position);
         }
         else
         {
