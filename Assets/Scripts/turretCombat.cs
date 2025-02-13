@@ -111,7 +111,7 @@ public class turretCombat : MonoBehaviour
         switchSpawn = !switchSpawn;
         if(switchSpawn)
         {
-            GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", bulletSpawnLeft.position, bulletSpawnLeft.rotation);
+            GameObject bullet = projectileManager.Instance.getProjectile("turretPool", bulletSpawnLeft.position, bulletSpawnLeft.rotation);
             //var bullet = Instantiate(bulletPrefab, bulletSpawnLeft.position, bulletSpawnLeft.rotation);
             //bullet.GetComponent<Rigidbody>().velocity = bulletSpawnLeft.forward * bulletSpeed;
             yield return new WaitForSeconds(fireRate);
@@ -120,7 +120,7 @@ public class turretCombat : MonoBehaviour
         }
         else
         {
-            GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", bulletSpawnRight.position, bulletSpawnRight.rotation);
+            GameObject bullet = projectileManager.Instance.getProjectile("turretPool", bulletSpawnRight.position, bulletSpawnRight.rotation);
             yield return new WaitForSeconds(fireRate);
             shooting = false;
             yield break;

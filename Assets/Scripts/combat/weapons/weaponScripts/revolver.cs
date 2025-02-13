@@ -37,7 +37,7 @@ public class revolver : weaponType
         bulletCount--;
         GameObject bullet = projectileManager.Instance.getProjectile("revolverPool", bulletSpawn.position, bulletSpawn.rotation);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
-        EffectsManager.instance.getFromPool("revolverFlash", bulletSpawn.position, bulletSpawn.rotation);
+        EffectsManager.instance.getFromPool("revolverFlash", bulletSpawn.position, bulletSpawn.rotation, true, true);
         yield return new WaitForSeconds(fireRateTime);
 
         canShoot = true;

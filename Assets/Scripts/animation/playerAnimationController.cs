@@ -168,6 +168,29 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     }
 
+    public void knightHeavyOne(float time)
+    {
+        animator.SetBool("H1", true);
+        animator.Play("heavyOne");
+        StartCoroutine(attackWait(time, "heavyWaitOne", 0));
+    }
+
+    public void knightHeavyTwo(float time)
+    {
+        animator.SetBool("H2", true);
+        animator.SetBool("H1", false);
+        animator.Play("heavyTwo");
+        StartCoroutine(attackWait(time, "heavyWaitTwo", 0));
+    }
+
+    public void knightHeavyThree()
+    {
+        animator.SetBool("H3", true);
+        animator.SetBool("H1", false);
+        animator.SetBool("H2", false);
+        animator.Play("heavyThree");
+    }
+
     public void stop()
     {
         animator.StopPlayback();
@@ -188,20 +211,26 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     public void resetKnight()
     {
-        if(animator.GetBool("attack3") == true)
+        if(animator.GetBool("attack3") == true || animator.GetBool("H3") == true)
         {
             animator.SetBool("attack1", false);
             animator.SetBool("attack2", false);
             animator.SetBool("attack3", false);
+            animator.SetBool("H1", false);
+            animator.SetBool("H2", false);
+            animator.SetBool("H3", false);
         }
-        else if (animator.GetBool("attack2") == true)
+        else if (animator.GetBool("attack2") == true || animator.GetBool("H2") == true)
         {
             animator.SetBool("attack1", false);
             animator.SetBool("attack2", false);
+            animator.SetBool("H1", false);
+            animator.SetBool("H2", false);
         }
         else
         {
             animator.SetBool("attack1", false);
+            animator.SetBool("H1", false);
         }
     }
     //-------------------------------------------------------
