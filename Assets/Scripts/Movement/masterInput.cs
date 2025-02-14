@@ -94,6 +94,7 @@ public class masterInput : MonoBehaviour
     public float dashSpeed = 3f;
     public float dashTime = .2f;
     Coroutine dashCooldown;
+    public float comboCooldown = 1.5f;
 
     GameObject staminaBar;
     GameObject staminaFill;
@@ -1085,7 +1086,7 @@ public class masterInput : MonoBehaviour
             noOfClicks = 0;
         }
 
-        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
+        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords && !isBlocking)
         {
             if (playerInput.actions["attack"].triggered)
             {
@@ -1200,6 +1201,7 @@ public class masterInput : MonoBehaviour
     {
         yield return new WaitForSeconds(animationTime);
 
+        
         if (Time.time - lastClickedTime > maxComboDelay)
         {
             noOfClicks = 0; // Reset Combo if no input in time
@@ -1210,6 +1212,11 @@ public class masterInput : MonoBehaviour
 
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
             animationControl.resetEngineer();
+        if(noOfClicks >= 3 && (animationControl.getAnimationInfo().IsName("attackThree") || animationControl.getAnimationInfo().IsName("heavyThree")))
+        {
+            yield return new WaitForSeconds(comboCooldown);
+            noOfClicks = 0;
+        }
     }
 
     private IEnumerator waitAttack(float animationTime)
@@ -1223,20 +1230,6 @@ public class masterInput : MonoBehaviour
         }
     }
 
-    // Logic for Heavy Attack Input
-    private void HandleHeavyAttackInput()
-    {
-        if (playerInput.actions["attack"].IsPressed())
-        {
-            float holdTime = Time.time - lastClickedTime;
-
-            // Check if the hold time is long enough to trigger a heavy attack
-            //if (holdTime > heavyAttackThreshold)
-            //{
-            //    StartCoroutine(PerformHeavyAttack());
-            //}
-        }
-    }
 
 
 
@@ -1317,7 +1310,7 @@ public class masterInput : MonoBehaviour
                 }
             }*/
 
-            if (playerInput.actions["RightClick"].triggered)
+            if (playerInput.actions["RightClick"].triggered && !isAttacking)
             {
                 isBlocking = true;
                 isAttacking = false;
@@ -1550,7 +1543,7 @@ public class masterInput : MonoBehaviour
             {
                 print("Using ability Three");
                 abilityInUse = true;
-                if (currentClass == WeaponBase.weaponClassTypes.Knight)
+                if (currentClass == WeaponBase.weaponClassTypes.Knight && !classAbilties.instance.a3cooldown)
                 {
                     animationControl.knightShootSwords();
                     shootingSwords = true;

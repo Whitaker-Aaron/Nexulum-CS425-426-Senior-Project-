@@ -135,7 +135,7 @@ public class classAbilties : MonoBehaviour
     public float ka1Time, ka2Time, ka3Time;
     public float ga1Time, ga2Time, ga3Time;
     public float ea1Time, ea2Time, ea3Time;
-    private bool a1cooldown, a2cooldown, a3cooldown = false;
+    public bool a1cooldown, a2cooldown, a3cooldown = false;
     private Coroutine acc1, acc2, acc3;
 
 
@@ -501,22 +501,22 @@ public class classAbilties : MonoBehaviour
             //print(projectileManager.Instance);
             GameObject sword = projectileManager.Instance.getProjectile("swordShotIcePool", swordSpawn.position, swordSpawn.rotation);
             sword.GetComponent<swordShot>().isIce = true;
-            sword.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * swordSpeed;
-            sword.GetComponent<swordShot>().damage = swordShotDamage;
+            //sword.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * swordSpeed;
+            //sword.GetComponent<swordShot>().damage = swordShotDamage;
         }
         else if(SSExplode)
         {
-            GameObject sword = projectileManager.Instance.getProjectile("swordShotPool", swordSpawn.position, swordSpawn.rotation);
+            GameObject sword = projectileManager.Instance.getProjectile("swordShotExplodePool", swordSpawn.position, swordSpawn.rotation);
             sword.GetComponent<swordShot>().activateExplosion();
-            sword.GetComponent<Rigidbody>().velocity = swordSpawn.forward * swordSpeed;
-            sword.GetComponent<swordShot>().damage = swordShotDamage;
+            //sword.GetComponent<Rigidbody>().velocity = swordSpawn.forward * swordSpeed;
+            //sword.GetComponent<swordShot>().damage = swordShotDamage;
         }
         else
         {
             //print(projectileManager.Instance);
             GameObject sword = projectileManager.Instance.getProjectile("swordShotPool", swordSpawn.position, swordSpawn.rotation);
-            sword.GetComponent<Rigidbody>().velocity = swordSpawn.forward * swordSpeed;
-            sword.GetComponent<swordShot>().damage = swordShotDamage;
+            //sword.GetComponent<Rigidbody>().velocity = swordSpawn.forward * swordSpeed;
+            //sword.GetComponent<swordShot>().damage = swordShotDamage;
         }
             
 
@@ -530,6 +530,7 @@ public class classAbilties : MonoBehaviour
     {
         yield return new WaitForSeconds(swordAbilityTime);
         gameObject.GetComponent<playerAnimationController>().stopShootSword();
+        yield return new WaitUntil(() => gameObject.GetComponent<playerAnimationController>().getAnimationInfo().IsName("Locomotion"));
         gameObject.GetComponent<masterInput>().shootingSwords = false;
         shootingSwords = false;
         currentEffect.GetComponent<ParticleSystem>().Stop();
