@@ -38,6 +38,7 @@ public class StoreItem : MonoBehaviour
                 Debug.Log("Purchasing recipe");
                 menuManager.AddToAvailableCraftRecipes(craftRecipe);
                 GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().RemoveFlorentine(craftRecipe.shopCost);
+                menuManager.RemoveShopItemFromShop(this.gameObject);
                 break;
         }
     }

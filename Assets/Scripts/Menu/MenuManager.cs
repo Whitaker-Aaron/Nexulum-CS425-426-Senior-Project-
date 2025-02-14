@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class MenuManager : MonoBehaviour
     
@@ -157,7 +158,7 @@ public class MenuManager : MonoBehaviour
             }
             if(GameObject.FindGameObjectWithTag("ShopOptions") != null)
             {
-                Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
+                //Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
             }
             if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
@@ -244,7 +245,7 @@ public class MenuManager : MonoBehaviour
         }
         if (GameObject.FindGameObjectWithTag("ShopOptions") != null)
         {
-            Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
+            //Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
         }
         if (GameObject.FindGameObjectWithTag("MainMenu") != null)
         {
@@ -306,6 +307,10 @@ public class MenuManager : MonoBehaviour
     {
         return GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopCraftRecipes>().getRecipes();
     }
+    public void removeShopCraftRecipe(CraftRecipe recipeToRemove)
+    {
+        GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopCraftRecipes>().removeRecipe(recipeToRemove);
+    }
 
     public void navigateToMaterialMenu()
     {
@@ -350,8 +355,6 @@ public class MenuManager : MonoBehaviour
     public void navigateToBaseShopMenu()
     {
         Debug.Log("Navigating to Base Shop Menu");
-        Instantiate(shopOptionsReference);
-        //Instantiate(craftListsReference);
         Destroy(currentMenuObject);
         currentMenuObject = Instantiate(baseShopMenuReference);
         currentMenuObject.transform.SetParent(canvas.transform, false);
@@ -512,23 +515,28 @@ public class MenuManager : MonoBehaviour
             {
                 case StoreItem.StoreItemType.Recipe:
                     var recipes = returnRecipesInShop();
+                    if (recipes == null) break;
                     for (int i = 0; i < recipes.Count; i++)
                     {
                         var shopItem = shopOptionObject.GetComponent<StoreItem>();
                         shopItem.craftRecipe = recipes[i];
                         shopItem.storeItemName.GetComponent<TMP_Text>().text = recipes[i].recipeName;
                         shopItem.storeItemNameShadow.GetComponent<TMP_Text>().text = recipes[i].recipeName;
-                        shopItem.florentineRequiredAmount.GetComponent<Text>().text = recipes[i].shopCost.ToString();
+                        shopItem.florentineRequiredAmount.GetComponent<Text>().text = "x" + recipes[i].shopCost.ToString();
                         shopItem.storeType = type;
-                        if(curFlorentine >= recipes[i].shopCost)
+                        Color32 red = new Color32(0xE4, 0x3c, 0x54, 0xFF);
+                        Color32 white = new Color32(0xFF, 0xFF, 0xFF, 0xFF);
+                        if (curFlorentine >= recipes[i].shopCost)
                         {
                             shopItem.purchaseButton.GetComponent<Button>().interactable = true;
                             shopItem.disabledPanel.SetActive(false);
+                            shopItem.florentineRequiredAmount.GetComponent<Text>().color = white;
                         }
                         else
                         {
                             shopItem.purchaseButton.GetComponent<Button>().interactable = false;
                             shopItem.disabledPanel.SetActive(true);
+                            shopItem.florentineRequiredAmount.GetComponent<Text>().color = red;
                         }
                         var curShop = Instantiate(shopOptionObject);
                         curShop.transform.SetParent(container.transform, false);
@@ -537,6 +545,18 @@ public class MenuManager : MonoBehaviour
             }
             
         }
+    }
+
+    public void RemoveShopItemFromShop(GameObject shopItem)
+    {
+        switch (shopItem.GetComponent<StoreItem>().storeType)
+        {
+            case StoreItem.StoreItemType.Recipe:
+                removeShopCraftRecipe(shopItem.GetComponent<StoreItem>().craftRecipe);
+                break;
+        }
+        
+        Destroy(shopItem);
     }
 
     public void populateBaseInventoryMaterials()
