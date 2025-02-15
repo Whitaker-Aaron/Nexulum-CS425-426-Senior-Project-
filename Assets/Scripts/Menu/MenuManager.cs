@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -125,6 +126,22 @@ public class MenuManager : MonoBehaviour
                     counter++;
                 }
             }
+        }
+    }
+
+    public void resetShopSelection()
+    {
+        if(currentMenuObject != null && currentMenuObject.GetComponent<BaseShopMenu>() != null)
+        {
+            currentMenuObject.GetComponent<BaseShopMenu>().resetSelection();
+        }
+    }
+
+    public void updateShopCount(float amount)
+    {
+        if (currentMenuObject != null && currentMenuObject.GetComponent<BaseShopMenu>() != null)
+        {
+            currentMenuObject.GetComponent<BaseShopMenu>().updateFlorentineCount(amount);
         }
     }
 
@@ -358,7 +375,7 @@ public class MenuManager : MonoBehaviour
         Destroy(currentMenuObject);
         currentMenuObject = Instantiate(baseShopMenuReference);
         currentMenuObject.transform.SetParent(canvas.transform, false);
-        populateBaseShopOptions(StoreItem.StoreItemType.Recipe);
+        //populateBaseShopOptions(StoreItem.StoreItemType.Recipe);
         //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
     }
 
