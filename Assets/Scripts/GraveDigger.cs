@@ -14,6 +14,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
     private bool _isAttacking;
     public LayerMask Player;
     public float attackRange = .5f;
+    public float attackCooldownTime = 2f;
     public int attackDamage = 20;
     private float timeOffset;
 
@@ -25,6 +26,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
     private float spawnInterval = 45f; // Time in seconds between spawns
 
     private bool isSpawning = true;
+    public bool canAttack = true;
 
     void Start()
     {
@@ -40,6 +42,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
             {
                 Debug.LogError("Player not found! Make sure the player has the 'Player' tag.");
             }
+            canAttack = true;
         }
 
         playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
@@ -129,18 +132,28 @@ public class GraveDigger : MonoBehaviour, enemyInt
         }
     }
 
+    public IEnumerator attackCooldown()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(attackCooldownTime);
+        canAttack = true;
+    }
+
     void attackPlayer()
     {
+        if (!canAttack) return;
         Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
 
         foreach (Collider player in playerInRange)
         {
             //attack player commands
             Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
-            if (player.tag == "Player") playerRef.takeDamage(attackDamage, knockBackDir);
+            if (player.tag == "Player") {
+                playerRef.takeDamage(attackDamage, knockBackDir);
+                StartCoroutine(attackCooldown());
+            };
             Debug.Log(player.tag);
-
-
+            
         }
 
     }
