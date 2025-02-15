@@ -83,6 +83,8 @@ public class masterInput : MonoBehaviour
     public float animTime = 0.5f;
     public float animTimeTwo = 0.5f;
     public float animTimeThree = 0.99f;
+    public float animHeavyTimeOne = 0.6f;
+    public float animHeavyTimeTwo = 0.6f;
     GameObject sword;
     public float blockTime;
     public float blockSpeed;
@@ -1032,15 +1034,16 @@ public class masterInput : MonoBehaviour
 
         if (isHeavy && currentClass == WeaponBase.weaponClassTypes.Knight)
         {
+            nextAttackTime = 0.5f;
             // Trigger Heavy Attack Animations and Effects
             switch (attackStage)
             {
                 case 1:
-                    animationControl.knightHeavyOne(animTime);
+                    animationControl.knightHeavyOne(animHeavyTimeOne);
                     SS1.GetComponent<ParticleSystem>().Play();
                     break;
                 case 2:
-                    animationControl.knightHeavyTwo(animTime);
+                    animationControl.knightHeavyTwo(animHeavyTimeTwo);
                     SS1.GetComponent<ParticleSystem>().Play();
                     break;
                 case 3:
@@ -1063,7 +1066,7 @@ public class masterInput : MonoBehaviour
                     SS1.GetComponent<ParticleSystem>().Play();
                     break;
                 case 2:
-                    animationControl.knightAttackTwo(animTime);
+                    animationControl.knightAttackTwo(animTimeTwo);
                     SS2.GetComponent<ParticleSystem>().Play();
                     break;
                 case 3:
