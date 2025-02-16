@@ -31,6 +31,8 @@ public abstract class projectile : MonoBehaviour
 
     protected string bulletHitEffect;
 
+    protected bool counting = false;
+
 
     //fire rune vars
     ///bool gunnerFire = false;
@@ -58,6 +60,7 @@ public abstract class projectile : MonoBehaviour
         lifeTime = maxLifeTime;
         //Invoke(nameof(returnToPool), lifeTime);
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        counting = true;
         //GetDamage();
 
         /*
@@ -161,6 +164,9 @@ public abstract class projectile : MonoBehaviour
                 case "Turret":
                     damage = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().engineerObject.turretAttack;
                     break;
+                case "swordShot":
+                    damage = classAbilties.instance.swordShotDamage;
+                    break;
             }
         }
         else
@@ -197,7 +203,10 @@ public abstract class projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        if(counting)
+        {
+            handleTime();
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -243,6 +252,7 @@ public abstract class projectile : MonoBehaviour
         }
         returnToPool();
         hitEnemy = false;
+        hitPlayer = false;
 
     }
 
@@ -295,6 +305,7 @@ public abstract class projectile : MonoBehaviour
     protected void returnToPool()
     {
         stop = true;
+        counting = false;
         projectileManager.Instance.returnProjectile(poolName, gameObject);
         /*
         if(poolName == "bulletPool")
@@ -316,6 +327,14 @@ public abstract class projectile : MonoBehaviour
         */
     }
 
+    void handleTime()
+    {
+        lifeTime -= Time.deltaTime;
+        if (lifeTime < 0)
+        {
+            returnToPool();
+        }
+    }
 
     protected abstract void moveProj();
 

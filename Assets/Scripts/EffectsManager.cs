@@ -297,6 +297,7 @@ public class EffectsManager : MonoBehaviour
                 if (ignorePlayerLoc)
                 {
                     obj.transform.rotation = rotation;
+                    obj.transform.localPosition = Vector3.zero;
                 }
                 else
                 {
