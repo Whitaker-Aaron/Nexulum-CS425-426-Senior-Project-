@@ -64,15 +64,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12fa29c9b8ce1464883155e354a260df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  materialRequirementObject: {fileID: 0}
+  materialRequirementObject: {fileID: 251070956553156952, guid: c1cb6121414da894eaf6b1899e44f23f, type: 3}
   craftRecipe: {fileID: 11400000, guid: cf4328a6dd8046a46b9daa3b46b8a059, type: 2}
-  materialContainer: {fileID: 0}
+  weaponBase: {fileID: 0}
+  playerItem: {fileID: 11400000, guid: ca3cdf21172617840be1b518f3f0345b, type: 2}
+  materialContainer: {fileID: 7244660146653776290}
   storeItemName: {fileID: 3643318357724078292}
   storeItemNameShadow: {fileID: 2974618294436087641}
   florentineRequiredAmount: {fileID: 6946952679841691427}
   purchaseButton: {fileID: 3026216113479770452}
+  viewButton: {fileID: 2033431293356739664}
   disabledPanel: {fileID: 9029836643695602697}
-  storeType: 0
+  itemQuantity: {fileID: 6744266934326279683}
+  requiredMaterials: {fileID: 2836896460114157862}
+  description: {fileID: 2234807982666679312}
+  storeType: 1
 --- !u!1001 &7091270174693263116
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -91,7 +97,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5052368526509010176, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
       propertyPath: m_text
-      value: Revolver
+      value: Small Restore
       objectReference: {fileID: 0}
     - target: {fileID: 5175363983197315669, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
       propertyPath: m_Interactable
@@ -189,9 +195,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5490655354779578599, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+      propertyPath: m_text
+      value: Small bundle of health that restores 20 hp
+      objectReference: {fileID: 0}
     - target: {fileID: 5813522958256191871, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
       propertyPath: m_Text
-      value: x500
+      value: x50
       objectReference: {fileID: 0}
     - target: {fileID: 5813522958256191871, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
       propertyPath: m_Color.b
@@ -207,7 +217,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6771855897356127239, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
       propertyPath: m_text
-      value: Revolver
+      value: Small Restore
+      objectReference: {fileID: 0}
+    - target: {fileID: 7411648659532041066, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+      propertyPath: m_text
+      value: 'Have: 4/99'
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 9014155252250330612, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
@@ -215,6 +229,21 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+--- !u!1 &2033431293356739664 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9102182060337597276, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2234807982666679312 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9037284788035388188, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2836896460114157862 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4987717808931530282, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2974618294436087641 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5417468831559303253, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
@@ -235,9 +264,19 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5829604162302093272, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
   m_PrefabInstance: {fileID: 7091270174693263116}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6744266934326279683 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4607520708980128015, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6946952679841691427 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 144616569564262447, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
+  m_PrefabInstance: {fileID: 7091270174693263116}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7244660146653776290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 496368631250177710, guid: fd1f33000d9494f47bdff12e601ba943, type: 3}
   m_PrefabInstance: {fileID: 7091270174693263116}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &9029836643695602697 stripped

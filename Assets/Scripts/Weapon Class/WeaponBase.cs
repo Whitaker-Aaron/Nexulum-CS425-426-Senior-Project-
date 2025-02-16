@@ -11,6 +11,7 @@ public class WeaponBase : ScriptableObject
     [SerializeField] public int weaponAttack;
     [SerializeField] public weaponClassTypes weaponClassType;
     [SerializeField] public GameObject weaponMesh;
+    [SerializeField] public float shopCost;
     [SerializeField] public CraftRecipe weaponRecipe;
     [SerializeField] public weaponType weaponType;
 

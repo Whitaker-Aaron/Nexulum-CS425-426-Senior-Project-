@@ -21,6 +21,7 @@ public class SaveData
 
     public string[] weaponInventory;
     public string[] runeInventory;
+    public PlayerItemSaveData[] itemInventory;
 
     public SaveData()
     {
@@ -47,6 +48,12 @@ public class SaveData
         runeInventory[1] = "Ice";
         runeInventory[2] = "Earth";
         runeInventory[4] = "Regen";
+
+        itemInventory = new PlayerItemSaveData[100];
+        for(int i = 0; i < itemInventory.Length; i++)
+        {
+            itemInventory[i] = new PlayerItemSaveData();
+        }
 
         equippedRunes = new string[3];
     }
