@@ -21,4 +21,16 @@ public class ShopCraftRecipes : MonoBehaviour
     {
         return recipesInStore;
     }
+
+    public void removeRecipe(CraftRecipe recipeToRemove)
+    {
+        for(int i = 0; i < recipesInStore.Count; i++)
+        {
+            if (recipesInStore[i].recipeName == recipeToRemove.recipeName)
+            {
+                recipesInStore.RemoveAt(i);
+                break;
+            }
+        }
+    }
 }
