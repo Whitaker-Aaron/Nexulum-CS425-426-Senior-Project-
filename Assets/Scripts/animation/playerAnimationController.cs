@@ -177,10 +177,9 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     public void knightHeavyTwo(float time)
     {
-        animator.SetBool("H2", true);
         animator.SetBool("H1", false);
+        animator.SetBool("H2", true);
         animator.Play("heavyTwo");
-        StartCoroutine(attackWait(time, "heavyWaitTwo", 0));
     }
 
     public void knightHeavyThree()
@@ -241,7 +240,17 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     {
         animator.SetBool("reload", true);
         animator.Play("Reload Blend Tree");
-        animator.SetFloat("blendTreeSpeed", (animator.GetCurrentAnimatorStateInfo(1).length / time));
+        StartCoroutine(reloadWait(time));
+
+        //float reloadDuration = animator.GetCurrentAnimatorStateInfo(1).length; 
+        //animator.speed = reloadDuration / time; // Adjust animation speed dynamically
+
+        //StartCoroutine(ResetAnimatorSpeed(reloadDuration / time)); // Reset after animation
+    }
+
+    IEnumerator reloadWait(float time)
+    {
+        yield return new WaitForSeconds(time);
         animator.SetBool("reload", false);
     }
 
@@ -251,6 +260,7 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     //Engineer Animations------------------------------------
 
+    /*
     public void engineerReload(float time)
     {
         
@@ -259,6 +269,62 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         animator.SetFloat("blendTreeSpeed", (animator.GetCurrentAnimatorStateInfo(2).length / time) * 2f);
         animator.SetBool("reload", false);
         //StartCoroutine(engrReloadWait((animator.GetCurrentAnimatorStateInfo(2).length / time) + 1));
+    }
+    /*
+    public void engineerReload(float time)
+    {
+        animator.SetBool("reload", true);
+        animator.Play("engReloadBlendTree");
+
+        float reloadDuration = animator.GetCurrentAnimatorStateInfo(2).length; // Check layer 0 instead of 2
+        animator.speed = reloadDuration / time; // Adjust animation speed dynamically
+
+        StartCoroutine(ResetAnimatorSpeed(reloadDuration / time)); // Reset after animation
+    }
+    */
+
+    public void engineerReload(float reloadTime)
+    {
+        animator.SetBool("reload", true);
+        animator.Play("engReloadBlendTree");
+        StartCoroutine(reloadWait(reloadTime));
+        // Get the default reload animation duration from the blend tree
+        //float baseReloadDuration = GetReloadAnimationLength();
+
+        // Calculate the new speed multiplier to fit the desired reload time
+        //float speedMultiplier = baseReloadDuration / reloadTime;
+
+        // Ensure the speed multiplier is at least 1 to avoid too fast animation
+        //speedMultiplier = Mathf.Max(speedMultiplier, 1f);
+
+        // Apply the new speed to the blend tree parameter
+        //animator.SetFloat("reloadSpeed", speedMultiplier);
+
+        // Start a coroutine to reset values after reload finishes
+        //StartCoroutine(ResetReload(reloadTime));
+    }
+
+    private float GetReloadAnimationLength()
+    {
+        int layerIndex = 0; // Change if reload animation is on a different layer
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(layerIndex);
+
+        // Account for the animation length, avoiding division by zero
+        return Mathf.Max(stateInfo.length, 0.1f); // Use a small minimum value
+    }
+
+    private IEnumerator ResetReload(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+
+        animator.SetBool("reload", false);
+        animator.SetFloat("reloadSpeed", 1f); // Reset speed to normal
+    }
+
+    IEnumerator ResetAnimatorSpeed(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        animator.speed = 1f; // Reset to default speed
     }
 
     public void engAttackOne(float time)
