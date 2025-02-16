@@ -239,12 +239,19 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     public void gunnerReload(float time)
     {
         animator.SetBool("reload", true);
-        animator.Play("ReloadBlendTree");
+        animator.Play("Reload Blend Tree");
+        StartCoroutine(reloadWait(time));
 
-        float reloadDuration = animator.GetCurrentAnimatorStateInfo(1).length; 
-        animator.speed = reloadDuration / time; // Adjust animation speed dynamically
+        //float reloadDuration = animator.GetCurrentAnimatorStateInfo(1).length; 
+        //animator.speed = reloadDuration / time; // Adjust animation speed dynamically
 
-        StartCoroutine(ResetAnimatorSpeed(reloadDuration / time)); // Reset after animation
+        //StartCoroutine(ResetAnimatorSpeed(reloadDuration / time)); // Reset after animation
+    }
+
+    IEnumerator reloadWait(float time)
+    {
+        yield return new WaitForSeconds(time);
+        animator.SetBool("reload", false);
     }
 
 
@@ -280,20 +287,21 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     {
         animator.SetBool("reload", true);
         animator.Play("engReloadBlendTree");
+        StartCoroutine(reloadWait(reloadTime));
         // Get the default reload animation duration from the blend tree
-        float baseReloadDuration = GetReloadAnimationLength();
+        //float baseReloadDuration = GetReloadAnimationLength();
 
         // Calculate the new speed multiplier to fit the desired reload time
-        float speedMultiplier = baseReloadDuration / reloadTime;
+        //float speedMultiplier = baseReloadDuration / reloadTime;
 
         // Ensure the speed multiplier is at least 1 to avoid too fast animation
-        speedMultiplier = Mathf.Max(speedMultiplier, 1f);
+        //speedMultiplier = Mathf.Max(speedMultiplier, 1f);
 
         // Apply the new speed to the blend tree parameter
-        animator.SetFloat("reloadSpeed", speedMultiplier);
+        //animator.SetFloat("reloadSpeed", speedMultiplier);
 
         // Start a coroutine to reset values after reload finishes
-        StartCoroutine(ResetReload(reloadTime));
+        //StartCoroutine(ResetReload(reloadTime));
     }
 
     private float GetReloadAnimationLength()
