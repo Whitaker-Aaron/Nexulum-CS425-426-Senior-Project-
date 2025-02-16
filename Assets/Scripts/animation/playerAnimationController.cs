@@ -177,10 +177,9 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     public void knightHeavyTwo(float time)
     {
-        animator.SetBool("H2", true);
         animator.SetBool("H1", false);
+        animator.SetBool("H2", true);
         animator.Play("heavyTwo");
-        StartCoroutine(attackWait(time, "heavyWaitTwo", 0));
     }
 
     public void knightHeavyThree()

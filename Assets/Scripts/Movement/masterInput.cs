@@ -109,9 +109,11 @@ public class masterInput : MonoBehaviour
     public bool shootingSwords = false;
 
     public GameObject swordSlashPrefab, swordSlash2, swordSlash3;
-    private GameObject SS1, SS2, SS3;
-    public GameObject ESP1, ESP2, ESP3;
+    private GameObject SS1, SS2, SS3;//sword slash
+    public GameObject ESP1, ESP2, ESP3;//engr slash prefab
     private GameObject ES1, ES2, ES3;
+    private GameObject HS1, HS2, HS3;//heavy slash
+    public GameObject HSP1, HSP2, HSP3;
 
 
 
@@ -330,6 +332,8 @@ public class masterInput : MonoBehaviour
             onSwitchToSpell();
         }
 
+        if (animationControl != null)
+            checkAnimationState();
         runLogic();
 
         returningFromMenu = false;
@@ -1006,11 +1010,35 @@ public class masterInput : MonoBehaviour
     }
     */
     public float attackTime = .5f;
+    private bool canTrigger = true;
+
+    private IEnumerator attackCooldown(float time)
+    {
+        canTrigger = false;
+        yield return new WaitForSeconds(time);
+        canTrigger = true;
+    }
+
+    private void checkAnimationState()
+    {
+        AnimatorStateInfo temp = animationControl.getAnimationInfo();
+        if((temp.IsName("waitOne") || temp.IsName("waitTwo") || temp.IsName("waitThree")) && temp.normalizedTime >= 0.5f)
+        {
+            StartCoroutine(attackCooldown(0.25f));
+        }
+        if((temp.IsName("heavyWaitOne") || temp.IsName("heavyWaitTwo") || temp.IsName("heavyThree")) && temp.normalizedTime >= 0.7f)
+        {
+            StartCoroutine(attackCooldown(0.4f));
+        }
+    }
 
     private IEnumerator HandleComboAttack(float attackTime, int attackStage, bool isHeavy)
     {
+        if (!canTrigger)
+            yield break;
+        AnimatorStateInfo temp = animationControl.getAnimationInfo();
         //effect.GetComponent<ParticleSystem>()?.Play();
-        if(currentClass == WeaponBase.weaponClassTypes.Engineer)
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             switch (attackStage)
             {
@@ -1034,30 +1062,67 @@ public class masterInput : MonoBehaviour
 
         if (isHeavy && currentClass == WeaponBase.weaponClassTypes.Knight)
         {
-            nextAttackTime = 0.5f;
+            if (temp.IsName("heavyTwo"))
+                yield break;
+            //nextAttackTime = 0.6f;
             // Trigger Heavy Attack Animations and Effects
+            temp = animationControl.getAnimationInfo();
+            if (temp.IsName("Locomotion"))
+            {
+                animationControl.knightHeavyOne(animHeavyTimeOne);
+                HS1.GetComponent<ParticleSystem>().Play();
+            }
+            if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
+            {
+                StopCoroutine(wait(attackStage));
+                animationControl.knightHeavyTwo(animHeavyTimeTwo);
+                HS1.GetComponent<ParticleSystem>().Play();
+            }
+            if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
+            {
+                animationControl.knightHeavyThree();
+                HS1.GetComponent<ParticleSystem>().Play();
+            }
+            /*
             switch (attackStage)
             {
                 case 1:
                     animationControl.knightHeavyOne(animHeavyTimeOne);
-                    SS1.GetComponent<ParticleSystem>().Play();
+                    HS1.GetComponent<ParticleSystem>().Play();
                     break;
                 case 2:
                     animationControl.knightHeavyTwo(animHeavyTimeTwo);
-                    SS1.GetComponent<ParticleSystem>().Play();
+                    HS1.GetComponent<ParticleSystem>().Play();
                     break;
                 case 3:
                     animationControl.knightHeavyThree();
-                    SS1.GetComponent<ParticleSystem>().Play();
+                    HS1.GetComponent<ParticleSystem>().Play();
                     break;
             }
-            sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
+            */
+            sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true);
         }
         else
         {
-            if (currentClass == WeaponBase.weaponClassTypes.Engineer)
-                yield break;
             // Trigger Light Attack Animations and Effects
+            //nextAttackTime = 0.25f;
+            temp = animationControl.getAnimationInfo();
+            if (temp.IsName("Locomotion"))
+            {
+                animationControl.knightAttackOne(animTime);
+                SS1.GetComponent<ParticleSystem>().Play();
+            }
+            if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
+            {
+                animationControl.knightAttackTwo(animTimeTwo);
+                SS2.GetComponent<ParticleSystem>().Play();
+            }
+            if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
+            {
+                animationControl.knightAttackThree();
+                SS3.GetComponent<ParticleSystem>().Play();
+            }
+            /*
             switch (attackStage)
             {
                 case 1:
@@ -1073,8 +1138,8 @@ public class masterInput : MonoBehaviour
                     animationControl.knightAttackThree();
                     SS3.GetComponent<ParticleSystem>().Play();
                     break;
-            }
-            sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
+            }*/
+            sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false);
         }
 
         // Wait for animation and reset logic
@@ -1119,6 +1184,7 @@ public class masterInput : MonoBehaviour
         }
 
         // Execute attack after determining light or heavy
+        StopCoroutine(wait(attackStage));
         StartCoroutine(HandleComboAttack(isHeavy ? animTime : animTimeTwo, attackStage, isHeavy));
     }
 
@@ -1313,7 +1379,7 @@ public class masterInput : MonoBehaviour
                 }
             }*/
 
-            if (playerInput.actions["RightClick"].triggered && !isAttacking)
+            if (playerInput.actions["RightClick"].triggered && !isAttacking && animationControl.getAnimationInfo().IsName("Locomotion"))
             {
                 isBlocking = true;
                 isAttacking = false;
@@ -1331,7 +1397,7 @@ public class masterInput : MonoBehaviour
                     StartCoroutine(animationControl.startKnightBlock(blockTime));
                 StartCoroutine(StartStaminaCooldown());
             }
-            if (playerInput.actions["RightClick"].WasReleasedThisFrame())
+            if (playerInput.actions["RightClick"].WasReleasedThisFrame() && isBlocking)
             {
                 isBlocking = false;
                 character.invul = false;
@@ -1754,6 +1820,9 @@ public class masterInput : MonoBehaviour
         SS1 = Instantiate(swordSlashPrefab);
         SS2 = Instantiate(swordSlash2);
         SS3 = Instantiate(swordSlash3);
+        HS1 = Instantiate(swordSlashPrefab);
+        HS2 = Instantiate(swordSlash2);
+        HS3 = Instantiate(swordSlash3);
         ES1 = Instantiate(ESP1);
         ES2 = Instantiate(ESP2);
         ES3 = Instantiate(ESP3);
@@ -1763,18 +1832,27 @@ public class masterInput : MonoBehaviour
         ES1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         SS1.transform.SetParent(player.transform, false);
         SS2.transform.SetParent(player.transform, false);
         SS3.transform.SetParent(player.transform, false);
         ES1.transform.SetParent(player.transform, false);
         ES2.transform.SetParent(player.transform, false);
         ES3.transform.SetParent(player.transform, false);
+        HS1.transform.SetParent(player.transform, false);
+        HS2.transform.SetParent(player.transform, false);
+        HS3.transform.SetParent(player.transform, false);
         SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
         SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
         SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
         ES1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
     }
 }
 
