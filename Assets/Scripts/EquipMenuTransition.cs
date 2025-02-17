@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System.Data;
 //using static UnityEditor.Progress;
 
 public class EquipMenuTransition : MonoBehaviour
@@ -359,10 +360,36 @@ public class EquipMenuTransition : MonoBehaviour
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Weapon;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = weaponsInventory[i].weaponName;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = weaponsInventory[i].weaponDescription;
-                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<TMP_Text>().text = "Attack +" + weaponsInventory[i].weaponAttack;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(true);
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.SetActive(true);
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().unequipOptionButton.SetActive(false);
+
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.SetActive(false);
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDamage.SetActive(true);
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDamage.transform.Find("DamageDescription").gameObject.GetComponent<TMP_Text>().text = "+ " + weaponsInventory[i].weaponAttack + " ATK";
+
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.SetActive(true);
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.SetActive(false);
+
+
+                switch (equipOptionPrefab.GetComponent<EquipOptionPrefab>().weapon.weaponClassType)
+                {
+                    case WeaponBase.weaponClassTypes.Knight:
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.transform.Find("KnightClass").gameObject.SetActive(true);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.transform.Find("GunnerClass").gameObject.SetActive(false);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.transform.Find("EngineerClass").gameObject.SetActive(false);
+                        break;
+                    case WeaponBase.weaponClassTypes.Gunner:
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.transform.Find("KnightClass").gameObject.SetActive(false);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.transform.Find("GunnerClass").gameObject.SetActive(true);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.transform.Find("EngineerClass").gameObject.SetActive(false);
+                        break;
+                    case WeaponBase.weaponClassTypes.Engineer:
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.transform.Find("KnightClass").gameObject.SetActive(false);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.transform.Find("GunnerClass").gameObject.SetActive(false);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.transform.Find("EngineerClass").gameObject.SetActive(true);
+                        break;
+                }
 
 
                 bool equipped = false;
@@ -440,10 +467,35 @@ public class EquipMenuTransition : MonoBehaviour
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Rune;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = runeInventory[i].runeName;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = runeInventory[i].runeDescription;
-                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<TMP_Text>().text = "Effect +" + runeInventory[i].runeEffect;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(true);
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().unequipOptionButton.SetActive(false);
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.SetActive(true);
+
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.SetActive(true);
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDamage.SetActive(false);
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEffect.transform.Find("EffectDescription").gameObject.GetComponent<TMP_Text>().text = "+ " + runeInventory[i].runeEffect;
+
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionClassUI.SetActive(false);
+                equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.SetActive(true);
+
+                switch (equipOptionPrefab.GetComponent<EquipOptionPrefab>().rune.runeType)
+                {
+                    case Rune.RuneType.Class:
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.transform.Find("ClassUI").gameObject.SetActive(true);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.transform.Find("BuffUI").gameObject.SetActive(false);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.transform.Find("SpellUI").gameObject.SetActive(false);
+                        break;
+                    case Rune.RuneType.Spell:
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.transform.Find("ClassUI").gameObject.SetActive(false);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.transform.Find("BuffUI").gameObject.SetActive(false);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.transform.Find("SpellUI").gameObject.SetActive(true);
+                        break;
+                    case Rune.RuneType.Buff:
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.transform.Find("ClassUI").gameObject.SetActive(false);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.transform.Find("BuffUI").gameObject.SetActive(true);
+                        equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.transform.Find("SpellUI").gameObject.SetActive(false);
+                        break;
+                }
 
                 var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
                 bool runeEquipped = false;
