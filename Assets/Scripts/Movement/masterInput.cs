@@ -71,6 +71,7 @@ public class masterInput : MonoBehaviour
 
     //Knight Combat Variables
     bool isAttacking = false;
+    public bool bubble = false;
     float cooldown = 1f;
     public bool inputPaused = false;
     bool returningFromMenu = true;
@@ -482,6 +483,11 @@ public class masterInput : MonoBehaviour
 
     public void onSwitchToSpell()
     {
+        if(shootingLaser || shootingRocket || shootingSwords || throwingGrenade ||placing)
+        {
+            print("cant switch, ability active");
+            return;
+        }
         int rCount = 0;
         foreach(Rune rune in character.equippedRunes)
         {
@@ -1576,11 +1582,12 @@ public class masterInput : MonoBehaviour
         //Class ability Logic
         if(!usingSpellRunes)
         {
-            if(currentClass == WeaponBase.weaponClassTypes.Engineer && placing)
+            if (placing || shootingLaser || shootingRocket || throwingGrenade)
             {
-                print("still placing, cant activate");
+                print("abiity in use cant use again");
                 return;
             }
+            //if(currentClass == WeaponBase.weaponClassTypes.Knight)
             if (playerInput.actions["AbilityOne"].triggered && !abilityInUse)
             {
                 print("Using ability One");
@@ -1629,6 +1636,11 @@ public class masterInput : MonoBehaviour
         }
         else
         {
+            if (placing || shootingLaser || shootingRocket || throwingGrenade || shootingSwords)
+            {
+                print("abiity in use cant use spell cast");
+                return;
+            }
             if (playerInput.actions["AbilityOne"].triggered && !abilityInUse && character.equippedRunes[0].runeType == Rune.RuneType.Spell)
             {
                 print("Using spellCast One");

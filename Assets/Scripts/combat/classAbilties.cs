@@ -174,6 +174,7 @@ public class classAbilties : MonoBehaviour
             StartCoroutine(bubbleShield());
             acc1 = StartCoroutine(abilitiesCooldown(1, ka1Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
+            gameObject.GetComponent<masterInput>().bubble = true;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
         {
@@ -253,8 +254,9 @@ public class classAbilties : MonoBehaviour
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !shootingSwords)
         {
             shootingSwords = true;
-            
-            if(iceBool)
+            gameObject.GetComponent<masterInput>().shootingSwords = true;
+
+            if (iceBool)
             {
                 GameObject currentEffect = Instantiate(swordShotIceEffect, player.transform.position, Quaternion.identity);
                 currentEffect.transform.SetParent(player.transform);
@@ -342,6 +344,22 @@ public class classAbilties : MonoBehaviour
                 break;
         }
         uiManager.DeactivateCooldownOnAbility(ability);
+        switch(masterInput.instance.currentClass)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                masterInput.instance.shootingSwords = false;
+                break;
+
+            case WeaponBase.weaponClassTypes.Gunner:
+                masterInput.instance.shootingRocket = false;
+                masterInput.instance.shootingLaser = false;
+                masterInput.instance.throwingGrenade = false;
+                break;
+
+            case WeaponBase.weaponClassTypes.Engineer:
+                //masterInput.instance.placing = false;
+                break;
+        }
 
 
         yield break;
@@ -654,6 +672,99 @@ public class classAbilties : MonoBehaviour
 
     }
 
+    public void mouseTeslaPlace(InputAction.CallbackContext context)
+    {
+        if (!casting)
+            return;
+        if (teslaCount == 0 && currentTesla != null)
+        {
+
+            if (masterInput.instance.inputPaused || isGamepadLooking)
+                return;
+
+            isMouseLooking = true;
+            isGamepadLooking = false;
+
+            Vector2 mousePosition = context.ReadValue<Vector2>();
+
+            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100, ground))
+            {
+                lookPos = hit.point;
+            }
+
+
+            float distanceFromPlayer = Vector3.Distance(player.transform.position, lookPos);
+            Vector3 direction = (lookPos - player.transform.position).normalized;
+
+            if (distanceFromPlayer <= maxPlacementDistance && distanceFromPlayer > minPlacementDistance)
+            {
+                currentTesla.transform.position = lookPos + spawnOffset;
+                currentTesla.transform.rotation = player.transform.rotation;
+            }
+            else if (distanceFromPlayer <= minPlacementDistance)
+            {
+                currentTesla.transform.position = player.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
+                currentTesla.transform.position = new Vector3(
+                    currentTesla.transform.position.x,
+                    spawnOffset.y,
+                    currentTesla.transform.position.z
+                );
+                currentTesla.transform.rotation = player.transform.rotation;
+            }
+            else
+            {
+                currentTesla.transform.position = player.transform.position + direction * maxPlacementDistance + spawnOffset;
+                currentTesla.transform.rotation = player.transform.rotation;
+            }
+        }
+        if (teslaCount == 1 && nextCurrentTesla != null)
+        {
+            if (masterInput.instance.inputPaused || isGamepadLooking)
+                return;
+
+            isMouseLooking = true;
+            isGamepadLooking = false;
+
+            Vector2 mousePosition = context.ReadValue<Vector2>();
+
+            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100, ground))
+            {
+                lookPos = hit.point;
+            }
+
+
+            float distanceFromTurret = Vector3.Distance(currentTesla.transform.position, lookPos);
+            Vector3 direction = (lookPos - currentTesla.transform.position).normalized;
+
+            if (distanceFromTurret <= teslaMinPlacementRad && distanceFromTurret > minPlacementDistance)
+            {
+                nextCurrentTesla.transform.position = new Vector3(lookPos.x, .2f, lookPos.z);// + spawnOffset;
+                //nextCurrentTesla.transform.rotation = currentTesla.transform.rotation;
+            }
+            else if (distanceFromTurret <= teslaMinPlacementRad)
+            {
+                nextCurrentTesla.transform.position = currentTesla.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
+                nextCurrentTesla.transform.position = new Vector3(
+                    nextCurrentTesla.transform.position.x,
+                    .2f,
+                    nextCurrentTesla.transform.position.z
+                );
+                nextCurrentTesla.transform.rotation = currentTesla.transform.rotation;
+            }
+            else
+            {
+                nextCurrentTesla.transform.position = currentTesla.transform.position + direction * teslaMinPlacementRad;// + spawnOffset;
+                nextCurrentTesla.transform.rotation = currentTesla.transform.rotation;
+            }
+        }
+    }
+
     public void gamepadTurretPlace(InputAction.CallbackContext context)
     {
 
@@ -726,6 +837,11 @@ public class classAbilties : MonoBehaviour
 
     }
 
+    public void gamepadTeslaPlace(InputAction.CallbackContext context)
+    {
+
+    }
+
     void removeAllTowers()
     {
         for (int i = placedTowers.Length; i >= 0; i--) // Start from the end of the list
@@ -770,76 +886,19 @@ public class classAbilties : MonoBehaviour
             instant = false;
             if(teslaCount == 0)
             {
-                currentTesla = GameObject.Instantiate(teslaTransparent, player.transform.position, Quaternion.LookRotation(player.transform.forward));
+                currentTesla = GameObject.Instantiate(teslaTransparent, player.transform.position + new Vector3(0,0,1.5f), Quaternion.LookRotation(player.transform.forward));
+                currentTesla.transform.parent = player.transform;
+                currentTesla.transform.position = new Vector3(currentTesla.transform.position.x, 0, currentTesla.transform.position.z);
+                casting = true;
             }
             if(teslaCount == 1)
             {
                 nextCurrentTesla = GameObject.Instantiate(teslaTransparent, player.transform.position, Quaternion.LookRotation(player.transform.forward));
+                nextCurrentTesla.transform.position = new Vector3(nextCurrentTesla.transform.position.x, 0, nextCurrentTesla.transform.position.z);
+
             }
-            
+
         }
-
-        if(teslaCount == 0)
-        {
-            print("updating 0");
-            teslaDistance = Vector3.Distance(player.transform.position, mousePos);
-            teslaDirection = (mousePos - player.transform.position).normalized;
-
-            if (teslaDistance <= turretPlacementRadius && teslaDistance > playerRad)
-            {
-                currentTesla.gameObject.transform.position = mousePos;
-            }
-            else if (teslaDistance <= playerRad)
-            {
-                currentTesla.transform.position = player.transform.position + teslaDirection * (playerRad + 0.1f);  // Small buffer to avoid overlap
-
-                // Ensure the turret stays above the ground to avoid going under the player
-                currentTesla.transform.position = new Vector3(
-                    currentTesla.transform.position.x,
-                    Mathf.Max(currentTesla.transform.position.y, player.transform.position.y + 0.03f),  // Ensure turret stays slightly above player's Y position
-                    currentTesla.transform.position.z
-                );
-                currentTesla.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-            }
-            else
-            {
-                currentTesla.gameObject.transform.position = player.transform.position + teslaDirection * turretPlacementRadius;
-            }
-        }
-        if(teslaCount == 1)
-        {
-            print("updating 1");
-            teslaDistance = Vector3.Distance(currentTesla.transform.position, mousePos);
-            teslaDirection = (mousePos - currentTesla.transform.position).normalized;
-
-            if (teslaDistance <= teslaPlacementRadius && teslaDistance > teslaMinPlacementRad)
-            {
-                nextCurrentTesla.gameObject.transform.position = mousePos;
-                //nextCurrentTesla.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-            }
-            else if (teslaDistance <= teslaMinPlacementRad)
-            {
-                nextCurrentTesla.transform.position = currentTesla.transform.position + teslaDirection * (teslaMinPlacementRad + 0.1f);  // Small buffer to avoid overlap
-
-                // Ensure the turret stays above the ground to avoid going under the player
-                nextCurrentTesla.transform.position = new Vector3(
-                    nextCurrentTesla.transform.position.x,
-                    Mathf.Max(nextCurrentTesla.transform.position.y, currentTesla.transform.position.y + 0.03f),  // Ensure turret stays slightly above player's Y position
-                    nextCurrentTesla.transform.position.z
-                );
-                //currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-                //Vector3 Direction = (mousePos - player.transform.position).normalized;
-                //currentTurret.gameObject.transform.position = player.transform.position + Direction * playerRad;
-                //currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-            }
-            else
-            {
-                //Vector3 direction = (mousePos - player.transform.position).normalized;
-                nextCurrentTesla.gameObject.transform.position = currentTesla.transform.position + teslaDirection * teslaPlacementRadius;
-                //currentTurret.transform.rotation = Quaternion.LookRotation(player.transform.forward);
-            }
-        }
-        
 
 
         if(playerInput.actions["Attack"].triggered && teslaCount == 0 && placingOne && !placingTwo) 
@@ -860,6 +919,7 @@ public class classAbilties : MonoBehaviour
         if (playerInput.actions["Attack"].triggered && teslaCount == 1 && !placingOne && placingTwo)
         {
             //print("activate 1");
+            casting = false;
             teslaCount = 0;
             if (nextCurrentTesla != null)// && teslaDistance <= turretPlacementRadius)
             {
