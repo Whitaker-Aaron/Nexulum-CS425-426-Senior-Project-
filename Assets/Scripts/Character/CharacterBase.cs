@@ -37,6 +37,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     public RoomInformation targetRoom;
 
+    Coroutine currFallCountdown;
+
     //MANAGERS
     LifetimeManager lifetimeManager;
     UIManager uiManager;
@@ -87,6 +89,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         runeInt = GameObject.FindGameObjectWithTag("runeManager").GetComponent<runeIntController>();
         physicMat = GetComponent<CapsuleCollider>().material;
+        masterInput = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -99,6 +102,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         if(collision.gameObject.tag == "ground" || collision.gameObject.tag == "MovingPlatform")
         {
             Debug.Log("touching ground");
+            
             groundCounter++;
             
         }
@@ -134,7 +138,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "MovingPlatform")
         {
             Debug.Log("No longer touching ground");
-            if(groundCounter -1 > -1) groundCounter--;
+            if (groundCounter - 1 > -1)
+            {
+                groundCounter--;
+
+            }
             //lastGroundLocation = gameObject.transform.position;
         }
 
@@ -180,13 +188,32 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
                physicMat.dynamicFriction = 0.5f;
         }
-        if (groundCounter <= 0) isTouchingGround = false;
-        else isTouchingGround = true;
+        if (groundCounter <= 0)
+        {
+            if (isTouchingGround && !transitioningRoom) currFallCountdown = StartCoroutine(startFallCountdown());
+            isTouchingGround = false;
+        }
+        else
+        {
+            if (masterInput.gameObject.activeSelf && !isTouchingGround && !transitioningRoom)
+            {
+                if(currFallCountdown != null) StopCoroutine(currFallCountdown);
+                masterInput.DisableFallAnimation();
+            }
+            isTouchingGround = true;
+        }
     }
 
     public void ResetToGround()
     {
         transform.position = lastGroundLocation;
+    }
+    
+    public IEnumerator startFallCountdown()
+    {
+        yield return new WaitForSeconds(0.25f);
+        if (masterInput.gameObject.activeSelf && !isTouchingGround) masterInput.ActivateFallAnimation();
+
     }
 
     public void AddFlorentine(float amount)

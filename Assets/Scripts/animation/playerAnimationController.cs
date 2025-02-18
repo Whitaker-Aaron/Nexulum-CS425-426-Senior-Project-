@@ -129,6 +129,37 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         animator.Play("blocking");
     }
 
+    public void falling(string curClass)
+    {
+
+        if (curClass == "Knight")
+        {
+            animator.SetBool("isFallingKnight", true);
+            animator.Play("fallingAnimKnight");
+        }
+        else if (curClass == "Gunner")
+        {
+            animator.SetBool("isFallingGunner", true);
+            animator.Play("fallingAnimGunner");
+        }
+        else if (curClass == "Engineer")
+        {
+            animator.SetBool("isFallingEngineer", true);
+            animator.Play("fallingAnimEngineer");
+        }
+
+    }
+
+    public void stopFall(string curClass)
+    {
+        animator.SetBool("isFallingKnight", false);
+        animator.SetBool("isFallingGunner", false);
+        animator.SetBool("isFallingEngineer", false);
+        if (curClass == "Knight") animator.Play("Locomotion", 0);
+        else if (curClass == "Gunner") animator.Play("Locomotion", 1);
+        else if (curClass == "Engineer") animator.Play("Locomotion", 2);
+    }
+
     IEnumerator attackWait(float time, string animName, int index)
     {
         yield return new WaitForSeconds(time);

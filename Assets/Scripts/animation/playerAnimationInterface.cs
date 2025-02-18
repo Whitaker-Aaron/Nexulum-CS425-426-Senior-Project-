@@ -26,6 +26,10 @@ public interface PlayerAnimation
 
     void blocking();
 
+    void falling(string curClass);
+
+    void stopFall(string curClass);
+
     void engineerReload(float time);
 
     void engAttackOne(float time);
