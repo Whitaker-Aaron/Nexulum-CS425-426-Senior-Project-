@@ -1,3 +1,4 @@
+
 public class EnemyIdleState : EnemyNeutralState
 {
     public override void EnterState(EnemyStateManager stateContext)
@@ -17,7 +18,7 @@ public class EnemyIdleState : EnemyNeutralState
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag())
         {
             // Changes to chase state if the target is spotted - Aisling
-            stateContext.ChangeState(stateContext.chaseState);
+            stateContext.ChangeState(stateContext.GetStateOfName("Chase"));
         }
     }
 

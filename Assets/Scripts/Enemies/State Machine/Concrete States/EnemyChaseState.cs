@@ -1,3 +1,4 @@
+
 public class EnemyChaseState : EnemyNeutralState
 {
     public override void EnterState(EnemyStateManager stateContext)
@@ -21,7 +22,7 @@ public class EnemyChaseState : EnemyNeutralState
         }
         else
         {
-            stateContext.ChangeState(stateContext.searchState);
+            stateContext.ChangeState(stateContext.GetStateOfName("Search"));
         }
     }
 

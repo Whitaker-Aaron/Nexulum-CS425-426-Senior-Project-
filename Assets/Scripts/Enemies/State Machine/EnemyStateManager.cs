@@ -11,10 +11,10 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Adjustable in-editor settings for behaviors
     // ----------------------------------------------
 
+    [Header("Movement Settings")]
+
     public float defaultMovementSpeed = 2f; // Movement speed of enemy
     public float engagementRange = 1f; // How close, from target, the enemy will get to the target (radius). Set with SetEngagementRange(float range)
-
-    // Debugging
     public float currentSpeed;
 
     // Movement pausing
@@ -25,6 +25,8 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Components
     // ----------------------------------------------
 
+    [Header("Components")]
+
     public NavMeshAgent agent;
     public EnemyLOS enemyLOS;
     public EnemyFrame enemyFrame;
@@ -33,25 +35,42 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // State objects and state-related variables
     // ----------------------------------------------
 
+    [Header("Concrete States")]
+
     // Current state
     private EnemyState currentState;
 
     // Concrete states
-    public EnemyIdleState idleState = new EnemyIdleState();
-    public EnemyChaseState chaseState = new EnemyChaseState();
-    public EnemySearchState searchState = new EnemySearchState();
+    public List<EnemyState> concreteStates = new List<EnemyState>();
+    // "Default" set of concrete states for a standard AI
+    
+    // Not scriptable object
+    // public EnemyIdleState idleState = new EnemyIdleState();
+    // public EnemyChaseState chaseState = new EnemyChaseState();
+    // public EnemySearchState searchState = new EnemySearchState();
 
+    // Debugging and status effects
+    [Header("Debugging and Status Effects")]
     public bool enableStateDebugLogs = false;
-
-    // ----------------------------------------------
-    // Effects
-    // ----------------------------------------------
-
     public bool isFrozen = false;
 
     // ----------------------------------------------
     // Methods
     // ----------------------------------------------
+
+    public void Awake()
+    {
+        // Populate list with "default" AI system
+        if (concreteStates.Count == 0)
+        {
+            Object.CreateInstance(EnemyIdleState idleState);
+            Object.CreateInstance(EnemyChaseState chaseState);
+            Object.CreateInstance(EnemySearchState searchState);
+            concreteStates.Add(idleState);
+            concreteStates.Add(chaseState);
+            concreteStates.Add(searchState);
+        }
+    }
 
     public void Start()
     {
@@ -155,6 +174,34 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public EnemyState GetCurrentState() // Returns the state object of the current state
     {
         return currentState;
+    }
+
+    public EnemyState GetStateOfName(string name) // Return state object of the given name, returns null if the state isn't found
+    {
+        EnemyState state = null; // Holder for the state
+
+        if (concreteStates.Count != 0) // Search the list by state name for the state
+        {
+            for (int i = 0; i < concreteStates.Count; i++)
+            {
+                if (concreteStates[i].stateName == name)
+                {
+                    state = concreteStates[i]; // Set state holder to found state then break
+                    break;
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("EnemyStateManager.GetStateOfName() - List of concrete states is empty. \n");
+        }
+
+        if (state == null) // Log to console if the state was null (not found)
+        {
+            Debug.LogWarning("EnemyStateManager.GetStateOfName() - Requested state not found in list of concrete states. Returned null. \n");
+        }
+
+        return state;
     }
 
     public void PauseMovementFor(float seconds)

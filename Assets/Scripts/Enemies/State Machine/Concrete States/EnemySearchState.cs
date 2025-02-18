@@ -1,3 +1,4 @@
+
 public class EnemySearchState : EnemyNeutralState
 {
     public override void EnterState(EnemyStateManager stateContext)
@@ -20,13 +21,13 @@ public class EnemySearchState : EnemyNeutralState
         base.OnDamaged();
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag())
         {
-            stateContext.ChangeState(stateContext.chaseState);
+            stateContext.ChangeState(stateContext.GetStateOfName("Chase"));
         }
         else
         {
             if (stateContext.transform.position == stateContext.enemyLOS.lastKnownTargetPos)
             {
-                stateContext.ChangeState(stateContext.idleState);
+                stateContext.ChangeState(stateContext.GetStateOfName("Idle"));
             }
         }
     }

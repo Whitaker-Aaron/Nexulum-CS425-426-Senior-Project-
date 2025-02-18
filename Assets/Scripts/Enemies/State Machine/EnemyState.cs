@@ -3,11 +3,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class EnemyState
+[Serializable]
+public class EnemyState : ScriptableObject
 {
     protected EnemyStateManager stateContext;
-    public string stateName;
+    public string stateName { get; set; }
 
     public EnemyState()
     {
