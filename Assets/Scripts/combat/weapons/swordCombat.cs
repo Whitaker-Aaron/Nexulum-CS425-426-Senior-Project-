@@ -35,7 +35,7 @@ public class swordCombat : MonoBehaviour
 
     public void activateAttack(Transform attackPoint, float radius, LayerMask layer, bool isHeavy)
     {
-        print("activating sword attack");
+        print("activating sword attack " + Time.time);
         Collider[] colliders = Physics.OverlapSphere(attackPoint.position, radius, layer);
         GetDamage();
         foreach (Collider collider in colliders)
@@ -66,7 +66,7 @@ public class swordCombat : MonoBehaviour
                 //Vector3 knockBackDir = collider.transform.position - GameObject.FindGameObjectWithTag("Player").transform.position;
                 //Debug.Log("Enemy knockback mag: " + knockBackDir.magnitude);
                 //knockBackDir *= 1.5f;
-                collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
+                //collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }
         }
     }

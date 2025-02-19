@@ -267,11 +267,17 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     //GUNNER ANIMATIONS--------------------------------------
 
-    public void gunnerReload(float time)
+    public IEnumerator gunnerReload(float time)
     {
+        var temp = animator.speed;
         animator.SetBool("reload", true);
         animator.Play("Reload Blend Tree");
-        StartCoroutine(reloadWait(time));
+
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).IsName("Reload Blend Tree"));
+        //if(animator.GetCurrentAnimatorStateInfo(1).IsName("Reload Blend Tree"))
+        animator.speed = animator.GetCurrentAnimatorStateInfo(1).length / time;
+        print("Animator speed is: " + animator.speed);
+        yield return StartCoroutine(reloadWait(1, time, temp));
 
         //float reloadDuration = animator.GetCurrentAnimatorStateInfo(1).length; 
         //animator.speed = reloadDuration / time; // Adjust animation speed dynamically
@@ -279,10 +285,13 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         //StartCoroutine(ResetAnimatorSpeed(reloadDuration / time)); // Reset after animation
     }
 
-    IEnumerator reloadWait(float time)
+    IEnumerator reloadWait(int layer, float time, float ogSpeed)
     {
         yield return new WaitForSeconds(time);
         animator.SetBool("reload", false);
+        animator.Play("Locomotion", layer);
+        animator.speed = ogSpeed;
+        yield break;
     }
 
 
@@ -314,11 +323,15 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
     }
     */
 
-    public void engineerReload(float reloadTime)
+    public IEnumerator engineerReload(float reloadTime)
     {
+        var temp = animator.speed;
         animator.SetBool("reload", true);
         animator.Play("engReloadBlendTree");
-        StartCoroutine(reloadWait(reloadTime));
+
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(2).IsName("engReloadBlendTree"));
+        animator.speed = animator.GetCurrentAnimatorStateInfo(2).length / reloadTime;
+        StartCoroutine(reloadWait(2, reloadTime, temp));
         // Get the default reload animation duration from the blend tree
         //float baseReloadDuration = GetReloadAnimationLength();
 
