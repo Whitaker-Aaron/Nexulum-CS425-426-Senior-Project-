@@ -28,6 +28,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public CharacterStat characterStats;
     public Coroutine curStopVel;
     PhysicMaterial physicMat;
+    Rigidbody rigidbody;
     float florentineAmount;
 
     bool lowHealthReached = false;
@@ -70,6 +71,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     int collisionCounter = 0;
     int groundCounter = 0;
     public int wallCollisionCounter = 0;
+    public int enemyCollisionCounter = 0;
     float yPOSVal = 0f;
     private RuneInt runeInt;
 
@@ -90,6 +92,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         runeInt = GameObject.FindGameObjectWithTag("runeManager").GetComponent<runeIntController>();
         physicMat = GetComponent<CapsuleCollider>().material;
         masterInput = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -115,10 +118,14 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
                 //yPOSVal = gameObject.transform.position.y;
         }
+        if (collision.gameObject.tag == "Enemy")
+        {
+            enemyCollisionCounter++;
+        }
 
 
 
-    }
+        }
 
     public void ResetGroundCounter()
     {
@@ -146,10 +153,18 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             //lastGroundLocation = gameObject.transform.position;
         }
 
+        if (collision.gameObject.tag == "Enemy")
+        {
+            if (enemyCollisionCounter - 1 > -1) enemyCollisionCounter--;
+
+
+        }
+
         if (collision.gameObject.tag == "Wall")
         {
             Debug.Log("stopped touching wall");
-            wallCollisionCounter--;
+            if(wallCollisionCounter - 1 > -1) wallCollisionCounter--;
+
         }
 
     }
@@ -202,6 +217,16 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             }
             isTouchingGround = true;
         }
+
+        if (isGettingKnockbacked || enemyCollisionCounter >= 1)
+        {
+            rigidbody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        }
+        else
+        {
+            rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        }
+        Debug.Log(enemyCollisionCounter);
     }
 
     public void ResetToGround()

@@ -23,7 +23,7 @@ public class LockedDoorUI : MonoBehaviour
 
     public void UpdateKeyAmount(int amount)
     {
-        AmountOfSmallKeyText.text = "Have: Small Key x" + amount.ToString();
+        AmountOfSmallKeyText.text = "Have: x" + amount.ToString();
         if(amount >= 1)
         {
             openPanel.SetActive(true);
