@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,17 +58,25 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
 
     void attackPlayer()
     {
+        if (!canAttack) return;
         Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
-
         foreach (Collider player in playerInRange)
         {
             //attack player commands
             Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
-            if(player.tag == "Player") playerRef.takeDamage(attackDamage, knockBackDir);
+            if(player.tag == "Player" ) playerRef.takeDamage(attackDamage, knockBackDir);
+            if(canAttack) StartCoroutine(attackCountdown());
             Debug.Log(player.tag);
-
-
         }
+
+    }
+
+    public IEnumerator attackCountdown()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(0.5f);
+        canAttack = true;
+
 
     }
 
@@ -78,7 +87,7 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
             for(int i =0; i < 2; i++)
             {
                 var smallSlime = Instantiate(smallSlimeRef);
-                smallSlime.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1f, this.transform.position.z);
+                smallSlime.transform.position = new Vector3(this.transform.position.x + Random.Range(-0.25f, 0.25f), this.transform.position.y + 1f, this.transform.position.z + Random.Range(-0.25f, 0.25f));
                 smallSlime.GetComponent<NavMeshAgent>().Warp(smallSlime.transform.position);
                 smallSlime.GetComponent<EnemyLOS>().ChangeTarget(playerRef.gameObject);
                 smallSlime.transform.parent = this.transform.parent;

@@ -75,7 +75,9 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
                         tempRoomData.eventTriggers.Add(tempEventTriggerData);
                     }
                 }
-                data.roomData.Add(tempRoomData);
+                if (i+1 <= data.roomData.Count && data.roomData[i] != null && data.roomData[i].roomName == tempRoomData.roomName) data.roomData[i] = tempRoomData;
+                else data.roomData.Add(tempRoomData);
+
             }
                 
         }

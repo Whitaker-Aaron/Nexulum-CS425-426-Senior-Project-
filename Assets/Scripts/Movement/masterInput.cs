@@ -453,6 +453,41 @@ public class masterInput : MonoBehaviour
         return animationControl;
     }
 
+    public void ActivateFallAnimation(){
+        switch (currentClass)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                animationControl.falling("Knight");
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                animationControl.falling("Gunner");
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                animationControl.falling("Engineer");
+                break;
+
+        }
+        
+    }
+
+    public void DisableFallAnimation()
+    {
+        switch (currentClass)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                animationControl.stopFall("Knight");
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                animationControl.stopFall("Gunner");
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                animationControl.stopFall("Engineer");
+                break;
+
+        }
+    }
+
+
     public void OnMouseLook(InputAction.CallbackContext context)
     {
         if (inputPaused || isGamepadLooking)

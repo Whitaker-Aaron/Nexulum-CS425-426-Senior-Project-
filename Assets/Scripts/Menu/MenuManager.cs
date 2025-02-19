@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using TMPro;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class MenuManager : MonoBehaviour
     

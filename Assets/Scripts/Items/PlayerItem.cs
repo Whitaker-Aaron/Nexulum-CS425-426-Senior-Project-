@@ -14,7 +14,7 @@ public class PlayerItem : ScriptableObject
     [SerializeField] public float statAmount;
     [SerializeField] public float shopCost;
     [SerializeField] public bool canUseFromMenu;
-    [SerializeField] Texture itemTexture;
+    [SerializeField] public Texture itemTexture;
     [SerializeField] public CraftRecipe itemRecipe;
 
 

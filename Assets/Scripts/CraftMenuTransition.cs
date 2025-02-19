@@ -112,21 +112,8 @@ public class CraftMenuTransition : MonoBehaviour
         
     }
 
-    public void ResetWeaponCraftSelection()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(backButton2);
-        //EventSystem.current.SetSelectedGameObject(currentWeaponScrollObjects[currentWeaponScrollObjects.Count - 1].GetComponent<CraftRecipePrefab>().craftButton);
-    }
 
-    public void ResetRuneCraftSelection()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(backButton2);
-        //EventSystem.current.SetSelectedGameObject(currentRuneScrollObjects[currentRuneScrollObjects.Count - 1].GetComponent<CraftRecipePrefab>().craftButton);
-    }
-
-    public void ResetItemsCraftSelection()
+    public void ResetSelection()
     {
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(backButton2);
