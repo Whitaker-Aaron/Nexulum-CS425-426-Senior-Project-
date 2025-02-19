@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -26,6 +27,7 @@ public class StoreItem : MonoBehaviour
     MenuManager menuManager;
 
     List<GameObject> currentMaterialObjects = new List<GameObject>();
+    public static ResetDelegateTemplate.ResetDelegate reset;
     // Start is called before the first frame update
     void Start()
     {
@@ -71,6 +73,42 @@ public class StoreItem : MonoBehaviour
 
         }
 
+    }
+
+    public void onView()
+    {
+        reset = ResetSelection;
+        switch (storeType)
+        {
+            case StoreItemType.Recipe:
+                if (craftRecipe.type == CraftRecipe.CraftTypes.Weapon)
+                {
+                    var weaponToView = GameObject.Find("WeaponsList").GetComponent<WeaponsList>().ReturnWeapon(craftRecipe.recipeName);
+                    GameObject.Find("UIManager")
+                        .GetComponent<UIManager>().DisplayViewItem(ViewItemPrefab.ViewType.Weapon, reset, weaponToView);
+                }
+
+                else if (craftRecipe.type == CraftRecipe.CraftTypes.Rune)
+                {
+                    var runeToView = GameObject.Find("RunesList").GetComponent<RuneList>().ReturnRune(craftRecipe.recipeName);
+                    GameObject.Find("UIManager")
+                        .GetComponent<UIManager>().DisplayViewItem(ViewItemPrefab.ViewType.Rune, reset, null, runeToView);
+                }
+
+                else if (craftRecipe.type == CraftRecipe.CraftTypes.Item)
+                {
+                    var itemToView = GameObject.Find("ItemsList").GetComponent<ItemsList>().ReturnItem(craftRecipe.recipeName);
+                    GameObject.Find("UIManager")
+                        .GetComponent<UIManager>().DisplayViewItem(ViewItemPrefab.ViewType.Item, reset, null, null, itemToView);
+                }
+
+                break;
+        }
+    }
+
+    public void ResetSelection()
+    {
+        menuManager.resetShopSelection();
     }
 
     public void onPurchase()
