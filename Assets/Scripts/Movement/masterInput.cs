@@ -188,6 +188,7 @@ public class masterInput : MonoBehaviour
 
     //abilities
     public bool placing = false;
+    GameObject[] towersToRepair;
 
     //repair
     public bool canRepair = false;
@@ -239,6 +240,7 @@ public class masterInput : MonoBehaviour
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
         //laserLineRenderer.enabled = true;
 
+        
 
     }
 
@@ -252,6 +254,7 @@ public class masterInput : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         //playerControl = gameObject.GetComponent<PlayerInputActions>();
+        towersToRepair = new GameObject[classAbilties.instance.turretMaxQuantity + classAbilties.instance.teslaMaxQuantity];
 
         activateSwordSlashes();
         //DontDestroyOnLoad(SS1);
@@ -964,9 +967,16 @@ public class masterInput : MonoBehaviour
     }
     */
 
-    public void assignRepair(GameObject current)
+    public void assignRepair(GameObject current, int count)
     {
-        repairObj = current;
+        canRepair = true;
+        towersToRepair[count] = current;
+    }
+
+    public void unassignRepair(GameObject current, int count)
+    {
+        canRepair = false;
+        towersToRepair[count] = null;
     }
 
     void removeRepair()
@@ -988,6 +998,7 @@ public class masterInput : MonoBehaviour
         else
             yield break;
     }
+
 
     //-----------------------------------------------------------------
     /*
@@ -1424,7 +1435,7 @@ public class masterInput : MonoBehaviour
                 //pistolBulletCount = 0;
                 //canPistolShoot = false;
                 StartCoroutine(equippedWeapon.Reload());
-                animationControl.gunnerReload(equippedWeapon.reloadTime);
+                StartCoroutine(animationControl.gunnerReload(equippedWeapon.reloadTime));
             }
 
 
@@ -1466,7 +1477,7 @@ public class masterInput : MonoBehaviour
             if (((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize)) && equippedWeapon.canShoot && equippedWeapon.isReloading == false)//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
             {
                 StartCoroutine(equippedWeapon.Reload());
-                animationControl.engineerReload(equippedWeapon.reloadTime);
+                StartCoroutine(animationControl.engineerReload(equippedWeapon.reloadTime));
 
             }
 
@@ -1475,16 +1486,16 @@ public class masterInput : MonoBehaviour
 
 
 
-            if (playerInput.actions["attack"].WasPressedThisFrame() && !isAttacking)
+            if (playerInput.actions["Attack"].WasPressedThisFrame() && !isAttacking)
             {
                 shooting = true;
             }
-            else if (playerInput.actions["attack"].WasReleasedThisFrame())
+            else if (playerInput.actions["Attack"].WasReleasedThisFrame())
             {
                 shooting = false;
             }
 
-            float triggerValue = playerInput.actions["attack"].ReadValue<float>();
+            float triggerValue = playerInput.actions["Attack"].ReadValue<float>();
             //Debug.Log("Trigger Value: " + triggerValue); 
 
             if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion")))
@@ -1504,12 +1515,12 @@ public class masterInput : MonoBehaviour
 
             if (canRepair)
             {
-                if(Input.GetKeyDown(KeyCode.B) && !isAttacking && !pistolReloading)
+                if (playerInput.actions["Repair"].IsPressed() && !isAttacking && !pistolReloading && !shooting)
                 {
                     Debug.Log("Starting repair");
                     repairing = true;
                 }
-                if (repairing && Input.GetKeyUp(KeyCode.B))
+                if (playerInput.actions["Repair"].WasReleasedThisFrame())
                 {
                     Debug.Log("Stop repair");
                     repairing = false;
