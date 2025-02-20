@@ -6,8 +6,9 @@ public class EnemyDoorTrigger : MonoBehaviour
 {
     // Start is called before the first frame update
     //GameObject[] enemies;
-    [SerializeField] public GameObject controlledDoor;
-    bool doorTriggered = false;
+    [SerializeField] public List<GameObject> controlledDoors;
+    [SerializeField] public List<GameObject> roomTriggerObjects;
+    bool doorsTriggered = false;
     void Start()
     {
         //enemies = transform.GetComponent<RoomInformation>().GetEnemies();
@@ -24,28 +25,45 @@ public class EnemyDoorTrigger : MonoBehaviour
         else
         {
             //Debug.Log("All enemies killed");
-            if(!doorTriggered)
+            if(!doorsTriggered)
             {
-                doorTriggered = true;
-                OpenDoor();
+                doorsTriggered = true;
+                StartCoroutine(OpenDoors());
             }
         }
     }
 
-    public void OpenDoor()
+    public IEnumerator OpenDoors()
     {
-        if (controlledDoor != null)
+        if (controlledDoors != null)
         {
-            Door door = controlledDoor.GetComponent<Door>();
-            if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))
+            for(int i = 0; i < controlledDoors.Count; i++)
             {
-                door.isLocked = false;
-                if (!door.isOpen)
+                Door door = controlledDoors[i].GetComponent<Door>();
+                if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))
                 {
-                    StartCoroutine(PanToDoor(door.transform.position));
-                    door.ToggleDoor();
-                }
+                    door.isLocked = false;
+                    if (!door.isOpen)
+                    {
+                        yield return StartCoroutine(PanToDoor(door.transform.position));
+                        door.ToggleDoor();
+                    }
 
+                }
+                yield return null;
+            }
+            DeleteRoomTriggers();
+        }
+        yield break;
+    }
+
+    public void DeleteRoomTriggers()
+    {
+        for(int i = 0; i < roomTriggerObjects.Count; i++)
+        {
+            if (roomTriggerObjects[i] != null)
+            {
+                Destroy(roomTriggerObjects[i]);
             }
         }
     }
