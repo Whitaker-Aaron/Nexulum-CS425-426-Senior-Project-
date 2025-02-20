@@ -130,6 +130,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public void ResetGroundCounter()
     {
         groundCounter = 0;
+        enemyCollisionCounter = 0;
     }
 
     private void OnCollisionExit(Collision collision)
