@@ -71,6 +71,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     int collisionCounter = 0;
     int groundCounter = 0;
     public int wallCollisionCounter = 0;
+    public int voidWallCounter = 0;
     public int enemyCollisionCounter = 0;
     float yPOSVal = 0f;
     private RuneInt runeInt;
@@ -131,6 +132,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         groundCounter = 0;
         enemyCollisionCounter = 0;
+        voidWallCounter = 0;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -170,12 +172,27 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "VoidWall")
+        {
+
+            voidWallCounter++;
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "RestorePoint")
         {
             Debug.Log("No longer restore point");
             lastGroundLocation = transform.position;
+        }
+        if (other.gameObject.tag == "VoidWall")
+        {
+            Debug.Log("stopped touching wall");
+            if (voidWallCounter - 1 > -1) voidWallCounter--;
+
         }
 
     }
@@ -208,6 +225,12 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
             if (isTouchingGround && !transitioningRoom) currFallCountdown = StartCoroutine(startFallCountdown());
             isTouchingGround = false;
+        }
+        else if(voidWallCounter >= 1)
+        {
+            if (isTouchingGround && !transitioningRoom) currFallCountdown = StartCoroutine(startFallCountdown());
+            isTouchingGround = false;
+
         }
         else
         {
