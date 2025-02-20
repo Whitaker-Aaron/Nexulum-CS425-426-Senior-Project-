@@ -1090,6 +1090,8 @@ public class masterInput : MonoBehaviour
             yield break;
         AnimatorStateInfo temp = animationControl.getAnimationInfo();
         //effect.GetComponent<ParticleSystem>()?.Play();
+
+
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             switch (attackStage)
@@ -1114,7 +1116,7 @@ public class masterInput : MonoBehaviour
 
         if (isHeavy && currentClass == WeaponBase.weaponClassTypes.Knight)
         {
-            if (temp.IsName("heavyTwo"))
+            if ((temp.IsName("heavyTwo") || temp.IsName("heavyOne")) && temp.normalizedTime <= .6f)
                 yield break;
             //nextAttackTime = 0.6f;
             // Trigger Heavy Attack Animations and Effects
@@ -1884,15 +1886,15 @@ public class masterInput : MonoBehaviour
         ES1 = Instantiate(ESP1);
         ES2 = Instantiate(ESP2);
         ES3 = Instantiate(ESP3);
-        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS1.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        SS2.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        SS3.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
         ES1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
-        HS1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
-        HS2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
-        HS3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS1.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        HS2.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        HS3.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
         SS1.transform.SetParent(player.transform, false);
         SS2.transform.SetParent(player.transform, false);
         SS3.transform.SetParent(player.transform, false);
@@ -1902,15 +1904,15 @@ public class masterInput : MonoBehaviour
         HS1.transform.SetParent(player.transform, false);
         HS2.transform.SetParent(player.transform, false);
         HS3.transform.SetParent(player.transform, false);
-        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS1.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        SS2.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        SS3.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
         ES1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
-        HS1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
-        HS2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
-        HS3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS1.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        HS2.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        HS3.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
     }
 }
 
