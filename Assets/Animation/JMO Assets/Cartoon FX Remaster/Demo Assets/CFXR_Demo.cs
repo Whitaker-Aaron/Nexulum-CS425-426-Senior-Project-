@@ -5,7 +5,6 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace CartoonFX
@@ -117,9 +116,8 @@ namespace CartoonFX
 		public Text labelEffect;
 		public Text labelIndex;
 		[Space]
-		public GameObject groundURP;
-		public GameObject groundBIRP;
-		GameObject ground;
+		public GameObject ground;
+		public Collider groundCollider;
 		public Transform demoCamera;
 		public MonoBehaviour bloom;
 		public float rotationSpeed = 10f;
@@ -156,11 +154,6 @@ namespace CartoonFX
 
 			PlayAtIndex();
 			UpdateLabels();
-
-			bool isURP = GraphicsSettings.currentRenderPipeline != null;
-			ground = isURP ? groundURP : groundBIRP;
-			groundURP.SetActive(isURP);
-			groundBIRP.SetActive(!isURP);
 		}
 
 		void Update()

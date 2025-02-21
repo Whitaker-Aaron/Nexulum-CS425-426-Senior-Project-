@@ -1130,12 +1130,12 @@ public class masterInput : MonoBehaviour
             {
                 StopCoroutine(wait(attackStage));
                 animationControl.knightHeavyTwo(animHeavyTimeTwo);
-                HS1.GetComponent<ParticleSystem>().Play();
+                HS2.GetComponent<ParticleSystem>().Play();
             }
             if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
             {
                 animationControl.knightHeavyThree();
-                HS1.GetComponent<ParticleSystem>().Play();
+                HS3.GetComponent<ParticleSystem>().Play();
             }
             /*
             switch (attackStage)
@@ -1154,12 +1154,11 @@ public class masterInput : MonoBehaviour
                     break;
             }
             */
-            sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true);
+            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne));
         }
         else
         {
             // Trigger Light Attack Animations and Effects
-            //nextAttackTime = 0.25f;
             temp = animationControl.getAnimationInfo();
             if (temp.IsName("Locomotion"))
             {
@@ -1193,7 +1192,7 @@ public class masterInput : MonoBehaviour
                     SS3.GetComponent<ParticleSystem>().Play();
                     break;
             }*/
-            sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false);
+            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animTime));
         }
 
         // Wait for animation and reset logic
@@ -1880,9 +1879,9 @@ public class masterInput : MonoBehaviour
         SS1 = Instantiate(swordSlashPrefab);
         SS2 = Instantiate(swordSlash2);
         SS3 = Instantiate(swordSlash3);
-        HS1 = Instantiate(swordSlashPrefab);
-        HS2 = Instantiate(swordSlash2);
-        HS3 = Instantiate(swordSlash3);
+        HS1 = Instantiate(HSP1);
+        HS2 = Instantiate(HSP2);
+        HS3 = Instantiate(HSP3);
         ES1 = Instantiate(ESP1);
         ES2 = Instantiate(ESP2);
         ES3 = Instantiate(ESP3);
