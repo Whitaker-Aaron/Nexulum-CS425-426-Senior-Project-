@@ -9,18 +9,29 @@ public class EnemyDoorTrigger : MonoBehaviour
     [SerializeField] public List<GameObject> controlledDoors;
     [SerializeField] public List<GameObject> roomTriggerObjects;
     bool doorsTriggered = false;
+    int prevEnemyCount;
+    UIManager uiManager;
     void Start()
     {
         //enemies = transform.GetComponent<RoomInformation>().GetEnemies();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        var enemies = transform.GetComponent<RoomInformation>().GetEnemies();
+        //prevEnemyCount = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         var enemies = transform.GetComponent<RoomInformation>().GetEnemies();
+        
         if (enemies.Count > 0)
         {
+            Debug.Log("Prev enemy count: " + prevEnemyCount.ToString());
+            Debug.Log("Cur enemy count: " + enemies.Count.ToString());
+            
             //Debug.Log("There are still enemies");
+
         }
         else
         {
@@ -31,12 +42,20 @@ public class EnemyDoorTrigger : MonoBehaviour
                 StartCoroutine(OpenDoors());
             }
         }
+        if (prevEnemyCount != enemies.Count)
+        {
+            bool uiUpdated = uiManager.UpdateEnemiesRemainingUI(enemies.Count);
+            if (uiUpdated) prevEnemyCount = enemies.Count;
+            Debug.Log("Prev enemy count after: " + prevEnemyCount.ToString());
+        }
     }
 
     public IEnumerator OpenDoors()
     {
+        var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         if (controlledDoors != null)
         {
+            character.invul = true;
             for(int i = 0; i < controlledDoors.Count; i++)
             {
                 Door door = controlledDoors[i].GetComponent<Door>();
@@ -45,13 +64,14 @@ public class EnemyDoorTrigger : MonoBehaviour
                     door.isLocked = false;
                     if (!door.isOpen)
                     {
-                        yield return StartCoroutine(PanToDoor(door.transform.position));
-                        door.ToggleDoor();
+                        yield return StartCoroutine(PanToDoorAndOpen(door.transform.position, door));
+                        
                     }
 
                 }
                 yield return null;
             }
+            character.invul = false;
             DeleteRoomTriggers();
         }
         yield break;
@@ -63,16 +83,20 @@ public class EnemyDoorTrigger : MonoBehaviour
         {
             if (roomTriggerObjects[i] != null)
             {
+                roomTriggerObjects[i].GetComponent<EventTrigger>().hasTriggered = true;
+                roomTriggerObjects[i].GetComponent<EventTrigger>().UpdateTriggerState();
                 Destroy(roomTriggerObjects[i]);
             }
         }
     }
-    public IEnumerator PanToDoor(Vector3 pos)
+    public IEnumerator PanToDoorAndOpen(Vector3 pos, Door door)
     {
         var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         //if(character.)
         character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         yield return new WaitForSeconds(0.25f);
-        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().StartPan(pos, true, true, 0.05f);
+        door.ToggleDoor();
+        yield return StartCoroutine(GameObject.FindGameObjectWithTag("MainCamera").
+            GetComponent<CameraFollow>().StartMultiPan(pos, true, true, 0.05f));
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class CameraPanTrigger : MonoBehaviourID
+public class CameraPanTrigger : MonoBehaviourID, EventTrigger
 {
     [SerializeField] List<GameObject> objectToPanTo;
     [SerializeField] Vector3 offset = Vector3.zero;
@@ -12,12 +12,20 @@ public class CameraPanTrigger : MonoBehaviourID
     [SerializeField] bool panLookAtLocked = false;
     [SerializeField] float panDelay = 2f;
     [SerializeField] DialogueObject dialogueObject;
-    RoomInformation roomInfo;
-    public bool hasTriggered = false;
-    public string triggerGuid;
+    public RoomInformation roomInfo { get; set; }
+    public bool hasTriggered { get; set; }
+    [SerializeField] public string triggerGuid { get; set; }
+    [SerializeField] public string guid;
+
     CameraFollow camera;
     CharacterBase character;
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        triggerGuid = guid;
+        hasTriggered = false;
+    }
 
     private void Start()
     {
@@ -51,7 +59,7 @@ public class CameraPanTrigger : MonoBehaviourID
 
     public void SetRoomInfo(RoomInformation roomInfo_)
     {
-        roomInfo = roomInfo_;
+       roomInfo = roomInfo_;
     }
 
     public void DisableTrigger()
@@ -61,6 +69,7 @@ public class CameraPanTrigger : MonoBehaviourID
 
     public void UpdateTriggerState()
     {
-        roomInfo.UpdateTriggerState(ID, hasTriggered);
+        Debug.Log(triggerGuid);
+        roomInfo.UpdateTriggerState(triggerGuid, hasTriggered);
     }
 }

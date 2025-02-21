@@ -250,7 +250,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
             rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         }
-        Debug.Log(enemyCollisionCounter);
+        //Debug.Log(enemyCollisionCounter);
     }
 
     public void ResetToGround()

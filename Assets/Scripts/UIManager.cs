@@ -32,6 +32,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject damageNumPrefab;
     [SerializeField] GameObject viewItemPrefab;
     [SerializeField] GameObject chestDepositUI;
+    [SerializeField] GameObject enemiesRemainingUI;
 
     [SerializeField] GameObject talk_portrait;
     [SerializeField] GameObject dialogue_box;
@@ -86,6 +87,38 @@ public class UIManager : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(curViewItem.GetComponent<ViewItemPrefab>().backButton);
         }
+    }
+
+    public void ActivateEnemiesRemainingUI(int numEnemies)
+    {
+        enemiesRemainingUI.SetActive(true);
+        if (numEnemies > 0)
+        {
+            Debug.Log("NUM ENEMIES: " + numEnemies.ToString());
+            //enemiesRemainingUI.SetActive(true);
+            //GameObject.Find("EnemiesRemainingUI").transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies;
+            //GameObject.Find("EnemiesRemainingUI").transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies;
+            enemiesRemainingUI.transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
+            enemiesRemainingUI.transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
+        }
+    }
+
+    public bool UpdateEnemiesRemainingUI(int numEnemies)
+    {
+        if (!enemiesRemainingUI.activeSelf) return false;
+        if(numEnemies > 0)
+        {
+            Debug.Log("NUM ENEMIES: " + numEnemies.ToString());
+            //enemiesRemainingUI.SetActive(true);
+            //GameObject.Find("EnemiesRemainingUI").transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies;
+            //GameObject.Find("EnemiesRemainingUI").transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies;
+            enemiesRemainingUI.transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
+            enemiesRemainingUI.transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
+        }
+        else enemiesRemainingUI.SetActive(false);
+
+        return true;
+
     }
 
     public void ShowCriticalText()
