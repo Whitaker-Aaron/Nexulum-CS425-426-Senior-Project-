@@ -33,8 +33,9 @@ public class swordCombat : MonoBehaviour
         
     }
 
-    public void activateAttack(Transform attackPoint, float radius, LayerMask layer, bool isHeavy)
+    public IEnumerator activateAttack(Transform attackPoint, float radius, LayerMask layer, bool isHeavy, float time)
     {
+        yield return new WaitForSeconds(time);
         print("activating sword attack " + Time.time);
         Collider[] colliders = Physics.OverlapSphere(attackPoint.position, radius, layer);
         GetDamage();
@@ -69,6 +70,7 @@ public class swordCombat : MonoBehaviour
                 //collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }
         }
+        yield break;
     }
 
     public void GetDamage()

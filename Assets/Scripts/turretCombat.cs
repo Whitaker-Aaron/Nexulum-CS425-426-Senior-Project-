@@ -210,9 +210,9 @@ public class turretCombat : MonoBehaviour
 
         leftRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + leftRotation.y, 0);
         rightRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + rightRotation.y, 0);
-        print("Forward andgle:" + normalizeAngle(gameObject.transform.rotation.eulerAngles.y));
-        print("Left andgle:" + leftRotation.y);
-        print("Right andgle:" + rightRotation.y);
+        //print("Forward andgle:" + normalizeAngle(gameObject.transform.rotation.eulerAngles.y));
+        //print("Left andgle:" + leftRotation.y);
+        //print("Right andgle:" + rightRotation.y);
     }
 
     // Start is called before the first frame update
