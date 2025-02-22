@@ -43,6 +43,10 @@ public class SaveData
         weaponInventory[1] = "Rifle";
         weaponInventory[2] = "Pistol";
 
+        weaponClasses[0].currentWeapon = weaponInventory[0];
+        weaponClasses[1].currentWeapon = weaponInventory[1];
+        weaponClasses[2].currentWeapon = weaponInventory[2];
+
         runeInventory = new string[100];
         runeInventory[0] = "Fire";
         runeInventory[1] = "Ice";
