@@ -657,20 +657,20 @@ public class masterInput : MonoBehaviour
 
     IEnumerator updateWeaponWait()
     {
-        yield return new WaitForSeconds(.05f);
+        yield return new WaitForSeconds(.3f);
         
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-            //print("calling reload in UWW");
-            StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Reload());
-            animationControl.gunnerReload(equippedWeapon.reloadTime);
+            print("calling reload in UWW");
+            StartCoroutine(character.equippedWeapon.weaponType.Reload());
+            StartCoroutine(animationControl.gunnerReload(equippedWeapon.reloadTime));
             updateDistance(equippedWeapon.rangeModifier);
             yield break;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             StartCoroutine(equippedWeapon.Reload());
-            animationControl.engineerReload(equippedWeapon.reloadTime);
+            StartCoroutine(animationControl.engineerReload(equippedWeapon.reloadTime));
             updateDistance(equippedWeapon.rangeModifier);
             yield break;
         }
@@ -1432,7 +1432,7 @@ public class masterInput : MonoBehaviour
                 }
             }*/
 
-            if (playerInput.actions["RightClick"].triggered && !isAttacking && animationControl.getAnimationInfo().IsName("Locomotion"))
+            if (playerInput.actions["RightClick"].triggered && !isAttacking)// && animationControl.getAnimationInfo().IsName("Locomotion"))
             {
                 isBlocking = true;
                 isAttacking = false;

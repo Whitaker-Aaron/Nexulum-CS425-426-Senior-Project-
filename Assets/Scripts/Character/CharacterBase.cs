@@ -513,17 +513,19 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             Debug.Log("Newly equipped weapon is of type Engineer");
             masterInput.instance.changeTool(newWeapon);
             equippedWeapon = newWeapon;
-            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("pistolPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
+            equippedWeapon.weaponType = equippedWeapon.weaponMesh.GetComponent<weaponType>();
+            //GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("pistolPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
         }
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             equippedWeapon = newWeapon;
-            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("bulletPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
-            
+            equippedWeapon.weaponType = equippedWeapon.weaponMesh.GetComponent<weaponType>();
+            //GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("bulletPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
+
         }
 
-        equippedWeapon.weaponType = equippedWeapon.weaponMesh.GetComponent<weaponType>();
         
+        //masterInput.instance.updateWeapon(equippedWeapon.weaponType);
     }
 
     public void UpdateClass(WeaponBase.weaponClassTypes newClass)
