@@ -269,9 +269,12 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     public IEnumerator gunnerReload(float time)
     {
+        //print("starting gunnerReload() anim");
+        yield return new WaitUntil(() => animator.GetLayerWeight(1) == 1f);
         var temp = animator.speed;
+        print(animator.GetLayerWeight(1));
         animator.SetBool("reload", true);
-        animator.Play("Reload Blend Tree");
+        animator.Play("Reload Blend Tree", 1);
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).IsName("Reload Blend Tree"));
         //if(animator.GetCurrentAnimatorStateInfo(1).IsName("Reload Blend Tree"))
@@ -325,6 +328,7 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
 
     public IEnumerator engineerReload(float reloadTime)
     {
+        yield return new WaitUntil(() => animator.GetLayerWeight(2) == 1f);
         var temp = animator.speed;
         animator.SetBool("reload", true);
         animator.Play("engReloadBlendTree");

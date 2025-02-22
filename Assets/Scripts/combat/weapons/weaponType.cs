@@ -22,8 +22,11 @@ public abstract class weaponType : MonoBehaviour
 
     public virtual IEnumerator Reload()
     {
-        if (isReloading)
-            yield break;
+        //playerAnimationController animator = masterInput.instance.gameObject.GetComponent<playerAnimationController>();
+        //if (animator.getAnimationInfo().IsName("Reload Blend Tree") || animator.getAnimationInfo().IsName("engReloadBlendTree"))
+            //yield break;
+            if(isReloading)
+                yield break;
 
         print("Reloading in weaponType");
         print(canShoot);
@@ -32,6 +35,14 @@ public abstract class weaponType : MonoBehaviour
         //print("Reloading in pistolBasic");
         isReloading = true;
         canShoot = false;
+
+        
+        //if (animator.getAnimationInfo().IsName("Locomotion") && GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>().GetLayerWeight(1) == 1)
+        //{
+            //print("activating reload anim");
+            //animator.gunnerReload(reloadTime);
+        //}
+            
         yield return new WaitForSeconds(reloadTime);
         bulletCount = magSize;
         isReloading = false;

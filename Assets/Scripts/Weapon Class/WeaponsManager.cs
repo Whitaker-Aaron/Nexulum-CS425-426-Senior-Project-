@@ -85,7 +85,7 @@ public class WeaponsManager : MonoBehaviour
             case WeaponBase.weaponClassTypes.Knight:
                 Destroy(currentShield);
                 break;
-            case WeaponBase.weaponClassTypes.Gunner:
+            case WeaponBase.weaponClassTypes.Gunner:                              
                 break;
             case WeaponBase.weaponClassTypes.Engineer:
                 Destroy(currentTool);
@@ -94,7 +94,7 @@ public class WeaponsManager : MonoBehaviour
 
         //characterReference.GetWeaponClass().currentWeapon = newWeapon;
         //print("Calling update W in WM");
-        masterInput.instance.updateWeapon(newWeapon.weaponMesh.GetComponent<weaponType>());
+        
         characterReference.UpdateWeapon(newWeapon);
         
         Destroy(currentWeapon);
@@ -123,8 +123,9 @@ public class WeaponsManager : MonoBehaviour
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(1, 0);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 0);
         }
-            
 
+        if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner || characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
+            masterInput.instance.updateWeapon(newWeapon.weaponMesh.GetComponent<weaponType>());
     }
 
     public WeaponBase CurrentlyEquipped() 
