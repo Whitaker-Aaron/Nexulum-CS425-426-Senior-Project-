@@ -430,6 +430,22 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             engineerObject.currentLvl = 1;
             engineerObject.baseAttack = 5;
 
+            for (int index = 0; index < 3; index++)
+            {
+                switch (index)
+                {
+                    case 0:
+                        knightObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        break;
+                    case 1:
+                        gunnerObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        break;
+                    case 2:
+                        engineerObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        break;
+                }
+            }
+
         }
 
         
