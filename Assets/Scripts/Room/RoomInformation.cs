@@ -15,6 +15,7 @@ public class RoomInformation : MonoBehaviour
     public List<GameObject> allEventTriggers = new List<GameObject>();
     public bool firstVisit = true;
     public bool floorEntrance = false;
+    public bool requiredEnemyRoom = false;
     public RoomPersistenceData roomData;
 
     GameObject character; 
@@ -103,7 +104,7 @@ public class RoomInformation : MonoBehaviour
         {
             foreach (var trigger in allEventTriggers)
             {
-                var triggerScript = trigger.GetComponent<CameraPanTrigger>();
+                var triggerScript = trigger.GetComponent<EventTrigger>();
                 if (triggerScript != null)
                 {
                     triggerScript.SetRoomInfo(this);

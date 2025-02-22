@@ -60,6 +60,7 @@ public class BaseShopMenu : MonoBehaviour
         var list = GameObject.Find("ItemsList").GetComponent<ItemsList>();
         for (int i =0; i < curShopListings.Count; i++)
         {
+            if (curShopListings[i] == null) continue;
             var shopItem = curShopListings[i].GetComponent<StoreItem>();
             var itemCost = int.Parse((shopItem.florentineRequiredAmount.GetComponent<Text>().text).Substring(1));
 
