@@ -18,7 +18,7 @@ public class EnemyIdleState : EnemyNeutralState
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag())
         {
             // Changes to chase state if the target is spotted - Aisling
-            stateContext.ChangeState(stateContext.GetStateOfName("Chase"));
+            stateContext.ChangeState("Chase");
         }
     }
 

@@ -1,5 +1,6 @@
 // State manager for enemies - Aisling
 
+using AYellowpaper.SerializedCollections;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,17 +38,18 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     [Header("Concrete States")]
 
+    public bool useDefaultConcreteStates = true;
+
     // Current state
     private EnemyState currentState;
 
     // Concrete states
-    public List<EnemyState> concreteStates = new List<EnemyState>();
-    // "Default" set of concrete states for a standard AI
+    [SerializedDictionary("stateName", "stateObj(EnemyState)")]
+    public SerializedDictionary<string, EnemyState> concreteStates = new SerializedDictionary<string, EnemyState>();
     
-    // Not scriptable object
-    // public EnemyIdleState idleState = new EnemyIdleState();
-    // public EnemyChaseState chaseState = new EnemyChaseState();
-    // public EnemySearchState searchState = new EnemySearchState();
+    public EnemyIdleState idleState = new EnemyIdleState();
+    public EnemyChaseState chaseState = new EnemyChaseState();
+    public EnemySearchState searchState = new EnemySearchState();
 
     // Debugging and status effects
     [Header("Debugging and Status Effects")]
@@ -60,27 +62,26 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public void Awake()
     {
-        // Populate list with "default" AI system
-        if (concreteStates.Count == 0)
+        if (useDefaultConcreteStates)
         {
-            Object.CreateInstance(EnemyIdleState idleState);
-            Object.CreateInstance(EnemyChaseState chaseState);
-            Object.CreateInstance(EnemySearchState searchState);
-            concreteStates.Add(idleState);
-            concreteStates.Add(chaseState);
-            concreteStates.Add(searchState);
+            SetDefaultState(idleState);
+            AddState("Idle", idleState);
+            AddState("Chase", chaseState);
+            AddState("Search", searchState);
         }
     }
 
     public void Start()
     {
+        concreteStates.TrimExcess(); // Trim wasted space in concrete state dictionary
+
         agent = GetComponent<NavMeshAgent>();
         enemyLOS = GetComponent<EnemyLOS>();
         enemyFrame = GetComponent<EnemyFrame>();
 
         currentSpeed = defaultMovementSpeed;
 
-        ChangeState(idleState);
+        ChangeState("Default");
     }
 
     public void Update()
@@ -97,15 +98,39 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
         }
     }
 
-    public void ChangeState(EnemyState newState)
+    public void ChangeState(string newStateName)
     {
-        if (currentState != null)
+
+        EnemyState stateOutput;
+
+        if (concreteStates.TryGetValue(newStateName, out stateOutput))
         {
-            currentState.ExitState();
+            if (currentState != null)
+            {
+                currentState.ExitState();
+            }
+            else
+            {
+                Debug.LogWarning("EnemyStateManager.cs ChangeState() - Cannot exit previous state, as it is null.");
+            }
+            currentState = stateOutput;
+            currentState.EnterState(this);
         }
-        currentState = newState;
-        currentState.EnterState(this);
+        else
+        {
+            Debug.LogWarning("EnemyStateManager.cs ChangeState() - Requested state '" + newStateName + "' not found in concrete states dictionary.");
+        }
     }
+
+    // public void ChangeState(EnemyState newState)
+    // {
+    //     if (currentState != null)
+    //     {
+    //         currentState.ExitState();
+    //     }
+    //     currentState = newState;
+    //     currentState.EnterState(this);
+    // }
 
     public void CustomDebugLog(string log)
     {
@@ -163,7 +188,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public void ResetEnemyState()
     {
-        ChangeState(idleState);
+        ChangeState("Default");
     }
 
     public string GetCurrentStateName() // Returns name (string) of current state
@@ -174,34 +199,6 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public EnemyState GetCurrentState() // Returns the state object of the current state
     {
         return currentState;
-    }
-
-    public EnemyState GetStateOfName(string name) // Return state object of the given name, returns null if the state isn't found
-    {
-        EnemyState state = null; // Holder for the state
-
-        if (concreteStates.Count != 0) // Search the list by state name for the state
-        {
-            for (int i = 0; i < concreteStates.Count; i++)
-            {
-                if (concreteStates[i].stateName == name)
-                {
-                    state = concreteStates[i]; // Set state holder to found state then break
-                    break;
-                }
-            }
-        }
-        else
-        {
-            Debug.LogWarning("EnemyStateManager.GetStateOfName() - List of concrete states is empty. \n");
-        }
-
-        if (state == null) // Log to console if the state was null (not found)
-        {
-            Debug.LogWarning("EnemyStateManager.GetStateOfName() - Requested state not found in list of concrete states. Returned null. \n");
-        }
-
-        return state;
     }
 
     public void PauseMovementFor(float seconds)
@@ -216,6 +213,62 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
             movementPaused = true;
             yield return new WaitForSeconds(s);
             movementPaused = false;
+        }
+    }
+
+    public void AddState(string name, EnemyState state) // Add EnemyState object to dictionary
+    {
+        do
+        {
+            if (state == null)
+            {
+                Debug.LogError("EnemyStateManager.cs AddState() - Expected to receive EnemyState object, but received null.");
+                break;
+            }
+
+            if (concreteStates.TryAdd(name, state) == false)
+            {
+                Debug.LogWarning("EnemyStateManager.cs AddState() - Failed to add state '" + name + "' to state dictionary--state already exists.");
+                break;
+            }
+        } while (false);
+
+    }
+
+    public void RemoveState(string name)
+    {
+        if (concreteStates.Remove(name) == false)
+        {
+            Debug.LogWarning("EnemyStateManager.cs RemoveState() - State of name '" + name + "' not found in state dictionary.");
+        }
+    }
+
+    public void SetDefaultState(EnemyState state) // Replace default state with given state, used to change the default state
+    {
+        if (!concreteStates.ContainsKey("Default"))
+        {
+            concreteStates.Add("Default", state);
+        }
+        else
+        {
+            concreteStates["Default"] = state;
+        }
+    }
+
+    public void BuildStateDictionary(EnemyState defaultState, List<EnemyState> stateList)
+    {
+        if (defaultState != null)
+        {
+            SetDefaultState(defaultState);
+        }
+        else
+        {
+            Debug.LogError("EnemyStateManager.cs BuildStateDictionary() - Expected to receive EnemyState object, but received null.");
+        }
+
+        foreach (EnemyState stateItem in stateList)
+        {
+            AddState(stateItem.stateName, stateItem);
         }
     }
 }

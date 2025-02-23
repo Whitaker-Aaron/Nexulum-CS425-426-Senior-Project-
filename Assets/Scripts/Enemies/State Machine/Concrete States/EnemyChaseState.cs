@@ -22,7 +22,7 @@ public class EnemyChaseState : EnemyNeutralState
         }
         else
         {
-            stateContext.ChangeState(stateContext.GetStateOfName("Search"));
+            stateContext.ChangeState("Search");
         }
     }
 

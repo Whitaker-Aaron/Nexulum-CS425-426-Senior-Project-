@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class BehaviorTest : MonoBehaviour
 {
-
     EnemyStateManager enemyStateMananger;
     public bool toggle = false;
 
+    void Awake()
+    {
+        //
+    }
     void Start()
     {
         Debug.Log("Enemy test behavior script start");

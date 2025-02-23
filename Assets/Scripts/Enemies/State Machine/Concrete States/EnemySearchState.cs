@@ -21,13 +21,13 @@ public class EnemySearchState : EnemyNeutralState
         base.OnDamaged();
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag())
         {
-            stateContext.ChangeState(stateContext.GetStateOfName("Chase"));
+            stateContext.ChangeState("Chase");
         }
         else
         {
             if (stateContext.transform.position == stateContext.enemyLOS.lastKnownTargetPos)
             {
-                stateContext.ChangeState(stateContext.GetStateOfName("Idle"));
+                stateContext.ChangeState("Idle");
             }
         }
     }

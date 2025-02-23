@@ -6,11 +6,11 @@ using UnityEngine;
 using System;
 
 [Serializable]
+[CreateAssetMenu(menuName = "Enemy State")]
 public class EnemyState : ScriptableObject
 {
     protected EnemyStateManager stateContext;
-    public string stateName { get; set; }
-
+    public string stateName;
     public EnemyState()
     {
         this.stateName = "";

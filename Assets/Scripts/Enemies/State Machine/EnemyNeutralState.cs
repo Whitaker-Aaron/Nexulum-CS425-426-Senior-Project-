@@ -14,7 +14,7 @@ public abstract class EnemyNeutralState : EnemyState
                 case EnemyFrame.DamageSource.Player:
                     // Target player
                     stateContext.enemyLOS.ChangeTarget(stateContext.enemyLOS.player);
-                    stateContext.ChangeState(stateContext.GetStateOfName("Chase"));
+                    stateContext.ChangeState("Chase");
                     break;
             }
         }
