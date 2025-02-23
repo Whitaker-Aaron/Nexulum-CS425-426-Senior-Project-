@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] GameObject materialsMenuReference;
     [SerializeField] GameObject totalMaterialMenuReference;
+    [SerializeField] GameObject baseShopMenuReference;
     [SerializeField] GameObject terminalMenuReference;
     [SerializeField] GameObject craftMenuReference;
     [SerializeField] GameObject itemsMenuReference;
@@ -21,8 +22,10 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject DepositScrollContent;
     [SerializeField] GameObject WithdrawScrollContent;
     [SerializeField] GameObject ChestWithdrawObject;
+    [SerializeField] GameObject shopOptionObject;
 
     [SerializeField] GameObject craftListsReference;
+    [SerializeField] GameObject shopOptionsReference;
     [SerializeField] GameObject pauseMenuReference;
 
     List<GameObject> currentMaterials = new List<GameObject>();
@@ -124,6 +127,23 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    public void resetShopSelection()
+    {
+        if(currentMenuObject != null && currentMenuObject.GetComponent<BaseShopMenu>() != null)
+        {
+            currentMenuObject.GetComponent<BaseShopMenu>().resetSelection();
+            currentMenuObject.GetComponent<BaseShopMenu>().updateShopListings();
+        }
+    }
+
+    public void updateShopCount(float amount)
+    {
+        if (currentMenuObject != null && currentMenuObject.GetComponent<BaseShopMenu>() != null)
+        {
+            currentMenuObject.GetComponent<BaseShopMenu>().updateFlorentineCount(amount);
+        }
+    }
+
     public void closeChestMenu()
     {
         if (chestMenuActive)
@@ -150,7 +170,11 @@ public class MenuManager : MonoBehaviour
 
             if (GameObject.FindGameObjectWithTag("CraftLists") != null)
             {
-                Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+                //Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+            }
+            if(GameObject.FindGameObjectWithTag("ShopOptions") != null)
+            {
+                //Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
             }
             if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
@@ -233,7 +257,11 @@ public class MenuManager : MonoBehaviour
     {
         if (GameObject.FindGameObjectWithTag("CraftLists") != null)
         {
-            Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+            //Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
+        }
+        if (GameObject.FindGameObjectWithTag("ShopOptions") != null)
+        {
+            //Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
         }
         if (GameObject.FindGameObjectWithTag("MainMenu") != null)
         {
@@ -262,18 +290,51 @@ public class MenuManager : MonoBehaviour
 
     public List<CraftRecipe> returnWeaponsCraftList()
     {
-        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<WeaponCraftList>().allRecipes;
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<WeaponCraftList>().accessibleRecipes;
         
+    }
+
+    public void addToWeaponsCraftList(CraftRecipe recipeToAdd)
+    {
+        GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<WeaponCraftList>().addToAccessibleRecipes(recipeToAdd);
+    }
+
+    public void addToItemsCraftList(CraftRecipe recipeToAdd)
+    {
+        GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<ItemsCraftList>().addToAccessibleRecipes(recipeToAdd);
+    }
+
+    public void addToRunesCraftList(CraftRecipe recipeToAdd)
+    {
+        GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().addToAccessibleRecipes(recipeToAdd);
     }
 
     public List<CraftRecipe> returnItemsCraftList()
     {
-        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<ItemsCraftList>().allRecipes;
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<ItemsCraftList>().accessibleRecipes;
     }
 
     public List<CraftRecipe> returnRunesCraftList()
     {
-        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().allRecipes;
+        return GameObject.FindGameObjectWithTag("CraftLists").GetComponentInChildren<RunesCraftList>().accessibleRecipes;
+    }
+
+    public List<CraftRecipe> returnRecipesInShop()
+    {
+        return GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopCraftRecipes>().getRecipes();
+    }
+
+    public List<WeaponBase> returnWeaponsInShop()
+    {
+        return GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopWeapons>().getWeapons();
+    }
+    public List<PlayerItem> returnItemsInShop()
+    {
+        return GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopPlayerItems>().getItems();
+    }
+    public void removeShopCraftRecipe(CraftRecipe recipeToRemove)
+    {
+        GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopCraftRecipes>().removeRecipe(recipeToRemove);
     }
 
     public void navigateToMaterialMenu()
@@ -300,13 +361,39 @@ public class MenuManager : MonoBehaviour
         //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
     }
 
+    public void AddToAvailableCraftRecipes(CraftRecipe recipeToAdd)
+    {
+        switch(recipeToAdd.type)
+        {
+            case CraftRecipe.CraftTypes.Weapon:
+                addToWeaponsCraftList(recipeToAdd);
+                break;
+            case CraftRecipe.CraftTypes.Rune:
+                addToRunesCraftList(recipeToAdd);
+                break;
+            case CraftRecipe.CraftTypes.Item:
+                addToItemsCraftList(recipeToAdd);
+                break;
+        }
+    }
+
+    public void navigateToBaseShopMenu()
+    {
+        Debug.Log("Navigating to Base Shop Menu");
+        Destroy(currentMenuObject);
+        currentMenuObject = Instantiate(baseShopMenuReference);
+        currentMenuObject.transform.SetParent(canvas.transform, false);
+        //populateBaseShopOptions(StoreItem.StoreItemType.Recipe);
+        //currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+    }
+
     public void navigateToCraftMenu()
     {
         
         if (menuActive)
         {
             Debug.Log("Navigating to Craft Menu");
-            Instantiate(craftListsReference);
+            //Instantiate(craftListsReference);
             Destroy(currentMenuObject);
             currentMenuObject = Instantiate(craftMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform, false);
@@ -333,7 +420,7 @@ public class MenuManager : MonoBehaviour
         if (menuActive)
         {
             Debug.Log("Navigating to Equip Menu");
-            Instantiate(craftListsReference);
+            //Instantiate(craftListsReference);
             Destroy(currentMenuObject);
             currentMenuObject = Instantiate(equipMenuReference);
             currentMenuObject.transform.SetParent(canvas.transform, false);
@@ -441,6 +528,123 @@ public class MenuManager : MonoBehaviour
             }
             populateBaseInventoryMaterials();
         }
+    }
+
+    public void populateBaseShopOptions(StoreItem.StoreItemType type)
+    {
+        var curFlorentine = character.GetFlorentine();
+        if (currentMenuObject != null)
+        {
+            var container = GameObject.Find("StoreOptionLayout").GetComponent<VerticalLayoutGroup>();
+            switch (type)
+            {
+                case StoreItem.StoreItemType.Recipe:
+                    var recipes = returnRecipesInShop();
+                    if (recipes == null) break;
+                    for (int i = 0; i < recipes.Count; i++)
+                    {
+                        var shopItem = shopOptionObject.GetComponent<StoreItem>();
+                        shopItem.craftRecipe = recipes[i];
+                        shopItem.storeItemName.GetComponent<TMP_Text>().text = recipes[i].recipeName + " Recipe";
+                        shopItem.storeItemNameShadow.GetComponent<TMP_Text>().text = recipes[i].recipeName + " Recipe";
+                        shopItem.florentineRequiredAmount.GetComponent<Text>().text = "x" + recipes[i].shopCost.ToString();
+                        shopItem.storeType = type;
+                        Color32 red = new Color32(0xE4, 0x3c, 0x54, 0xFF);
+                        Color32 white = new Color32(0xFF, 0xFF, 0xFF, 0xFF);
+                        if (curFlorentine >= recipes[i].shopCost)
+                        {
+                            shopItem.purchaseButton.GetComponent<Button>().interactable = true;
+                            shopItem.disabledPanel.SetActive(false);
+                            shopItem.florentineRequiredAmount.GetComponent<Text>().color = white;
+                        }
+                        else
+                        {
+                            shopItem.purchaseButton.GetComponent<Button>().interactable = false;
+                            shopItem.disabledPanel.SetActive(true);
+                            shopItem.florentineRequiredAmount.GetComponent<Text>().color = red;
+                        }
+                        var curShop = Instantiate(shopOptionObject);
+                        curShop.transform.SetParent(container.transform, false);
+                        currentMenuObject.GetComponent<BaseShopMenu>().addToCurShopListings(curShop);
+                    }
+                    break;
+                case StoreItem.StoreItemType.Weapon:
+                    var weapons = returnWeaponsInShop();
+                    if (weapons == null) break;
+                    for (int i = 0; i < weapons.Count; i++)
+                    {
+                        var shopItem = shopOptionObject.GetComponent<StoreItem>();
+                        shopItem.weaponBase = weapons[i];
+                        shopItem.storeItemName.GetComponent<TMP_Text>().text = weapons[i].weaponName;
+                        shopItem.storeItemNameShadow.GetComponent<TMP_Text>().text = weapons[i].weaponName;
+                        shopItem.florentineRequiredAmount.GetComponent<Text>().text = "x" + weapons[i].shopCost.ToString();
+                        shopItem.storeType = type;
+                        Color32 red = new Color32(0xE4, 0x3c, 0x54, 0xFF);
+                        Color32 white = new Color32(0xFF, 0xFF, 0xFF, 0xFF);
+                        if (curFlorentine >= weapons[i].shopCost)
+                        {
+                            shopItem.purchaseButton.GetComponent<Button>().interactable = true;
+                            shopItem.disabledPanel.SetActive(false);
+                            shopItem.florentineRequiredAmount.GetComponent<Text>().color = white;
+                        }
+                        else
+                        {
+                            shopItem.purchaseButton.GetComponent<Button>().interactable = false;
+                            shopItem.disabledPanel.SetActive(true);
+                            shopItem.florentineRequiredAmount.GetComponent<Text>().color = red;
+                        }
+                        var curShop = Instantiate(shopOptionObject);
+                        curShop.transform.SetParent(container.transform, false);
+                        currentMenuObject.GetComponent<BaseShopMenu>().addToCurShopListings(curShop);
+                    }
+                    break;
+                case StoreItem.StoreItemType.Item:
+                    var items = returnItemsInShop();
+                    if (items == null) break;
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        var shopItem = shopOptionObject.GetComponent<StoreItem>();
+                        shopItem.playerItem = items[i];
+                        shopItem.storeItemName.GetComponent<TMP_Text>().text = items[i].itemName;
+                        shopItem.storeItemNameShadow.GetComponent<TMP_Text>().text = items[i].itemName;
+                        shopItem.florentineRequiredAmount.GetComponent<Text>().text = "x" + items[i].shopCost.ToString();
+                        shopItem.itemQuantity.GetComponent<TMP_Text>().text = "Have: " + items[i].itemAmount.ToString() + "/" + items[i].maxItemAmount.ToString(); ;
+                        shopItem.description.GetComponent<TMP_Text>().text = items[i].itemDescription;
+                        shopItem.storeType = type;
+                        Color32 red = new Color32(0xE4, 0x3c, 0x54, 0xFF);
+                        Color32 white = new Color32(0xFF, 0xFF, 0xFF, 0xFF);
+                        if (curFlorentine >= items[i].shopCost)
+                        {
+                            shopItem.purchaseButton.GetComponent<Button>().interactable = true;
+                            shopItem.disabledPanel.SetActive(false);
+                            shopItem.florentineRequiredAmount.GetComponent<Text>().color = white;
+                        }
+                        else
+                        {
+                            shopItem.purchaseButton.GetComponent<Button>().interactable = false;
+                            shopItem.disabledPanel.SetActive(true);
+                            shopItem.florentineRequiredAmount.GetComponent<Text>().color = red;
+                        }
+                        var curShop = Instantiate(shopOptionObject);
+                        curShop.transform.SetParent(container.transform, false);
+                        currentMenuObject.GetComponent<BaseShopMenu>().addToCurShopListings(curShop);
+                    }
+                    break;
+            }
+            
+        }
+    }
+
+    public void RemoveShopItemFromShop(GameObject shopItem)
+    {
+        switch (shopItem.GetComponent<StoreItem>().storeType)
+        {
+            case StoreItem.StoreItemType.Recipe:
+                removeShopCraftRecipe(shopItem.GetComponent<StoreItem>().craftRecipe);
+                break;
+        }
+        
+        Destroy(shopItem);
     }
 
     public void populateBaseInventoryMaterials()

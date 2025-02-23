@@ -71,6 +71,7 @@ public class masterInput : MonoBehaviour
 
     //Knight Combat Variables
     bool isAttacking = false;
+    public bool bubble = false;
     float cooldown = 1f;
     public bool inputPaused = false;
     bool returningFromMenu = true;
@@ -83,6 +84,8 @@ public class masterInput : MonoBehaviour
     public float animTime = 0.5f;
     public float animTimeTwo = 0.5f;
     public float animTimeThree = 0.99f;
+    public float animHeavyTimeOne = 0.6f;
+    public float animHeavyTimeTwo = 0.6f;
     GameObject sword;
     public float blockTime;
     public float blockSpeed;
@@ -94,6 +97,7 @@ public class masterInput : MonoBehaviour
     public float dashSpeed = 3f;
     public float dashTime = .2f;
     Coroutine dashCooldown;
+    public float comboCooldown = 1.5f;
 
     GameObject staminaBar;
     GameObject staminaFill;
@@ -106,9 +110,11 @@ public class masterInput : MonoBehaviour
     public bool shootingSwords = false;
 
     public GameObject swordSlashPrefab, swordSlash2, swordSlash3;
-    private GameObject SS1, SS2, SS3;
-    public GameObject ESP1, ESP2, ESP3;
+    private GameObject SS1, SS2, SS3;//sword slash
+    public GameObject ESP1, ESP2, ESP3;//engr slash prefab
     private GameObject ES1, ES2, ES3;
+    private GameObject HS1, HS2, HS3;//heavy slash
+    public GameObject HSP1, HSP2, HSP3;
 
 
 
@@ -182,6 +188,7 @@ public class masterInput : MonoBehaviour
 
     //abilities
     public bool placing = false;
+    GameObject[] towersToRepair;
 
     //repair
     public bool canRepair = false;
@@ -233,6 +240,7 @@ public class masterInput : MonoBehaviour
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
         //laserLineRenderer.enabled = true;
 
+        
 
     }
 
@@ -246,6 +254,7 @@ public class masterInput : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         //playerControl = gameObject.GetComponent<PlayerInputActions>();
+        towersToRepair = new GameObject[classAbilties.instance.turretMaxQuantity + classAbilties.instance.teslaMaxQuantity];
 
         activateSwordSlashes();
         //DontDestroyOnLoad(SS1);
@@ -327,6 +336,8 @@ public class masterInput : MonoBehaviour
             onSwitchToSpell();
         }
 
+        if (animationControl != null)
+            checkAnimationState();
         runLogic();
 
         returningFromMenu = false;
@@ -337,7 +348,7 @@ public class masterInput : MonoBehaviour
         player.transform.rotation = Quaternion.Euler(0.0f, player.transform.eulerAngles.y, 0.0f);
         if (inputPaused)
         {
-            animationControl.updatePlayerAnimation(Vector3.zero);
+            if(!character.transitioningRoom) animationControl.updatePlayerAnimation(Vector3.zero);
             audioManager.PauseFootsteps("TestWalk");
             return;
 
@@ -345,8 +356,7 @@ public class masterInput : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(horizontal, 0, vertical);
-
-        animationControl.updatePlayerAnimation(movement);
+        if (!character.transitioningRoom)  animationControl.updatePlayerAnimation(movement);
 
         
             
@@ -414,7 +424,7 @@ public class masterInput : MonoBehaviour
             {
                 movement.Normalize();
             }
-            animationControl.updatePlayerAnimation(movement);
+            if (!character.transitioningRoom) animationControl.updatePlayerAnimation(movement);
             // Here we add an offset rotation to correct any small misalignment
             //Quaternion playerOffset = Quaternion.Euler(0, player.transform.eulerAngles.y - camera.transform.eulerAngles.y, 0);
             //movement = playerOffset * movement;
@@ -431,12 +441,52 @@ public class masterInput : MonoBehaviour
         }
 
         // Update player animation with the correct movement direction
-        animationControl.updatePlayerAnimation(movement);
+        if (!character.transitioningRoom) animationControl.updatePlayerAnimation(movement);
     }
 
 
 
     //--------------------USER DEFINED FUNCTIONS----------------------
+
+    public PlayerAnimation GetAnimationControl()
+    {
+        return animationControl;
+    }
+
+    public void ActivateFallAnimation(){
+        switch (currentClass)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                animationControl.falling("Knight");
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                animationControl.falling("Gunner");
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                animationControl.falling("Engineer");
+                break;
+
+        }
+        
+    }
+
+    public void DisableFallAnimation()
+    {
+        switch (currentClass)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                animationControl.stopFall("Knight");
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                animationControl.stopFall("Gunner");
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                animationControl.stopFall("Engineer");
+                break;
+
+        }
+    }
+
 
     public void OnMouseLook(InputAction.CallbackContext context)
     {
@@ -471,6 +521,11 @@ public class masterInput : MonoBehaviour
 
     public void onSwitchToSpell()
     {
+        if(shootingLaser || shootingRocket || shootingSwords || throwingGrenade ||placing)
+        {
+            print("cant switch, ability active");
+            return;
+        }
         int rCount = 0;
         foreach(Rune rune in character.equippedRunes)
         {
@@ -602,20 +657,20 @@ public class masterInput : MonoBehaviour
 
     IEnumerator updateWeaponWait()
     {
-        yield return new WaitForSeconds(.05f);
+        yield return new WaitForSeconds(.3f);
         
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
-            //print("calling reload in UWW");
-            StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Reload());
-            animationControl.gunnerReload(equippedWeapon.reloadTime);
+            print("calling reload in UWW");
+            StartCoroutine(character.equippedWeapon.weaponType.Reload());
+            StartCoroutine(animationControl.gunnerReload(equippedWeapon.reloadTime));
             updateDistance(equippedWeapon.rangeModifier);
             yield break;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
             StartCoroutine(equippedWeapon.Reload());
-            animationControl.engineerReload(equippedWeapon.reloadTime);
+            StartCoroutine(animationControl.engineerReload(equippedWeapon.reloadTime));
             updateDistance(equippedWeapon.rangeModifier);
             yield break;
         }
@@ -748,6 +803,7 @@ public class masterInput : MonoBehaviour
     {
         sword = newSword.weaponMesh;
     }
+    /*
     IEnumerator wait(float animationTime)
     {
         //isAttacking = true;
@@ -758,21 +814,33 @@ public class masterInput : MonoBehaviour
             animationControl.resetEngineer();
         //isAttacking = false;
         yield break;
+    }*/
+
+    /*
+    IEnumerator wait(float animationTime)
+    {
+        yield return new WaitForSeconds(animationTime);
+
+        // Only reset if no further inputs were registered
+        if (noOfClicks >= 0)
+        {
+            if (currentClass == WeaponBase.weaponClassTypes.Knight)
+                animationControl.resetKnight();
+            if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+                animationControl.resetEngineer();
+        }
     }
 
     IEnumerator waitAttack(float animationTime)
     {
-        isAttacking = true;
-
-        //if(currentClass == WeaponBase.weaponClassTypes.Engineer)
-        //{
-            //StartCoroutine(waitShoot(animationTime * 4));
-        //}
         yield return new WaitForSeconds(animationTime);
-        //animationControl.resetKnight();
-        isAttacking = false;
-        yield break;
-    }
+
+        // Ensure isAttacking is only reset if no new input has occurred
+        if (Time.time - lastClickedTime > engNextAttackTime)
+        {
+            isAttacking = false;
+        }
+    }*/
 
     
 
@@ -934,9 +1002,16 @@ public class masterInput : MonoBehaviour
     }
     */
 
-    public void assignRepair(GameObject current)
+    public void assignRepair(GameObject current, int count)
     {
-        repairObj = current;
+        canRepair = true;
+        towersToRepair[count] = current;
+    }
+
+    public void unassignRepair(GameObject current, int count)
+    {
+        canRepair = false;
+        towersToRepair[count] = null;
     }
 
     void removeRepair()
@@ -959,7 +1034,327 @@ public class masterInput : MonoBehaviour
             yield break;
     }
 
+
     //-----------------------------------------------------------------
+    /*
+    private IEnumerator PerformAttack(float attackTime, GameObject effect, int attackStage)
+    {
+        effect.GetComponent<ParticleSystem>()?.Play();
+
+        switch (attackStage)
+        {
+            case 1:
+                StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, swordAttackPoint, toolAttackRadius, layer));
+                animationControl.engAttackOne(attackTime);
+                break;
+            case 2:
+                StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+                animationControl.engAttackTwo(attackTime);
+                break;
+            case 3:
+                StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+                animationControl.engAttackThree();
+                break;
+        }
+
+        StartCoroutine(wait(attackTime));        // Handles animation reset
+        yield return StartCoroutine(waitAttack(attackTime * 2));  // Controls `isAttacking`
+    }
+    */
+    public float attackTime = .5f;
+    private bool canTrigger = true;
+
+    private IEnumerator attackCooldown(float time)
+    {
+        canTrigger = false;
+        yield return new WaitForSeconds(time);
+        canTrigger = true;
+    }
+
+    private void checkAnimationState()
+    {
+        AnimatorStateInfo temp = animationControl.getAnimationInfo();
+        if((temp.IsName("waitOne") || temp.IsName("waitTwo") || temp.IsName("waitThree")) && temp.normalizedTime >= 0.5f)
+        {
+            StartCoroutine(attackCooldown(0.25f));
+        }
+        if((temp.IsName("heavyWaitOne") || temp.IsName("heavyWaitTwo") || temp.IsName("heavyThree")) && temp.normalizedTime >= 0.7f)
+        {
+            StartCoroutine(attackCooldown(0.4f));
+        }
+    }
+
+    private IEnumerator HandleComboAttack(float attackTime, int attackStage, bool isHeavy)
+    {
+        if (!canTrigger)
+            yield break;
+        AnimatorStateInfo temp = animationControl.getAnimationInfo();
+        //effect.GetComponent<ParticleSystem>()?.Play();
+
+
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            switch (attackStage)
+            {
+                case 1:
+                    animationControl.engAttackOne(animTime);
+                    ES1.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 2:
+                    animationControl.engAttackTwo(animTime);
+                    ES2.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 3:
+                    animationControl.engAttackThree();
+                    ES3.GetComponent<ParticleSystem>().Play();
+                    break;
+            }
+            StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+            StartCoroutine(wait(attackTime * 2));
+            yield return StartCoroutine(waitAttack(attackTime * 2));
+        }
+
+        if (isHeavy && currentClass == WeaponBase.weaponClassTypes.Knight)
+        {
+            if ((temp.IsName("heavyTwo") || temp.IsName("heavyOne")) && temp.normalizedTime <= .6f)
+                yield break;
+            //nextAttackTime = 0.6f;
+            // Trigger Heavy Attack Animations and Effects
+            temp = animationControl.getAnimationInfo();
+            if (temp.IsName("Locomotion"))
+            {
+                animationControl.knightHeavyOne(animHeavyTimeOne);
+                HS1.GetComponent<ParticleSystem>().Play();
+            }
+            if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
+            {
+                StopCoroutine(wait(attackStage));
+                animationControl.knightHeavyTwo(animHeavyTimeTwo);
+                HS2.GetComponent<ParticleSystem>().Play();
+            }
+            if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
+            {
+                animationControl.knightHeavyThree();
+                HS3.GetComponent<ParticleSystem>().Play();
+            }
+            /*
+            switch (attackStage)
+            {
+                case 1:
+                    animationControl.knightHeavyOne(animHeavyTimeOne);
+                    HS1.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 2:
+                    animationControl.knightHeavyTwo(animHeavyTimeTwo);
+                    HS1.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 3:
+                    animationControl.knightHeavyThree();
+                    HS1.GetComponent<ParticleSystem>().Play();
+                    break;
+            }
+            */
+            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne));
+        }
+        else
+        {
+            // Trigger Light Attack Animations and Effects
+            temp = animationControl.getAnimationInfo();
+            if (temp.IsName("Locomotion"))
+            {
+                animationControl.knightAttackOne(animTime);
+                SS1.GetComponent<ParticleSystem>().Play();
+            }
+            if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
+            {
+                animationControl.knightAttackTwo(animTimeTwo);
+                SS2.GetComponent<ParticleSystem>().Play();
+            }
+            if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
+            {
+                animationControl.knightAttackThree();
+                SS3.GetComponent<ParticleSystem>().Play();
+            }
+            /*
+            switch (attackStage)
+            {
+                case 1:
+                    
+                    animationControl.knightAttackOne(animTime);
+                    SS1.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 2:
+                    animationControl.knightAttackTwo(animTimeTwo);
+                    SS2.GetComponent<ParticleSystem>().Play();
+                    break;
+                case 3:
+                    animationControl.knightAttackThree();
+                    SS3.GetComponent<ParticleSystem>().Play();
+                    break;
+            }*/
+            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animTime));
+        }
+
+        // Wait for animation and reset logic
+        StartCoroutine(wait(attackTime));
+        yield return StartCoroutine(waitAttack(attackTime * 2));
+    }
+
+    private void runKnightAttackLogic()
+    {
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            noOfClicks = 0;
+        }
+
+        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords && !isBlocking)
+        {
+            if (playerInput.actions["attack"].triggered)
+            {
+                lastClickedTime = Time.time;
+                noOfClicks++;
+
+                // Start tracking attack hold time
+                StartCoroutine(DetectHeavyAttack(noOfClicks));
+            }
+        }
+    }
+
+    private IEnumerator DetectHeavyAttack(int attackStage)
+    {
+        float pressStartTime = Time.time;
+        bool isHeavy = false;
+
+        // Wait while button is still being held, up to a threshold
+        while (playerInput.actions["attack"].IsPressed())
+        {
+            if (Time.time - pressStartTime > 0.3f) // Adjust this value for heavy attack threshold
+            {
+                isHeavy = true;
+                break;
+            }
+            yield return null; // Wait for next frame
+        }
+
+        // Execute attack after determining light or heavy
+        StopCoroutine(wait(attackStage));
+        StartCoroutine(HandleComboAttack(isHeavy ? animTime : animTimeTwo, attackStage, isHeavy));
+    }
+
+    // Knight Logic with Light and Heavy Attacks
+    /*
+    private void runKnightAttackLogic()
+    {
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            noOfClicks = 0;
+        }
+
+        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
+        {
+            if (playerInput.actions["attack"].triggered)
+            {
+                lastClickedTime = Time.time;
+
+                // Light or Heavy Attack based on input
+                bool isHeavy = playerInput.actions["attack"].IsPressed();
+                noOfClicks++;
+
+                if (noOfClicks == 1)
+                {
+                    StartCoroutine(HandleComboAttack(animTime, 1, isHeavy));
+                }
+
+                if (noOfClicks >= 2)
+                {
+                    nextAttackTime = animTimeTwo;
+                    StartCoroutine(HandleComboAttack(animTimeTwo, 2, isHeavy));
+                }
+
+                if (noOfClicks >= 3)
+                {
+                    noOfClicks = 0;
+                    cooldownTime = Time.time + cooldown;
+                    StartCoroutine(HandleComboAttack(animTimeThree, 3, isHeavy));
+                }
+            }
+        }
+    }*/
+
+    // Engineer Logic with Light and Heavy Attacks
+    private void runEngineerAttackLogic()
+    {
+        /*
+        if ((playerInput.actions["RightClick"].WasPressedThisFrame() || playerInput.actions["RightClick"].IsPressed()) && !isAttacking)
+        {
+            isAttacking = true;
+
+            int attackStage = noOfClicks + 1;
+
+            if (attackStage <= 3)
+            {
+                // Handle Heavy Attack
+                StartCoroutine(HandleComboAttack(animTime, attackStage, false));
+            }
+            // Reset after a delay
+            //StartCoroutine(wait(attackTime));
+        }*/
+
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            noOfClicks = 0;
+        }
+
+        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
+        {
+            if (playerInput.actions["RightClick"].triggered)
+            {
+                lastClickedTime = Time.time;
+                noOfClicks++;
+
+                // Start tracking attack hold time
+                StartCoroutine(HandleComboAttack(attackTime, noOfClicks, false));
+            }
+        }
+    }
+
+    // Combo Input Logic to Track Timing
+    private IEnumerator wait(float animationTime)
+    {
+        yield return new WaitForSeconds(animationTime);
+
+        
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            noOfClicks = 0; // Reset Combo if no input in time
+        }
+
+        if (currentClass == WeaponBase.weaponClassTypes.Knight)
+            animationControl.resetKnight();
+
+        if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+            animationControl.resetEngineer();
+        if(noOfClicks >= 3 && (animationControl.getAnimationInfo().IsName("attackThree") || animationControl.getAnimationInfo().IsName("heavyThree")))
+        {
+            yield return new WaitForSeconds(comboCooldown);
+            noOfClicks = 0;
+        }
+    }
+
+    private IEnumerator waitAttack(float animationTime)
+    {
+        yield return new WaitForSeconds(animationTime);
+
+        // Reset attacking state if no new input occurred
+        if (Time.time - lastClickedTime > maxComboDelay)
+        {
+            isAttacking = false;
+        }
+    }
+
+
+
+
 
     private void runLogic()
     {
@@ -968,6 +1363,8 @@ public class masterInput : MonoBehaviour
         //KNIGHT LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
+            runKnightAttackLogic();
+            /*
             if (Time.time - lastClickedTime > maxComboDelay)
             {
                 noOfClicks = 0;
@@ -1033,9 +1430,9 @@ public class masterInput : MonoBehaviour
                             animationControl.resetKnight();
                     }
                 }
-            }
+            }*/
 
-            if (playerInput.actions["RightClick"].triggered)
+            if (playerInput.actions["RightClick"].triggered && !isAttacking)// && animationControl.getAnimationInfo().IsName("Locomotion"))
             {
                 isBlocking = true;
                 isAttacking = false;
@@ -1053,7 +1450,7 @@ public class masterInput : MonoBehaviour
                     StartCoroutine(animationControl.startKnightBlock(blockTime));
                 StartCoroutine(StartStaminaCooldown());
             }
-            if (playerInput.actions["RightClick"].WasReleasedThisFrame())
+            if (playerInput.actions["RightClick"].WasReleasedThisFrame() && isBlocking)
             {
                 isBlocking = false;
                 character.invul = false;
@@ -1074,7 +1471,7 @@ public class masterInput : MonoBehaviour
                 //pistolBulletCount = 0;
                 //canPistolShoot = false;
                 StartCoroutine(equippedWeapon.Reload());
-                animationControl.gunnerReload(equippedWeapon.reloadTime);
+                StartCoroutine(animationControl.gunnerReload(equippedWeapon.reloadTime));
             }
 
 
@@ -1116,24 +1513,25 @@ public class masterInput : MonoBehaviour
             if (((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize)) && equippedWeapon.canShoot && equippedWeapon.isReloading == false)//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
             {
                 StartCoroutine(equippedWeapon.Reload());
-                animationControl.engineerReload(equippedWeapon.reloadTime);
+                StartCoroutine(animationControl.engineerReload(equippedWeapon.reloadTime));
 
             }
 
+            runEngineerAttackLogic();
 
 
-            
 
-            if (playerInput.actions["attack"].WasPressedThisFrame() && !isAttacking)
+
+            if (playerInput.actions["Attack"].WasPressedThisFrame() && !isAttacking)
             {
                 shooting = true;
             }
-            else if (playerInput.actions["attack"].WasReleasedThisFrame())
+            else if (playerInput.actions["Attack"].WasReleasedThisFrame())
             {
                 shooting = false;
             }
 
-            float triggerValue = playerInput.actions["attack"].ReadValue<float>();
+            float triggerValue = playerInput.actions["Attack"].ReadValue<float>();
             //Debug.Log("Trigger Value: " + triggerValue); 
 
             if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion")))
@@ -1153,12 +1551,12 @@ public class masterInput : MonoBehaviour
 
             if (canRepair)
             {
-                if(Input.GetKeyDown(KeyCode.B) && !isAttacking && !pistolReloading)
+                if (playerInput.actions["Repair"].IsPressed() && !isAttacking && !pistolReloading && !shooting)
                 {
                     Debug.Log("Starting repair");
                     repairing = true;
                 }
-                if (repairing && Input.GetKeyUp(KeyCode.B))
+                if (playerInput.actions["Repair"].WasReleasedThisFrame())
                 {
                     Debug.Log("Stop repair");
                     repairing = false;
@@ -1171,85 +1569,58 @@ public class masterInput : MonoBehaviour
             {
                 StartCoroutine(repairWait());
             }
-
+            /*
             if (Time.time - lastClickedTime > engMaxComboDelay)
             {
                 noOfClicks = 0;
             }
-            if (Time.time > lastClickedTime + engNextAttackTime && isAttacking == false && shooting == false && !pistolReloading && !repairing)// && Time.time > engCooldown)//&& isAttacking == false)
+
+            if (Time.time > lastClickedTime + engNextAttackTime && !isAttacking && !shooting && !pistolReloading && !repairing)
             {
-                if (shooting)
-                    return;
+                if (!playerInput.actions["RightClick"].triggered) return;
 
-                if (playerInput.actions["RightClick"].triggered)
+                // Register attack input
+                isAttacking = true;
+                lastClickedTime = Time.time;
+                noOfClicks = Mathf.Clamp(noOfClicks + 1, 1, 3); // Ensure noOfClicks never resets prematurely
+
+                var currentAnim = animationControl.getAnimationInfo();
+
+                // Attack 1 - Ensures a follow-up can be registered right as animation ends
+                if (noOfClicks == 1 && currentAnim.normalizedTime > engAnimTime)
                 {
-                    if (shooting)
-                        return;
-                    isAttacking = true;
-                    print("click: " + noOfClicks);
-
-                    lastClickedTime = Time.time;
-
-                    noOfClicks++;
-
-
-                    if (noOfClicks == 1 && !animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > engAnimTime)
+                    if ((currentAnim.IsName("engWaitTwo") && currentAnim.normalizedTime > 0.9f) ||
+                        (currentAnim.IsName("engAttackThree") && currentAnim.normalizedTime > engAnimTimeThree))
                     {
-                        if (animationControl.getAnimationInfo().IsName("engWaitTwo") && animationControl.getAnimationInfo().normalizedTime > .9f)
-                        {
-                            noOfClicks = 0;
-                            return;
-                        }
-                        if (animationControl.getAnimationInfo().IsName("engAttackThree") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeThree)
-                        {
-                            noOfClicks = 0;
-                            return;
-                        }
-                        engNextAttackTime = engAnimTime;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTime, swordAttackPoint, toolAttackRadius, layer));
-                        animationControl.engAttackOne(engAnimTime);
-                        StartCoroutine(waitAttack(engAnimTime * 2));
-                        StartCoroutine(wait(engAnimTime));
-                        ES1.GetComponent<ParticleSystem>().Play();
-                    }
-                    noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
-
-                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("engWaitOne") && animationControl.getAnimationInfo().normalizedTime > engAnimTimeTwo)
-                    {
-                        print("animate two");
-                        engNextAttackTime = engAnimTimeTwo;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
-                        animationControl.engAttackTwo(engAnimTimeTwo);
-                        StartCoroutine(wait(engAnimTimeTwo));
-                        StartCoroutine(waitAttack(engAnimTimeTwo * 2));
-                        ES2.GetComponent<ParticleSystem>().Play();
-                    }
-
-                    if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("engWaitTwo"))
-                    {
-                        print("animate three");
-                        engNextAttackTime = engAnimTimeThree;
                         noOfClicks = 0;
-                        engCooldown = Time.time + cooldown;
-                        StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(engAnimTimeTwo, toolAttackPoint, toolAttackRadius, layer));
-                        animationControl.engAttackThree();
-                        StartCoroutine(wait(engAnimTimeThree));
-                        StartCoroutine(waitAttack(engAnimTimeThree * 2));
-                        engNextAttackTime = engAnimTime;
-                        ES3.GetComponent<ParticleSystem>().Play();
-
-                    }
-                    else
-                    {
-                        if (Time.time - lastClickedTime > engMaxComboDelay)
-                            animationControl.resetEngineer();
-                        if (noOfClicks >= 3)
-                            noOfClicks = 0;
+                        isAttacking = false;
+                        return;
                     }
 
+                    engNextAttackTime = engAnimTime;
+                    //StartCoroutine(PerformAttack(engAnimTime, ES1, 1));
                 }
 
-            }
+                // Attack 2 - Ensures input right as attack one ends is detected
+                else if (noOfClicks == 2 &&
+                        (currentAnim.IsName("engWaitOne") || currentAnim.IsName("engAttackOne")) &&
+                        currentAnim.normalizedTime > engAnimTimeTwo - 0.1f) // Extended input buffer
+                {
+                    engNextAttackTime = engAnimTimeTwo;
+                    //StartCoroutine(PerformAttack(engAnimTimeTwo, ES2, 2));
+                }
+
+                // Attack 3 - Ensures combo finishes correctly
+                else if (noOfClicks == 3 && currentAnim.IsName("engWaitTwo"))
+                {
+                    engNextAttackTime = engAnimTimeThree;
+                    noOfClicks = 0;
+                    engCooldown = Time.time + cooldown;
+
+                    //StartCoroutine(PerformAttack(engAnimTimeThree, ES3, 3));
+                }
+            
+            }*/
 
 
 
@@ -1258,11 +1629,12 @@ public class masterInput : MonoBehaviour
         //Class ability Logic
         if(!usingSpellRunes)
         {
-            if(currentClass == WeaponBase.weaponClassTypes.Engineer && placing)
+            if (placing || shootingLaser || shootingRocket || throwingGrenade)
             {
-                print("still placing, cant activate");
+                print("abiity in use cant use again");
                 return;
             }
+            //if(currentClass == WeaponBase.weaponClassTypes.Knight)
             if (playerInput.actions["AbilityOne"].triggered && !abilityInUse)
             {
                 print("Using ability One");
@@ -1294,7 +1666,7 @@ public class masterInput : MonoBehaviour
             {
                 print("Using ability Three");
                 abilityInUse = true;
-                if (currentClass == WeaponBase.weaponClassTypes.Knight)
+                if (currentClass == WeaponBase.weaponClassTypes.Knight && !classAbilties.instance.a3cooldown)
                 {
                     animationControl.knightShootSwords();
                     shootingSwords = true;
@@ -1311,6 +1683,11 @@ public class masterInput : MonoBehaviour
         }
         else
         {
+            if (placing || shootingLaser || shootingRocket || throwingGrenade || shootingSwords)
+            {
+                print("abiity in use cant use spell cast");
+                return;
+            }
             if (playerInput.actions["AbilityOne"].triggered && !abilityInUse && character.equippedRunes[0].runeType == Rune.RuneType.Spell)
             {
                 print("Using spellCast One");
@@ -1502,27 +1879,39 @@ public class masterInput : MonoBehaviour
         SS1 = Instantiate(swordSlashPrefab);
         SS2 = Instantiate(swordSlash2);
         SS3 = Instantiate(swordSlash3);
+        HS1 = Instantiate(HSP1);
+        HS2 = Instantiate(HSP2);
+        HS3 = Instantiate(HSP3);
         ES1 = Instantiate(ESP1);
         ES2 = Instantiate(ESP2);
         ES3 = Instantiate(ESP3);
-        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        SS1.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        SS2.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        SS3.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
         ES1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS1.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        HS2.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        HS3.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
         SS1.transform.SetParent(player.transform, false);
         SS2.transform.SetParent(player.transform, false);
         SS3.transform.SetParent(player.transform, false);
         ES1.transform.SetParent(player.transform, false);
         ES2.transform.SetParent(player.transform, false);
         ES3.transform.SetParent(player.transform, false);
-        SS1.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS2.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
-        SS3.transform.position = new Vector3(player.transform.position.x, .5f, player.transform.position.z);
+        HS1.transform.SetParent(player.transform, false);
+        HS2.transform.SetParent(player.transform, false);
+        HS3.transform.SetParent(player.transform, false);
+        SS1.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        SS2.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        SS3.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
         ES1.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES2.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
         ES3.transform.position = new Vector3(player.transform.position.x, .75f, player.transform.position.z);
+        HS1.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        HS2.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
+        HS3.transform.position = new Vector3(player.transform.position.x, .85f, player.transform.position.z);
     }
 }
 

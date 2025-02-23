@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class swordShot : MonoBehaviour
+public class swordShot : projectile
 {
-    public float lifeTime = 7f;
-    public int damage;
+    //public float lifeTime = 7f;
+    //public int damage;
 
     public bool isIce = false;
     public float iceRadius = 2f;
     public int iceDamage = 0;
 
-    string poolName = null;
+    //string poolName = null;
 
     bool explode = false;
     public float explodeRadius = 2f;
-    UIManager uiManager;
+    //UIManager uiManager;
 
     private void Awake()
     {
         //waitReturn();
+        GetDamage("swordShot");
+        bulletHitEffect = "swordShotHit";
     }
 
     // Start is called before the first frame update
@@ -29,11 +31,24 @@ public class swordShot : MonoBehaviour
         
     }
 
+    private void FixedUpdate()
+    {
+        if (!stop)
+        {
+            moveProj();
+        }
+    }
+
     private void OnEnable()
     {
-        StartCoroutine(waitReturn());
+        stop = false;
+        //StartCoroutine(waitReturn());
         if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+        GetDamage("Ability-swordShot");
+        bulletHitEffect = "swordShotHit";
+        counting = true;
     }
 
     private void OnDisable()
@@ -47,17 +62,23 @@ public class swordShot : MonoBehaviour
         gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected override void moveProj()
     {
-        if(collision.gameObject.tag == "Enemy")
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        //print("Colliding with: " + other.name);
+        if (other.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
-            uiManager.DisplayDamageNum(collision.gameObject.transform, damage);
-            collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            collision.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            other.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+            uiManager.DisplayDamageNum(other.gameObject.transform, damage);
+            //other.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            //other.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             if (isIce)
                 iceExplode();
-            else if(explode)
+            else if (explode)
             {
                 Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, explodeRadius);
 
@@ -70,21 +91,23 @@ public class swordShot : MonoBehaviour
                         uiManager.DisplayDamageNum(c.gameObject.transform, damage);
                     }
                 }
-                EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position, Quaternion.identity);
-                returnToPool();
+                //EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position, Quaternion.identity, false, false);
+                playEffect(gameObject.transform.position);
+                //resetProjectile();
             }
             else
             {
-                EffectsManager.instance.getFromPool("swordShotHit", gameObject.transform.position, Quaternion.identity);
-                returnToPool();
+                playEffect(gameObject.transform.position);
+                //EffectsManager.instance.getFromPool("swordShotHit", gameObject.transform.position, Quaternion.identity, false, false);
+                //resetProjectile();
             }
-                
+
         }
-        else if(isIce)
+        else if (isIce)
         {
             iceExplode();
         }
-        else if(explode)
+        else if (explode)
         {
             Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, explodeRadius);
 
@@ -97,14 +120,20 @@ public class swordShot : MonoBehaviour
                     uiManager.DisplayDamageNum(c.gameObject.transform, damage);
                 }
             }
-            EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position, Quaternion.identity);
-            returnToPool();
+            EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position, Quaternion.identity, false, false);
+            //resetProjectile();
         }
         else
         {
-            EffectsManager.instance.getFromPool("swordShotHit", gameObject.transform.position, Quaternion.identity);
-            returnToPool();
+            playEffect(gameObject.transform.position);
+            //EffectsManager.instance.getFromPool("swordShot", gameObject.transform.position, Quaternion.identity, false, false);
+            //resetProjectile();
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        
     }
 
     void iceExplode()
@@ -120,8 +149,8 @@ public class swordShot : MonoBehaviour
                 uiManager.DisplayDamageNum(c.gameObject.transform, damage);
             }
         }
-        EffectsManager.instance.getFromPool("swordShotIceHit", gameObject.transform.position, Quaternion.identity);
-        returnToPool();
+        EffectsManager.instance.getFromPool("swordShotIce", gameObject.transform.position, Quaternion.identity, false, false);
+        resetProjectile();
     }
 
     public void activateExplosion()
@@ -129,30 +158,8 @@ public class swordShot : MonoBehaviour
         explode = true;
     }
 
-    void returnToPool()
-    {
-        if(isIce)
-        {
-            projectileManager.Instance.returnProjectile(poolName, this.gameObject);
-        }
-        else
-        {
-            projectileManager.Instance.returnProjectile(poolName, this.gameObject);
-        }
-        
-    }
 
-    IEnumerator waitReturn()
-    {
-        yield return new WaitForSeconds(lifeTime);
-        returnToPool();
-        yield break;
-    }
 
-    public void setName(string name)
-    {
-        poolName = name;
-    }
 
     private void OnDrawGizmos()
     {

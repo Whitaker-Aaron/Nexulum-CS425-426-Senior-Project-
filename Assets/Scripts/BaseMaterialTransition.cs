@@ -37,6 +37,7 @@ public class BaseMaterialTransition : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(backButton);
     }
 
+
     public void OnTakeAll()
     {
         /*int items = itemDisplays.Count;

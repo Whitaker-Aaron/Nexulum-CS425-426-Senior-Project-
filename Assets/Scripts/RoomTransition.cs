@@ -222,6 +222,7 @@ public class RoomTransition : MonoBehaviour
         {
             case TransitionDirection.forward:
                 changeAmount = new Vector3(0.0f, 0.0f, 2.5f);
+                characterBase.GetMasterInput().GetComponent<masterInput>().GetAnimationControl().updatePlayerAnimation(new Vector3(0, 0, 1));
                 character.transform.rotation = Quaternion.Euler(character.transform.rotation.x, 0, character.transform.rotation.z);  
                 break;
             case TransitionDirection.backward:

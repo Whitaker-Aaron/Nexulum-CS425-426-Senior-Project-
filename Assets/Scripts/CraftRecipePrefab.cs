@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using static StoreItem;
+using JetBrains.Annotations;
+using System;
 //using static UnityEditor.Progress;
 
 public class CraftRecipePrefab : MonoBehaviour
@@ -19,8 +22,11 @@ public class CraftRecipePrefab : MonoBehaviour
     [SerializeField] GameObject disabledPanel;
     List<GameObject> currentMaterialObjects = new List<GameObject>();
 
-
     
+    public static ResetDelegateTemplate.ResetDelegate reset;
+
+
+
 
     void Start()
     {
@@ -37,10 +43,40 @@ public class CraftRecipePrefab : MonoBehaviour
         populateMaterialsList();
     }
 
+    public void ResetSelection()
+    {
+        GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetSelection();
+    }
+
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void onView()
+    {
+        reset = ResetSelection;
+        if (craftRecipe.type == CraftRecipe.CraftTypes.Weapon)
+        {
+            var weaponToView = GameObject.Find("WeaponsList").GetComponent<WeaponsList>().ReturnWeapon(craftRecipe.recipeName);
+            GameObject.Find("UIManager")
+                .GetComponent<UIManager>().DisplayViewItem(ViewItemPrefab.ViewType.Weapon,reset, weaponToView);
+        }
+
+        else if (craftRecipe.type == CraftRecipe.CraftTypes.Rune)
+        {
+            var runeToView = GameObject.Find("RunesList").GetComponent<RuneList>().ReturnRune(craftRecipe.recipeName);
+            GameObject.Find("UIManager")
+                .GetComponent<UIManager>().DisplayViewItem(ViewItemPrefab.ViewType.Rune, reset, null, runeToView);
+        }
+
+        else if (craftRecipe.type == CraftRecipe.CraftTypes.Item)
+        {
+            var itemToView = GameObject.Find("ItemsList").GetComponent<ItemsList>().ReturnItem(craftRecipe.recipeName);
+            GameObject.Find("UIManager")
+                .GetComponent<UIManager>().DisplayViewItem(ViewItemPrefab.ViewType.Item, reset, null, null, itemToView);
+        }
     }
 
     void populateMaterialsList()
@@ -113,6 +149,7 @@ public class CraftRecipePrefab : MonoBehaviour
             craftButton.SetActive(false);
             disabledPanel.SetActive(true);
         }
+
         
 
         switch (craftRecipe.type)
@@ -121,18 +158,18 @@ public class CraftRecipePrefab : MonoBehaviour
                 AddToWeaponsInventory();
                 craftRecipe.hasCrafted = true;
                 GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().DestroyRecipe(craftRecipe, craftRecipe.type);
-                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetWeaponCraftSelection();
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetSelection();
 
                 break;
             case CraftRecipe.CraftTypes.Rune:
                 AddToRunesInventory();
                 craftRecipe.hasCrafted = true;
                 GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().DestroyRecipe(craftRecipe, craftRecipe.type);
-                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetRuneCraftSelection();
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetSelection();
                 break;
             case CraftRecipe.CraftTypes.Item:
                 AddToItemsInventory();
-                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetItemsCraftSelection();
+                GameObject.FindGameObjectWithTag("CraftMenu").GetComponent<CraftMenuTransition>().ResetSelection();
                 break;
         }
     }

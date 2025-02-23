@@ -5,6 +5,7 @@ using UnityEngine;
 public class swordCombat : MonoBehaviour
 {
     public int damage = 0;
+    public int heavyDamage = 0;
     AudioManager audioManager;
     UIManager uiManager;
 
@@ -32,9 +33,10 @@ public class swordCombat : MonoBehaviour
         
     }
 
-    public void activateAttack(Transform attackPoint, float radius, LayerMask layer)
+    public IEnumerator activateAttack(Transform attackPoint, float radius, LayerMask layer, bool isHeavy, float time)
     {
-        print("activating sword attack");
+        yield return new WaitForSeconds(time);
+        print("activating sword attack " + Time.time);
         Collider[] colliders = Physics.OverlapSphere(attackPoint.position, radius, layer);
         GetDamage();
         foreach (Collider collider in colliders)
@@ -51,13 +53,24 @@ public class swordCombat : MonoBehaviour
                 }
                 if(uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
                 audioManager.PlaySFX("SwordCollide");
-                uiManager.DisplayDamageNum(collider.gameObject.transform, damage);
+                if(isHeavy)
+                {
+                    uiManager.DisplayDamageNum(collider.gameObject.transform, heavyDamage);
+                    collider.GetComponent<EnemyFrame>().takeDamage(heavyDamage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
+                }
+                else
+                {
+                    uiManager.DisplayDamageNum(collider.gameObject.transform, damage);
+                    collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
+                }
+                
                 //Vector3 knockBackDir = collider.transform.position - GameObject.FindGameObjectWithTag("Player").transform.position;
                 //Debug.Log("Enemy knockback mag: " + knockBackDir.magnitude);
                 //knockBackDir *= 1.5f;
-                collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
+                //collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }
         }
+        yield break;
     }
 
     public void GetDamage()
@@ -68,6 +81,7 @@ public class swordCombat : MonoBehaviour
         {
             case WeaponBase.weaponClassTypes.Knight:
                 damage = playerBase.knightObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
+                heavyDamage = playerBase.knightObject.baseAttack + playerBase.equippedWeapon.weaponHeavyAttack;
                 break;
             case WeaponBase.weaponClassTypes.Gunner:
                 break;

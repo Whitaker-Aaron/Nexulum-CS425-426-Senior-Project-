@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7984097343187053527}
   - component: {fileID: 6969649234634826951}
   - component: {fileID: 5764885688060491385}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: sword_1handed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1203922758913616302}
   - component: {fileID: 3352953826359496419}
   - component: {fileID: 7812569309411984114}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: iceSword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,11 +181,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34cc2698442146f4baee30c515c35b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 7
+  parent: {fileID: 0}
+  speed: 10
+  maxLifeTime: 3
   damage: 0
+  enemy:
+    serializedVersion: 2
+    m_Bits: 0
+  bufferDistance: 0
+  poolName: 
   isIce: 1
   iceRadius: 2
   iceDamage: 0
+  explodeRadius: 2
 --- !u!96 &7812569309411984114
 TrailRenderer:
   serializedVersion: 3
@@ -362,9 +370,21 @@ PrefabInstance:
       propertyPath: InitialModule.startColor.maxColor.r
       value: 0.002076519
       objectReference: {fileID: 0}
+    - target: {fileID: 800102669009380590, guid: a64a37f3dcfb87f44a8c6236b5d49b20, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 1864572845640764174, guid: a64a37f3dcfb87f44a8c6236b5d49b20, type: 3}
       propertyPath: m_Name
       value: VFX_Trail_Ice
+      objectReference: {fileID: 0}
+    - target: {fileID: 1864572845640764174, guid: a64a37f3dcfb87f44a8c6236b5d49b20, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2391038723309303778, guid: a64a37f3dcfb87f44a8c6236b5d49b20, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3931436992009472247, guid: a64a37f3dcfb87f44a8c6236b5d49b20, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b

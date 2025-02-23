@@ -161,6 +161,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Repair"",
+                    ""type"": ""Button"",
+                    ""id"": ""5809cfff-a205-47e9-ad8b-947a7802b2e1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -515,6 +524,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""SwitchAbilities"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5f2be1c6-abf0-408e-9251-b5785f8ec4ec"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Repair"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e05cafef-a519-4122-90fc-6e617969b003"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Repair"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -628,6 +659,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_player_AbilityThree = m_player.FindAction("AbilityThree", throwIfNotFound: true);
         m_player_Interact = m_player.FindAction("Interact", throwIfNotFound: true);
         m_player_SwitchAbilities = m_player.FindAction("SwitchAbilities", throwIfNotFound: true);
+        m_player_Repair = m_player.FindAction("Repair", throwIfNotFound: true);
         // MenuControl
         m_MenuControl = asset.FindActionMap("MenuControl", throwIfNotFound: true);
         m_MenuControl_Pause = m_MenuControl.FindAction("Pause", throwIfNotFound: true);
@@ -709,6 +741,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_AbilityThree;
     private readonly InputAction m_player_Interact;
     private readonly InputAction m_player_SwitchAbilities;
+    private readonly InputAction m_player_Repair;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -728,6 +761,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @AbilityThree => m_Wrapper.m_player_AbilityThree;
         public InputAction @Interact => m_Wrapper.m_player_Interact;
         public InputAction @SwitchAbilities => m_Wrapper.m_player_SwitchAbilities;
+        public InputAction @Repair => m_Wrapper.m_player_Repair;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -782,6 +816,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @SwitchAbilities.started += instance.OnSwitchAbilities;
             @SwitchAbilities.performed += instance.OnSwitchAbilities;
             @SwitchAbilities.canceled += instance.OnSwitchAbilities;
+            @Repair.started += instance.OnRepair;
+            @Repair.performed += instance.OnRepair;
+            @Repair.canceled += instance.OnRepair;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -831,6 +868,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @SwitchAbilities.started -= instance.OnSwitchAbilities;
             @SwitchAbilities.performed -= instance.OnSwitchAbilities;
             @SwitchAbilities.canceled -= instance.OnSwitchAbilities;
+            @Repair.started -= instance.OnRepair;
+            @Repair.performed -= instance.OnRepair;
+            @Repair.canceled -= instance.OnRepair;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -927,6 +967,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnAbilityThree(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnSwitchAbilities(InputAction.CallbackContext context);
+        void OnRepair(InputAction.CallbackContext context);
     }
     public interface IMenuControlActions
     {
