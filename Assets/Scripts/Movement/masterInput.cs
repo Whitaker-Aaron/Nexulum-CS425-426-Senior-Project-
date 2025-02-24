@@ -1154,7 +1154,7 @@ public class masterInput : MonoBehaviour
                     break;
             }
             */
-            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne));
+            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, attackStage));
         }
         else
         {
@@ -1192,7 +1192,7 @@ public class masterInput : MonoBehaviour
                     SS3.GetComponent<ParticleSystem>().Play();
                     break;
             }*/
-            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animTime));
+            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, attackStage));
         }
 
         // Wait for animation and reset logic
