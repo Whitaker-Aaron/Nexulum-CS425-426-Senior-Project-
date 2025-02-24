@@ -28,6 +28,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public CharacterStat characterStats;
     public Coroutine curStopVel;
     PhysicMaterial physicMat;
+    Rigidbody rigidbody;
     float florentineAmount;
 
     bool lowHealthReached = false;
@@ -36,6 +37,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public Vector3 lastGroundLocation;
 
     public RoomInformation targetRoom;
+
+    Coroutine currFallCountdown;
 
     //MANAGERS
     LifetimeManager lifetimeManager;
@@ -68,6 +71,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     int collisionCounter = 0;
     int groundCounter = 0;
     public int wallCollisionCounter = 0;
+    public int voidWallCounter = 0;
+    public int enemyCollisionCounter = 0;
     float yPOSVal = 0f;
     private RuneInt runeInt;
 
@@ -87,6 +92,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         runeInt = GameObject.FindGameObjectWithTag("runeManager").GetComponent<runeIntController>();
         physicMat = GetComponent<CapsuleCollider>().material;
+        masterInput = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -99,6 +106,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         if(collision.gameObject.tag == "ground" || collision.gameObject.tag == "MovingPlatform")
         {
             Debug.Log("touching ground");
+            
             groundCounter++;
             
         }
@@ -111,14 +119,20 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
                 //yPOSVal = gameObject.transform.position.y;
         }
+        if (collision.gameObject.tag == "Enemy")
+        {
+            enemyCollisionCounter++;
+        }
 
 
 
-    }
+        }
 
     public void ResetGroundCounter()
     {
         groundCounter = 0;
+        enemyCollisionCounter = 0;
+        voidWallCounter = 0;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -134,16 +148,37 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "MovingPlatform")
         {
             Debug.Log("No longer touching ground");
-            if(groundCounter -1 > -1) groundCounter--;
+            if (groundCounter - 1 > -1)
+            {
+                groundCounter--;
+
+            }
             //lastGroundLocation = gameObject.transform.position;
+        }
+
+        if (collision.gameObject.tag == "Enemy")
+        {
+            if (enemyCollisionCounter - 1 > -1) enemyCollisionCounter--;
+
+
         }
 
         if (collision.gameObject.tag == "Wall")
         {
             Debug.Log("stopped touching wall");
-            wallCollisionCounter--;
+            if(wallCollisionCounter - 1 > -1) wallCollisionCounter--;
+
         }
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "VoidWall")
+        {
+
+            voidWallCounter++;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -152,6 +187,12 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
             Debug.Log("No longer restore point");
             lastGroundLocation = transform.position;
+        }
+        if (other.gameObject.tag == "VoidWall")
+        {
+            Debug.Log("stopped touching wall");
+            if (voidWallCounter - 1 > -1) voidWallCounter--;
+
         }
 
     }
@@ -180,13 +221,48 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         {
                physicMat.dynamicFriction = 0.5f;
         }
-        if (groundCounter <= 0) isTouchingGround = false;
-        else isTouchingGround = true;
+        if (groundCounter <= 0)
+        {
+            if (isTouchingGround && !transitioningRoom) currFallCountdown = StartCoroutine(startFallCountdown());
+            isTouchingGround = false;
+        }
+        else if(voidWallCounter >= 1)
+        {
+            if (isTouchingGround && !transitioningRoom) currFallCountdown = StartCoroutine(startFallCountdown());
+            isTouchingGround = false;
+
+        }
+        else
+        {
+            if (masterInput.gameObject.activeSelf && !isTouchingGround && !transitioningRoom)
+            {
+                if(currFallCountdown != null) StopCoroutine(currFallCountdown);
+                masterInput.DisableFallAnimation();
+            }
+            isTouchingGround = true;
+        }
+
+        if (isGettingKnockbacked || enemyCollisionCounter >= 1)
+        {
+            rigidbody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        }
+        else
+        {
+            rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        }
+        //Debug.Log(enemyCollisionCounter);
     }
 
     public void ResetToGround()
     {
         transform.position = lastGroundLocation;
+    }
+    
+    public IEnumerator startFallCountdown()
+    {
+        yield return new WaitForSeconds(0.25f);
+        if (masterInput.gameObject.activeSelf && !isTouchingGround) masterInput.ActivateFallAnimation();
+
     }
 
     public void AddFlorentine(float amount)
@@ -354,6 +430,22 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             engineerObject.currentLvl = 1;
             engineerObject.baseAttack = 5;
 
+            for (int index = 0; index < 3; index++)
+            {
+                switch (index)
+                {
+                    case 0:
+                        knightObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        break;
+                    case 1:
+                        gunnerObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        break;
+                    case 2:
+                        engineerObject.currentWeapon = weapons.ReturnWeapon(data.weaponClasses[index].currentWeapon);
+                        break;
+                }
+            }
+
         }
 
         
@@ -421,17 +513,19 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             Debug.Log("Newly equipped weapon is of type Engineer");
             masterInput.instance.changeTool(newWeapon);
             equippedWeapon = newWeapon;
-            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("pistolPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
+            equippedWeapon.weaponType = equippedWeapon.weaponMesh.GetComponent<weaponType>();
+            //GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("pistolPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
         }
         if(newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             equippedWeapon = newWeapon;
-            GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("bulletPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
-            
+            equippedWeapon.weaponType = equippedWeapon.weaponMesh.GetComponent<weaponType>();
+            //GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("bulletPool", gunnerObject.baseAttack + newWeapon.weaponAttack);
+
         }
 
-        equippedWeapon.weaponType = equippedWeapon.weaponMesh.GetComponent<weaponType>();
         
+        //masterInput.instance.updateWeapon(equippedWeapon.weaponType);
     }
 
     public void UpdateClass(WeaponBase.weaponClassTypes newClass)

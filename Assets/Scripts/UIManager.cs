@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
 using System.Xml.Schema;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
@@ -29,11 +30,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject florentineUI;
 
     [SerializeField] GameObject damageNumPrefab;
+    [SerializeField] GameObject viewItemPrefab;
     [SerializeField] GameObject chestDepositUI;
+    [SerializeField] GameObject enemiesRemainingUI;
 
     [SerializeField] GameObject talk_portrait;
     [SerializeField] GameObject dialogue_box;
     [SerializeField] GameObject advance_textbox_obj;
+
+    [SerializeField] GameObject viewItemGradient;
 
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
@@ -48,13 +53,16 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Slider ExperienceBar;
     GameObject currentCheckpointText;
+    GameObject curViewItem;
     Queue<GameObject> currentSmears = new Queue<GameObject>();
     Queue<GameObject> currentDamageNums = new Queue<GameObject>();
     Queue<string> dialogueText = new Queue<string>();
     CharacterBase character;
+    public static ResetDelegateTemplate.ResetDelegate curViewReset;
     AudioManager audioManager;
     bool advanceTextbox = false;
     bool advanceLeadChar = false;
+    bool viewItemActive = false;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -65,7 +73,7 @@ public class UIManager : MonoBehaviour
         engineerHUD.SetActive(false);
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         if (currentDamageNums.Count > 0)
         {
@@ -74,6 +82,43 @@ public class UIManager : MonoBehaviour
                 //num.transform.position = new Vector3(num.transform.position.x, num.transform.position.y, num.transform.position.z);
             }
         }
+        if(viewItemActive && curViewItem != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(curViewItem.GetComponent<ViewItemPrefab>().backButton);
+        }
+    }
+
+    public void ActivateEnemiesRemainingUI(int numEnemies)
+    {
+        enemiesRemainingUI.SetActive(true);
+        if (numEnemies > 0)
+        {
+            Debug.Log("NUM ENEMIES: " + numEnemies.ToString());
+            //enemiesRemainingUI.SetActive(true);
+            //GameObject.Find("EnemiesRemainingUI").transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies;
+            //GameObject.Find("EnemiesRemainingUI").transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies;
+            enemiesRemainingUI.transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
+            enemiesRemainingUI.transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
+        }
+    }
+
+    public bool UpdateEnemiesRemainingUI(int numEnemies)
+    {
+        if (!enemiesRemainingUI.activeSelf) return false;
+        if(numEnemies > 0)
+        {
+            Debug.Log("NUM ENEMIES: " + numEnemies.ToString());
+            //enemiesRemainingUI.SetActive(true);
+            //GameObject.Find("EnemiesRemainingUI").transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies;
+            //GameObject.Find("EnemiesRemainingUI").transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies;
+            enemiesRemainingUI.transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
+            enemiesRemainingUI.transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
+        }
+        else enemiesRemainingUI.SetActive(false);
+
+        return true;
+
     }
 
     public void ShowCriticalText()
@@ -92,6 +137,109 @@ public class UIManager : MonoBehaviour
         StopCoroutine(currentCriticalBorderOpacity);
         criticalText.SetActive(false);
         criticalTextBorder.SetActive(false);
+
+    }
+
+    public void DisplayViewItem(ViewItemPrefab.ViewType type, ResetDelegateTemplate.ResetDelegate method, WeaponBase? weapon = null, Rune? rune = null, PlayerItem? item = null)
+    {
+        viewItemActive = true;
+        viewItemGradient.SetActive(true);
+        viewItemGradient.transform.SetAsLastSibling();
+        var viewItem = viewItemPrefab.GetComponent<ViewItemPrefab>();
+        curViewReset = method;
+        switch (type)
+        {
+            case ViewItemPrefab.ViewType.Weapon:
+                if(weapon != null)
+                {
+                    viewItem.classTypeUI.SetActive(true);
+                    viewItem.runeTypeUI.SetActive(false);
+                    switch (weapon.weaponClassType)
+                    {
+                        case WeaponBase.weaponClassTypes.Knight:
+                            viewItem.classTypeUI.transform.Find("KnightClass").gameObject.SetActive(true);
+                            viewItem.classTypeUI.transform.Find("GunnerClass").gameObject.SetActive(false);
+                            viewItem.classTypeUI.transform.Find("EngineerClass").gameObject.SetActive(false);
+                            break;
+                        case WeaponBase.weaponClassTypes.Gunner:
+                            viewItem.classTypeUI.transform.Find("KnightClass").gameObject.SetActive(false);
+                            viewItem.classTypeUI.transform.Find("GunnerClass").gameObject.SetActive(true);
+                            viewItem.classTypeUI.transform.Find("EngineerClass").gameObject.SetActive(false);
+                            break;
+                        case WeaponBase.weaponClassTypes.Engineer:
+                            viewItem.classTypeUI.transform.Find("KnightClass").gameObject.SetActive(false);
+                            viewItem.classTypeUI.transform.Find("GunnerClass").gameObject.SetActive(false);
+                            viewItem.classTypeUI.transform.Find("EngineerClass").gameObject.SetActive(true);
+                            break;
+                    }
+                    viewItem.viewItemName.GetComponent<TMP_Text>().text = weapon.weaponName;
+                    viewItem.viewOptionDescription.GetComponent<TMP_Text>().text = weapon.weaponDescription;
+                    if (weapon.weaponTexture != null) viewItem.viewTexture.GetComponent<RawImage>().texture = weapon.weaponTexture;
+                    viewItem.viewOptionEffect.SetActive(false);
+                    viewItem.viewOptionDamage.SetActive(true);
+                    viewItem.viewOptionDamage.transform.Find("DamageDescription").gameObject.GetComponent<TMP_Text>().text = "+ " + weapon.weaponAttack + " ATK";
+                }
+                break;
+            case ViewItemPrefab.ViewType.Item:
+                if (item != null)
+                {
+                    viewItem.classTypeUI.SetActive(false);
+                    viewItem.runeTypeUI.SetActive(false);
+                    viewItem.viewItemName.GetComponent<TMP_Text>().text = item.itemName;
+                    viewItem.viewOptionDescription.GetComponent<TMP_Text>().text = item.itemDescription;
+                    viewItem.viewOptionEffect.SetActive(false);
+                    viewItem.viewOptionDamage.SetActive(false);
+                    if (item.itemTexture != null) viewItem.viewTexture.GetComponent<RawImage>().texture = item.itemTexture;
+                }
+                break;
+            case ViewItemPrefab.ViewType.Rune:
+                if (rune != null)
+                {
+                    viewItem.classTypeUI.SetActive(false);
+                    viewItem.runeTypeUI.SetActive(true);
+                    switch (rune.runeType)
+                    {
+                        case Rune.RuneType.Class:
+                            viewItem.runeTypeUI.transform.Find("ClassUI").gameObject.SetActive(true);
+                            viewItem.runeTypeUI.transform.Find("BuffUI").gameObject.SetActive(false);
+                            viewItem.runeTypeUI.transform.Find("SpellUI").gameObject.SetActive(false);
+                            break;
+                        case Rune.RuneType.Spell:
+                            viewItem.runeTypeUI.transform.Find("ClassUI").gameObject.SetActive(false);
+                            viewItem.runeTypeUI.transform.Find("BuffUI").gameObject.SetActive(false);
+                            viewItem.runeTypeUI.transform.Find("SpellUI").gameObject.SetActive(true);
+                            break;
+                        case Rune.RuneType.Buff:
+                            viewItem.runeTypeUI.transform.Find("ClassUI").gameObject.SetActive(false);
+                            viewItem.runeTypeUI.transform.Find("BuffUI").gameObject.SetActive(true);
+                            viewItem.runeTypeUI.transform.Find("SpellUI").gameObject.SetActive(false);
+                            break;
+                    }
+                    viewItem.viewItemName.GetComponent<TMP_Text>().text = rune.runeName;
+                    viewItem.viewOptionDescription.GetComponent<TMP_Text>().text = rune.runeDescription;
+                    if (rune.runeTexture != null) viewItem.viewTexture.GetComponent<RawImage>().texture = rune.runeTexture;
+                    viewItem.viewOptionEffect.SetActive(true);
+                    viewItem.viewOptionDamage.SetActive(false);
+                    viewItem.viewOptionEffect.transform.Find("EffectDescription").gameObject.GetComponent<TMP_Text>().text = "+ " + rune.runeEffect;
+                }
+                break;
+        }
+        curViewItem = Instantiate(viewItemPrefab);
+        var ui = GameObject.Find("Canvas");
+        curViewItem.transform.SetParent(ui.transform, false);
+
+    }
+
+    public void HideViewItem()
+    {
+        viewItemGradient.SetActive(false);
+        if (viewItemActive)
+        {
+            if (curViewReset != null) curViewReset();
+            viewItemActive = false;
+            Destroy(curViewItem);
+            curViewReset = null;
+        }
 
     }
 

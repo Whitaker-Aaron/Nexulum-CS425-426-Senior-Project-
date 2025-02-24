@@ -2,20 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemsInventory : MonoBehaviour
+public class ItemsInventory : MonoBehaviour, SaveSystemInterface
 {
     // Start is called before the first frame update
     PlayerItem[] inventory = new PlayerItem[100];
     int nextFreeIndex = 0;
+    ItemsList itemsList;
     void Start()
     {
-        
+        itemsList = GameObject.Find("ItemsList").GetComponent<ItemsList>();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void SaveData(ref SaveData data)
+    {
+        for (int index = 0; index < nextFreeIndex; index++)
+        {
+            data.itemInventory[index].itemName = inventory[index].itemName;
+            data.itemInventory[index].itemAmount = inventory[index].itemAmount;
+        }
+    }
+
+    public void LoadData(SaveData data)
+    {
+
+        for (int index = 0; index < inventory.Length; index++)
+        {
+            if (data.itemInventory[index].itemName != "" && data.itemInventory[index] != null && !data.isNewFile)
+            {
+                AddToInventory(itemsList.ReturnItem(data.itemInventory[index].itemName), data.itemInventory[index].itemAmount);
+            }
+
+        }
     }
 
 

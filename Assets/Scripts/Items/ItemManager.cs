@@ -30,6 +30,10 @@ public class ItemManager : MonoBehaviour
         itemsInventory.GetComponent<ItemsInventory>().RemoveFromInventory(itemToRemove, amount);
     }
 
+   
+
+    
+
     public PlayerItem[] GetInventory()
     {
         return itemsInventory.GetInventory();

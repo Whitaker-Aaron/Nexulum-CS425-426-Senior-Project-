@@ -1,0 +1,124 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Transactions;
+using UnityEngine;
+
+public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
+{
+    // Start is called before the first frame update
+    //GameObject[] enemies;
+    [SerializeField] public List<GameObject> controlledDoors;
+    [SerializeField] public string triggerGuid { get; set; }
+    [SerializeField] public string guid;
+    public RoomInformation roomInfo { get; set; }
+    public bool hasTriggered  { get; set; }
+    bool doorsTriggered = false;
+    void Start()
+    {
+        //enemies = transform.GetComponent<RoomInformation>().GetEnemies();
+    }
+
+    // Update is called once per frame
+    /*void Update()
+    {
+        var enemies = transform.GetComponent<RoomInformation>().GetEnemies();
+        if (enemies.Count > 0)
+        {
+            //Debug.Log("There are still enemies");
+        }
+        else
+        {
+            //Debug.Log("All enemies killed");
+            if (!doorsTriggered)
+            {
+                doorsTriggered = true;
+                StartCoroutine(LockDoors());
+            }
+        }
+    }*/
+
+    private void Awake()
+    {
+        triggerGuid = guid;
+        hasTriggered = false;
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Player")
+        {
+            StartCoroutine(LockDoors());
+        }
+    }
+
+    public IEnumerator LockDoors()
+    {
+        if (controlledDoors != null)
+        {
+            for (int i = 0; i < controlledDoors.Count; i++)
+            {
+                Door door = controlledDoors[i].GetComponent<Door>();
+                if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))
+                {
+                    if (door.isOpen)
+                    {
+                        door.isLocked = true;
+                        yield return StartCoroutine(PanToDoor(door.transform.position));
+                        door.ToggleDoor();
+                        var enemies = roomInfo.GetEnemies();
+                        if (roomInfo.requiredEnemyRoom) GameObject.Find("UIManager").GetComponent<UIManager>().ActivateEnemiesRemainingUI(enemies.Count);
+                    }
+
+                }
+                yield return null;
+            }
+
+        }
+        hasTriggered = true;
+        UpdateTriggerState();
+        Destroy(this.gameObject);
+        yield break;
+    }
+
+    public void UnlockDoors()
+    {
+        for (int i = 0; i < controlledDoors.Count; i++)
+        {
+            Door door = controlledDoors[i].GetComponent<Door>();
+            if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))
+            {
+                if (!door.isOpen)
+                {
+                    door.isLocked = false;
+                    door.ToggleDoor();
+                }
+
+            }
+        }
+    }
+
+    public IEnumerator PanToDoor(Vector3 pos)
+    {
+        var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        yield return new WaitForSeconds(0.25f);
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>().StartPan(pos, true, true, 0.05f);
+    }
+
+    public void SetRoomInfo(RoomInformation roomInfo_)
+    {
+        roomInfo = roomInfo_;
+    }
+
+    public void DisableTrigger()
+    {
+        UnlockDoors();
+        Destroy(this.gameObject);
+    }
+
+    public void UpdateTriggerState()
+    {
+        Debug.Log(triggerGuid);
+        roomInfo.UpdateTriggerState(triggerGuid, hasTriggered);
+    }
+}

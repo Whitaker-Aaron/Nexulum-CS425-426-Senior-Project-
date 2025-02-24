@@ -12,8 +12,9 @@ public class PlayerItem : ScriptableObject
     [SerializeField] public int itemAmount;
     [SerializeField] public int maxItemAmount;
     [SerializeField] public float statAmount;
+    [SerializeField] public float shopCost;
     [SerializeField] public bool canUseFromMenu;
-    [SerializeField] Texture itemTexture;
+    [SerializeField] public Texture itemTexture;
     [SerializeField] public CraftRecipe itemRecipe;
 
 

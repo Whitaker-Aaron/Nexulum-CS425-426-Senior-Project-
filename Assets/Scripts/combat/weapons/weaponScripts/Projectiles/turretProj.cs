@@ -31,7 +31,7 @@ public class turretProj : projectile
     private void Awake()
     {
         bulletHitEffect = "bulletHitPool";
-        GetDamage("Player");
+        GetDamage("Ability-Turret");
     }
 
     private void OnEnable()
@@ -69,6 +69,7 @@ public class turretProj : projectile
         {
             if (hit.collider.gameObject.tag == "Enemy")
             {
+                GetDamage("Ability-Turret");
                 hitEnemy = true;
                 int updatedDamage = damage;
                 //if (playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)

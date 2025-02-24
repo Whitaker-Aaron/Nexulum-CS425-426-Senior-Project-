@@ -10,6 +10,7 @@ public class turretCombat : MonoBehaviour
 
     //Enemy layer
     public LayerMask Enemy;
+    public LayerMask playerLayer;
 
     //attack variables
     public float attackRadius = 4f;
@@ -32,6 +33,18 @@ public class turretCombat : MonoBehaviour
     //repair vars
     bool playerInRange = false;
     public float repairRange = 1f;
+    bool assigned = false;
+
+    //effect
+    public GameObject inRangeEffect;
+    private GameObject effect;
+
+    private void OnEnable()
+    {
+        effect = Instantiate(inRangeEffect, gameObject.transform.position, Quaternion.identity);
+        effect.transform.parent = gameObject.transform;
+        effect.SetActive(false);
+    }
 
 
     private void OnDrawGizmos()
@@ -58,6 +71,7 @@ public class turretCombat : MonoBehaviour
         classAbilties.instance.removeTower(key);
     }
 
+
     public void repair(int amount)
     {
         if (!playerInRange)
@@ -73,21 +87,28 @@ public class turretCombat : MonoBehaviour
 
     void checkPlayerRange()
     {
-        Collider[] player = Physics.OverlapSphere(gameObject.transform.position, repairRange);
-        foreach (Collider collider in player)
+        Collider[] player = Physics.OverlapSphere(gameObject.transform.position, repairRange, playerLayer);
+        if (player.Length > 0 && player[0].gameObject.tag == "Player" && !assigned)
         {
-            if (collider.gameObject.tag == "Player")
-            {
-                Debug.Log("Player can repair");
-                playerInRange = true;
-                GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>().canRepair = true;
-                GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>().assignRepair(gameObject);
-            }
-            else
-            {
-                playerInRange = false;
-                GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>().canRepair = false;
-            }
+            assigned = true;
+            Debug.Log("Player can repair");
+            playerInRange = true;
+            //collider.gameObject.GetComponent<masterInput>().canRepair = true;
+            masterInput.instance.assignRepair(gameObject, key);
+
+            effect.SetActive(true);
+            effect.transform.position = gameObject.transform.position;
+            effect.GetComponent<ParticleSystem>().Play();
+
+        }
+        if(player.Length == 0)
+        {
+            playerInRange = false;
+            assigned = false;
+            //GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>().canRepair = false;
+            GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>().unassignRepair(gameObject, key);
+            effect.SetActive(false);
+            effect.GetComponent<ParticleSystem>().Stop();
         }
     }
 
@@ -189,9 +210,9 @@ public class turretCombat : MonoBehaviour
 
         leftRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + leftRotation.y, 0);
         rightRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + rightRotation.y, 0);
-        print("Forward andgle:" + normalizeAngle(gameObject.transform.rotation.eulerAngles.y));
-        print("Left andgle:" + leftRotation.y);
-        print("Right andgle:" + rightRotation.y);
+        //print("Forward andgle:" + normalizeAngle(gameObject.transform.rotation.eulerAngles.y));
+        //print("Left andgle:" + leftRotation.y);
+        //print("Right andgle:" + rightRotation.y);
     }
 
     // Start is called before the first frame update

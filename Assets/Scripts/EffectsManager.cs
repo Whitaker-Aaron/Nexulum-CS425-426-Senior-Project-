@@ -57,6 +57,8 @@ public class EffectsManager : MonoBehaviour
         createNewPool("pistolFlash", getPrefab("pistolFlash"), 4);
         createNewPool("rifleFlash", getPrefab("rifleFlash"), 12);
         createNewPool("revolverFlash", getPrefab("revolverFlash"), 8);
+        createNewPool("subMachineFlash", getPrefab("subMachineFlash"), 12);
+        createNewPool("subMachineHitPool", getPrefab("subMachineHit"), 20);
         createNewPool("tankHitPool", getPrefab("tankHit"), tankPoolSize);
         createNewPool("mageHitOne", getPrefab("mageHit"), magePoolSize);
         createNewPool("caPool", getPrefab("caStart"), 3);
@@ -297,6 +299,7 @@ public class EffectsManager : MonoBehaviour
                 if (ignorePlayerLoc)
                 {
                     obj.transform.rotation = rotation;
+                    obj.transform.localPosition = Vector3.zero;
                 }
                 else
                 {
