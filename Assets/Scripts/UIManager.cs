@@ -742,14 +742,16 @@ public class UIManager : MonoBehaviour
         //UpdateExperienceBar(character.weaponClass.getCurrentLvlExperienceAmount(), character.weaponClass.getNextLvlExperienceAmount(), character.weaponClass.totalExp);
     }
 
-    public void InstantiateSmear(float angle)
+    public IEnumerator InstantiateSmear(float angle, Vector3 pos)
     {
+        yield return new WaitForSeconds(0.15f);
         var currentSmear = Instantiate(dashSmear);
         currentSmear.transform.SetParent(GameObject.Find("SplashCanvas").transform, false);
-        currentSmear.transform.position = new Vector3(character.transform.position.x, character.transform.position.y + 0.15f, character.transform.position.z);
+        currentSmear.transform.position = new Vector3(pos.x, character.transform.position.y + 0.15f, pos.z);
         currentSmear.transform.rotation = Quaternion.Euler(currentSmear.transform.eulerAngles.x, currentSmear.transform.eulerAngles.y, -angle);
         StartCoroutine(IncreaseImageOpacity(currentSmear, 4f));
         currentSmears.Enqueue(currentSmear);
+        yield break;
     }
 
     public void DestroyOldestSmear()
