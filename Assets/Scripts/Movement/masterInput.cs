@@ -609,7 +609,7 @@ public class masterInput : MonoBehaviour
             {
                 audioManager.PlaySFX("Dash");
                 EffectsManager.instance.getFromPool("playerDash", player.transform.position + new Vector3(0, .8f, 0), player.transform.rotation, true, false);
-                //uiManager.startBorderStretch();
+                uiManager.startBorderStretch();
                 isDashing = true;
                 dashSpeed = 4.5f;
                 Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
@@ -632,7 +632,7 @@ public class masterInput : MonoBehaviour
                 }
                 Debug.Log(angle);
                 if (targetDir.x < 0) angle = -angle;
-                //uiManager.InstantiateSmear(angle);
+                uiManager.InstantiateSmear(angle);
                 StartCoroutine(PlayerDash());
             }
 
