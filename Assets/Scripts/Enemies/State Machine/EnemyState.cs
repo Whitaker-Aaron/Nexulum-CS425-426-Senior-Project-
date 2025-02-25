@@ -6,8 +6,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-[CreateAssetMenu(menuName = "Enemy State")]
-public class EnemyState : ScriptableObject
+public class EnemyState
 {
     protected EnemyStateManager stateContext;
     public string stateName;
