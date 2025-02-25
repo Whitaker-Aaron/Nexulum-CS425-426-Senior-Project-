@@ -56,6 +56,9 @@ public class iceSwordProj : projectile
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.tag == "Player" || (other.gameObject.GetComponent<projectile>() != null && other.gameObject.GetComponent<projectile>().poolName == "iceSwordProjPool"))
+            return;
+
         if(count == maxHitCount - 1)
         {
             if (other.gameObject.tag == "Enemy")

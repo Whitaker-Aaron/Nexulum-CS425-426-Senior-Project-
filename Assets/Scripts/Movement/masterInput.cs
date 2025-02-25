@@ -608,7 +608,8 @@ public class masterInput : MonoBehaviour
             if (!isDashing)
             {
                 audioManager.PlaySFX("Dash");
-                uiManager.startBorderStretch();
+                EffectsManager.instance.getFromPool("playerDash", player.transform.position + new Vector3(0, .8f, 0), player.transform.rotation, true, false);
+                //uiManager.startBorderStretch();
                 isDashing = true;
                 dashSpeed = 4.5f;
                 Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
@@ -631,7 +632,7 @@ public class masterInput : MonoBehaviour
                 }
                 Debug.Log(angle);
                 if (targetDir.x < 0) angle = -angle;
-                uiManager.InstantiateSmear(angle);
+                //uiManager.InstantiateSmear(angle);
                 StartCoroutine(PlayerDash());
             }
 
@@ -1125,17 +1126,20 @@ public class masterInput : MonoBehaviour
             {
                 animationControl.knightHeavyOne(animHeavyTimeOne);
                 HS1.GetComponent<ParticleSystem>().Play();
+                StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, 1));
             }
             if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
             {
                 StopCoroutine(wait(attackStage));
                 animationControl.knightHeavyTwo(animHeavyTimeTwo);
                 HS2.GetComponent<ParticleSystem>().Play();
+                StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, 2));
             }
             if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
             {
                 animationControl.knightHeavyThree();
                 HS3.GetComponent<ParticleSystem>().Play();
+                StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, 3));
             }
             /*
             switch (attackStage)
@@ -1154,7 +1158,7 @@ public class masterInput : MonoBehaviour
                     break;
             }
             */
-            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, attackStage));
+            
         }
         else
         {
@@ -1164,16 +1168,19 @@ public class masterInput : MonoBehaviour
             {
                 animationControl.knightAttackOne(animTime);
                 SS1.GetComponent<ParticleSystem>().Play();
+                StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, 1));
             }
             if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
             {
                 animationControl.knightAttackTwo(animTimeTwo);
                 SS2.GetComponent<ParticleSystem>().Play();
+                StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, 2));
             }
             if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
             {
                 animationControl.knightAttackThree();
                 SS3.GetComponent<ParticleSystem>().Play();
+                StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, 3));
             }
             /*
             switch (attackStage)
@@ -1192,7 +1199,7 @@ public class masterInput : MonoBehaviour
                     SS3.GetComponent<ParticleSystem>().Play();
                     break;
             }*/
-            StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, attackStage));
+            
         }
 
         // Wait for animation and reset logic

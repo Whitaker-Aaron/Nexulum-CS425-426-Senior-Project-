@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class IceSword : swordCombat
 {
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -19,8 +20,16 @@ public class IceSword : swordCombat
 
     public override IEnumerator activateAttack(Transform attackPoint, float radius, LayerMask layer, bool isHeavy, float time, int count)
     {
+        //if (checking)
+            //yield break;
+
+        //checking = true;
         yield return new WaitForSeconds(time);
-        GameObject proj = projectileManager.Instance.getProjectile("iceSwordProjPool", attackPoint.position, attackPoint.rotation);
+        if(count == 3)
+        {
+            GameObject proj = projectileManager.Instance.getProjectile("iceSwordProjPool", attackPoint.position, attackPoint.rotation);
+        }
+            
         print("activating sword attack " + Time.time);
         Collider[] colliders = Physics.OverlapSphere(attackPoint.position, radius, layer);
         GetDamage();
@@ -56,7 +65,7 @@ public class IceSword : swordCombat
             }
         }
 
-
+        checking = false;
         yield break;
     }
 }

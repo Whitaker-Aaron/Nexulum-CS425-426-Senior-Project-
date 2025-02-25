@@ -75,6 +75,8 @@ public class EffectsManager : MonoBehaviour
         createNewPool("archerHitPool", getPrefab("archerHit"), 4);
         createNewPool("swordHit", getPrefab("swordHit"), 5);
         createNewPool("swordHeavyHit", getPrefab("swordHeavyHit"), 5);
+        createNewPool("iceSwordProjHit", getPrefab("iceSwordProjHit"), 10);
+        createNewPool("playerDash", getPrefab("playerDash"), 3);
     }
 
 

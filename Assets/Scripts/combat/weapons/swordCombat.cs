@@ -10,6 +10,7 @@ public abstract class swordCombat : MonoBehaviour
     protected int count = 0;
     protected AudioManager audioManager;
     protected UIManager uiManager;
+    public bool checking = false;
 
 
     //rune ability combat mechanic
