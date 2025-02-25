@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.SocialPlatforms.Impl;
+using System.Collections;
 
 public class EnemyBat : MonoBehaviour, enemyInt
 {
@@ -12,60 +10,78 @@ public class EnemyBat : MonoBehaviour, enemyInt
     public Transform attackPoint;
     CharacterBase playerRef;
 
-    private Animator animator;  // Reference to Animator component
-
-    private bool _isAttacking;
     public LayerMask Player;
+
+    public int attackDamage = 20;
     public float attackRange = .5f;
-    public int attackDamage = 10;
+    public float attackCooldownTime = 2f;
+    private float timeOffset;
+
+    public bool canAttack = true;
+    private bool _isAttacking;
+
+    void Start()
+    {
+        // Automatically find the Player if not set in Inspector
+        if (player == null)
+        {
+            playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+            else
+            {
+                Debug.LogError("Player not found! Make sure the player has the 'Player' tag.");
+            }
+
+            canAttack = true;
+        }
+
+        estate = GetComponent<EnemyStateManager>();
+        if (estate == null)
+        {
+            Debug.LogError("EnemyStateManager not found on EnemyHead!");
+        }
+
+        playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+    }
+
+    void Update()
+    {
+        if (player != null)
+        {
+            attackPlayer();
+        }
+    }
+
+    public void onDeath()
+    {
+    
+    }
+
+    public enemyInt getType()
+    {
+        return this;
+    }
 
     public bool isAttacking
     {
         get { return _isAttacking; }
         set
         {
-            if (_isAttacking != value)  // Only set if the value is different
+            if (_isAttacking != value)
             {
                 _isAttacking = value;
-                // Do the other necessary actions
             }
         }
     }
 
-    private void OnEnable()
+    public IEnumerator attackCooldown()
     {
-        isAttacking = false;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
-        animator = GetComponent<Animator>(); // Get the Animator component
-
-        if (animator != null)
-        {
-            animator.Play("YourAnimationName"); // Replace with your actual animation state name
-        }
-        else
-        {
-            Debug.LogWarning("Animator not found on EnemyBat!");
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        attackPlayer();
-        if (animator != null)
-        {
-            animator.Play("YourAnimationName"); // Ensure animation keeps playing
-        }
-    }
-
-    public enemyInt getType()
-    {
-        return this;
+        canAttack = false;
+        yield return new WaitForSeconds(attackCooldownTime);
+        canAttack = true;
     }
 
     void attackPlayer()
@@ -74,14 +90,12 @@ public class EnemyBat : MonoBehaviour, enemyInt
 
         foreach (Collider player in playerInRange)
         {
+            //attack player commands
             Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
             if (player.tag == "Player") playerRef.takeDamage(attackDamage, knockBackDir);
             Debug.Log(player.tag);
         }
-    }
-
-    public void onDeath()
-    {
 
     }
+
 }

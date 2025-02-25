@@ -10,17 +10,21 @@ public class EnemyHead : MonoBehaviour, enemyInt
     public Transform attackPoint;
     CharacterBase playerRef;
 
-    public float visionDistance = 10f; // How far the player can "look"
-    private bool canMove = true;
-    private bool _isAttacking;
     public LayerMask Player;
-    public float attackRange = .5f;
     private Vector3 startPos;
     private float lastYPosition; // Store last valid floating position
+
+    public int attackDamage = 20;
+    public float visionDistance = 10f;
     public float floatSpeed = 2f;
     public float floatHeight = 0.5f;
-    public int attackDamage = 20;
+    public float attackRange = .5f;
+    public float attackCooldownTime = 2f;
     private float timeOffset;
+
+    public bool canAttack = true;
+    private bool canMove = true;
+    private bool _isAttacking;
 
     void Start()
     {
@@ -36,6 +40,8 @@ public class EnemyHead : MonoBehaviour, enemyInt
             {
                 Debug.LogError("Player not found! Make sure the player has the 'Player' tag.");
             }
+
+            canAttack = true;
         }
 
         estate = GetComponent<EnemyStateManager>();
@@ -133,6 +139,13 @@ public class EnemyHead : MonoBehaviour, enemyInt
                 _isAttacking = value;
             }
         }
+    }
+
+    public IEnumerator attackCooldown()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(attackCooldownTime);
+        canAttack = true;
     }
 
     void attackPlayer()
