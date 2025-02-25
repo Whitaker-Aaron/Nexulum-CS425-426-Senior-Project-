@@ -141,6 +141,7 @@ public abstract class projectile : MonoBehaviour
             switch (playerBase.equippedWeapon.weaponClassType)
             {
                 case WeaponBase.weaponClassTypes.Knight:
+                    damage = playerBase.equippedWeapon.weaponMesh.GetComponent<swordCombat>().projectileDamage;
                     break;
                 case WeaponBase.weaponClassTypes.Gunner:
                     damage = playerBase.gunnerObject.baseAttack + playerBase.equippedWeapon.weaponAttack;
