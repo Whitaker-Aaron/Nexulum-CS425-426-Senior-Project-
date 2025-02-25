@@ -632,7 +632,7 @@ public class masterInput : MonoBehaviour
                 }
                 Debug.Log(angle);
                 if (targetDir.x < 0) angle = -angle;
-                uiManager.InstantiateSmear(angle);
+                StartCoroutine(uiManager.InstantiateSmear(angle, character.transform.position));
                 StartCoroutine(PlayerDash());
             }
 
@@ -763,6 +763,7 @@ public class masterInput : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         StopDash();
         //yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.25f);
         uiManager.DestroyOldestSmear();
         yield break;
         
