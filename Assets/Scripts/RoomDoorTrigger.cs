@@ -8,14 +8,28 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
     // Start is called before the first frame update
     //GameObject[] enemies;
     [SerializeField] public List<GameObject> controlledDoors;
+    [SerializeField] public List<GameObject> controlledEnemies;
     [SerializeField] public string triggerGuid { get; set; }
     [SerializeField] public string guid;
+    
     public RoomInformation roomInfo { get; set; }
     public bool hasTriggered  { get; set; }
     bool doorsTriggered = false;
     void Start()
     {
         //enemies = transform.GetComponent<RoomInformation>().GetEnemies();
+    }
+
+    void OnEnable()
+    {
+        var enemies = roomInfo.GetEnemies();
+        for(int i =0; i < enemies.Count; i++)
+        {
+            if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().isMiniboss)
+            {
+                enemies[i].GetComponent<EnemyLOS>().canTarget = false;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -67,6 +81,7 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
                         door.ToggleDoor();
                         var enemies = roomInfo.GetEnemies();
                         if (roomInfo.requiredEnemyRoom) GameObject.Find("UIManager").GetComponent<UIManager>().ActivateEnemiesRemainingUI(enemies.Count);
+                        UnlockEnemies();
                     }
 
                 }
@@ -78,6 +93,18 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
         UpdateTriggerState();
         Destroy(this.gameObject);
         yield break;
+    }
+
+    public void UnlockEnemies()
+    {
+        var enemies = roomInfo.GetEnemies();
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().isMiniboss)
+            {
+                enemies[i].GetComponent<EnemyLOS>().canTarget = true;
+            }
+        }
     }
 
     public void UnlockDoors()
