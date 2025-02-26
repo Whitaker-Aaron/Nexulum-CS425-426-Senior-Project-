@@ -448,13 +448,14 @@ public class UIManager : MonoBehaviour
 
     public void startBorderStretch()
     {
+        if (currentBorderStretch != null) StopCoroutine(currentBorderStretch);
         currentBorderStretch = StartCoroutine(StretchBorderUI());
     }
 
     public void stopBorderStretch()
     {
         if (currentBorderStretch != null) StopCoroutine(currentBorderStretch);
-        StartCoroutine(UnstretchBorderUI());
+        currentBorderStretch = StartCoroutine(UnstretchBorderUI());
     }
 
     public IEnumerator StretchBorderUI()
@@ -754,11 +755,16 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
-    public void DestroyOldestSmear()
+    public void DestroyOldestSmear(bool instant=false)
     {
         if(currentSmears.Count > 0)
         {
-            StartCoroutine(AnimateDestroyOldestSmear(currentSmears.Dequeue()));
+            if (instant)
+            {
+                Destroy(currentSmears.Dequeue());
+            }
+            else StartCoroutine(AnimateDestroyOldestSmear(currentSmears.Dequeue()));
+
         }   
     }
     public IEnumerator AnimateDestroyOldestSmear(GameObject smear)
