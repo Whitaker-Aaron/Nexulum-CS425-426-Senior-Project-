@@ -13,6 +13,7 @@ public class EnemyLOS : MonoBehaviour
     public GameObject currentTarget { get; set; }
 
     public bool isTargetSpotted = false;
+    public bool canTarget = true;
 
     private LayerMask layers = LayerMask.GetMask();
 
@@ -86,6 +87,7 @@ public class EnemyLOS : MonoBehaviour
     // Return the tag of the collider spotted
     public string TargetSpotted()
     {
+        //if (!canTarget) return null;
         if (currentTarget != null)
         {
             selfPos = transform.position;

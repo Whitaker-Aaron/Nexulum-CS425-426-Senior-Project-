@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class MenuManager : MonoBehaviour
+public class MenuManager : MonoBehaviour, SaveSystemInterface
     
 {
     [SerializeField] GameObject materialsMenuReference;
@@ -55,6 +55,151 @@ public class MenuManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SaveData(ref SaveData data)
+    {
+        var craftLists = GameObject.Find("CraftLists");
+        var weaponLists = craftLists.transform.Find("WeaponCraftList").GetComponent<WeaponCraftList>();
+        var runeLists = craftLists.transform.Find("RunesCraftList").GetComponent<RunesCraftList>();
+        var itemLists = craftLists.transform.Find("ItemsCraftList").GetComponent<ItemsCraftList>();
+        int accRecipeIndex = 0;
+        int allRecipeIndex = 0;
+
+        for(int i =0; i < itemLists.allRecipes.Count;  i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Item";
+            recipe.recipeName = itemLists.allRecipes[i].recipeName;
+            recipe.hasCrafted = itemLists.allRecipes[i].hasCrafted;
+            data.allRecipes[allRecipeIndex] = recipe;
+            allRecipeIndex++;
+        }
+        for (int i = 0; i < weaponLists.allRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Weapon";
+            recipe.recipeName = weaponLists.allRecipes[i].recipeName;
+            recipe.hasCrafted = weaponLists.allRecipes[i].hasCrafted;
+            data.allRecipes[allRecipeIndex] = recipe;
+            allRecipeIndex++;
+        }
+        for (int i = 0; i < runeLists.allRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Rune";
+            recipe.recipeName = runeLists.allRecipes[i].recipeName;
+            recipe.hasCrafted = runeLists.allRecipes[i].hasCrafted;
+            data.allRecipes[allRecipeIndex] = recipe;
+            allRecipeIndex++;
+        }
+        for (int i = 0; i < itemLists.accessibleRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Item";
+            recipe.recipeName = itemLists.accessibleRecipes[i].recipeName;
+            recipe.hasCrafted = itemLists.accessibleRecipes[i].hasCrafted;
+            data.accessibleRecipes[accRecipeIndex] = recipe;
+            accRecipeIndex++;
+        }
+        for (int i = 0; i < weaponLists.accessibleRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Weapon";
+            recipe.recipeName = weaponLists.accessibleRecipes[i].recipeName;
+            recipe.hasCrafted = weaponLists.accessibleRecipes[i].hasCrafted;
+            data.accessibleRecipes[accRecipeIndex] = recipe;
+            accRecipeIndex++;
+        }
+        for (int i = 0; i < runeLists.accessibleRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Rune";
+            recipe.recipeName = runeLists.accessibleRecipes[i].recipeName;
+            recipe.hasCrafted = runeLists.accessibleRecipes[i].hasCrafted;
+            data.accessibleRecipes[accRecipeIndex] = recipe;
+            accRecipeIndex++;
+        }
+    }
+
+    public void LoadData(SaveData data)
+    {
+        var craftLists = GameObject.Find("CraftLists");
+        var weaponLists = craftLists.transform.Find("WeaponCraftList").GetComponent<WeaponCraftList>();
+        var runeLists = craftLists.transform.Find("RunesCraftList").GetComponent<RunesCraftList>();
+        var itemLists = craftLists.transform.Find("ItemsCraftList").GetComponent<ItemsCraftList>();
+        if (data.isNewFile)
+        {
+            for (int i = 0; i < itemLists.allRecipes.Count; i++)
+            {
+                itemLists.allRecipes[i].hasCrafted = false;
+            }
+            for (int i = 0; i < weaponLists.allRecipes.Count; i++)
+            {
+                weaponLists.allRecipes[i].hasCrafted = false;
+            }
+            for (int i = 0; i < runeLists.allRecipes.Count; i++)
+            {
+                runeLists.allRecipes[i].hasCrafted = false;
+            }
+            for(int i = 0; i < data.accessibleRecipes.Length; i++)
+            {
+                if (data.accessibleRecipes[i] == null) continue;
+                switch (data.accessibleRecipes[i].recipeType)
+                {
+                    case "Weapon":
+                        weaponLists.addToAccessibleRecipes(GameObject.Find("WeaponsList").
+                            GetComponent<WeaponsList>().ReturnWeapon(data.accessibleRecipes[i].recipeName).weaponRecipe);
+                        break;
+                    case "Rune":
+                        runeLists.addToAccessibleRecipes(GameObject.Find("RunesList").
+                            GetComponent<RuneList>().ReturnRune(data.accessibleRecipes[i].recipeName).runeRecipe);
+                        break;
+                    case "Item":
+                        itemLists.addToAccessibleRecipes(GameObject.Find("ItemsList").
+                            GetComponent<ItemsList>().ReturnItem(data.accessibleRecipes[i].recipeName).itemRecipe);
+                        break;
+                }
+            }
+        }
+        else
+        {
+            weaponLists.accessibleRecipes.Clear();
+            runeLists.accessibleRecipes.Clear();
+            itemLists.accessibleRecipes.Clear();
+            for (int i = 0; i < data.accessibleRecipes.Length; i++)
+            {
+                if (data.accessibleRecipes[i] == null) continue;
+                Debug.Log(data.accessibleRecipes[i].recipeName);
+                switch (data.accessibleRecipes[i].recipeType)
+                {
+                    case "Weapon":
+                        var weaponRecipe = GameObject.Find("WeaponsList").
+                            GetComponent<WeaponsList>().ReturnWeapon(data.accessibleRecipes[i].recipeName).weaponRecipe;
+                        weaponRecipe.hasCrafted = data.accessibleRecipes[i].hasCrafted;
+                        weaponLists.addToAccessibleRecipes(weaponRecipe);
+                        break;
+                    case "Rune":
+                        var runeRecipe = GameObject.Find("RunesList").
+                            GetComponent<RuneList>().ReturnRune(data.accessibleRecipes[i].recipeName).runeRecipe;
+                        Debug.Log(runeRecipe);
+                        runeRecipe.hasCrafted = data.accessibleRecipes[i].hasCrafted;
+                        runeLists.addToAccessibleRecipes(runeRecipe);
+                        break;
+                    case "Item":
+                        var itemRecipe = GameObject.Find("ItemsList").
+                            GetComponent<ItemsList>().ReturnItem(data.accessibleRecipes[i].recipeName).itemRecipe;
+                        itemRecipe.hasCrafted = data.accessibleRecipes[i].hasCrafted;
+                        itemLists.addToAccessibleRecipes(itemRecipe);
+                        break;
+                }
+            }
+        }
+    }
+
+        public GameObject GetCurrentMenu()
+    {
+        return currentMenuObject;
     }
 
     public void openTerminalMenu()

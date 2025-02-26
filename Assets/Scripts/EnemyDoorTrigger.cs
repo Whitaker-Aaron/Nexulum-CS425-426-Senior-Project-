@@ -27,8 +27,6 @@ public class EnemyDoorTrigger : MonoBehaviour
         
         if (enemies.Count > 0)
         {
-            Debug.Log("Prev enemy count: " + prevEnemyCount.ToString());
-            Debug.Log("Cur enemy count: " + enemies.Count.ToString());
             
             //Debug.Log("There are still enemies");
 
@@ -46,7 +44,6 @@ public class EnemyDoorTrigger : MonoBehaviour
         {
             bool uiUpdated = uiManager.UpdateEnemiesRemainingUI(enemies.Count);
             if (uiUpdated) prevEnemyCount = enemies.Count;
-            Debug.Log("Prev enemy count after: " + prevEnemyCount.ToString());
         }
     }
 

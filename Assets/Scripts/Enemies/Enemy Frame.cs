@@ -36,6 +36,7 @@ public class EnemyFrame : MonoBehaviour
     public Vector3 initialPos;
 
     public bool dmgOverTimeActivated = false;
+    public bool isMiniboss = false;
     bool takingDmgOT = false;
     bool dying = false;
 

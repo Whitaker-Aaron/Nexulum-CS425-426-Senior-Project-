@@ -18,6 +18,9 @@ public class SaveData
     public CraftMaterialSaveData[] totalMaterialInventory;
     public WeaponClassSaveData[] weaponClasses;
     public List<RoomSaveData> roomData = new List<RoomSaveData>();
+    public CraftRecipeSaveData[] allRecipes;
+    public CraftRecipeSaveData[] accessibleRecipes;
+
 
     public string[] weaponInventory;
     public string[] runeInventory;
@@ -32,6 +35,9 @@ public class SaveData
 
         materialInventory = new CraftMaterialSaveData[50];
         totalMaterialInventory = new CraftMaterialSaveData[150];
+        allRecipes = new CraftRecipeSaveData[150];
+        accessibleRecipes = new CraftRecipeSaveData[150];
+
         //roomData = new RoomSaveData[50];
         weaponClasses = new WeaponClassSaveData[3];
         weaponClasses[0] = new WeaponClassSaveData();
