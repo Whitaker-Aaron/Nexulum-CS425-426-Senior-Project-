@@ -22,14 +22,18 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
 
     void OnEnable()
     {
-        var enemies = roomInfo.GetEnemies();
-        for(int i =0; i < enemies.Count; i++)
+        if(roomInfo != null)
         {
-            if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().isMiniboss)
+            var enemies = roomInfo.GetEnemies();
+            for (int i = 0; i < enemies.Count; i++)
             {
-                enemies[i].GetComponent<EnemyLOS>().canTarget = false;
+                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().isMiniboss)
+                {
+                    enemies[i].GetComponent<EnemyLOS>().canTarget = false;
+                }
             }
         }
+        
     }
 
     // Update is called once per frame
@@ -90,8 +94,8 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
 
         }
         hasTriggered = true;
-        UpdateTriggerState();
-        Destroy(this.gameObject);
+        //UpdateTriggerState();
+        //Destroy(this.gameObject);
         yield break;
     }
 

@@ -57,6 +57,11 @@ public class MenuManager : MonoBehaviour
         
     }
 
+    public GameObject GetCurrentMenu()
+    {
+        return currentMenuObject;
+    }
+
     public void openTerminalMenu()
     {
         if (menuActive)
