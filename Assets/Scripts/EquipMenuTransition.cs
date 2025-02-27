@@ -23,8 +23,9 @@ public class EquipMenuTransition : MonoBehaviour
     [SerializeField] GameObject backButton4;
 
     [SerializeField] GameObject disabledPanel;
-    
 
+    ScrollRect weaponsScrollRect;
+    ScrollRect runesScrollRect;
 
     List<GameObject> currentEquipmentObjects = new List<GameObject>();
     List<GameObject> currentScrollObjects = new List<GameObject>();
@@ -53,6 +54,8 @@ public class EquipMenuTransition : MonoBehaviour
     GameObject classChangeButton;
 
     GameObject equippedBackdrop;
+
+    ScrollSelection curScrollSelection = ScrollSelection.none;
 
     // Start is called before the first frame update
     void Start()
@@ -89,7 +92,10 @@ public class EquipMenuTransition : MonoBehaviour
 
         equippedBackdrop = GameObject.Find("EquippedBackdrop");
 
-        
+        weaponsScrollRect = weaponsScroll.GetComponent<ScrollRect>();
+        runesScrollRect = runesScroll.GetComponent<ScrollRect>();
+
+
         FillEquipment();
         
         
@@ -124,7 +130,28 @@ public class EquipMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (curScrollSelection != ScrollSelection.none && EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "EquipOption(Clone)")
+        {
+            var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
+            RectTransform selectedItemRect = selectedItem.GetComponent<RectTransform>();
+            switch (curScrollSelection)
+            {
+                case ScrollSelection.weapons:
+                    var weaponContentPanel = weaponsScrollContent.GetComponent<RectTransform>();
+                    Vector2 newWeaponPos = (Vector2)weaponsScrollRect.transform.InverseTransformPoint(weaponContentPanel.position)
+                    - (Vector2)weaponsScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
+                    float newWeaponPosY = (float)newWeaponPos.y;
+                    weaponContentPanel.anchoredPosition = new Vector2(weaponContentPanel.anchoredPosition.x, newWeaponPosY - 150f);
+                    break;
+                case ScrollSelection.runes:
+                    var runesContentPanel = runesScrollContent.GetComponent<RectTransform>();
+                    Vector2 newRunePos = (Vector2)runesScrollRect.transform.InverseTransformPoint(runesContentPanel.position)
+                    - (Vector2)runesScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
+                    float newRunePosY = (float)newRunePos.y;
+                    runesContentPanel.anchoredPosition = new Vector2(runesContentPanel.anchoredPosition.x, newRunePosY - 150f);
+                    break;
+            }
+        }
     }
 
     public void ResetWeaponCraftSelection()
@@ -149,6 +176,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void NavigateToWeaponEquipMenu()
     {
+        curScrollSelection = ScrollSelection.weapons;
         Debug.Log("Weapon Button pressed");
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
@@ -189,6 +217,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void NavigateToRuneEquipMenu()
     {
+        curScrollSelection = ScrollSelection.runes;
         Debug.Log("Weapon Button pressed");
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
@@ -225,7 +254,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void ResetMenu()
     {
-        
+        curScrollSelection = ScrollSelection.none;
         CleanEquipment();
         FillEquipment();
 
@@ -598,5 +627,12 @@ public class EquipMenuTransition : MonoBehaviour
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Engineer);
         ResetMenu();
+    }
+
+    enum ScrollSelection
+    {
+        none,
+        weapons,
+        runes
     }
 }

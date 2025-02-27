@@ -1083,8 +1083,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8903244941389259716}
   m_HandleRect: {fileID: 8029824406946269217}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.8426484
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1558,7 +1558,7 @@ GameObject:
   - component: {fileID: 3635872590863720082}
   - component: {fileID: 3651959835465851699}
   m_Layer: 5
-  m_Name: Scroll View (1)
+  m_Name: StoreScroll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1961,7 +1961,7 @@ GameObject:
   - component: {fileID: 8439958023366492237}
   - component: {fileID: 6289311634869901066}
   m_Layer: 5
-  m_Name: StoreOptionLayout
+  m_Name: StoreScrollContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1983,7 +1983,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -291, y: 0}
+  m_AnchoredPosition: {x: -386, y: 0}
   m_SizeDelta: {x: 1224.418, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8439958023366492237
@@ -1999,10 +1999,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 225
+    m_Left: 320
     m_Right: 0
     m_Top: 125
-    m_Bottom: 500
+    m_Bottom: 750
   m_ChildAlignment: 0
   m_Spacing: 300
   m_ChildForceExpandWidth: 1
@@ -2329,7 +2329,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7496114671723493288
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4663,6 +4663,7 @@ MonoBehaviour:
   selection: {fileID: 8105045891529446417}
   scroll: {fileID: 2320835693690523412}
   florentineCount: {fileID: 4006073292608919711}
+  storeScrollContent: {fileID: 0}
 --- !u!1 &7224114307753422194
 GameObject:
   m_ObjectHideFlags: 0

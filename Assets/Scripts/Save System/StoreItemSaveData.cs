@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CraftRecipeSaveData
+public class StoreItemSaveData
 {
-    public string recipeName;
-    public bool hasCrafted;
+    public string storeItemName;
     public bool hasPurchased;
-    public string recipeType;
+    public string storeItemType;
 }
 

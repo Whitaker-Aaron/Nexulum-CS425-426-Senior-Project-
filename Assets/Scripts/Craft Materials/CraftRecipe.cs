@@ -13,6 +13,7 @@ public class CraftRecipe : ScriptableObject
     public string recipeName;
     public float shopCost;
     public bool hasCrafted = false;
+    public bool hasPurchased = false;
 
     public enum CraftTypes
     {
