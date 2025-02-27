@@ -2,6 +2,7 @@ using AYellowpaper.SerializedCollections;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -106,32 +107,51 @@ public class projectileManager : MonoBehaviour
 
     public virtual void createNewPool(string poolName, GameObject prefab, int size)
     {
-        if (!allPools.ContainsKey(poolName))
+        // Check if the pool already exists
+        if (allPools.ContainsKey(poolName))
         {
-            allPools[poolName] = new Queue<GameObject>();
+            Debug.Log("Pool with name: " + poolName + " already exists");
+            return; // Exit if the pool already exists
+        }
 
-            for (int i = 0; i < size; i++)
+        // Create a new queue for the pool
+        allPools[poolName] = new Queue<GameObject>();
+
+        // Determine the prefab to use
+        GameObject selectedPrefab = prefab;
+
+        if (prefab == null)
+        {
+            // If prefab is null, get the first prefab from the poolPrefabs dictionary
+            if (poolPrefabs.Count > 0)
             {
-                GameObject temp = Instantiate(prefab);
-                temp.transform.parent = poolContainer.transform;
-                //DontDestroyOnLoad(temp);
-                temp.SetActive(false);
-                allPools[poolName].Enqueue(temp);
-                
+                // Get the first prefab from the dictionary
+                selectedPrefab = poolPrefabs.Values.First();
+                Debug.LogWarning("Prefab was null. Using first prefab: " + selectedPrefab.name);
+            }
+            else
+            {
+                Debug.LogError("No prefabs available in poolPrefabs dictionary to use as default.");
+                return; // Exit if no prefabs are available
             }
         }
-        else
+
+        // Create the pool using the selected prefab
+        for (int i = 0; i < size; i++)
         {
-            Debug.Log("pool with name: " + poolName + " already exists");
+            GameObject temp = Instantiate(selectedPrefab);
+            temp.transform.parent = poolContainer.transform;
+            temp.SetActive(false);
+            allPools[poolName].Enqueue(temp);
         }
     }
 
     //GameObject checkPoolPrefab(string poolName)
     //{
-      //  GameObject temp = null;
-        //if(poolPrefabs.ContainsKey(poolName))
-         //   temp = poolPrefabs[poolName];
-        //return temp;
+    //  GameObject temp = null;
+    //if(poolPrefabs.ContainsKey(poolName))
+    //   temp = poolPrefabs[poolName];
+    //return temp;
     //}
 
     public GameObject getProjectile(string poolName, Vector3 position, Quaternion rotation)
@@ -220,6 +240,11 @@ public class projectileManager : MonoBehaviour
     {
         projectile.SetActive(false);
         allPools[poolName].Enqueue(projectile);
+    }
+
+    public Dictionary<string, Queue<GameObject>> GetAllPools()
+    {
+        return allPools;
     }
 
 
