@@ -25,9 +25,9 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Components
     // ----------------------------------------------
 
-    public NavMeshAgent agent;
+    // public NavMeshAgent agent;
     public EnemyLOS enemyLOS;
-    public EnemyFrame enemyFrame;
+    // public EnemyFrame enemyFrame;
 
     // ----------------------------------------------
     // State objects and state-related variables
@@ -55,9 +55,14 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        // // agent = GetComponent<NavMeshAgent>();
         enemyLOS = GetComponent<EnemyLOS>();
-        enemyFrame = GetComponent<EnemyFrame>();
+        // // enemyFrame = GetComponent<EnemyFrame>();
+
+        if (enemyLOS == null)
+        {
+            Debug.LogError("enemyLOS is null");
+        }
 
         currentSpeed = defaultMovementSpeed;
 
@@ -66,7 +71,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public void Update()
     {
-        agent.speed = currentSpeed;
+        // agent.speed = currentSpeed;
 
         if (currentState != null)
         {
@@ -101,7 +106,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public void MoveTo(Vector3 position, bool enablePrediction = false)
     {
         Vector3 directionToPos = (position - enemyLOS.selfPos).normalized;
-        agent.SetDestination(position);
+        // agent.SetDestination(position);
     }
 
     // Overloaded MoveTo, enforces engagement range from point
@@ -114,7 +119,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
         {
             Vector3 awayDirection = (enemyLOS.selfPos - position).normalized; // Get direction away from player
             Vector3 awayPos = (enemyLOS.selfPos + awayDirection); // Get the position, away from the player, to go to
-            agent.SetDestination(awayPos);
+            // agent.SetDestination(awayPos);
         }
     }
 
