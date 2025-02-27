@@ -8,14 +8,14 @@ public class EnemySearchState : EnemyNeutralState
         stateContext.CustomDebugLog("Entered " + stateName + " state");
 
         // Enemy should be able to move if searching, unless forcibly stopped
-        // stateContext.agent.isStopped = stateContext.movementPaused;
+        stateContext.agent.isStopped = stateContext.movementPaused;
 
         stateContext.MoveTo(stateContext.enemyLOS.lastKnownTargetPos, false);
     }
 
     public override void RunState()
     {
-        // stateContext.agent.isStopped = stateContext.movementPaused;
+        stateContext.agent.isStopped = stateContext.movementPaused;
         
         base.OnDamaged();
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag())

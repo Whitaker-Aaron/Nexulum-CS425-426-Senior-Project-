@@ -8,7 +8,7 @@ public class EnemyIdleState : EnemyNeutralState
         stateContext.CustomDebugLog("Entered " + stateName + " state");
 
         // Enemy should be stationary while idling
-        // stateContext.agent.isStopped = true;
+        stateContext.agent.isStopped = true;
     }
 
     public override void RunState()

@@ -69,8 +69,8 @@ public class EnemyFrame : MonoBehaviour
     {
      
         zeroDir = Vector3.zero;
-        // health = enemyReference.baseHealth;
-        // maxHealth = enemyReference.baseHealth;
+        health = enemyReference.baseHealth;
+        maxHealth = enemyReference.baseHealth;
         initialPos = transform.position;
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         //Slider enemyHealthBar = enemyHealth.GetComponentInChildren<Slider>();
@@ -83,7 +83,7 @@ public class EnemyFrame : MonoBehaviour
         anim = GetComponent<EnemyAnimation>();
         enemyUIRef = GameObject.Find("DynamicEnemyUI");
 
-        // if (!enemyReference.isInvincible)
+        if (!enemyReference.isInvincible)
         {
             healthRef = Instantiate(enemyHealth);
             healthRef.transform.SetParent(enemyUIRef.transform, false);
@@ -102,20 +102,13 @@ public class EnemyFrame : MonoBehaviour
         
 
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-        // if (enemyReference != null) enemyType = gameObject.GetComponent<enemyInt>().getType();
+        if (enemyReference != null) enemyType = gameObject.GetComponent<enemyInt>().getType();
         
             
 
         // Status effects - Aisling
         iceEffect = new IceDamage(movementReference, iceStackMax);
         InvokeRepeating("TickIceEffect", 0.0f, effectTickInterval); // Decreases current ice stacks by 1 every effectTickInterval seconds until 0
-
-        // if (enemyReference == null){
-            // Debug.LogError("enemyReference is null.");
-        // }
-        if (health == null){
-            Debug.LogError("health is null.");
-        }
     }
 
     public void DeactivateHealthBar()
@@ -139,11 +132,11 @@ public class EnemyFrame : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        // // if (!enemyReference.isInvincible)
-        // {
-        //     healthRef.transform.position = new Vector3(this.transform.position.x - 1f,
-        //     // this.transform.position.y + 2f + enemyReference.healthBarOffset, this.transform.position.z);
-        // }
+        if (!enemyReference.isInvincible)
+        {
+            healthRef.transform.position = new Vector3(this.transform.position.x - 1f,
+            this.transform.position.y + 2f + enemyReference.healthBarOffset, this.transform.position.z);
+        }
         
     }
 
@@ -155,61 +148,61 @@ public class EnemyFrame : MonoBehaviour
     //take damage function with given damage paramater - Spencer
     public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource, DamageType damageType)
     {
-        // if (enemyReference.isInvincible) return;
-        // Debug.Log("Taken damage of type " + damageType);
-        // switch(damageType)
-        // {
-        //     case DamageType.Ice:
-        //         iceEffect.AddStacks(1);
-        //         iceEffect.execute();
-        //         break;
-        // }
+        if (enemyReference.isInvincible) return;
+        Debug.Log("Taken damage of type " + damageType);
+        switch(damageType)
+        {
+            case DamageType.Ice:
+                iceEffect.AddStacks(1);
+                iceEffect.execute();
+                break;
+        }
 
-        // // Damage info for state - Aisling
-        // onDamaged = true;
-        // source = targetSource;
+        // Damage info for state - Aisling
+        onDamaged = true;
+        source = targetSource;
         
-        // // if(enemyReference != null)
-        // {
-        //     Debug.Log("Enemy was attacked");
-        //     Debug.Log("Enemy attacking?" + enemyType.isAttacking);
-        //     if (!enemyType.isAttacking)
-        //     {
-        //         anim.takeHit();
-        //     }
-        //     if(true)
-        //     {
-        //         Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
-        //         if (forwardDir != Vector3.zero)
-        //         {
-        //             Debug.Log("Normalized enemy knockback: " + forwardDir.normalized);
-        //             transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15, ForceMode.Impulse);
-        //             if (curStopVel != null)
-        //             {
-        //                 StopCoroutine(curStopVel);
-        //             }
-        //             transform.GetComponent<CapsuleCollider>().isTrigger = true;
-        //             curStopVel = StartCoroutine(StopVelocity(0.15f));
-        //         }
+        if(enemyReference != null)
+        {
+            Debug.Log("Enemy was attacked");
+            Debug.Log("Enemy attacking?" + enemyType.isAttacking);
+            if (!enemyType.isAttacking)
+            {
+                anim.takeHit();
+            }
+            if(true)
+            {
+                Vector3 forceVector = new Vector3(5.0f, 0.0f, 5.0f);
+                if (forwardDir != Vector3.zero)
+                {
+                    Debug.Log("Normalized enemy knockback: " + forwardDir.normalized);
+                    transform.gameObject.GetComponent<Rigidbody>().AddForce((forwardDir.normalized) * 15, ForceMode.Impulse);
+                    if (curStopVel != null)
+                    {
+                        StopCoroutine(curStopVel);
+                    }
+                    transform.GetComponent<CapsuleCollider>().isTrigger = true;
+                    curStopVel = StartCoroutine(StopVelocity(0.15f));
+                }
 
                 
-        //     }
-        //     print("Health is: " + health + " Dmg taken is: " + damage);
-        //     if (health - damage <= 0 && !dying)
-        //     {
-        //         health = 0;
-        //         dying = true;
-        //         //StartCoroutine(updateHealthBarsNegative());
-        //         StartCoroutine(death());
+            }
+            print("Health is: " + health + " Dmg taken is: " + damage);
+            if (health - damage <= 0 && !dying)
+            {
+                health = 0;
+                dying = true;
+                //StartCoroutine(updateHealthBarsNegative());
+                StartCoroutine(death());
 
-        //     }
+            }
 
-        //     else if (!dying)
-        //     {
-        //         health -= damage;
-        //         StartCoroutine(updateHealthBarsNegative());
-        //     }
-        // }
+            else if (!dying)
+            {
+                health -= damage;
+                StartCoroutine(updateHealthBarsNegative());
+            }
+        }
         
 
         
@@ -366,7 +359,7 @@ public class EnemyFrame : MonoBehaviour
 
 
         }
-        // character.AddExperienceToClass(enemyReference.droppedExperience);
+        character.AddExperienceToClass(enemyReference.droppedExperience);
         Destroy(healthRef);
         Destroy(this.gameObject);
     }
@@ -425,8 +418,7 @@ public class EnemyFrame : MonoBehaviour
 
     public Enemy GetEnemy()
     {
-        // return enemyReference;
-        return null;
+        return enemyReference;
     }
 
     public enum DamageSource
