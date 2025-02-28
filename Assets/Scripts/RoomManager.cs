@@ -107,6 +107,16 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
                         trigger[triggerKey] = false;
                     }
                 }
+
+                //INITIALIZE ALL COLLECTIBLES TO UNCOLLECTED
+                if (allRoomData[i].collectibles != null && allRoomData[i].collectibles.Count > 0)
+                {
+                    foreach (var collectibleKey in allRoomData[i].collectibles.Keys.ToList())
+                    {
+                        var collectible = allRoomData[i].collectibles;
+                        collectible[collectibleKey] = false;
+                    }
+                }
                 allRoomData[i].hasVisited = false;
             }
         }
@@ -143,6 +153,16 @@ public class RoomManager : MonoBehaviour, SaveSystemInterface
                                     allRoomData[i].eventTriggers[trigger.triggerGuid] = trigger.hasTriggered;
                                 }
                             }
+
+                        //LOAD EVENT COLLECTIBLES FROM SAVE DATA 
+                        if (data.roomData[j].collectibles != null && data.roomData[j].collectibles.Count > 0 &&
+                            allRoomData[i].collectibles != null && allRoomData[i].collectibles.Count > 0)
+                        {
+                            foreach (var collectible in data.roomData[j].collectibles)
+                            {
+                                allRoomData[i].collectibles[collectible.collectibleGuid] = collectible.hasCollected;
+                            }
+                        }
                         break;
                         }
                     else continue;

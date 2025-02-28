@@ -14,4 +14,5 @@ public class RoomPersistenceData : ScriptableObject
     public RoomSpawnObject spawnObject;
     public SerializedDictionary<string, bool> lockedDoors;
     public SerializedDictionary<string, bool> eventTriggers;
+    public SerializedDictionary<string, bool> collectibles;
 }

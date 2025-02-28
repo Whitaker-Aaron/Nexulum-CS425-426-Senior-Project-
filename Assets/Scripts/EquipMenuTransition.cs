@@ -46,7 +46,9 @@ public class EquipMenuTransition : MonoBehaviour
     GameObject equippedPanel;
 
     GameObject currentWeaponContent;
+    GameObject currentWeaponContentShadow;
     GameObject currentClassContent;
+    GameObject currentClassContentShadow;
     GameObject currentRuneContainer;
 
     GameObject classChangeContainer;
@@ -88,6 +90,8 @@ public class EquipMenuTransition : MonoBehaviour
 
         currentWeaponContent = GameObject.Find("CurrentWeaponPlaceholder");
         currentClassContent = GameObject.Find("CurrentClassPlaceholder");
+        currentWeaponContentShadow = GameObject.Find("CurrentWeaponPlaceholderShadow");
+        currentClassContentShadow = GameObject.Find("CurrentClassPlaceholderShadow");
         currentRuneContainer = GameObject.Find("CurrentRunesList");
 
         equippedBackdrop = GameObject.Find("EquippedBackdrop");
@@ -325,17 +329,21 @@ public class EquipMenuTransition : MonoBehaviour
     {
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         currentWeaponContent.GetComponent<TMP_Text>().text = characterRef.equippedWeapon.weaponName;
+        currentWeaponContentShadow.GetComponent<TMP_Text>().text = characterRef.equippedWeapon.weaponName;
         switch (characterRef.equippedWeapon.weaponClassType)
         {
             case WeaponBase.weaponClassTypes.Knight:
                 currentClassContent.GetComponent<TMP_Text>().text = "Knight";
+                currentClassContentShadow.GetComponent<TMP_Text>().text = "Knight";
                 break;
 
             case WeaponBase.weaponClassTypes.Engineer:
                 currentClassContent.GetComponent<TMP_Text>().text = "Engineer";
+                currentClassContentShadow.GetComponent<TMP_Text>().text = "Engineer";
                 break;
             case WeaponBase.weaponClassTypes.Gunner:
                 currentClassContent.GetComponent<TMP_Text>().text = "Gunner";
+                currentClassContentShadow.GetComponent<TMP_Text>().text = "Gunner";
                 break;
 
         }
