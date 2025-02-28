@@ -10,5 +10,6 @@ public class RoomSaveData
     public bool isCheckpoint;
     public List<LockedDoorSaveData> lockedDoors = new List<LockedDoorSaveData>();
     public List<EventTriggerSaveData> eventTriggers = new List<EventTriggerSaveData>();
+    public List<CollectiblesSaveData> collectibles = new List<CollectiblesSaveData>();
     
 }

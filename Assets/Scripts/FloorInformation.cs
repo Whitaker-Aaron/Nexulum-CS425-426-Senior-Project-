@@ -23,6 +23,7 @@ public class FloorInformation : MonoBehaviour
     {
         InitializeRoomDoors();
         InitializeRoomTriggers();
+        InitializeCollectibles();
         StartCoroutine(DeactivateRooms());
 
     }
@@ -45,6 +46,17 @@ public class FloorInformation : MonoBehaviour
             foreach (var room in RoomList)
             {
                 room.GetComponent<RoomInformation>().InitializeTriggers();
+            }
+        }
+    }
+
+    public void InitializeCollectibles()
+    {
+        if (RoomList.Length > 0)
+        {
+            foreach (var room in RoomList)
+            {
+                room.GetComponent<RoomInformation>().InitializeCollectibles();
             }
         }
     }

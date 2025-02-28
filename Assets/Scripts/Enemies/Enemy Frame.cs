@@ -149,6 +149,13 @@ public class EnemyFrame : MonoBehaviour
     public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource, DamageType damageType)
     {
         if (enemyReference.isInvincible) return;
+
+        // Damage info for state - Aisling
+        onDamaged = true;
+        source = targetSource;
+
+        Debug.LogWarning("onDamaged is " + onDamaged);
+
         Debug.Log("Taken damage of type " + damageType);
         switch(damageType)
         {
@@ -157,10 +164,6 @@ public class EnemyFrame : MonoBehaviour
                 iceEffect.execute();
                 break;
         }
-
-        // Damage info for state - Aisling
-        onDamaged = true;
-        source = targetSource;
         
         if(enemyReference != null)
         {

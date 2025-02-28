@@ -7,6 +7,7 @@ public class CraftRecipeSaveData
 {
     public string recipeName;
     public bool hasCrafted;
+    public bool hasPurchased;
     public string recipeType;
 }
 

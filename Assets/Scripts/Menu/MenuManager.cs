@@ -72,6 +72,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
             recipe.recipeType = "Item";
             recipe.recipeName = itemLists.allRecipes[i].recipeName;
             recipe.hasCrafted = itemLists.allRecipes[i].hasCrafted;
+            recipe.hasPurchased = itemLists.allRecipes[i].hasPurchased;
             data.allRecipes[allRecipeIndex] = recipe;
             allRecipeIndex++;
         }
@@ -81,6 +82,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
             recipe.recipeType = "Weapon";
             recipe.recipeName = weaponLists.allRecipes[i].recipeName;
             recipe.hasCrafted = weaponLists.allRecipes[i].hasCrafted;
+            recipe.hasPurchased = weaponLists.allRecipes[i].hasPurchased;
             data.allRecipes[allRecipeIndex] = recipe;
             allRecipeIndex++;
         }
@@ -90,6 +92,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
             recipe.recipeType = "Rune";
             recipe.recipeName = runeLists.allRecipes[i].recipeName;
             recipe.hasCrafted = runeLists.allRecipes[i].hasCrafted;
+            recipe.hasPurchased = runeLists.allRecipes[i].hasPurchased;
             data.allRecipes[allRecipeIndex] = recipe;
             allRecipeIndex++;
         }
@@ -99,6 +102,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
             recipe.recipeType = "Item";
             recipe.recipeName = itemLists.accessibleRecipes[i].recipeName;
             recipe.hasCrafted = itemLists.accessibleRecipes[i].hasCrafted;
+            recipe.hasPurchased = itemLists.accessibleRecipes[i].hasPurchased;
             data.accessibleRecipes[accRecipeIndex] = recipe;
             accRecipeIndex++;
         }
@@ -108,6 +112,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
             recipe.recipeType = "Weapon";
             recipe.recipeName = weaponLists.accessibleRecipes[i].recipeName;
             recipe.hasCrafted = weaponLists.accessibleRecipes[i].hasCrafted;
+            recipe.hasPurchased = weaponLists.accessibleRecipes[i].hasPurchased;
             data.accessibleRecipes[accRecipeIndex] = recipe;
             accRecipeIndex++;
         }
@@ -117,6 +122,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
             recipe.recipeType = "Rune";
             recipe.recipeName = runeLists.accessibleRecipes[i].recipeName;
             recipe.hasCrafted = runeLists.accessibleRecipes[i].hasCrafted;
+            recipe.hasPurchased = runeLists.accessibleRecipes[i].hasPurchased;
             data.accessibleRecipes[accRecipeIndex] = recipe;
             accRecipeIndex++;
         }
@@ -133,14 +139,17 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
             for (int i = 0; i < itemLists.allRecipes.Count; i++)
             {
                 itemLists.allRecipes[i].hasCrafted = false;
+                itemLists.allRecipes[i].hasPurchased = false;
             }
             for (int i = 0; i < weaponLists.allRecipes.Count; i++)
             {
                 weaponLists.allRecipes[i].hasCrafted = false;
+                weaponLists.allRecipes[i].hasPurchased = false;
             }
             for (int i = 0; i < runeLists.allRecipes.Count; i++)
             {
                 runeLists.allRecipes[i].hasCrafted = false;
+                runeLists.allRecipes[i].hasPurchased = false;
             }
             for(int i = 0; i < data.accessibleRecipes.Length; i++)
             {
@@ -177,6 +186,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
                         var weaponRecipe = GameObject.Find("WeaponsList").
                             GetComponent<WeaponsList>().ReturnWeapon(data.accessibleRecipes[i].recipeName).weaponRecipe;
                         weaponRecipe.hasCrafted = data.accessibleRecipes[i].hasCrafted;
+                        weaponRecipe.hasPurchased = data.accessibleRecipes[i].hasPurchased;
                         weaponLists.addToAccessibleRecipes(weaponRecipe);
                         break;
                     case "Rune":
@@ -184,12 +194,14 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
                             GetComponent<RuneList>().ReturnRune(data.accessibleRecipes[i].recipeName).runeRecipe;
                         Debug.Log(runeRecipe);
                         runeRecipe.hasCrafted = data.accessibleRecipes[i].hasCrafted;
+                        runeRecipe.hasPurchased = data.accessibleRecipes[i].hasPurchased;
                         runeLists.addToAccessibleRecipes(runeRecipe);
                         break;
                     case "Item":
                         var itemRecipe = GameObject.Find("ItemsList").
                             GetComponent<ItemsList>().ReturnItem(data.accessibleRecipes[i].recipeName).itemRecipe;
                         itemRecipe.hasCrafted = data.accessibleRecipes[i].hasCrafted;
+                        itemRecipe.hasPurchased = data.accessibleRecipes[i].hasPurchased;
                         itemLists.addToAccessibleRecipes(itemRecipe);
                         break;
                 }
@@ -479,7 +491,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
     }
     public void removeShopCraftRecipe(CraftRecipe recipeToRemove)
     {
-        GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopCraftRecipes>().removeRecipe(recipeToRemove);
+        //GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopCraftRecipes>().removeRecipe(recipeToRemove);
     }
 
     public void navigateToMaterialMenu()
@@ -680,7 +692,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
         var curFlorentine = character.GetFlorentine();
         if (currentMenuObject != null)
         {
-            var container = GameObject.Find("StoreOptionLayout").GetComponent<VerticalLayoutGroup>();
+            var container = GameObject.Find("StoreScrollContent").GetComponent<VerticalLayoutGroup>();
             switch (type)
             {
                 case StoreItem.StoreItemType.Recipe:
@@ -688,6 +700,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
                     if (recipes == null) break;
                     for (int i = 0; i < recipes.Count; i++)
                     {
+                        if (recipes[i].hasPurchased) continue;
                         var shopItem = shopOptionObject.GetComponent<StoreItem>();
                         shopItem.craftRecipe = recipes[i];
                         shopItem.storeItemName.GetComponent<TMP_Text>().text = recipes[i].recipeName + " Recipe";

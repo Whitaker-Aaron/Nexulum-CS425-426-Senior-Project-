@@ -29,7 +29,7 @@ public class EnemyLOS : MonoBehaviour
 
     // Scope of visual field (in-editor configurable)
     [SerializeField] private float detectionRange = 7;
-    [SerializeField] private float visionAngle = 90;
+    [SerializeField] private int visionAngle = 90;
 
     // Enable xray vision
     [SerializeField] private bool canSeeThroughWalls = false;
@@ -64,6 +64,51 @@ public class EnemyLOS : MonoBehaviour
         myHeading = transform.forward;
     }
 
+    public void SetDetectionRange(float range)
+    {
+        detectionRange = range;
+    }
+
+    public void SetVisionAngle(int angle)
+    {
+        visionAngle = angle;
+    }
+
+    public void SetLastKnownTargetPosition(Vector3 position)
+    {
+        lastKnownTargetPos = position;
+    }
+
+    public float GetDistanceToTarget()
+    {
+        return distancetotarget;
+    }
+
+    public GameObject GetCurrentTargetObject()
+    {
+        return currentTarget;
+    }
+
+    public Vector3 GetCurrentTargetPosition()
+    {
+        return targetPos;
+    }
+
+    public Vector3 GetLastKnownTargetPosition()
+    {
+        return lastKnownTargetPos;
+    }
+
+    public float GetDistanceToLastKnownPos()
+    {
+        return Vector3.Distance(lastKnownTargetPos, selfPos);
+    }
+
+    public float GetDistanceToPosition(Vector3 position)
+    {
+        return Vector3.Distance(position, selfPos);
+    }
+
     // ChangeTarget takes a gameobject (a new target) and switches the current target to the new target
     // Returns true if successful, returns false if the new target is null (a null target causes errors)
     public bool ChangeTarget(GameObject newTarget)
@@ -77,11 +122,6 @@ public class EnemyLOS : MonoBehaviour
         {
             return false;
         }
-    }
-
-    public void ResetTarget()
-    {
-        currentTarget = null;
     }
 
     // Return the tag of the collider spotted
@@ -155,11 +195,6 @@ public class EnemyLOS : MonoBehaviour
         {
             return false;
         }
-    }
-
-    public float GetDistanceToTarget()
-    {
-        return distancetotarget;
     }
 
     void OnDrawGizmosSelected()
