@@ -13,13 +13,14 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public float defaultMovementSpeed = 2f; // Movement speed of enemy
     public float engagementRange = 1f; // How close, from target, the enemy will get to the target (radius). Set with SetEngagementRange(float range)
+    public float inaccuracyPointTolerance = 1; // Effectively the "range" surrounding a target point; if the enemy gets within this distance from the point, then it will flag itself as having reached the position
+    // ^ Used in EnemySearchState to allow the enemy to 
 
     // Debugging
     public float currentSpeed;
 
     // Movement pausing
     public bool movementPaused = false;
-    // public float waitTime = 0;
 
     // ----------------------------------------------
     // Components
@@ -34,7 +35,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // ----------------------------------------------
 
     // Current state
-    private EnemyState currentState;
+    [SerializeField] private EnemyState currentState;
 
     // Concrete states
     public EnemyIdleState idleState = new EnemyIdleState();
@@ -71,6 +72,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public void Update()
     {
+        enemyFrame = GetComponent<EnemyFrame>();
         agent.speed = currentSpeed;
 
         if (currentState != null)
@@ -98,6 +100,14 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
         if (enableStateDebugLogs == true)
         {
             Debug.Log("SM Debug: " + log);
+        }
+    }
+
+    public void CustomDebugLogError(string log)
+    {
+        if (enableStateDebugLogs == true)
+        {
+            Debug.Log("SM Debug ERROR: " + log);
         }
     }
 
@@ -174,6 +184,20 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
             movementPaused = true;
             yield return new WaitForSeconds(s);
             movementPaused = false;
+        }
+    }
+
+    public bool EnemyIsAtPosition(Vector3 position)
+    {
+        float distance = enemyLOS.GetDistanceToPosition(position);
+
+        if (distance <= inaccuracyPointTolerance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
