@@ -170,6 +170,9 @@ public class PauseMenuTransition : MonoBehaviour
 
     public void returnToMainPause()
     {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(MapButton);
+
         CleanUpCheckpoint();
         SkillMenu.SetActive(false);
         KnightSkillMenu.SetActive(false);
