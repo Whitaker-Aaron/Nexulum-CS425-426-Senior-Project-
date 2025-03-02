@@ -355,7 +355,7 @@ public class EnemyFrame : MonoBehaviour
             {
                 if (UnityEngine.Random.Range(0.0f, 1.0f) <= craftMat.material.dropRate)
                 {
-                    Instantiate(materialList[i], new Vector3(transform.position.x + UnityEngine.Random.Range(-1.0f, 1.0f), transform.position.y + 2.5f, transform.position.z + UnityEngine.Random.Range(-1.0f, 1.0f)), Quaternion.identity);
+                    Instantiate(materialList[i], new Vector3(transform.position.x, transform.position.y + 3.5f, transform.position.z), Quaternion.identity);
                 }
             }
             
