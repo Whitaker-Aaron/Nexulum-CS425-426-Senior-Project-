@@ -16,6 +16,7 @@ public class OverworldMaterial : MonoBehaviour
     [SerializeField]  public CraftMaterial material; 
     //[SerializeField] newCraft
     float originalPos;
+    bool isCollectible = false;
     float offset = 0.5f;
     float yHeightPeakOffset = 2.75f;
     float yDesiredOffset = 10.0f;
@@ -86,6 +87,7 @@ public class OverworldMaterial : MonoBehaviour
             yield return null;
 
         }
+        isCollectible = true;
         float accel = 21.4f;
         while (transform.position.y != ogPos.y-1)
         {
@@ -102,6 +104,7 @@ public class OverworldMaterial : MonoBehaviour
 
     public IEnumerator animateLoop()
     {
+        
         while (true)
         {
             if (!descending)
@@ -150,7 +153,7 @@ public class OverworldMaterial : MonoBehaviour
     {
         Debug.Log("Colliding with: ");
         Debug.Log(other.gameObject.tag);
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && isCollectible)
 
         {
             audioManager.PlaySFX("MaterialCollect");
