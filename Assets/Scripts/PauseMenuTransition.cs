@@ -246,8 +246,8 @@ public class PauseMenuTransition : MonoBehaviour
         checkpointScrollRect = GameObject.Find("CheckpointView").GetComponent<ScrollRect>();
         mapScrollRect = GameObject.Find("MapView").GetComponent<ScrollRect>();
         var disabledPanel = GameObject.Find("CheckpointsDisabledPanel");
-        if (roomManager.IsCheckpoint()) disabledPanel.SetActive(false);
-        else disabledPanel.SetActive(true);
+        if (roomManager.IsCheckpoint() && disabledPanel != null) disabledPanel.SetActive(false);
+        else if(disabledPanel != null)  disabledPanel.SetActive(true);
 
         var mapContentPanel = mapContent.GetComponent<RectTransform>();
         initialMapPos = mapContentPanel.anchoredPosition;
@@ -272,8 +272,8 @@ public class PauseMenuTransition : MonoBehaviour
         int mapChildrenCount = mapContent.transform.childCount;
         var curRoomPanel = GameObject.Find("CurrentRoomPanel");
         var noMapDataPanel = GameObject.Find("NoMapDataFound");
-        if (curRoom == "BaseCamp") curRoomPanel.SetActive(false);
-        else curRoomPanel.SetActive(true);
+        if (curRoom == "BaseCamp" && curRoomPanel != null) curRoomPanel.SetActive(false);
+        else if(curRoomPanel != null) curRoomPanel.SetActive(true);
         bool roomsFound = false;
 
         for (int i = 0; i < mapChildrenCount; i++)
@@ -313,8 +313,8 @@ public class PauseMenuTransition : MonoBehaviour
             }
             
         }
-        if(roomsFound) noMapDataPanel.SetActive(false);
-        else noMapDataPanel.SetActive(true);
+        if(roomsFound && noMapDataPanel != null) noMapDataPanel.SetActive(false);
+        else if(noMapDataPanel != null) noMapDataPanel.SetActive(true);
 
     }
 
