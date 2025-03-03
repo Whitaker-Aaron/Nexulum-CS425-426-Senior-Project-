@@ -22,6 +22,9 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Movement pausing
     public bool movementPaused = false;
 
+    // Lock into idle state instead of patrol
+    public bool stayInIdle = false;
+
     // ----------------------------------------------
     // Components
     // ----------------------------------------------
@@ -41,6 +44,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public EnemyIdleState idleState = new EnemyIdleState();
     public EnemyChaseState chaseState = new EnemyChaseState();
     public EnemySearchState searchState = new EnemySearchState();
+    public EnemyPatrolState patrolState = new EnemyPatrolState();
 
     public bool enableStateDebugLogs = false;
 
@@ -115,7 +119,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Pathfinding-less and predicted movement will be supported at a later date, for now this function can only cover movement with pathfinding
     public void MoveTo(Vector3 position, bool enablePrediction = false)
     {
-        Vector3 directionToPos = (position - enemyLOS.selfPos).normalized;
+        CustomDebugLog("Moving to " + position);
         agent.SetDestination(position);
     }
 
