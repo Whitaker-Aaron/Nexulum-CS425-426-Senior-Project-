@@ -58,6 +58,7 @@ public class EquipMenuTransition : MonoBehaviour
     GameObject equippedBackdrop;
 
     ScrollSelection curScrollSelection = ScrollSelection.none;
+    public bool isTerminal = false;
 
     // Start is called before the first frame update
     void Start()
@@ -175,7 +176,8 @@ public class EquipMenuTransition : MonoBehaviour
     public void NavigateToMaterialMenu()
     {
         Debug.Log("Back Button pressed");
-        GameObject.Find("MenuManager").GetComponent<MenuManager>().navigateToMaterialMenu();
+        if (isTerminal) GameObject.Find("MenuManager").GetComponent<MenuManager>().openTerminalMenu();
+        else GameObject.Find("MenuManager").GetComponent<MenuManager>().navigateToMaterialMenu();
     }
 
     public void NavigateToWeaponEquipMenu()
@@ -484,11 +486,13 @@ public class EquipMenuTransition : MonoBehaviour
             prefab.index = i;
 
         }
-
-
+        runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionRuneUI.SetActive(true);
+        runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionClassUI.SetActive(false);
+        runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionEffect.SetActive(true);
+        runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionDamage.SetActive(false);
         runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = runeToAdd.runeName;
         runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = runeToAdd.runeDescription;
-        runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionEffect.GetComponent<TMP_Text>().text = "Effect +" + runeToAdd.runeEffect;
+        runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionEffect.transform.Find("EffectDescription").GetComponent<TMP_Text>().text = "+ " + runeToAdd.runeEffect;
     }
 
 

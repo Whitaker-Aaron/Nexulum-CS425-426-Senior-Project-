@@ -26,6 +26,17 @@ public class TerminalMenuTransition : MonoBehaviour
         menuManager.navigateToBaseShopMenu();
     }
 
+    public void TransitionToEquip()
+    {
+        menuManager.navigateToBaseEquipMenu();
+    }
+
+    public void TransitionToCraft()
+    {
+        menuManager.navigateToBaseCraftMenu();
+    }
+
+
     public void OnBackButton()
     {
         menuManager.CloseMenu();
