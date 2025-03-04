@@ -1102,14 +1102,17 @@ public class masterInput : MonoBehaviour
                 case 1:
                     animationControl.engAttackOne(animTime);
                     ES1.GetComponent<ParticleSystem>().Play();
+                    attackTime = engAnimTime;
                     break;
                 case 2:
                     animationControl.engAttackTwo(animTime);
                     ES2.GetComponent<ParticleSystem>().Play();
+                    attackTime = engAnimTimeTwo;
                     break;
                 case 3:
                     animationControl.engAttackThree();
                     ES3.GetComponent<ParticleSystem>().Play();
+                    attackTime = engAnimTimeThree;
                     break;
             }
             StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
@@ -1164,6 +1167,8 @@ public class masterInput : MonoBehaviour
         }
         else
         {
+            if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+                yield break;
             // Trigger Light Attack Animations and Effects
             temp = animationControl.getAnimationInfo();
             if (temp.IsName("Locomotion"))
@@ -1316,13 +1321,13 @@ public class masterInput : MonoBehaviour
 
         if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
         {
-            if (playerInput.actions["RightClick"].triggered)
+            if (playerInput.actions["RightClick"].triggered && !isAttacking)
             {
                 lastClickedTime = Time.time;
                 noOfClicks++;
 
                 // Start tracking attack hold time
-                StartCoroutine(HandleComboAttack(attackTime, noOfClicks, false));
+                StartCoroutine(HandleComboAttack(0, noOfClicks, false));
             }
         }
     }
@@ -1347,6 +1352,13 @@ public class masterInput : MonoBehaviour
         {
             yield return new WaitForSeconds(comboCooldown);
             noOfClicks = 0;
+            //isAttacking = false;
+        }
+        if(noOfClicks >= 3 && currentClass == WeaponBase.weaponClassTypes.Engineer)
+        {
+            yield return new WaitForSeconds(comboCooldown);
+            noOfClicks = 0;
+            //isAttacking = false;
         }
     }
 
@@ -1515,8 +1527,8 @@ public class masterInput : MonoBehaviour
         {
             if (playerInput.actions["attack"].IsPressed() && playerInput.actions["RightClick"].IsPressed())
             {
-                isAttacking = true;
-                StartCoroutine(waitAttack(.03f));
+                //isAttacking = false;
+                //StartCoroutine(waitAttack(.03f));
             }
 
             if (((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize)) && equippedWeapon.canShoot && equippedWeapon.isReloading == false)//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
