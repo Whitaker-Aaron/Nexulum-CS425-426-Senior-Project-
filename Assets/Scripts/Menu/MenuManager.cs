@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class MenuManager : MonoBehaviour
+public class MenuManager : MonoBehaviour, SaveSystemInterface
     
 {
     [SerializeField] GameObject materialsMenuReference;
@@ -14,8 +14,10 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject baseShopMenuReference;
     [SerializeField] GameObject terminalMenuReference;
     [SerializeField] GameObject craftMenuReference;
+    [SerializeField] GameObject baseCraftMenuReference;
     [SerializeField] GameObject itemsMenuReference;
     [SerializeField] GameObject equipMenuReference;
+    [SerializeField] GameObject baseEquipMenuReference;
     [SerializeField] GameObject chestMenuReference;
 
     [SerializeField] GameObject scrollContent;
@@ -57,6 +59,163 @@ public class MenuManager : MonoBehaviour
         
     }
 
+    public void SaveData(ref SaveData data)
+    {
+        var craftLists = GameObject.Find("CraftLists");
+        var weaponLists = craftLists.transform.Find("WeaponCraftList").GetComponent<WeaponCraftList>();
+        var runeLists = craftLists.transform.Find("RunesCraftList").GetComponent<RunesCraftList>();
+        var itemLists = craftLists.transform.Find("ItemsCraftList").GetComponent<ItemsCraftList>();
+        int accRecipeIndex = 0;
+        int allRecipeIndex = 0;
+
+        for(int i =0; i < itemLists.allRecipes.Count;  i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Item";
+            recipe.recipeName = itemLists.allRecipes[i].recipeName;
+            recipe.hasCrafted = itemLists.allRecipes[i].hasCrafted;
+            recipe.hasPurchased = itemLists.allRecipes[i].hasPurchased;
+            data.allRecipes[allRecipeIndex] = recipe;
+            allRecipeIndex++;
+        }
+        for (int i = 0; i < weaponLists.allRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Weapon";
+            recipe.recipeName = weaponLists.allRecipes[i].recipeName;
+            recipe.hasCrafted = weaponLists.allRecipes[i].hasCrafted;
+            recipe.hasPurchased = weaponLists.allRecipes[i].hasPurchased;
+            data.allRecipes[allRecipeIndex] = recipe;
+            allRecipeIndex++;
+        }
+        for (int i = 0; i < runeLists.allRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Rune";
+            recipe.recipeName = runeLists.allRecipes[i].recipeName;
+            recipe.hasCrafted = runeLists.allRecipes[i].hasCrafted;
+            recipe.hasPurchased = runeLists.allRecipes[i].hasPurchased;
+            data.allRecipes[allRecipeIndex] = recipe;
+            allRecipeIndex++;
+        }
+        for (int i = 0; i < itemLists.accessibleRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Item";
+            recipe.recipeName = itemLists.accessibleRecipes[i].recipeName;
+            recipe.hasCrafted = itemLists.accessibleRecipes[i].hasCrafted;
+            recipe.hasPurchased = itemLists.accessibleRecipes[i].hasPurchased;
+            data.accessibleRecipes[accRecipeIndex] = recipe;
+            accRecipeIndex++;
+        }
+        for (int i = 0; i < weaponLists.accessibleRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Weapon";
+            recipe.recipeName = weaponLists.accessibleRecipes[i].recipeName;
+            recipe.hasCrafted = weaponLists.accessibleRecipes[i].hasCrafted;
+            recipe.hasPurchased = weaponLists.accessibleRecipes[i].hasPurchased;
+            data.accessibleRecipes[accRecipeIndex] = recipe;
+            accRecipeIndex++;
+        }
+        for (int i = 0; i < runeLists.accessibleRecipes.Count; i++)
+        {
+            var recipe = new CraftRecipeSaveData();
+            recipe.recipeType = "Rune";
+            recipe.recipeName = runeLists.accessibleRecipes[i].recipeName;
+            recipe.hasCrafted = runeLists.accessibleRecipes[i].hasCrafted;
+            recipe.hasPurchased = runeLists.accessibleRecipes[i].hasPurchased;
+            data.accessibleRecipes[accRecipeIndex] = recipe;
+            accRecipeIndex++;
+        }
+    }
+
+    public void LoadData(SaveData data)
+    {
+        var craftLists = GameObject.Find("CraftLists");
+        var weaponLists = craftLists.transform.Find("WeaponCraftList").GetComponent<WeaponCraftList>();
+        var runeLists = craftLists.transform.Find("RunesCraftList").GetComponent<RunesCraftList>();
+        var itemLists = craftLists.transform.Find("ItemsCraftList").GetComponent<ItemsCraftList>();
+        if (data.isNewFile)
+        {
+            for (int i = 0; i < itemLists.allRecipes.Count; i++)
+            {
+                itemLists.allRecipes[i].hasCrafted = false;
+                itemLists.allRecipes[i].hasPurchased = false;
+            }
+            for (int i = 0; i < weaponLists.allRecipes.Count; i++)
+            {
+                weaponLists.allRecipes[i].hasCrafted = false;
+                weaponLists.allRecipes[i].hasPurchased = false;
+            }
+            for (int i = 0; i < runeLists.allRecipes.Count; i++)
+            {
+                runeLists.allRecipes[i].hasCrafted = false;
+                runeLists.allRecipes[i].hasPurchased = false;
+            }
+            for(int i = 0; i < data.accessibleRecipes.Length; i++)
+            {
+                if (data.accessibleRecipes[i] == null) continue;
+                switch (data.accessibleRecipes[i].recipeType)
+                {
+                    case "Weapon":
+                        weaponLists.addToAccessibleRecipes(GameObject.Find("WeaponsList").
+                            GetComponent<WeaponsList>().ReturnWeapon(data.accessibleRecipes[i].recipeName).weaponRecipe);
+                        break;
+                    case "Rune":
+                        runeLists.addToAccessibleRecipes(GameObject.Find("RunesList").
+                            GetComponent<RuneList>().ReturnRune(data.accessibleRecipes[i].recipeName).runeRecipe);
+                        break;
+                    case "Item":
+                        itemLists.addToAccessibleRecipes(GameObject.Find("ItemsList").
+                            GetComponent<ItemsList>().ReturnItem(data.accessibleRecipes[i].recipeName).itemRecipe);
+                        break;
+                }
+            }
+        }
+        else
+        {
+            weaponLists.accessibleRecipes.Clear();
+            runeLists.accessibleRecipes.Clear();
+            itemLists.accessibleRecipes.Clear();
+            for (int i = 0; i < data.accessibleRecipes.Length; i++)
+            {
+                if (data.accessibleRecipes[i] == null) continue;
+                Debug.Log(data.accessibleRecipes[i].recipeName);
+                switch (data.accessibleRecipes[i].recipeType)
+                {
+                    case "Weapon":
+                        var weaponRecipe = GameObject.Find("WeaponsList").
+                            GetComponent<WeaponsList>().ReturnWeapon(data.accessibleRecipes[i].recipeName).weaponRecipe;
+                        weaponRecipe.hasCrafted = data.accessibleRecipes[i].hasCrafted;
+                        weaponRecipe.hasPurchased = data.accessibleRecipes[i].hasPurchased;
+                        weaponLists.addToAccessibleRecipes(weaponRecipe);
+                        break;
+                    case "Rune":
+                        var runeRecipe = GameObject.Find("RunesList").
+                            GetComponent<RuneList>().ReturnRune(data.accessibleRecipes[i].recipeName).runeRecipe;
+                        Debug.Log(runeRecipe);
+                        runeRecipe.hasCrafted = data.accessibleRecipes[i].hasCrafted;
+                        runeRecipe.hasPurchased = data.accessibleRecipes[i].hasPurchased;
+                        runeLists.addToAccessibleRecipes(runeRecipe);
+                        break;
+                    case "Item":
+                        var itemRecipe = GameObject.Find("ItemsList").
+                            GetComponent<ItemsList>().ReturnItem(data.accessibleRecipes[i].recipeName).itemRecipe;
+                        itemRecipe.hasCrafted = data.accessibleRecipes[i].hasCrafted;
+                        itemRecipe.hasPurchased = data.accessibleRecipes[i].hasPurchased;
+                        itemLists.addToAccessibleRecipes(itemRecipe);
+                        break;
+                }
+            }
+        }
+    }
+
+        public GameObject GetCurrentMenu()
+    {
+        return currentMenuObject;
+    }
+
     public void openTerminalMenu()
     {
         if (menuActive)
@@ -72,6 +231,7 @@ public class MenuManager : MonoBehaviour
 
     public void openChestMenu(Chest chestRef)
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Destroy(currentMenuObject);
@@ -167,15 +327,6 @@ public class MenuManager : MonoBehaviour
 
         if (!pauseMenuActive && !character.transitioningRoom && !menusPaused && context.performed)
         {
-
-            if (GameObject.FindGameObjectWithTag("CraftLists") != null)
-            {
-                //Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
-            }
-            if(GameObject.FindGameObjectWithTag("ShopOptions") != null)
-            {
-                //Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
-            }
             if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
                 Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
@@ -191,9 +342,15 @@ public class MenuManager : MonoBehaviour
 
                 Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
             }
+            if (GameObject.FindGameObjectWithTag("ChestMenu") != null)
+            {
+                closeChestMenu();
+                //Destroy(GameObject.FindGameObjectWithTag("ChestMenu"));
+            }
+
 
             menuActive = false;
-
+            Destroy(currentMenuObject);
             currentMenuObject = Instantiate(pauseMenuReference);
             pauseMenuActive = true;
             Time.timeScale = 0;
@@ -334,7 +491,7 @@ public class MenuManager : MonoBehaviour
     }
     public void removeShopCraftRecipe(CraftRecipe recipeToRemove)
     {
-        GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopCraftRecipes>().removeRecipe(recipeToRemove);
+        //GameObject.FindGameObjectWithTag("ShopOptions").GetComponentInChildren<ShopCraftRecipes>().removeRecipe(recipeToRemove);
     }
 
     public void navigateToMaterialMenu()
@@ -389,7 +546,7 @@ public class MenuManager : MonoBehaviour
 
     public void navigateToCraftMenu()
     {
-        
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Debug.Log("Navigating to Craft Menu");
@@ -402,8 +559,25 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    public void navigateToBaseCraftMenu()
+    {
+        if (pauseMenuActive) return;
+        if (menuActive)
+        {
+            Debug.Log("Navigating to Craft Menu");
+            //Instantiate(craftListsReference);
+            Destroy(currentMenuObject);
+            currentMenuObject = Instantiate(baseCraftMenuReference);
+            currentMenuObject.GetComponent<CraftMenuTransition>().isTerminal = true;
+            currentMenuObject.transform.SetParent(canvas.transform, false);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x + 75, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
+        }
+    }
+
     public void navigateToItemsMenu()
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Destroy(currentMenuObject);
@@ -417,12 +591,29 @@ public class MenuManager : MonoBehaviour
 
     public void navigateToEquipMenu()
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Debug.Log("Navigating to Equip Menu");
             //Instantiate(craftListsReference);
             Destroy(currentMenuObject);
             currentMenuObject = Instantiate(equipMenuReference);
+            currentMenuObject.transform.SetParent(canvas.transform, false);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x + 75, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
+        }
+    }
+
+    public void navigateToBaseEquipMenu()
+    {
+        if (pauseMenuActive) return;
+        if (menuActive)
+        {
+            Debug.Log("Navigating to Equip Menu");
+            //Instantiate(craftListsReference);
+            Destroy(currentMenuObject);
+            currentMenuObject = Instantiate(baseEquipMenuReference);
+            currentMenuObject.GetComponent<EquipMenuTransition>().isTerminal = true;
             currentMenuObject.transform.SetParent(canvas.transform, false);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
             currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x + 75, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
@@ -535,7 +726,7 @@ public class MenuManager : MonoBehaviour
         var curFlorentine = character.GetFlorentine();
         if (currentMenuObject != null)
         {
-            var container = GameObject.Find("StoreOptionLayout").GetComponent<VerticalLayoutGroup>();
+            var container = GameObject.Find("StoreScrollContent").GetComponent<VerticalLayoutGroup>();
             switch (type)
             {
                 case StoreItem.StoreItemType.Recipe:
@@ -543,6 +734,7 @@ public class MenuManager : MonoBehaviour
                     if (recipes == null) break;
                     for (int i = 0; i < recipes.Count; i++)
                     {
+                        if (recipes[i].hasPurchased) continue;
                         var shopItem = shopOptionObject.GetComponent<StoreItem>();
                         shopItem.craftRecipe = recipes[i];
                         shopItem.storeItemName.GetComponent<TMP_Text>().text = recipes[i].recipeName + " Recipe";

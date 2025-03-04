@@ -13,6 +13,7 @@ public class RoomInformation : MonoBehaviour
     List<GameObject> allEnemies = new List<GameObject>();
     public List<GameObject> allLockedDoors = new List<GameObject>();
     public List<GameObject> allEventTriggers = new List<GameObject>();
+    public List<GameObject> allCollectibles = new List<GameObject>();
     public bool firstVisit = true;
     public bool floorEntrance = false;
     public bool requiredEnemyRoom = false;
@@ -117,6 +118,25 @@ public class RoomInformation : MonoBehaviour
         }
     }
 
+    public void InitializeCollectibles()
+    {
+        if (allCollectibles != null && allCollectibles.Count > 0 && roomData.collectibles != null)
+        {
+            foreach (var collectible in allCollectibles)
+            {
+                var collectibleScript = collectible.GetComponent<Collectible>();
+                if (collectibleScript != null)
+                {
+                    collectibleScript.SetRoomInfo(this);
+                    if (roomData.collectibles[collectibleScript.collectibleGuid])
+                    {
+                        collectibleScript.DisableCollectible();
+                    }
+                }
+            }
+        }
+    }
+
     public void UpdateDoorState(string guid, bool state)
     {
         if(roomData.lockedDoors != null)
@@ -130,6 +150,14 @@ public class RoomInformation : MonoBehaviour
         if (roomData.eventTriggers != null)
         {
             roomData.eventTriggers[guid] = state;
+        }
+    }
+
+    public void UpdateCollectibleState(string guid, bool state)
+    {
+        if (roomData.collectibles != null)
+        {
+            roomData.collectibles[guid] = state;
         }
     }
 

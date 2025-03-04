@@ -17,6 +17,8 @@ public class BaseShopMenu : MonoBehaviour
     [SerializeField] GameObject selection;
     [SerializeField] GameObject scroll;
     [SerializeField] GameObject florentineCount;
+    ScrollRect storeScrollRect;
+    public GameObject storeScrollContent;
 
     List<GameObject> curShopListings = new List<GameObject>();
     public void Start()
@@ -26,6 +28,8 @@ public class BaseShopMenu : MonoBehaviour
         availableItems.SetActive(false);
         availableWeapons.SetActive(false);
         shopTitle.SetActive(true);
+        storeScrollContent = GameObject.Find("StoreScrollContent");
+        storeScrollRect = scroll.GetComponent<ScrollRect>();
 
         backButton.SetActive(true);
         backButton2.SetActive(false);
@@ -36,6 +40,23 @@ public class BaseShopMenu : MonoBehaviour
         resetSelection();
     }
     // Start is called before the first frame update
+
+    public void Update()
+    {
+        if (EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "StoreItem")
+        {
+            var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
+            RectTransform selectedItemRect = selectedItem.GetComponent<RectTransform>();
+
+
+            var itemContentPanel = storeScrollContent.GetComponent<RectTransform>();
+            Vector2 newItemPos = (Vector2)storeScrollRect.transform.InverseTransformPoint(itemContentPanel.position)
+            - (Vector2)storeScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
+            float newItemPosY = (float)newItemPos.y;
+            itemContentPanel.anchoredPosition = new Vector2(itemContentPanel.anchoredPosition.x, newItemPosY - 150f);
+
+        }
+    }
     public void onRecipeButton()
     {
         scroll.SetActive(true);
@@ -171,5 +192,13 @@ public class BaseShopMenu : MonoBehaviour
         scroll.SetActive(false);
 
         clearCurShopListings();
+    }
+
+    enum ScrollSelection
+    {
+        none,
+        weapons,
+        recipe,
+        item
     }
 }

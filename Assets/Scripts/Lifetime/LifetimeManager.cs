@@ -155,6 +155,7 @@ public class LifetimeManager : MonoBehaviour
     {
         
         menuManager.CloseMenu();
+        uiManager.OnDeath();
         menuManager.menusPaused = true;
         inputManager.pausePlayerInput();
         StartCoroutine(AnimateDeathScreen());

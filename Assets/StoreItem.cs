@@ -18,11 +18,13 @@ public class StoreItem : MonoBehaviour
     [SerializeField] public GameObject storeItemNameShadow;
     [SerializeField] public GameObject florentineRequiredAmount;
     [SerializeField] public GameObject purchaseButton;
+    [SerializeField] public GameObject viewItemPanel;
     [SerializeField] public GameObject viewButton;
     [SerializeField] public GameObject disabledPanel;
     [SerializeField] public GameObject itemQuantity;
     [SerializeField] public GameObject requiredMaterials;
     [SerializeField] public GameObject description;
+    bool hasPurchased = false;
     public StoreItemType storeType;
     MenuManager menuManager;
 
@@ -36,7 +38,7 @@ public class StoreItem : MonoBehaviour
         if (storeType != StoreItemType.Recipe)
         {
             requiredMaterials.SetActive(false);
-            viewButton.SetActive(false);
+            viewItemPanel.SetActive(false);
         }
         if (storeType == StoreItemType.Recipe && craftRecipe != null)
         {
@@ -116,6 +118,7 @@ public class StoreItem : MonoBehaviour
         switch (storeType)
         {
             case StoreItemType.Recipe:
+                craftRecipe.hasPurchased = true;
                 Debug.Log("Purchasing recipe");
                 menuManager.AddToAvailableCraftRecipes(craftRecipe);
                 GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().RemoveFlorentine(craftRecipe.shopCost);

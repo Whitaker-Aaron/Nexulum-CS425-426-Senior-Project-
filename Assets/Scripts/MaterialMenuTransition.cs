@@ -20,6 +20,11 @@ public class MaterialMenuTransition : MonoBehaviour
         
     }
 
+    public void CloseMaterialsMenu()
+    {
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().CloseMenu();
+    }
+
     public void NavigateToCraftMenu()
     {
         Debug.Log("Button pressed");

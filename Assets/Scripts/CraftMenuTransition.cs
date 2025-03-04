@@ -36,6 +36,7 @@ public class CraftMenuTransition : MonoBehaviour
     ScrollRect itemsScrollRect;
 
     ScrollSelection curScrollSelection = ScrollSelection.none;
+    public bool isTerminal = false;
     
     void Start()
     {
@@ -213,7 +214,8 @@ public class CraftMenuTransition : MonoBehaviour
     public void NavigateToMaterialMenu()
     {
         Debug.Log("Back Button pressed");
-        GameObject.Find("MenuManager").GetComponent<MenuManager>().navigateToMaterialMenu();
+        if (isTerminal) GameObject.Find("MenuManager").GetComponent<MenuManager>().openTerminalMenu();
+        else GameObject.Find("MenuManager").GetComponent<MenuManager>().navigateToMaterialMenu();
     }
 
     public void NavigateToWeaponCraftMenu()
