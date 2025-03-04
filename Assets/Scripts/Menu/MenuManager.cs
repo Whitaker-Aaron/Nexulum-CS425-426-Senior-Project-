@@ -231,6 +231,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void openChestMenu(Chest chestRef)
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Destroy(currentMenuObject);
@@ -347,8 +348,9 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
                 //Destroy(GameObject.FindGameObjectWithTag("ChestMenu"));
             }
 
-            menuActive = false;
 
+            menuActive = false;
+            Destroy(currentMenuObject);
             currentMenuObject = Instantiate(pauseMenuReference);
             pauseMenuActive = true;
             Time.timeScale = 0;
@@ -544,7 +546,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void navigateToCraftMenu()
     {
-        
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Debug.Log("Navigating to Craft Menu");
@@ -559,7 +561,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void navigateToBaseCraftMenu()
     {
-
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Debug.Log("Navigating to Craft Menu");
@@ -575,6 +577,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void navigateToItemsMenu()
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Destroy(currentMenuObject);
@@ -588,6 +591,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void navigateToEquipMenu()
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Debug.Log("Navigating to Equip Menu");
@@ -602,6 +606,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void navigateToBaseEquipMenu()
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Debug.Log("Navigating to Equip Menu");

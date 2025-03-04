@@ -56,7 +56,9 @@ public class PauseMenuTransition : MonoBehaviour
     {
         Debug.Log("Current room at pause: " + roomManager.currentRoom.roomName);
         curRoom = roomManager.currentRoom.roomName;
-        
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(MapButton);
+
     }
 
 

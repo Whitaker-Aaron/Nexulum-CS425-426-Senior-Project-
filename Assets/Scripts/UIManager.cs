@@ -497,7 +497,7 @@ public class UIManager : MonoBehaviour
         var botGrad2 = GameObject.Find("BottomGradient2").GetComponent<RectTransform>();
         float desiredAmount = topGrad.sizeDelta.y + 300;
         
-        while(topGrad.sizeDelta.y != desiredAmount)
+        while(topGrad.sizeDelta.y < desiredAmount)
         {
             topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, topGrad.sizeDelta.y + 1250f*Time.deltaTime);
             topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, topGrad2.sizeDelta.y + 1250f * Time.deltaTime);
@@ -523,13 +523,13 @@ public class UIManager : MonoBehaviour
         var botGrad2 = GameObject.Find("BottomGradient2").GetComponent<RectTransform>();
         float desiredAmount = 275.9484f;
 
-        while (topGrad.sizeDelta.y != desiredAmount)
+        while (topGrad.sizeDelta.y > desiredAmount)
         {
             topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, topGrad.sizeDelta.y - 1250f * Time.deltaTime);
             topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, topGrad2.sizeDelta.y - 1250f * Time.deltaTime);
             botGrad.sizeDelta = new Vector2(botGrad.sizeDelta.x, botGrad.sizeDelta.y - 1250f * Time.deltaTime);
             botGrad2.sizeDelta = new Vector2(botGrad2.sizeDelta.x, botGrad2.sizeDelta.y - 1250f * Time.deltaTime);
-            if (Mathf.Abs(topGrad.sizeDelta.y - desiredAmount) <= 25)
+            if (Mathf.Abs(topGrad.sizeDelta.y - desiredAmount) <= 35)
             {
                 topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, desiredAmount);
                 topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, desiredAmount);
