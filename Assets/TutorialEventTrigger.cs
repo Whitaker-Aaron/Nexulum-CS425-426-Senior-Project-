@@ -38,6 +38,9 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
             {
                 curTutorial = Instantiate(tutorialRef);
                 curTutorial.transform.SetParent(canvas.transform, false);
+                var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+                var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
+                uiManager.startTutorialAnimate(mainTutorial);
                 inputManager.pausePlayerInput();
             }
             hasTriggered = true;

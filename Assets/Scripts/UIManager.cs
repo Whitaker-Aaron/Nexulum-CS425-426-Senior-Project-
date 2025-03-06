@@ -98,6 +98,35 @@ public class UIManager : MonoBehaviour
         DeactivateEnemiesRemainingUI();
     }
 
+    public void startTutorialAnimate(GameObject page)
+    {
+        StartCoroutine(animateTutorialPage(page));
+    }
+
+    public IEnumerator animateTutorialPage(GameObject page)
+    {
+        Vector3 desiredPos = new Vector3(-400, page.transform.localPosition.y, page.transform.localPosition.z);
+        Debug.Log(page);
+        Debug.Log(page.transform.position);
+        Debug.Log(page.transform.localPosition);
+        //page.transform.localPosition != desiredPos
+        bool animFinished = false;
+        while (!animFinished)
+        {
+            if (page == null) yield break;
+            if(page != null) page.transform.localPosition = Vector3.Lerp(page.transform.localPosition, desiredPos, (10f * Time.deltaTime));
+            /*if(page.transform.localPosition.x == -400.0f)
+            {
+                page.transform.localPosition = desiredPos;
+                animFinished = true;
+            }*/
+            //Debug.Log(page.transform.position);
+            //Debug.Log(page.transform.localPosition);
+            yield return null;
+        }
+        yield break;
+    }
+
     public IEnumerator animateEnemyRemainingUI()
     {
         enemiesRemainingUI.transform.position = initialEnemyRemainingUIPos;
