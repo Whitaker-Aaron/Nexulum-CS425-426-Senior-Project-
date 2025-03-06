@@ -97,7 +97,8 @@ public class TutorialPage : MonoBehaviour
 
             tutorialShadow.GetComponent<TMP_Text>().text = tutorial.tutorialName;
             tutorialDescription.GetComponent<TMP_Text>().text = tutorial.tutorialDialogueList[curPage];
-            tutorialImage.GetComponent<RawImage>().texture = tutorial.tutorialDialogueImages[curPage];
+            tutorialImage.GetComponent<Image>().sprite = tutorial.tutorialDialogueImages[curPage];
+            tutorialImage.GetComponent<Image>().preserveAspect = true;
 
             if (tutorial.tutorialAbilitySpriteKeyboard.Count > 0)
             {
