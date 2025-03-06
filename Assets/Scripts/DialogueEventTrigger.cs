@@ -51,6 +51,6 @@ public class DialogueEventTrigger : MonoBehaviourID, EventTrigger
     public void UpdateTriggerState()
     {
         Debug.Log(triggerGuid);
-        roomInfo.UpdateTriggerState(triggerGuid, hasTriggered);
+        if(roomInfo != null) roomInfo.UpdateTriggerState(triggerGuid, hasTriggered);
     }
 }
