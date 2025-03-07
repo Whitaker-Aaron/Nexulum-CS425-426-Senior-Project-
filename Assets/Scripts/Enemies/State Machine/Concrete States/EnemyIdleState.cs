@@ -10,7 +10,7 @@ public class EnemyIdleState : EnemyNeutralState
 
         if (stateContext.stayInIdle == false)
         {
-            stateContext.ChangeState(stateContext.patrolState);
+            stateContext.ChangeState("Patrol");
         }
 
         // Enemy should be stationary while idling

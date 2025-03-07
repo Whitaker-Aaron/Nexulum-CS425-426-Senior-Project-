@@ -46,7 +46,7 @@ public class EnemyPatrolState : EnemyNeutralState
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) // Chase if target is seen
         {
             stateContext.CustomDebugLog("EnemyPatrolState - Target spotted");
-            stateContext.ChangeState(stateContext.chaseState);
+            stateContext.ChangeState("Chase");
         }
 
         if (stateContext.EnemyIsAtPosition(nextPatrolPosition)) // Patrol otherwise

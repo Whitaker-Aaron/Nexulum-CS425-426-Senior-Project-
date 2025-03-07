@@ -75,6 +75,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
             AddState("Idle", idleState);
             AddState("Chase", chaseState);
             AddState("Search", searchState);
+            AddState("Patrol", patrolState);
         }
         else
         {
@@ -224,7 +225,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public string GetCurrentStateName() // Returns name (string) of current state
     {
-        return currentState.stateName;
+        return currentState.GetName();
     }
 
     public EnemyState GetCurrentState() // Returns the state object of the current state
