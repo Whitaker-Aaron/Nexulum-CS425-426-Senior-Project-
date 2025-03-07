@@ -14,8 +14,10 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
     [SerializeField] GameObject baseShopMenuReference;
     [SerializeField] GameObject terminalMenuReference;
     [SerializeField] GameObject craftMenuReference;
+    [SerializeField] GameObject baseCraftMenuReference;
     [SerializeField] GameObject itemsMenuReference;
     [SerializeField] GameObject equipMenuReference;
+    [SerializeField] GameObject baseEquipMenuReference;
     [SerializeField] GameObject chestMenuReference;
 
     [SerializeField] GameObject scrollContent;
@@ -229,6 +231,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void openChestMenu(Chest chestRef)
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Destroy(currentMenuObject);
@@ -324,15 +327,6 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
         if (!pauseMenuActive && !character.transitioningRoom && !menusPaused && context.performed)
         {
-
-            if (GameObject.FindGameObjectWithTag("CraftLists") != null)
-            {
-                //Destroy(GameObject.FindGameObjectWithTag("CraftLists"));
-            }
-            if(GameObject.FindGameObjectWithTag("ShopOptions") != null)
-            {
-                //Destroy(GameObject.FindGameObjectWithTag("ShopOptions"));
-            }
             if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
                 Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
@@ -348,9 +342,15 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
                 Destroy(GameObject.FindGameObjectWithTag("CraftMenu"));
             }
+            if (GameObject.FindGameObjectWithTag("ChestMenu") != null)
+            {
+                closeChestMenu();
+                //Destroy(GameObject.FindGameObjectWithTag("ChestMenu"));
+            }
+
 
             menuActive = false;
-
+            Destroy(currentMenuObject);
             currentMenuObject = Instantiate(pauseMenuReference);
             pauseMenuActive = true;
             Time.timeScale = 0;
@@ -546,7 +546,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void navigateToCraftMenu()
     {
-        
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Debug.Log("Navigating to Craft Menu");
@@ -559,8 +559,25 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
         }
     }
 
+    public void navigateToBaseCraftMenu()
+    {
+        if (pauseMenuActive) return;
+        if (menuActive)
+        {
+            Debug.Log("Navigating to Craft Menu");
+            //Instantiate(craftListsReference);
+            Destroy(currentMenuObject);
+            currentMenuObject = Instantiate(baseCraftMenuReference);
+            currentMenuObject.GetComponent<CraftMenuTransition>().isTerminal = true;
+            currentMenuObject.transform.SetParent(canvas.transform, false);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x + 75, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
+        }
+    }
+
     public void navigateToItemsMenu()
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Destroy(currentMenuObject);
@@ -574,12 +591,29 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void navigateToEquipMenu()
     {
+        if (pauseMenuActive) return;
         if (menuActive)
         {
             Debug.Log("Navigating to Equip Menu");
             //Instantiate(craftListsReference);
             Destroy(currentMenuObject);
             currentMenuObject = Instantiate(equipMenuReference);
+            currentMenuObject.transform.SetParent(canvas.transform, false);
+            currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x + 75, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);
+        }
+    }
+
+    public void navigateToBaseEquipMenu()
+    {
+        if (pauseMenuActive) return;
+        if (menuActive)
+        {
+            Debug.Log("Navigating to Equip Menu");
+            //Instantiate(craftListsReference);
+            Destroy(currentMenuObject);
+            currentMenuObject = Instantiate(baseEquipMenuReference);
+            currentMenuObject.GetComponent<EquipMenuTransition>().isTerminal = true;
             currentMenuObject.transform.SetParent(canvas.transform, false);
             currentMenuObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
             currentMenuObject.GetComponent<RectTransform>().localPosition = new Vector3(currentMenuObject.GetComponent<RectTransform>().localPosition.x + 75, currentMenuObject.GetComponent<RectTransform>().localPosition.y + 90, currentMenuObject.GetComponent<RectTransform>().localPosition.z);

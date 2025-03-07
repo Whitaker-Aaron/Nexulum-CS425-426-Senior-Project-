@@ -149,7 +149,7 @@ public class EnemyFrame : MonoBehaviour
     public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource, DamageType damageType)
     {
         if (enemyReference.isInvincible) return;
-
+        
         // Damage info for state - Aisling
         onDamaged = true;
         source = targetSource;
@@ -345,17 +345,27 @@ public class EnemyFrame : MonoBehaviour
     private IEnumerator death()
     {
         yield return (StartCoroutine(updateHealthBarsNegative()));
+        if (transform.GetComponentInChildren<ParticleSystem>() != null)
+        {
+            Debug.Log("enemy has particle system");
+            var particleSys = transform.GetComponentInChildren<ParticleSystem>();
+            //particleSys.transform.SetParent(null, true);
+            //particleSys.transform.position = new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z);
+            //particleSys.GetComponentInChildren<ParticleSystem>().Play();
+        }
+        else Debug.Log("enemy does not have particle system");
         enemyType.onDeath();
         for (int i = 0; i < materialList.Length; i++)
         {
             var craftMat = materialList[i].GetComponent<OverworldMaterial>();
             Debug.Log("Craft material drop rate: ");
             Debug.Log(craftMat.material.dropRate);
+            
             for (int j = 0; j < craftMat.material.dropAmount; j++)
             {
                 if (UnityEngine.Random.Range(0.0f, 1.0f) <= craftMat.material.dropRate)
                 {
-                    Instantiate(materialList[i], new Vector3(transform.position.x + UnityEngine.Random.Range(-1.0f, 1.0f), transform.position.y + 2.5f, transform.position.z + UnityEngine.Random.Range(-1.0f, 1.0f)), Quaternion.identity);
+                    Instantiate(materialList[i], new Vector3(transform.position.x, transform.position.y + 3.5f, transform.position.z), Quaternion.identity);
                 }
             }
             

@@ -63,6 +63,8 @@ public class UIManager : MonoBehaviour
     bool advanceTextbox = false;
     bool advanceLeadChar = false;
     bool viewItemActive = false;
+
+    Vector3 initialEnemyRemainingUIPos;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -71,6 +73,8 @@ public class UIManager : MonoBehaviour
         knightHUD.SetActive(false);
         gunnerHUD.SetActive(false);
         engineerHUD.SetActive(false);
+
+        initialEnemyRemainingUIPos = enemiesRemainingUI.transform.position;
     }
 
     private void Update()
@@ -89,6 +93,60 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void OnDeath()
+    {
+        DeactivateEnemiesRemainingUI();
+    }
+
+    public void startTutorialAnimate(GameObject page)
+    {
+        StartCoroutine(animateTutorialPage(page));
+    }
+
+    public IEnumerator animateTutorialPage(GameObject page)
+    {
+        Vector3 desiredPos = new Vector3(-400, page.transform.localPosition.y, page.transform.localPosition.z);
+        Debug.Log(page);
+        Debug.Log(page.transform.position);
+        Debug.Log(page.transform.localPosition);
+        //page.transform.localPosition != desiredPos
+        bool animFinished = false;
+        while (!animFinished)
+        {
+            if (page == null) yield break;
+            if(page != null) page.transform.localPosition = Vector3.Lerp(page.transform.localPosition, desiredPos, (10f * Time.deltaTime));
+            /*if(page.transform.localPosition.x == -400.0f)
+            {
+                page.transform.localPosition = desiredPos;
+                animFinished = true;
+            }*/
+            //Debug.Log(page.transform.position);
+            //Debug.Log(page.transform.localPosition);
+            yield return null;
+        }
+        yield break;
+    }
+
+    public IEnumerator animateEnemyRemainingUI()
+    {
+        enemiesRemainingUI.transform.position = initialEnemyRemainingUIPos;
+        Vector3 desiredPos = new Vector3(enemiesRemainingUI.transform.position.x, 932, enemiesRemainingUI.transform.position.z);
+        while(enemiesRemainingUI.transform.position != desiredPos)
+        {
+            //Vector3 newPos = new Vector3(enemiesRemainingUI.transform.position.x, enemiesRemainingUI.transform.position.y - (000f*Time.deltaTime),
+            //    enemiesRemainingUI.transform.position.z);
+            enemiesRemainingUI.transform.position = Vector3.Lerp(enemiesRemainingUI.transform.position, desiredPos, 10f * Time.deltaTime);
+            if (Mathf.Abs(enemiesRemainingUI.transform.position.y - 932) <= 2) enemiesRemainingUI.transform.position = desiredPos;
+            yield return null;
+        }
+        yield break;
+    }
+
+    public void DeactivateEnemiesRemainingUI()
+    {
+        enemiesRemainingUI.SetActive(false);
+    }
+
     public void ActivateEnemiesRemainingUI(int numEnemies)
     {
         enemiesRemainingUI.SetActive(true);
@@ -100,13 +158,14 @@ public class UIManager : MonoBehaviour
             //GameObject.Find("EnemiesRemainingUI").transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies;
             enemiesRemainingUI.transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
             enemiesRemainingUI.transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
+            StartCoroutine(animateEnemyRemainingUI());
         }
     }
 
     public bool UpdateEnemiesRemainingUI(int numEnemies)
     {
         if (!enemiesRemainingUI.activeSelf) return false;
-        if(numEnemies > 0)
+        if (numEnemies > 0)
         {
             Debug.Log("NUM ENEMIES: " + numEnemies.ToString());
             //enemiesRemainingUI.SetActive(true);
@@ -115,7 +174,7 @@ public class UIManager : MonoBehaviour
             enemiesRemainingUI.transform.Find("EnemyRemainingText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
             enemiesRemainingUI.transform.Find("EnemyRemainingShadowText").GetComponent<TMP_Text>().text = "x" + numEnemies.ToString();
         }
-        else enemiesRemainingUI.SetActive(false);
+        else DeactivateEnemiesRemainingUI();
 
         return true;
 
@@ -467,7 +526,7 @@ public class UIManager : MonoBehaviour
         var botGrad2 = GameObject.Find("BottomGradient2").GetComponent<RectTransform>();
         float desiredAmount = topGrad.sizeDelta.y + 300;
         
-        while(topGrad.sizeDelta.y != desiredAmount)
+        while(topGrad.sizeDelta.y < desiredAmount)
         {
             topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, topGrad.sizeDelta.y + 1250f*Time.deltaTime);
             topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, topGrad2.sizeDelta.y + 1250f * Time.deltaTime);
@@ -493,13 +552,13 @@ public class UIManager : MonoBehaviour
         var botGrad2 = GameObject.Find("BottomGradient2").GetComponent<RectTransform>();
         float desiredAmount = 275.9484f;
 
-        while (topGrad.sizeDelta.y != desiredAmount)
+        while (topGrad.sizeDelta.y > desiredAmount)
         {
             topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, topGrad.sizeDelta.y - 1250f * Time.deltaTime);
             topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, topGrad2.sizeDelta.y - 1250f * Time.deltaTime);
             botGrad.sizeDelta = new Vector2(botGrad.sizeDelta.x, botGrad.sizeDelta.y - 1250f * Time.deltaTime);
             botGrad2.sizeDelta = new Vector2(botGrad2.sizeDelta.x, botGrad2.sizeDelta.y - 1250f * Time.deltaTime);
-            if (Mathf.Abs(topGrad.sizeDelta.y - desiredAmount) <= 25)
+            if (Mathf.Abs(topGrad.sizeDelta.y - desiredAmount) <= 35)
             {
                 topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, desiredAmount);
                 topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, desiredAmount);
