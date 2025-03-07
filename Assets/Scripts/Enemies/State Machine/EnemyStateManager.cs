@@ -72,10 +72,19 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
             AddState("Chase", chaseState);
             AddState("Search", searchState);
         }
+        else
+        {
+            Debug.Log("EnemyStateManager.cs Awake() - useDefaultConcreteStates is toggled false");
+        }
     }
 
     public void Start()
     {
+        if (useDefaultConcreteStates == null)
+        {
+            Debug.LogError("EnemyStateManager.cs Start() - State dictionary is null");
+        }
+
         concreteStates.TrimExcess(); // Trim wasted space in concrete state dictionary
 
         agent = GetComponent<NavMeshAgent>();
@@ -131,6 +140,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
         }
     }
 
+    // Deprecated ChangeState function
     // public void ChangeState(EnemyState newState)
     // {
     //     if (currentState != null)
@@ -272,6 +282,18 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
         }
     }
 
+    public EnemyState GetDefaultState()
+    {
+        EnemyState def = concreteStates["Default"];
+        return def;
+    }
+
+    public string GetDefaultStateName()
+    {
+        EnemyState def = concreteStates["Default"];
+        return def.GetName();
+    }
+
     public void BuildStateDictionary(EnemyState defaultState, List<EnemyState> stateList)
     {
         if (defaultState != null)
@@ -283,9 +305,9 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
             Debug.LogError("EnemyStateManager.cs BuildStateDictionary() - Expected to receive EnemyState object, but received null.");
         }
 
-        foreach (EnemyState stateItem in stateList)
+        foreach (EnemyState i in stateList)
         {
-            AddState(stateItem.stateName, stateItem);
+            AddState(i.GetName(), i);
         }
     }
     

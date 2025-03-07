@@ -18,4 +18,9 @@ public class EnemyState
     public virtual void EnterState(EnemyStateManager stateContext) { }
     public virtual void RunState() { }
     public virtual void ExitState() { }
+
+    public string GetName()
+    {
+        return stateName;
+    }
 }
