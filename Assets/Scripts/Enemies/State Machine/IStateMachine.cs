@@ -7,7 +7,7 @@ public interface IStateMachine
     // EnemyState currentState;
     
     // Enemies should exit their currentState, set currentState to newState, then enter their currentState
-    void ChangeState(EnemyState newState);
+    void ChangeState(string newStateName);
 
     // Used to reset the state of enemies during level loading, implementation should simply change the state to whatever you want the 'default' state to be
     void ResetEnemyState();

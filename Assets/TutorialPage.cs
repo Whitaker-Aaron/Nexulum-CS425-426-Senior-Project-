@@ -100,16 +100,21 @@ public class TutorialPage : MonoBehaviour
             tutorialImage.GetComponent<Image>().sprite = tutorial.tutorialDialogueImages[curPage];
             tutorialImage.GetComponent<Image>().preserveAspect = true;
 
-            if (tutorial.tutorialAbilitySpriteKeyboard.Count > 0)
+            if (tutorial.tutorialAbilitySpriteKeyboard.Count >= curPage+1 && tutorial.tutorialAbilitySpriteKeyboard[curPage] != null)
             {
                 tutorialInputSprite.
                     GetComponent<Image>().sprite = tutorial.tutorialAbilitySpriteKeyboard[curPage];
                 tutorialInputSprite.
                     GetComponent<Image>().preserveAspect = true;
             }
+            else
+            {
+                tutorialInputSprite.SetActive(false);
+            }
 
-            if (tutorial.tutorialAbilityName.Count > 0) tutorialAbilityName.
+            if (tutorial.tutorialAbilityName.Count >= curPage+1 && tutorial.tutorialAbilityName[curPage] != null) tutorialAbilityName.
                     GetComponent<TMP_Text>().text = tutorial.tutorialAbilityName[curPage];
+            else tutorialAbilityName.SetActive(false);
         }
     }
 
