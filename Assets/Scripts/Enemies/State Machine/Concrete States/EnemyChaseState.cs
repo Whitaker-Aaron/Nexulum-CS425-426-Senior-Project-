@@ -1,3 +1,4 @@
+
 public class EnemyChaseState : EnemyNeutralState
 {
     public override void EnterState(EnemyStateManager stateContext)
@@ -16,15 +17,14 @@ public class EnemyChaseState : EnemyNeutralState
     {
         stateContext.agent.isStopped = stateContext.movementPaused;
 
-        if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) {
-            if (false)
-            {
-                stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, false);
-            }
-            else
-            {
-                stateContext.ChangeState(stateContext.searchState);
-            }
+        //if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) {
+        if (false)
+        {
+            stateContext.MoveTo(stateContext.enemyLOS.targetPos, stateContext.engagementRange, false);
+        }
+        else
+        {
+            stateContext.ChangeState("Search");
         }
     }
 

@@ -18,7 +18,7 @@ public abstract class EnemyNeutralState : EnemyState
                     GameObject player = GameObject.FindWithTag("Player");
                     stateContext.enemyLOS.ChangeTarget(player);
                     stateContext.enemyLOS.SetLastKnownTargetPosition(stateContext.enemyLOS.GetCurrentTargetPosition()); // Ensure LKTP is updated
-                    stateContext.ChangeState(stateContext.searchState); // Search will go to the target regardless of if its in LoS
+                    stateContext.ChangeState("Search"); // Search will go to the target regardless of if its in LoS
                     break;
             }
             stateContext.enemyFrame.onDamaged = false; // Reset onDamaged
