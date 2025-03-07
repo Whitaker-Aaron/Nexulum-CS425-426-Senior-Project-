@@ -10,16 +10,19 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
     [SerializeField] GameObject tutorialRef;
     [SerializeField] public bool isClassDependent = false;
     public bool hasTriggered { get; set; }
+    public bool requiresDungeonVisitFirst = false;
     public RoomInformation roomInfo { get; set; }
     [SerializeField] TutorialObject tutorialObject;
     [SerializeField] TutorialObject[] classTutorialObjects;
     masterInput inputManager;
     GameObject canvas;
+    CharacterBase character;
     // Start is called before the first frame update
     void Start()
     {
         inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
         canvas = GameObject.Find("Canvas").gameObject;
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
     }
 
     // Update is called once per frame
@@ -30,8 +33,16 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
 
     private void OnTriggerEnter(Collider other)
     {
+        
         if (other.tag == "Player")
         {
+            if (requiresDungeonVisitFirst)
+            {
+                Debug.Log(character);
+                Debug.Log(character.progressionChecks);
+                Debug.Log(character.progressionChecks.getHasVisitedDungeon());
+                if (!character.progressionChecks.getHasVisitedDungeon()) return;
+            }
             GameObject curTutorial;
             //if (dialogueObject != null) StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(dialogueObject));
             
@@ -46,6 +57,7 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
                 var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
                 uiManager.startTutorialAnimate(mainTutorial);
                 inputManager.pausePlayerInput();
+                Time.timeScale = 0.0f;
             }
             else if(classTutorialObjects != null && isClassDependent)
             {
@@ -76,6 +88,7 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
                     var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
                     uiManager.startTutorialAnimate(mainTutorial);
                     inputManager.pausePlayerInput();
+                    Time.timeScale = 0.0f;
                 }
                 
             }

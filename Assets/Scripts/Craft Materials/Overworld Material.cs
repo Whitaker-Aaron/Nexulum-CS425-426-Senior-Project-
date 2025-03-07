@@ -154,8 +154,9 @@ public class OverworldMaterial : MonoBehaviour
         Debug.Log("Colliding with: ");
         Debug.Log(other.gameObject.tag);
         if (other.gameObject.tag == "Player" && isCollectible)
-
         {
+            
+
             audioManager.PlaySFX("MaterialCollect");
             var scrollRef = scrollManager.GetComponent<MaterialScrollManager>();
             scrollRef.AddToMaterialsInventory(this.material, 1);
@@ -163,6 +164,12 @@ public class OverworldMaterial : MonoBehaviour
             if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
                 GameObject.Find("MenuManager").GetComponent<MenuManager>().AddToCurrentInventory(this.material);
+            }
+            if (!other.gameObject.GetComponent<CharacterBase>().progressionChecks.getHasPickedUpMaterial())
+            {
+                other.gameObject.GetComponent<CharacterBase>().progressionChecks.setHasPickedUpMaterial(true);
+                var tutorialManager = GameObject.Find("TutorialManager").GetComponent<TutorialManager>();
+                tutorialManager.LoadPage(tutorialManager.returnTutorial("MaterialsAndCrafting"));
             }
             Destroy(this.gameObject);
         }

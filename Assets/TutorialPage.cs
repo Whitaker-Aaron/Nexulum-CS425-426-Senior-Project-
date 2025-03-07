@@ -124,6 +124,7 @@ public class TutorialPage : MonoBehaviour
         GameObject.Find("InputandAnimationManager").GetComponent<masterInput>().resumePlayerInput();
         Destroy(trigger);
         Destroy(this.gameObject);
+        Time.timeScale = 1.0f;
     }
 
 

@@ -114,7 +114,7 @@ public class UIManager : MonoBehaviour
         while (!animFinished)
         {
             if (page == null) yield break;
-            if(page != null) page.transform.localPosition = Vector3.Lerp(page.transform.localPosition, desiredPos, (10f * Time.deltaTime));
+            if(page != null) page.transform.localPosition = Vector3.Lerp(page.transform.localPosition, desiredPos, (10f * Time.unscaledDeltaTime));
             /*if(page.transform.localPosition.x == -400.0f)
             {
                 page.transform.localPosition = desiredPos;
