@@ -19,13 +19,13 @@ public class BehaviorTest : MonoBehaviour
         // enemyStateMananger.PauseMovementFor(5f);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        EnemyStateManager enemyStateMananger = gameObject.GetComponent<EnemyStateManager>();
-        if (toggle) // This represents whatever your condition is
-        {
-            enemyStateMananger.PauseMovementFor(5f);
-        }
-    }
+    // // Update is called once per frame
+    // void Update()
+    // {
+    //     EnemyStateManager enemyStateMananger = gameObject.GetComponent<EnemyStateManager>();
+    //     if (toggle) // This represents whatever your condition is
+    //     {
+    //         enemyStateMananger.PauseMovementFor(5f);
+    //     }
+    // }
 }

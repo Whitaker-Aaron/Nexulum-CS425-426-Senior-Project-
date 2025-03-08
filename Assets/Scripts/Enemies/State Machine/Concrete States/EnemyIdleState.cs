@@ -8,6 +8,11 @@ public class EnemyIdleState : EnemyNeutralState
 
         stateContext.CustomDebugLog("Entered " + stateName + " state");
 
+        if (stateContext.stayInIdle == false)
+        {
+            stateContext.ChangeState("Patrol");
+        }
+
         // Enemy should be stationary while idling
         stateContext.agent.isStopped = true;
     }

@@ -25,6 +25,9 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Movement pausing
     public bool movementPaused = false;
 
+    // Lock into idle state instead of patrol
+    public bool stayInIdle = true;
+
     // ----------------------------------------------
     // Components
     // ----------------------------------------------
@@ -53,6 +56,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public EnemyIdleState idleState = new EnemyIdleState();
     public EnemyChaseState chaseState = new EnemyChaseState();
     public EnemySearchState searchState = new EnemySearchState();
+    public EnemyPatrolState patrolState = new EnemyPatrolState();
 
     // Debugging and status effects
     [Header("Debugging and Status Effects")]
@@ -71,6 +75,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
             AddState("Idle", idleState);
             AddState("Chase", chaseState);
             AddState("Search", searchState);
+            AddState("Patrol", patrolState);
         }
         else
         {
@@ -171,7 +176,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Pathfinding-less and predicted movement will be supported at a later date, for now this function can only cover movement with pathfinding
     public void MoveTo(Vector3 position, bool enablePrediction = false)
     {
-        Vector3 directionToPos = (position - enemyLOS.selfPos).normalized;
+        CustomDebugLog("Moving to " + position);
         agent.SetDestination(position);
     }
 
@@ -220,7 +225,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public string GetCurrentStateName() // Returns name (string) of current state
     {
-        return currentState.stateName;
+        return currentState.GetName();
     }
 
     public EnemyState GetCurrentState() // Returns the state object of the current state

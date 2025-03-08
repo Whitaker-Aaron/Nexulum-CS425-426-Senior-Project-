@@ -9,7 +9,7 @@ using System;
 public class EnemyState
 {
     protected EnemyStateManager stateContext;
-    public string stateName;
+    protected string stateName;
     public EnemyState()
     {
         this.stateName = "";
