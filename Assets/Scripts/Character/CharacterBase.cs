@@ -26,6 +26,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     //[SerializeField] public RuneInt runeInt;
     public WeaponClass weaponClass;
     public CharacterStat characterStats;
+    public ProgressionChecks progressionChecks;
     public Coroutine curStopVel;
     PhysicMaterial physicMat;
     Rigidbody rigidbody;
@@ -94,6 +95,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         physicMat = GetComponent<CapsuleCollider>().material;
         masterInput = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
         rigidbody = GetComponent<Rigidbody>();
+        progressionChecks = new ProgressionChecks();
     }
 
     private void OnCollisionEnter(Collision collision)

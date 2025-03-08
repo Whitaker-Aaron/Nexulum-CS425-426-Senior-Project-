@@ -44,10 +44,13 @@ public class Interactor : MonoBehaviour
     }
     public void OnInteractInput(InputAction.CallbackContext context)
     {
+        if (GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().
+            GetMasterInput().GetComponent<masterInput>().inputPaused == true) return;
         Debug.Log("Input detected");
         Debug.Log(currentInteractable);
         if (context.performed && currentInteractable != null)
         {
+            
             currentInteractable.Interact(this);
         }
     }

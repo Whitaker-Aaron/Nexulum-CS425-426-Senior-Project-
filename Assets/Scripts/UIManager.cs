@@ -98,6 +98,35 @@ public class UIManager : MonoBehaviour
         DeactivateEnemiesRemainingUI();
     }
 
+    public void startTutorialAnimate(GameObject page)
+    {
+        StartCoroutine(animateTutorialPage(page));
+    }
+
+    public IEnumerator animateTutorialPage(GameObject page)
+    {
+        Vector3 desiredPos = new Vector3(-400, page.transform.localPosition.y, page.transform.localPosition.z);
+        Debug.Log(page);
+        Debug.Log(page.transform.position);
+        Debug.Log(page.transform.localPosition);
+        //page.transform.localPosition != desiredPos
+        bool animFinished = false;
+        while (!animFinished)
+        {
+            if (page == null) yield break;
+            if(page != null) page.transform.localPosition = Vector3.Lerp(page.transform.localPosition, desiredPos, (10f * Time.unscaledDeltaTime));
+            /*if(page.transform.localPosition.x == -400.0f)
+            {
+                page.transform.localPosition = desiredPos;
+                animFinished = true;
+            }*/
+            //Debug.Log(page.transform.position);
+            //Debug.Log(page.transform.localPosition);
+            yield return null;
+        }
+        yield break;
+    }
+
     public IEnumerator animateEnemyRemainingUI()
     {
         enemiesRemainingUI.transform.position = initialEnemyRemainingUIPos;
@@ -497,7 +526,7 @@ public class UIManager : MonoBehaviour
         var botGrad2 = GameObject.Find("BottomGradient2").GetComponent<RectTransform>();
         float desiredAmount = topGrad.sizeDelta.y + 300;
         
-        while(topGrad.sizeDelta.y != desiredAmount)
+        while(topGrad.sizeDelta.y < desiredAmount)
         {
             topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, topGrad.sizeDelta.y + 1250f*Time.deltaTime);
             topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, topGrad2.sizeDelta.y + 1250f * Time.deltaTime);
@@ -523,13 +552,13 @@ public class UIManager : MonoBehaviour
         var botGrad2 = GameObject.Find("BottomGradient2").GetComponent<RectTransform>();
         float desiredAmount = 275.9484f;
 
-        while (topGrad.sizeDelta.y != desiredAmount)
+        while (topGrad.sizeDelta.y > desiredAmount)
         {
             topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, topGrad.sizeDelta.y - 1250f * Time.deltaTime);
             topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, topGrad2.sizeDelta.y - 1250f * Time.deltaTime);
             botGrad.sizeDelta = new Vector2(botGrad.sizeDelta.x, botGrad.sizeDelta.y - 1250f * Time.deltaTime);
             botGrad2.sizeDelta = new Vector2(botGrad2.sizeDelta.x, botGrad2.sizeDelta.y - 1250f * Time.deltaTime);
-            if (Mathf.Abs(topGrad.sizeDelta.y - desiredAmount) <= 25)
+            if (Mathf.Abs(topGrad.sizeDelta.y - desiredAmount) <= 35)
             {
                 topGrad.sizeDelta = new Vector2(topGrad.sizeDelta.x, desiredAmount);
                 topGrad2.sizeDelta = new Vector2(topGrad2.sizeDelta.x, desiredAmount);

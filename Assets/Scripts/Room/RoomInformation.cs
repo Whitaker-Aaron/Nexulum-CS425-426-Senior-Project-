@@ -29,11 +29,14 @@ public class RoomInformation : MonoBehaviour
         
 
         //allEnemies = new GameObject[enemies.transform.childCount];
-
-        for(int i =0; i < enemies.transform.childCount; i++)
+        if(enemies != null)
         {
-            allEnemies.Add(enemies.transform.GetChild(i).gameObject);
+            for (int i = 0; i < enemies.transform.childCount; i++)
+            {
+                allEnemies.Add(enemies.transform.GetChild(i).gameObject);
+            }
         }
+        
     }
 
     private void OnEnable()
