@@ -663,7 +663,7 @@ public class masterInput : MonoBehaviour
         if (currentClass == WeaponBase.weaponClassTypes.Gunner)
         {
             print("calling reload in UWW");
-            StartCoroutine(character.equippedWeapon.weaponType.Reload());
+            StartCoroutine(GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().equippedWeapon.weaponType.Reload());
             StartCoroutine(animationControl.gunnerReload(equippedWeapon.reloadTime));
             updateDistance(equippedWeapon.rangeModifier);
             yield break;

@@ -10,6 +10,7 @@ public class EquipOptionPrefab : MonoBehaviour
     public Rune rune;
 
     [SerializeField] public GameObject equipOptionName;
+    [SerializeField] public GameObject image;
     [SerializeField] public GameObject equipOptionEquipText;
     [SerializeField] public GameObject equipOptionDescription;
     [SerializeField] public GameObject equipOptionButton;
