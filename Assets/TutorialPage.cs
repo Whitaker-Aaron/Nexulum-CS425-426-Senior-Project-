@@ -20,6 +20,7 @@ public class TutorialPage : MonoBehaviour
     [SerializeField] GameObject exitPanel;
     [SerializeField] GameObject nextDisablePanel;
     [SerializeField] GameObject backButton;
+    [SerializeField] GameObject abilityNameBackdrop;
     [SerializeField] GameObject backDisablePanel;
     [SerializeField] GameObject exitButton;
     [SerializeField] GameObject pageCount;
@@ -100,8 +101,9 @@ public class TutorialPage : MonoBehaviour
             tutorialImage.GetComponent<Image>().sprite = tutorial.tutorialDialogueImages[curPage];
             tutorialImage.GetComponent<Image>().preserveAspect = true;
 
-            if (tutorial.tutorialAbilitySpriteKeyboard.Count >= curPage+1 && tutorial.tutorialAbilitySpriteKeyboard[curPage] != null)
+            if (tutorial.tutorialAbilitySpriteKeyboard[curPage] != null)
             {
+                tutorialInputSprite.SetActive(true);
                 tutorialInputSprite.
                     GetComponent<Image>().sprite = tutorial.tutorialAbilitySpriteKeyboard[curPage];
                 tutorialInputSprite.
@@ -112,9 +114,17 @@ public class TutorialPage : MonoBehaviour
                 tutorialInputSprite.SetActive(false);
             }
 
-            if (tutorial.tutorialAbilityName.Count >= curPage+1 && tutorial.tutorialAbilityName[curPage] != null) tutorialAbilityName.
-                    GetComponent<TMP_Text>().text = tutorial.tutorialAbilityName[curPage];
-            else tutorialAbilityName.SetActive(false);
+            if (tutorial.tutorialAbilityName[curPage] != "")
+            {
+                tutorialAbilityName.SetActive(true);
+                abilityNameBackdrop.SetActive(true);
+                tutorialAbilityName.GetComponent<TMP_Text>().text = tutorial.tutorialAbilityName[curPage];
+            }
+            else
+            {
+                abilityNameBackdrop.SetActive(false);
+                tutorialAbilityName.SetActive(false);
+            }
         }
     }
 
