@@ -32,6 +32,7 @@ public class revolverProj : projectile
     {
         bulletHitEffect = "bulletHitPool";
         GetDamage("Player");
+        ignore = LayerMask.GetMask("Material", "Ignore Raycast");
     }
 
     private void OnEnable()
@@ -59,7 +60,7 @@ public class revolverProj : projectile
     void checkDistance()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity))// && poolName != "enemyMagePoolOne")
+        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity, ~ignore))// && poolName != "enemyMagePoolOne")
         {
             hitPoint = hit.point;
         }
