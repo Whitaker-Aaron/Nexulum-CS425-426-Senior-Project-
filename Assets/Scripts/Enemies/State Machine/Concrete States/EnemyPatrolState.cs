@@ -4,15 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.AI;
 
 [Serializable]
 public class EnemyPatrolState : EnemyNeutralState
 {
-    public Vector3[] patrolPoints;
-    private Vector3 nextPatrolPosition;
+    public Transform[] patrolPoints;
     private int currentPointIndex = 0;
-    private NavMeshPath path;
     public override void EnterState(EnemyStateManager stateContext)
     {
         this.stateContext = stateContext;
@@ -21,27 +18,26 @@ public class EnemyPatrolState : EnemyNeutralState
         stateContext.CustomDebugLog("Entered " + stateName + " state");
 
         stateContext.agent.isStopped = stateContext.movementPaused;
+        stateContext.agent.autoBraking = false;
+        stateContext.agent.stoppingDistance = 0;
 
-        nextPatrolPosition = patrolPoints[currentPointIndex];
+        if (patrolPoints == null || patrolPoints.Length == 0)
+        {
+            Debug.LogError("EnemyPatrolState.cs - Enemy set to patrol but patrol route is null or of length 0. Back to idle.");
+            stateContext.stayInIdle = true;
+            stateContext.ChangeState("Idle");
+        }
 
-        // Create patrol path
-        path = new NavMeshPath();
-        bool calculatePathBool = NavMesh.CalculatePath(stateContext.enemyLOS.selfPos, nextPatrolPosition, NavMesh.AllAreas, path);
+        stateContext.MoveTo(patrolPoints[currentPointIndex].position, false);
 
-        stateContext.CustomDebugLog("CalculatePath returned " + calculatePathBool);
-        stateContext.CustomDebugLog("Is stopped? " + stateContext.agent.isStopped);
-        stateContext.CustomDebugLog("Next position = " + nextPatrolPosition);
-        stateContext.CustomDebugLog("Current point index = " + currentPointIndex);
-        stateContext.CustomDebugLog("Path: " + path);
-        stateContext.CustomDebugLog("Path Status: " + path.status);
-        stateContext.CustomDebugLog("Agent enabled? " + stateContext.agent.enabled);
-
-        // stateContext.MoveTo(nextPatrolPosition, false);
+        Debug.Log("NavAgent Destination: " + stateContext.agent.destination);
     }
 
     public override void RunState()
     {
         base.OnDamaged();
+        stateContext.agent.isStopped = stateContext.movementPaused;
+        Debug.Log("Distance to point: " + Vector3.Distance(patrolPoints[currentPointIndex].position, stateContext.transform.position));
 
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) // Chase if target is seen
         {
@@ -49,51 +45,51 @@ public class EnemyPatrolState : EnemyNeutralState
             stateContext.ChangeState("Chase");
         }
 
-        if (stateContext.EnemyIsAtPosition(nextPatrolPosition)) // Patrol otherwise
+        if (stateContext.EnemyIsAtPosition(patrolPoints[currentPointIndex].position) && patrolPoints.Length != 1)
         {
-            stateContext.CustomDebugLog("Arrived at point " + nextPatrolPosition);
-            IncrementCurrentPointIndex();
-            SetnextPatrolPosition(patrolPoints[currentPointIndex]);
-            stateContext.CustomDebugLog("Moving to next point " + nextPatrolPosition + " at index " + currentPointIndex);
-            // stateContext.MoveTo(nextPatrolPosition, false);
+            stateContext.CustomDebugLog("Enemy is at patrol point " + patrolPoints[currentPointIndex].position);
+            MoveToNextPoint();
         }
     }
 
     public override void ExitState()
     {
         stateContext.CustomDebugLog("Exited " + stateName + " state");
+        stateContext.agent.autoBraking = true;
     }
 
-    private Vector3 GetnextPatrolPosition()
-    {
-        return patrolPoints[currentPointIndex + 1];
-    }
-
-    private void SetnextPatrolPosition(Vector3 position)
-    {
-        nextPatrolPosition = position;
-    }
-
-    public Vector3[] GetPatrolPoints()
+    public Transform[] GetPatrolPoints()
     {
         return patrolPoints;
     }
 
-    public void SetPatrolPoints(Vector3[] points)
+    public void SetPatrolPoints(Transform[] newPoints)
     {
-        patrolPoints = points;
+        patrolPoints = newPoints;
     }
 
-    private void IncrementCurrentPointIndex() // Increments current point index by 1
+    private void MoveToNextPoint()
     {
-        int maxIndex = patrolPoints.Length - 1;
-        if (currentPointIndex + 1 <= maxIndex) // If, after adding amount, the new index would be within array bounds
+        if (patrolPoints != null || patrolPoints.Length != 0)
         {
-            currentPointIndex += 1;
+            currentPointIndex = (currentPointIndex + 1) % patrolPoints.Length;
+            stateContext.MoveTo(patrolPoints[currentPointIndex].position, false);
         }
-        else // Otherwise wrap around, index only incremented by 1 in this fxn -> currentPointIndex can just be set to 0
+        else
         {
-            currentPointIndex = 0;
+            Debug.LogError("EnemyPatrolState.cs - Enemy set to patrol but patrol route is null or of length 0.");
+            return;
+        }
+    }
+
+    public void AppendPatrolPoint(Transform point)
+    {
+        if (patrolPoints.Length != 0){
+            patrolPoints[patrolPoints.Length - 1] = point;
+        }
+        else
+        {
+            patrolPoints[0] = point;
         }
     }
 }

@@ -26,7 +26,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public bool movementPaused = false;
 
     // Lock into idle state instead of patrol
-    public bool stayInIdle = false;
+    public bool stayInIdle = true;
 
     // ----------------------------------------------
     // Components
