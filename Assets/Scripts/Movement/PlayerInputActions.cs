@@ -170,6 +170,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ActivateKeyboard"",
+                    ""type"": ""Button"",
+                    ""id"": ""a2f0a81f-31d2-43f3-b1cb-37c0c38d67ec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ActivateGamepad"",
+                    ""type"": ""Button"",
+                    ""id"": ""23d0bd28-3d36-4488-84af-cc4ce650ab7f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -557,6 +575,72 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Repair"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""wasd"",
+                    ""id"": ""580ef365-7553-46e6-8ce7-35a5f091c623"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""ee51aa9e-9a75-412c-bd87-8f4b2bd35857"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""9184fe71-485f-4aa9-b90f-879777562036"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d3c0b222-b70a-423e-bcd3-dcc0334ade72"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e062f47d-2ee2-4c27-b7f2-e5bf4391094a"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0920a72-5155-4ec6-9c97-cdb41b6208da"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateGamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -671,6 +755,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_player_Interact = m_player.FindAction("Interact", throwIfNotFound: true);
         m_player_SwitchAbilities = m_player.FindAction("SwitchAbilities", throwIfNotFound: true);
         m_player_Repair = m_player.FindAction("Repair", throwIfNotFound: true);
+        m_player_ActivateKeyboard = m_player.FindAction("ActivateKeyboard", throwIfNotFound: true);
+        m_player_ActivateGamepad = m_player.FindAction("ActivateGamepad", throwIfNotFound: true);
         // MenuControl
         m_MenuControl = asset.FindActionMap("MenuControl", throwIfNotFound: true);
         m_MenuControl_Pause = m_MenuControl.FindAction("Pause", throwIfNotFound: true);
@@ -753,6 +839,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_Interact;
     private readonly InputAction m_player_SwitchAbilities;
     private readonly InputAction m_player_Repair;
+    private readonly InputAction m_player_ActivateKeyboard;
+    private readonly InputAction m_player_ActivateGamepad;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -773,6 +861,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_player_Interact;
         public InputAction @SwitchAbilities => m_Wrapper.m_player_SwitchAbilities;
         public InputAction @Repair => m_Wrapper.m_player_Repair;
+        public InputAction @ActivateKeyboard => m_Wrapper.m_player_ActivateKeyboard;
+        public InputAction @ActivateGamepad => m_Wrapper.m_player_ActivateGamepad;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -830,6 +920,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Repair.started += instance.OnRepair;
             @Repair.performed += instance.OnRepair;
             @Repair.canceled += instance.OnRepair;
+            @ActivateKeyboard.started += instance.OnActivateKeyboard;
+            @ActivateKeyboard.performed += instance.OnActivateKeyboard;
+            @ActivateKeyboard.canceled += instance.OnActivateKeyboard;
+            @ActivateGamepad.started += instance.OnActivateGamepad;
+            @ActivateGamepad.performed += instance.OnActivateGamepad;
+            @ActivateGamepad.canceled += instance.OnActivateGamepad;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -882,6 +978,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Repair.started -= instance.OnRepair;
             @Repair.performed -= instance.OnRepair;
             @Repair.canceled -= instance.OnRepair;
+            @ActivateKeyboard.started -= instance.OnActivateKeyboard;
+            @ActivateKeyboard.performed -= instance.OnActivateKeyboard;
+            @ActivateKeyboard.canceled -= instance.OnActivateKeyboard;
+            @ActivateGamepad.started -= instance.OnActivateGamepad;
+            @ActivateGamepad.performed -= instance.OnActivateGamepad;
+            @ActivateGamepad.canceled -= instance.OnActivateGamepad;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -979,6 +1081,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnSwitchAbilities(InputAction.CallbackContext context);
         void OnRepair(InputAction.CallbackContext context);
+        void OnActivateKeyboard(InputAction.CallbackContext context);
+        void OnActivateGamepad(InputAction.CallbackContext context);
     }
     public interface IMenuControlActions
     {

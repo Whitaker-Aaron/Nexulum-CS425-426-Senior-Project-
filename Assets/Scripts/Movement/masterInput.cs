@@ -53,6 +53,8 @@ public class masterInput : MonoBehaviour
     bool isDashing = false;
     bool isGamepadLooking = false;
     bool isMouseLooking = false;
+    bool isGamepadActive= false;
+    bool isKeyboardActive = false;
     public bool characterColliding = false;
     public float minLookDistance = 1f;
     public LayerMask ground;
@@ -453,6 +455,11 @@ public class masterInput : MonoBehaviour
         return animationControl;
     }
 
+    public bool getGamepadActive()
+    {
+        return isGamepadActive;
+    }
+
     public void ActivateFallAnimation(){
         switch (currentClass)
         {
@@ -487,11 +494,32 @@ public class masterInput : MonoBehaviour
         }
     }
 
+    public void OnActivateKeyboard(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            isGamepadActive = false;
+            isKeyboardActive = true;
+        }
+        
+    }
+
+    public void OnActivateGamepad(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            isGamepadActive = true;
+            isKeyboardActive = false;
+        }
+        
+    }
+
 
     public void OnMouseLook(InputAction.CallbackContext context)
     {
-        if (inputPaused || isGamepadLooking)
+        if (inputPaused)
             return;
+        if (isGamepadLooking) isGamepadLooking = false;
         isMouseLooking = true;
         // Read mouse position input
         Vector2 mousePosition = context.ReadValue<Vector2>();
@@ -516,7 +544,7 @@ public class masterInput : MonoBehaviour
         {
             player.transform.LookAt(player.transform.position + lookDir, Vector3.up); // Rotate towards the look direction
         }
-        isMouseLooking = false;
+        //isMouseLooking = false;
     }
 
     public void onSwitchToSpell()
@@ -552,8 +580,9 @@ public class masterInput : MonoBehaviour
 
     public void OnGamepadLook(InputAction.CallbackContext context)
     {
-        if (inputPaused || isMouseLooking)
+        if (inputPaused)
             return;
+        if (isMouseLooking) isMouseLooking = false;
         isGamepadLooking = true;
 
         // Get the right stick input from the gamepad
@@ -589,7 +618,7 @@ public class masterInput : MonoBehaviour
             player.transform.LookAt(player.transform.position + lookDir, Vector3.up); // Rotate towards the look direction
             //player.transform.rotation = Quaternion.Euler(lookDir.)
         }
-        isGamepadLooking = false;
+        //isGamepadLooking = false;
     }
 
     //onMove is implemented through InputSystem in unity, context is the input

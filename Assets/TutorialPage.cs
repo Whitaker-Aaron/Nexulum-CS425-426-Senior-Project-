@@ -24,16 +24,21 @@ public class TutorialPage : MonoBehaviour
     [SerializeField] GameObject backDisablePanel;
     [SerializeField] GameObject exitButton;
     [SerializeField] GameObject pageCount;
+    bool usingController = false;
     public int curPage = 0;
+
+    masterInput inputManager;
 
     // Start is called before the first frame update
     public void Awake()
     {
-        
+        inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
     }
 
     public void Start()
     {
+        Debug.Log("Gamepad active?: " + inputManager.getGamepadActive());
+        if (inputManager.getGamepadActive()) usingController = true;
         LoadPage();
 
         //EventSystem.
@@ -101,11 +106,19 @@ public class TutorialPage : MonoBehaviour
             tutorialImage.GetComponent<Image>().sprite = tutorial.tutorialDialogueImages[curPage];
             tutorialImage.GetComponent<Image>().preserveAspect = true;
 
-            if (tutorial.tutorialAbilitySpriteKeyboard[curPage] != null)
+            if (tutorial.tutorialAbilitySpriteKeyboard[curPage] != null && !usingController)
             {
                 tutorialInputSprite.SetActive(true);
                 tutorialInputSprite.
                     GetComponent<Image>().sprite = tutorial.tutorialAbilitySpriteKeyboard[curPage];
+                tutorialInputSprite.
+                    GetComponent<Image>().preserveAspect = true;
+            }
+            else if (tutorial.tutorialAbilitySpriteGamepad[curPage] != null && usingController)
+            {
+                tutorialInputSprite.SetActive(true);
+                tutorialInputSprite.
+                    GetComponent<Image>().sprite = tutorial.tutorialAbilitySpriteGamepad[curPage];
                 tutorialInputSprite.
                     GetComponent<Image>().preserveAspect = true;
             }

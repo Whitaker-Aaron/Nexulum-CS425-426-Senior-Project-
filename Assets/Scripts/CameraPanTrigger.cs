@@ -50,8 +50,11 @@ public class CameraPanTrigger : MonoBehaviourID, EventTrigger
 
     public IEnumerator StartCameraPanThenDestroy()
     {
-        camera.panYAxisLocked = panYAxisLocked;
-        camera.panLookAtLocked = panLookAtLocked;
+        if (objectToPanTo.Count >= 1)
+        {
+            camera.panYAxisLocked = panYAxisLocked;
+            camera.panLookAtLocked = panLookAtLocked;
+        }  
         //yield return new WaitForSeconds(0.25f);
         character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         character.inEvent = true;
