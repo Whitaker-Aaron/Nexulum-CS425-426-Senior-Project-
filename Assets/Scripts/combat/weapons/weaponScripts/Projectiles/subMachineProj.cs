@@ -47,7 +47,7 @@ public class subMachineProj : projectile
 
         //RaycastHit hit;
         GetDamage("Player");
-
+        ignore = LayerMask.GetMask("Material", "Ignore Raycast");
 
     }
 
@@ -60,7 +60,7 @@ public class subMachineProj : projectile
     {
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity))// && poolName != "enemyMagePoolOne")
+        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity, ~ignore))// && poolName != "enemyMagePoolOne")
         {
             hitPoint = hit.point;
         }

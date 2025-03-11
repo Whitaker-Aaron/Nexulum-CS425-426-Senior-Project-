@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class BehaviorTest : MonoBehaviour
 {
-
     EnemyStateManager enemyStateMananger;
     public bool toggle = false;
 
+    void Awake()
+    {
+        //
+    }
     void Start()
     {
         Debug.Log("Enemy test behavior script start");
@@ -16,13 +19,13 @@ public class BehaviorTest : MonoBehaviour
         // enemyStateMananger.PauseMovementFor(5f);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        EnemyStateManager enemyStateMananger = gameObject.GetComponent<EnemyStateManager>();
-        if (toggle) // This represents whatever your condition is
-        {
-            enemyStateMananger.PauseMovementFor(5f);
-        }
-    }
+    // // Update is called once per frame
+    // void Update()
+    // {
+    //     EnemyStateManager enemyStateMananger = gameObject.GetComponent<EnemyStateManager>();
+    //     if (toggle) // This represents whatever your condition is
+    //     {
+    //         enemyStateMananger.PauseMovementFor(5f);
+    //     }
+    // }
 }

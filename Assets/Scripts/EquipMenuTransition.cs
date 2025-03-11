@@ -506,6 +506,7 @@ public class EquipMenuTransition : MonoBehaviour
             {
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().rune = runeInventory[i];
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().type = EquipOptionPrefab.EquipTypes.Rune;
+                if(runeInventory[i].runeTexture != null) equipOptionPrefab.GetComponent<EquipOptionPrefab>().image.GetComponent<RawImage>().texture = runeInventory[i].runeTexture;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = runeInventory[i].runeName;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = runeInventory[i].runeDescription;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(true);

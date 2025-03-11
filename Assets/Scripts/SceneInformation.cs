@@ -41,6 +41,9 @@ public class SceneInformation : MonoBehaviour
     {
         roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
         characterRef = GameObject.FindWithTag("Player").GetComponent<CharacterBase>();
+
+        if (sceneName == "Floor1") characterRef.progressionChecks.setHasVisitedDungeon(true);
+
         if (sceneName == "BaseCamp")
         {
             beginningRoom = new RoomInformation();

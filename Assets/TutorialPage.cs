@@ -20,19 +20,25 @@ public class TutorialPage : MonoBehaviour
     [SerializeField] GameObject exitPanel;
     [SerializeField] GameObject nextDisablePanel;
     [SerializeField] GameObject backButton;
+    [SerializeField] GameObject abilityNameBackdrop;
     [SerializeField] GameObject backDisablePanel;
     [SerializeField] GameObject exitButton;
     [SerializeField] GameObject pageCount;
+    bool usingController = false;
     public int curPage = 0;
+
+    masterInput inputManager;
 
     // Start is called before the first frame update
     public void Awake()
     {
-        
+        inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
     }
 
     public void Start()
     {
+        Debug.Log("Gamepad active?: " + inputManager.getGamepadActive());
+        if (inputManager.getGamepadActive()) usingController = true;
         LoadPage();
 
         //EventSystem.
@@ -97,18 +103,41 @@ public class TutorialPage : MonoBehaviour
 
             tutorialShadow.GetComponent<TMP_Text>().text = tutorial.tutorialName;
             tutorialDescription.GetComponent<TMP_Text>().text = tutorial.tutorialDialogueList[curPage];
-            tutorialImage.GetComponent<RawImage>().texture = tutorial.tutorialDialogueImages[curPage];
+            tutorialImage.GetComponent<Image>().sprite = tutorial.tutorialDialogueImages[curPage];
+            tutorialImage.GetComponent<Image>().preserveAspect = true;
 
-            if (tutorial.tutorialAbilitySpriteKeyboard.Count > 0)
+            if (tutorial.tutorialAbilitySpriteKeyboard[curPage] != null && !usingController)
             {
+                tutorialInputSprite.SetActive(true);
                 tutorialInputSprite.
                     GetComponent<Image>().sprite = tutorial.tutorialAbilitySpriteKeyboard[curPage];
                 tutorialInputSprite.
                     GetComponent<Image>().preserveAspect = true;
             }
+            else if (tutorial.tutorialAbilitySpriteGamepad[curPage] != null && usingController)
+            {
+                tutorialInputSprite.SetActive(true);
+                tutorialInputSprite.
+                    GetComponent<Image>().sprite = tutorial.tutorialAbilitySpriteGamepad[curPage];
+                tutorialInputSprite.
+                    GetComponent<Image>().preserveAspect = true;
+            }
+            else
+            {
+                tutorialInputSprite.SetActive(false);
+            }
 
-            if (tutorial.tutorialAbilityName.Count > 0) tutorialAbilityName.
-                    GetComponent<TMP_Text>().text = tutorial.tutorialAbilityName[curPage];
+            if (tutorial.tutorialAbilityName[curPage] != "")
+            {
+                tutorialAbilityName.SetActive(true);
+                abilityNameBackdrop.SetActive(true);
+                tutorialAbilityName.GetComponent<TMP_Text>().text = tutorial.tutorialAbilityName[curPage];
+            }
+            else
+            {
+                abilityNameBackdrop.SetActive(false);
+                tutorialAbilityName.SetActive(false);
+            }
         }
     }
 
@@ -123,6 +152,7 @@ public class TutorialPage : MonoBehaviour
         GameObject.Find("InputandAnimationManager").GetComponent<masterInput>().resumePlayerInput();
         Destroy(trigger);
         Destroy(this.gameObject);
+        Time.timeScale = 1.0f;
     }
 
 

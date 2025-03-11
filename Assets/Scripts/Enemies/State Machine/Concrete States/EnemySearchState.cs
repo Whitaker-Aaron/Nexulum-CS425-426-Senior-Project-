@@ -28,14 +28,14 @@ public class EnemySearchState : EnemyNeutralState
         
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag())
         {
-            stateContext.ChangeState(stateContext.chaseState);
+            stateContext.ChangeState("Chase");
         }
         else
         {
             if (stateContext.EnemyIsAtPosition(stateContext.enemyLOS.lastKnownTargetPos))
             {
                 stateContext.CustomDebugLog("Arrived at last known player position, switching to idle.");
-                stateContext.ChangeState(stateContext.idleState);
+                stateContext.ChangeState("Idle");
             }
         }
     }

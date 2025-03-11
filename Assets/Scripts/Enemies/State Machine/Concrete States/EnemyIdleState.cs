@@ -1,3 +1,4 @@
+
 public class EnemyIdleState : EnemyNeutralState
 {
     public override void EnterState(EnemyStateManager stateContext)
@@ -6,6 +7,11 @@ public class EnemyIdleState : EnemyNeutralState
         this.stateName = "Idle";
 
         stateContext.CustomDebugLog("Entered " + stateName + " state");
+
+        if (stateContext.stayInIdle == false)
+        {
+            stateContext.ChangeState("Patrol");
+        }
 
         // Enemy should be stationary while idling
         stateContext.agent.isStopped = true;
@@ -17,7 +23,7 @@ public class EnemyIdleState : EnemyNeutralState
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag())
         {
             // Changes to chase state if the target is spotted - Aisling
-            stateContext.ChangeState(stateContext.chaseState);
+            stateContext.ChangeState("Chase");
         }
     }
 

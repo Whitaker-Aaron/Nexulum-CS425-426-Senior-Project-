@@ -118,6 +118,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""LeftClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""b33a9bd8-5932-4237-bfec-2a01eca4277c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""AbilityOne"",
                     ""type"": ""Button"",
                     ""id"": ""c730c0ad-3e0c-43a1-a7d6-1a9a5b743929"",
@@ -166,6 +175,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Repair"",
                     ""type"": ""Button"",
                     ""id"": ""5809cfff-a205-47e9-ad8b-947a7802b2e1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ActivateKeyboard"",
+                    ""type"": ""Button"",
+                    ""id"": ""a2f0a81f-31d2-43f3-b1cb-37c0c38d67ec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ActivateGamepad"",
+                    ""type"": ""Button"",
+                    ""id"": ""23d0bd28-3d36-4488-84af-cc4ce650ab7f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Submit"",
+                    ""type"": ""Button"",
+                    ""id"": ""79c7c1b3-7882-4381-9136-3410efc8fa80"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -557,6 +593,127 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Repair"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""wasd"",
+                    ""id"": ""580ef365-7553-46e6-8ce7-35a5f091c623"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""ee51aa9e-9a75-412c-bd87-8f4b2bd35857"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""9184fe71-485f-4aa9-b90f-879777562036"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d3c0b222-b70a-423e-bcd3-dcc0334ade72"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e062f47d-2ee2-4c27-b7f2-e5bf4391094a"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateKeyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0920a72-5155-4ec6-9c97-cdb41b6208da"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActivateGamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e9c5d58f-bb06-47c9-bd05-d12514c40479"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9b97dd46-50c9-4850-9558-c5b7aabfd860"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96808f02-2105-4f14-85b9-25ab4496648a"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2a7ea5e-b733-429b-8a31-d7bcd2e9ec53"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d9fd1712-d06d-4f59-80f3-16aadc1b7959"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -665,12 +822,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_player_GamePadLook = m_player.FindAction("GamePadLook", throwIfNotFound: true);
         m_player_Reload = m_player.FindAction("Reload", throwIfNotFound: true);
         m_player_RightClick = m_player.FindAction("RightClick", throwIfNotFound: true);
+        m_player_LeftClick = m_player.FindAction("LeftClick", throwIfNotFound: true);
         m_player_AbilityOne = m_player.FindAction("AbilityOne", throwIfNotFound: true);
         m_player_AbilityTwo = m_player.FindAction("AbilityTwo", throwIfNotFound: true);
         m_player_AbilityThree = m_player.FindAction("AbilityThree", throwIfNotFound: true);
         m_player_Interact = m_player.FindAction("Interact", throwIfNotFound: true);
         m_player_SwitchAbilities = m_player.FindAction("SwitchAbilities", throwIfNotFound: true);
         m_player_Repair = m_player.FindAction("Repair", throwIfNotFound: true);
+        m_player_ActivateKeyboard = m_player.FindAction("ActivateKeyboard", throwIfNotFound: true);
+        m_player_ActivateGamepad = m_player.FindAction("ActivateGamepad", throwIfNotFound: true);
+        m_player_Submit = m_player.FindAction("Submit", throwIfNotFound: true);
         // MenuControl
         m_MenuControl = asset.FindActionMap("MenuControl", throwIfNotFound: true);
         m_MenuControl_Pause = m_MenuControl.FindAction("Pause", throwIfNotFound: true);
@@ -747,12 +908,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_GamePadLook;
     private readonly InputAction m_player_Reload;
     private readonly InputAction m_player_RightClick;
+    private readonly InputAction m_player_LeftClick;
     private readonly InputAction m_player_AbilityOne;
     private readonly InputAction m_player_AbilityTwo;
     private readonly InputAction m_player_AbilityThree;
     private readonly InputAction m_player_Interact;
     private readonly InputAction m_player_SwitchAbilities;
     private readonly InputAction m_player_Repair;
+    private readonly InputAction m_player_ActivateKeyboard;
+    private readonly InputAction m_player_ActivateGamepad;
+    private readonly InputAction m_player_Submit;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -767,12 +932,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @GamePadLook => m_Wrapper.m_player_GamePadLook;
         public InputAction @Reload => m_Wrapper.m_player_Reload;
         public InputAction @RightClick => m_Wrapper.m_player_RightClick;
+        public InputAction @LeftClick => m_Wrapper.m_player_LeftClick;
         public InputAction @AbilityOne => m_Wrapper.m_player_AbilityOne;
         public InputAction @AbilityTwo => m_Wrapper.m_player_AbilityTwo;
         public InputAction @AbilityThree => m_Wrapper.m_player_AbilityThree;
         public InputAction @Interact => m_Wrapper.m_player_Interact;
         public InputAction @SwitchAbilities => m_Wrapper.m_player_SwitchAbilities;
         public InputAction @Repair => m_Wrapper.m_player_Repair;
+        public InputAction @ActivateKeyboard => m_Wrapper.m_player_ActivateKeyboard;
+        public InputAction @ActivateGamepad => m_Wrapper.m_player_ActivateGamepad;
+        public InputAction @Submit => m_Wrapper.m_player_Submit;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -812,6 +981,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightClick.started += instance.OnRightClick;
             @RightClick.performed += instance.OnRightClick;
             @RightClick.canceled += instance.OnRightClick;
+            @LeftClick.started += instance.OnLeftClick;
+            @LeftClick.performed += instance.OnLeftClick;
+            @LeftClick.canceled += instance.OnLeftClick;
             @AbilityOne.started += instance.OnAbilityOne;
             @AbilityOne.performed += instance.OnAbilityOne;
             @AbilityOne.canceled += instance.OnAbilityOne;
@@ -830,6 +1002,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Repair.started += instance.OnRepair;
             @Repair.performed += instance.OnRepair;
             @Repair.canceled += instance.OnRepair;
+            @ActivateKeyboard.started += instance.OnActivateKeyboard;
+            @ActivateKeyboard.performed += instance.OnActivateKeyboard;
+            @ActivateKeyboard.canceled += instance.OnActivateKeyboard;
+            @ActivateGamepad.started += instance.OnActivateGamepad;
+            @ActivateGamepad.performed += instance.OnActivateGamepad;
+            @ActivateGamepad.canceled += instance.OnActivateGamepad;
+            @Submit.started += instance.OnSubmit;
+            @Submit.performed += instance.OnSubmit;
+            @Submit.canceled += instance.OnSubmit;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -864,6 +1045,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightClick.started -= instance.OnRightClick;
             @RightClick.performed -= instance.OnRightClick;
             @RightClick.canceled -= instance.OnRightClick;
+            @LeftClick.started -= instance.OnLeftClick;
+            @LeftClick.performed -= instance.OnLeftClick;
+            @LeftClick.canceled -= instance.OnLeftClick;
             @AbilityOne.started -= instance.OnAbilityOne;
             @AbilityOne.performed -= instance.OnAbilityOne;
             @AbilityOne.canceled -= instance.OnAbilityOne;
@@ -882,6 +1066,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Repair.started -= instance.OnRepair;
             @Repair.performed -= instance.OnRepair;
             @Repair.canceled -= instance.OnRepair;
+            @ActivateKeyboard.started -= instance.OnActivateKeyboard;
+            @ActivateKeyboard.performed -= instance.OnActivateKeyboard;
+            @ActivateKeyboard.canceled -= instance.OnActivateKeyboard;
+            @ActivateGamepad.started -= instance.OnActivateGamepad;
+            @ActivateGamepad.performed -= instance.OnActivateGamepad;
+            @ActivateGamepad.canceled -= instance.OnActivateGamepad;
+            @Submit.started -= instance.OnSubmit;
+            @Submit.performed -= instance.OnSubmit;
+            @Submit.canceled -= instance.OnSubmit;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -973,12 +1166,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnGamePadLook(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
+        void OnLeftClick(InputAction.CallbackContext context);
         void OnAbilityOne(InputAction.CallbackContext context);
         void OnAbilityTwo(InputAction.CallbackContext context);
         void OnAbilityThree(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnSwitchAbilities(InputAction.CallbackContext context);
         void OnRepair(InputAction.CallbackContext context);
+        void OnActivateKeyboard(InputAction.CallbackContext context);
+        void OnActivateGamepad(InputAction.CallbackContext context);
+        void OnSubmit(InputAction.CallbackContext context);
     }
     public interface IMenuControlActions
     {

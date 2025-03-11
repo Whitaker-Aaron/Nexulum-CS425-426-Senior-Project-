@@ -50,13 +50,16 @@ public class CameraPanTrigger : MonoBehaviourID, EventTrigger
 
     public IEnumerator StartCameraPanThenDestroy()
     {
-        camera.panYAxisLocked = panYAxisLocked;
-        camera.panLookAtLocked = panLookAtLocked;
+        if (objectToPanTo.Count >= 1)
+        {
+            camera.panYAxisLocked = panYAxisLocked;
+            camera.panLookAtLocked = panLookAtLocked;
+        }  
         //yield return new WaitForSeconds(0.25f);
         character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         character.inEvent = true;
         if (dialogueObject != null) yield return StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(dialogueObject));
-        yield return StartCoroutine(camera.PanToPosition(objectToPanTo[0].transform.position + offset, panSpeed, panDelay));
+        if(objectToPanTo.Count >= 1) yield return StartCoroutine(camera.PanToPosition(objectToPanTo[0].transform.position + offset, panSpeed, panDelay));
         hasTriggered = true;
         //if (tutorialObject != null) StartTutorial();
         UpdateTriggerState();

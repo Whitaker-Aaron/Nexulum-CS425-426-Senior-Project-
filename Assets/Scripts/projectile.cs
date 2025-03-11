@@ -17,6 +17,7 @@ public abstract class projectile : MonoBehaviour
     public int damage = 0;
     Rigidbody rb;
     public LayerMask enemy;
+    protected LayerMask ignore;
     protected int layerMask;
     masterInput input;
     protected UIManager uiManager;
@@ -126,7 +127,7 @@ public abstract class projectile : MonoBehaviour
         //DontDestroyOnLoad(this);
         input = GameObject.FindGameObjectWithTag("inputManager").GetComponent<masterInput>();
         //GetDamage();
-        layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
+        ignore = LayerMask.GetMask("Material");//"Default", "Enemy", "ground");
         playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         enemyProjectileDamage = masterInput.instance.gameObject.GetComponent<enemyProjectileDamage>();
 

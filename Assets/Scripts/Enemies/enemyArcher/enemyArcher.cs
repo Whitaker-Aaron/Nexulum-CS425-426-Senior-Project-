@@ -50,8 +50,8 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
         checkDistance();
 
         enemyState = enemyStateManager.GetCurrentState();
-        print("Enemy state is: " + enemyState.stateName);
-        if((inRange && playerObj != null) && enemyState != null && (enemyState.stateName == "Chase" || enemyState.stateName == "Search"))
+        print("Enemy state is: " + enemyState.GetName());
+        if((inRange && playerObj != null) && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
         {
             gameObject.transform.LookAt(playerObj.transform.position, Vector3.up);
             print("Enemy can shoot bow");

@@ -46,7 +46,7 @@ public class rifleProj : projectile
 
         //RaycastHit hit;
         GetDamage("Player");
-
+        ignore = LayerMask.GetMask("Material", "Ignore Raycast");
 
     }
 
@@ -58,7 +58,7 @@ public class rifleProj : projectile
     void checkDistance()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity))// && poolName != "enemyMagePoolOne")
+        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity, ~ignore))// && poolName != "enemyMagePoolOne")
         {
             hitPoint = hit.point;
         }
@@ -68,6 +68,9 @@ public class rifleProj : projectile
 
         if ((distanceToHit <= step || distanceToHit <= bufferDistance || hitEnemy) && hitPoint != null)
         {
+            if (hit.collider == null)
+                return;
+
             if (hit.collider.gameObject.tag == "Enemy")
             {
                 hitEnemy = true;
@@ -89,6 +92,7 @@ public class rifleProj : projectile
                 uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
 
             }
+
             playEffect(hitPoint);
             // We've reached the hit point, stop the projectile
             stop = true;
