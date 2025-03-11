@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4903923262536536871
+--- !u!1 &3880327393975062676
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6782279903350017760}
-  m_Layer: 0
-  m_Name: attackPoint
+  - component: {fileID: 99160798791166058}
+  m_Layer: 7
+  m_Name: attackpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6782279903350017760
+--- !u!4 &99160798791166058
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4903923262536536871}
+  m_GameObject: {fileID: 3880327393975062676}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 1.217, z: 0.492}
+  m_LocalPosition: {x: -0, y: 1.058, z: 0.552}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -71,8 +71,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6782279903350017760}
   - {fileID: 15904674241301828}
+  - {fileID: 99160798791166058}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 198.588, z: 0}
 --- !u!114 &2122617763535812972
@@ -96,6 +96,7 @@ MonoBehaviour:
   healthRef: {fileID: 0}
   initialPos: {x: 0, y: 0, z: 0}
   dmgOverTimeActivated: 1
+  isMiniboss: 0
   onDamaged: 0
   source: 0
   effectTickInterval: 5
@@ -146,10 +147,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.8153613
-  m_Height: 1.6307226
+  m_Radius: 0.49953762
+  m_Height: 1.172533
   m_Direction: 1
-  m_Center: {x: 0.18999909, y: 1.5599968, z: -0.13536131}
+  m_Center: {x: 0.18999611, y: 1.789082, z: -0.08888203}
 --- !u!195 &4928959221387099164
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -255,11 +256,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultMovementSpeed: 2
   engagementRange: 1
+  inaccuracyPointTolerance: 1
   currentSpeed: 0
   movementPaused: 0
+  stayInIdle: 1
   agent: {fileID: 4928959221387099164}
   enemyLOS: {fileID: 0}
   enemyFrame: {fileID: 0}
+  useDefaultConcreteStates: 1
+  concreteStates:
+    _serializedList: []
+  patrolState:
+    patrolPoints: []
   enableStateDebugLogs: 0
   isFrozen: 0
 --- !u!114 &6996728658863666810
@@ -275,6 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  canTarget: 1
   player: {fileID: 0}
   detectionRange: 40
   visionAngle: 90
@@ -298,15 +307,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  attackPoint: {fileID: 6782279903350017760}
-  visionDistance: 40
+  attackPoint: {fileID: 99160798791166058}
   Player:
     serializedVersion: 2
     m_Bits: 64
-  attackRange: 0.5
+  attackDamage: 10
+  visionDistance: 40
   floatSpeed: 2
   floatHeight: 0.5
-  attackDamage: 20
+  attackRange: 0.5
+  attackCooldownTime: 2
+  canAttack: 1
 --- !u!1001 &6047482625680741885
 PrefabInstance:
   m_ObjectHideFlags: 0

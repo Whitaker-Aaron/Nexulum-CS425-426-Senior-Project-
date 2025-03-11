@@ -22,15 +22,14 @@ public class GraveDigger : MonoBehaviour, enemyInt
     public GameObject skeletonPrefab2; // Second skeleton prefab
     public GameObject smokeEffectPrefab; // Smoke effect prefab
 
-    private float firstSpawnDelay = 5f; // Initial delay before first spawn
-    private float spawnInterval = 45f; // Time in seconds between spawns
+    private float firstSpawnDelay = 5f;
+    private float spawnInterval = 45f;
 
     private bool isSpawning = true;
     public bool canAttack = true;
 
     void Start()
     {
-        // Automatically find the Player if not set in Inspector
         if (player == null)
         {
             playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -50,7 +49,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
         estate = GetComponent<EnemyStateManager>();
         if (estate == null)
         {
-            Debug.LogError("EnemyStateManager not found on EnemyHead!");
+            Debug.LogError("EnemyStateManager not found on GraveDigger!");
         }
 
         StartCoroutine(SpawnSkeletonsRoutine());
@@ -66,11 +65,9 @@ public class GraveDigger : MonoBehaviour, enemyInt
 
     IEnumerator SpawnSkeletonsRoutine()
     {
-        // First spawn after initial delay
         yield return new WaitForSeconds(firstSpawnDelay);
         SpawnSkeletons();
 
-        // Continue spawning at regular intervals
         while (isSpawning)
         {
             yield return new WaitForSeconds(spawnInterval);
@@ -85,7 +82,6 @@ public class GraveDigger : MonoBehaviour, enemyInt
             Vector3 spawnPosition1 = new Vector3(transform.position.x + 5f, transform.position.y + 1f, transform.position.z);
             Vector3 spawnPosition2 = new Vector3(transform.position.x - 5f, transform.position.y + 1f, transform.position.z);
 
-            // Spawn smoke effect at both locations
             if (smokeEffectPrefab != null)
             {
                 Instantiate(smokeEffectPrefab, spawnPosition1, Quaternion.identity);
@@ -96,11 +92,9 @@ public class GraveDigger : MonoBehaviour, enemyInt
                 Debug.LogError("Smoke effect prefab is not assigned!");
             }
 
-            // Spawn skeletons
             GameObject skeleton1 = Instantiate(skeletonPrefab1, spawnPosition1, Quaternion.identity);
             GameObject skeleton2 = Instantiate(skeletonPrefab2, spawnPosition2, Quaternion.identity);
 
-            // Warp skeletons to ensure proper positioning
             skeleton1.GetComponent<NavMeshAgent>().Warp(skeleton1.transform.position);
             skeleton2.GetComponent<NavMeshAgent>().Warp(skeleton2.transform.position);
         }
@@ -110,26 +104,14 @@ public class GraveDigger : MonoBehaviour, enemyInt
         }
     }
 
-    public void onDeath()
-    {
-        isSpawning = false;
-    }
+    public void onDeath() { isSpawning = false; }
 
-    public enemyInt getType()
-    {
-        return this;
-    }
+    public enemyInt getType() { return this; }
 
     public bool isAttacking
     {
         get { return _isAttacking; }
-        set
-        {
-            if (_isAttacking != value)
-            {
-                _isAttacking = value;
-            }
-        }
+        set { if (_isAttacking != value) _isAttacking = value; }
     }
 
     public IEnumerator attackCooldown()
@@ -142,19 +124,21 @@ public class GraveDigger : MonoBehaviour, enemyInt
     void attackPlayer()
     {
         if (!canAttack) return;
+
         Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
 
-        foreach (Collider player in playerInRange)
+        if (playerInRange.Length > 0)
         {
-            //attack player commands
-            Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
-            if (player.tag == "Player") {
-                playerRef.takeDamage(attackDamage, knockBackDir);
-                StartCoroutine(attackCooldown());
-            };
-            Debug.Log(player.tag);
-            
+            foreach (Collider player in playerInRange)
+            {
+                if (player.CompareTag("Player"))
+                {
+                    Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
+                    playerRef.takeDamage(attackDamage, knockBackDir);
+                    StartCoroutine(attackCooldown());
+                    break; // Stop further checking to avoid multiple cooldown triggers
+                }
+            }
         }
-
     }
 }

@@ -22,7 +22,6 @@ public class EnemyBat : MonoBehaviour, enemyInt
 
     void Start()
     {
-        // Automatically find the Player if not set in Inspector
         if (player == null)
         {
             playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -41,7 +40,7 @@ public class EnemyBat : MonoBehaviour, enemyInt
         estate = GetComponent<EnemyStateManager>();
         if (estate == null)
         {
-            Debug.LogError("EnemyStateManager not found on EnemyHead!");
+            Debug.LogError("EnemyStateManager not found on EnemyBat!");
         }
 
         playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
@@ -55,26 +54,14 @@ public class EnemyBat : MonoBehaviour, enemyInt
         }
     }
 
-    public void onDeath()
-    {
-    
-    }
+    public void onDeath() { }
 
-    public enemyInt getType()
-    {
-        return this;
-    }
+    public enemyInt getType() { return this; }
 
     public bool isAttacking
     {
         get { return _isAttacking; }
-        set
-        {
-            if (_isAttacking != value)
-            {
-                _isAttacking = value;
-            }
-        }
+        set { if (_isAttacking != value) _isAttacking = value; }
     }
 
     public IEnumerator attackCooldown()
@@ -86,16 +73,22 @@ public class EnemyBat : MonoBehaviour, enemyInt
 
     void attackPlayer()
     {
+        if (!canAttack) return;
+
         Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
 
-        foreach (Collider player in playerInRange)
+        if (playerInRange.Length > 0)
         {
-            //attack player commands
-            Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
-            if (player.tag == "Player") playerRef.takeDamage(attackDamage, knockBackDir);
-            Debug.Log(player.tag);
+            foreach (Collider player in playerInRange)
+            {
+                if (player.CompareTag("Player"))
+                {
+                    Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
+                    playerRef.takeDamage(attackDamage, knockBackDir);
+                    StartCoroutine(attackCooldown());
+                    break; // Prevent triggering multiple cooldowns per frame
+                }
+            }
         }
-
     }
-
 }

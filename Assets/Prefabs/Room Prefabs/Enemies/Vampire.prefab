@@ -97,6 +97,7 @@ MonoBehaviour:
   healthRef: {fileID: 0}
   initialPos: {x: 0, y: 0, z: 0}
   dmgOverTimeActivated: 0
+  isMiniboss: 0
   onDamaged: 0
   source: 0
   effectTickInterval: 5
@@ -277,11 +278,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultMovementSpeed: 2
   engagementRange: 1
+  inaccuracyPointTolerance: 1
   currentSpeed: 0
   movementPaused: 0
+  stayInIdle: 1
   agent: {fileID: 4928959221387099164}
   enemyLOS: {fileID: 0}
   enemyFrame: {fileID: 0}
+  useDefaultConcreteStates: 1
+  concreteStates:
+    _serializedList: []
+  patrolState:
+    patrolPoints: []
   enableStateDebugLogs: 0
   isFrozen: 0
 --- !u!114 &6996728658863666810
@@ -297,6 +305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  canTarget: 1
   player: {fileID: 0}
   detectionRange: 7
   visionAngle: 90
@@ -320,10 +329,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  attackPoint: {fileID: 0}
+  attackPoint: {fileID: 6782279903350017760}
   Player:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   attackRange: 0.5
   attackCooldownTime: 2
   attackDamage: 20

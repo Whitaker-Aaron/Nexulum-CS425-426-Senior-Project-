@@ -28,7 +28,6 @@ public class EnemyHead : MonoBehaviour, enemyInt
 
     void Start()
     {
-        // Automatically find the Player if not set in Inspector
         if (player == null)
         {
             playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -40,7 +39,6 @@ public class EnemyHead : MonoBehaviour, enemyInt
             {
                 Debug.LogError("Player not found! Make sure the player has the 'Player' tag.");
             }
-
             canAttack = true;
         }
 
@@ -53,8 +51,8 @@ public class EnemyHead : MonoBehaviour, enemyInt
         playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
 
         startPos = transform.position;
-        lastYPosition = startPos.y; // Initialize lastYPosition
-        StartCoroutine(StartFloatingAfterDelay(0.5f)); // Delay floating for a smoother start
+        lastYPosition = startPos.y;
+        StartCoroutine(StartFloatingAfterDelay(0.5f));
     }
 
     IEnumerator StartFloatingAfterDelay(float delay)
@@ -71,20 +69,17 @@ public class EnemyHead : MonoBehaviour, enemyInt
             attackPlayer();
         }
 
-        // Ensure estate is valid before accessing it
         if (estate != null)
         {
             estate.movementPaused = !canMove;
         }
 
-        // Only apply floating effect if movement is allowed
         if (canMove)
         {
             ApplyFloatingEffect();
         }
         else
         {
-            // Maintain last valid Y position to prevent spazzing
             transform.position = new Vector3(transform.position.x, lastYPosition, transform.position.z);
         }
     }
@@ -104,41 +99,27 @@ public class EnemyHead : MonoBehaviour, enemyInt
                 return;
             }
         }
-
-        // Only reset movement if the player is no longer looking
         canMove = true;
     }
 
     void ApplyFloatingEffect()
     {
-        if (timeOffset == 0) return; // Prevent floating before the delay is over
+        if (timeOffset == 0) return;
 
         float elapsedTime = (Time.time - timeOffset);
         float newY = startPos.y + Mathf.Sin(elapsedTime * floatSpeed) * floatHeight;
-        lastYPosition = newY; // Store last valid position before freezing
+        lastYPosition = newY;
         transform.position = new Vector3(transform.position.x, newY, transform.position.z);
     }
 
-    public void onDeath()
-    {
-        // Unkillable enemy
-    }
+    public void onDeath() { }
 
-    public enemyInt getType()
-    {
-        return this;
-    }
+    public enemyInt getType() { return this; }
 
     public bool isAttacking
     {
         get { return _isAttacking; }
-        set
-        {
-            if (_isAttacking != value)
-            {
-                _isAttacking = value;
-            }
-        }
+        set { if (_isAttacking != value) _isAttacking = value; }
     }
 
     public IEnumerator attackCooldown()
@@ -150,16 +131,18 @@ public class EnemyHead : MonoBehaviour, enemyInt
 
     void attackPlayer()
     {
+        if (!canAttack) return;
         Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
 
         foreach (Collider player in playerInRange)
         {
-            //attack player commands
             Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
-            if (player.tag == "Player") playerRef.takeDamage(attackDamage, knockBackDir);
+            if (player.tag == "Player")
+            {
+                playerRef.takeDamage(attackDamage, knockBackDir);
+                StartCoroutine(attackCooldown());
+            }
             Debug.Log(player.tag);
         }
-
     }
-
 }
