@@ -34,6 +34,7 @@ public class pistolBasicProj : projectile
     {
         bulletHitEffect = "bulletHitPool";
         GetDamage("Player");
+
     }
 
     private void OnEnable()

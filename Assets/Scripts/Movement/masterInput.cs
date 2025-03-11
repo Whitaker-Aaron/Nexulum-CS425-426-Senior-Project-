@@ -1255,47 +1255,7 @@ public class masterInput : MonoBehaviour
         StartCoroutine(HandleComboAttack(isHeavy ? animTime : animTimeTwo, attackStage, isHeavy));
     }
 
-    // Knight Logic with Light and Heavy Attacks
-    /*
-    private void runKnightAttackLogic()
-    {
-        if (Time.time - lastClickedTime > maxComboDelay)
-        {
-            noOfClicks = 0;
-        }
 
-        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
-        {
-            if (playerInput.actions["attack"].triggered)
-            {
-                lastClickedTime = Time.time;
-
-                // Light or Heavy Attack based on input
-                bool isHeavy = playerInput.actions["attack"].IsPressed();
-                noOfClicks++;
-
-                if (noOfClicks == 1)
-                {
-                    StartCoroutine(HandleComboAttack(animTime, 1, isHeavy));
-                }
-
-                if (noOfClicks >= 2)
-                {
-                    nextAttackTime = animTimeTwo;
-                    StartCoroutine(HandleComboAttack(animTimeTwo, 2, isHeavy));
-                }
-
-                if (noOfClicks >= 3)
-                {
-                    noOfClicks = 0;
-                    cooldownTime = Time.time + cooldown;
-                    StartCoroutine(HandleComboAttack(animTimeThree, 3, isHeavy));
-                }
-            }
-        }
-    }*/
-
-    // Engineer Logic with Light and Heavy Attacks
     private void runEngineerAttackLogic()
     {
         /*
@@ -1385,73 +1345,7 @@ public class masterInput : MonoBehaviour
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
             runKnightAttackLogic();
-            /*
-            if (Time.time - lastClickedTime > maxComboDelay)
-            {
-                noOfClicks = 0;
-            }
-            if (Time.time > lastClickedTime + nextAttackTime && isAttacking == false && !shootingSwords)//Time.time > cooldownTime && isAttacking == false)
-            {
-                if (playerInput.actions["attack"].triggered)
-                {
-                    audioManager.PlaySFX("SwordWoosh");
-                    print("click: " + noOfClicks);
-
-                    lastClickedTime = Time.time;
-
-                    noOfClicks++;
-                    if (noOfClicks == 1)
-                    {
-                        
-                        if (animationControl.getAnimationInfo().IsName("waitTwo") && animationControl.getAnimationInfo().normalizedTime > .99f)
-                        {
-                            noOfClicks = 0;
-                            return;
-                        }
-                        if (animationControl.getAnimationInfo().IsName("attackThree") && animationControl.getAnimationInfo().normalizedTime < animTimeThree)
-                        {
-                            noOfClicks = 0;
-                            return;
-                        }
-                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
-                        animationControl.knightAttackOne(animTime);
-                        StartCoroutine(waitAttack(animTime * 2));
-                        StartCoroutine(wait(animTime));
-                        SS1.GetComponent<ParticleSystem>().Play();
-                    }
-                    noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
-
-                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("waitOne"))
-                    {
-                        
-                        nextAttackTime = animTimeTwo;
-                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
-                        animationControl.knightAttackTwo(animTimeTwo);
-                        StartCoroutine(wait(animTimeTwo));
-                        StartCoroutine(waitAttack(animTimeTwo * 2));
-                        SS2.GetComponent<ParticleSystem>().Play();
-                    }
-
-                    if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("waitTwo"))
-                    {
-                        
-                        nextAttackTime = animTimeThree;
-                        noOfClicks = 0;
-                        cooldownTime = Time.time + cooldown;
-                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
-                        animationControl.knightAttackThree();
-                        StartCoroutine(wait(animTimeThree));
-                        StartCoroutine(waitAttack(animTimeThree * 2));
-                        nextAttackTime = animTime;
-                        SS3.GetComponent<ParticleSystem>().Play();
-                    }
-                    else
-                    {
-                        if (Time.time - lastClickedTime > maxComboDelay)
-                            animationControl.resetKnight();
-                    }
-                }
-            }*/
+            
 
             if (playerInput.actions["RightClick"].triggered && !isAttacking)// && animationControl.getAnimationInfo().IsName("Locomotion"))
             {
@@ -1538,7 +1432,7 @@ public class masterInput : MonoBehaviour
 
             }
 
-            runEngineerAttackLogic();
+            //runEngineerAttackLogic();
 
 
 
@@ -1590,60 +1484,6 @@ public class masterInput : MonoBehaviour
             {
                 StartCoroutine(repairWait());
             }
-            /*
-            if (Time.time - lastClickedTime > engMaxComboDelay)
-            {
-                noOfClicks = 0;
-            }
-
-            if (Time.time > lastClickedTime + engNextAttackTime && !isAttacking && !shooting && !pistolReloading && !repairing)
-            {
-                if (!playerInput.actions["RightClick"].triggered) return;
-
-                // Register attack input
-                isAttacking = true;
-                lastClickedTime = Time.time;
-                noOfClicks = Mathf.Clamp(noOfClicks + 1, 1, 3); // Ensure noOfClicks never resets prematurely
-
-                var currentAnim = animationControl.getAnimationInfo();
-
-                // Attack 1 - Ensures a follow-up can be registered right as animation ends
-                if (noOfClicks == 1 && currentAnim.normalizedTime > engAnimTime)
-                {
-                    if ((currentAnim.IsName("engWaitTwo") && currentAnim.normalizedTime > 0.9f) ||
-                        (currentAnim.IsName("engAttackThree") && currentAnim.normalizedTime > engAnimTimeThree))
-                    {
-                        noOfClicks = 0;
-                        isAttacking = false;
-                        return;
-                    }
-
-                    engNextAttackTime = engAnimTime;
-                    //StartCoroutine(PerformAttack(engAnimTime, ES1, 1));
-                }
-
-                // Attack 2 - Ensures input right as attack one ends is detected
-                else if (noOfClicks == 2 &&
-                        (currentAnim.IsName("engWaitOne") || currentAnim.IsName("engAttackOne")) &&
-                        currentAnim.normalizedTime > engAnimTimeTwo - 0.1f) // Extended input buffer
-                {
-                    engNextAttackTime = engAnimTimeTwo;
-                    //StartCoroutine(PerformAttack(engAnimTimeTwo, ES2, 2));
-                }
-
-                // Attack 3 - Ensures combo finishes correctly
-                else if (noOfClicks == 3 && currentAnim.IsName("engWaitTwo"))
-                {
-                    engNextAttackTime = engAnimTimeThree;
-                    noOfClicks = 0;
-                    engCooldown = Time.time + cooldown;
-
-                    //StartCoroutine(PerformAttack(engAnimTimeThree, ES3, 3));
-                }
-            
-            }*/
-
-
 
         }
 
