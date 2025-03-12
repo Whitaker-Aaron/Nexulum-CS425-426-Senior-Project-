@@ -60,6 +60,9 @@ public class EnemyBat : MonoBehaviour, enemyInt
             Debug.LogError("Animator not found on EnemyBat!");
         }
 
+        // Set the bat's starting position to match the player's Y position + 4
+        transform.position = new Vector3(transform.position.x, playerRef.transform.position.y + 4f, transform.position.z);
+
         StartCoroutine(DiveAttackRoutine()); // Start the dive attack routine
     }
 
