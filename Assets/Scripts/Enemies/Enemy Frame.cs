@@ -349,9 +349,9 @@ public class EnemyFrame : MonoBehaviour
         {
             Debug.Log("enemy has particle system");
             var particleSys = transform.GetComponentInChildren<ParticleSystem>();
-            //particleSys.transform.SetParent(null, true);
-            //particleSys.transform.position = new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z);
-            //particleSys.GetComponentInChildren<ParticleSystem>().Play();
+            particleSys.transform.SetParent(null, true);
+            particleSys.transform.position = new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z);
+            particleSys.GetComponentInChildren<ParticleSystem>().Play();
         }
         else Debug.Log("enemy does not have particle system");
         enemyType.onDeath();

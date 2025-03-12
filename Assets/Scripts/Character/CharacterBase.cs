@@ -63,6 +63,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public bool isDying = false;
     public bool isTouchingGround = false;
     public bool isGettingKnockbacked;
+    public bool activatingFall = false;
     public bool usingTerminal = false;
     public RoomSpawnObject teleportSpawnObject;
 
@@ -71,6 +72,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     int collisionCounter = 0;
     int groundCounter = 0;
+    public int floatingPlatformCounter = 0;
     public int wallCollisionCounter = 0;
     public int voidWallCounter = 0;
     public int enemyCollisionCounter = 0;
@@ -225,12 +227,14 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         }
         if (groundCounter <= 0)
         {
+            activatingFall = true;
             if (isTouchingGround && !transitioningRoom) currFallCountdown = StartCoroutine(startFallCountdown());
-            isTouchingGround = false;
+            
         }
         else if(voidWallCounter >= 1)
         {
             if (isTouchingGround && !transitioningRoom) currFallCountdown = StartCoroutine(startFallCountdown());
+            activatingFall = true;
             isTouchingGround = false;
 
         }
@@ -241,6 +245,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
                 if(currFallCountdown != null) StopCoroutine(currFallCountdown);
                 masterInput.DisableFallAnimation();
             }
+            activatingFall = false;
             isTouchingGround = true;
         }
 
@@ -263,7 +268,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public IEnumerator startFallCountdown()
     {
         yield return new WaitForSeconds(0.25f);
-        if (masterInput.gameObject.activeSelf && !isTouchingGround) masterInput.ActivateFallAnimation();
+        isTouchingGround = false;
+        if (masterInput.gameObject.activeSelf && !isTouchingGround && activatingFall && floatingPlatformCounter < 1) masterInput.ActivateFallAnimation();
 
     }
 
