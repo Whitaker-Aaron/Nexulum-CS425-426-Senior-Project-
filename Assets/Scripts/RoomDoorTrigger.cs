@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
@@ -78,6 +79,7 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
                 Door door = controlledDoors[i].GetComponent<Door>();
                 if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))
                 {
+                    Debug.Log("IS DOOR LOCKED: " + door.isOpen);
                     if (door.isOpen)
                     {
                         door.isLocked = true;

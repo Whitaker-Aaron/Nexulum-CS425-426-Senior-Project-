@@ -5,6 +5,7 @@ using UnityEngine;
 public class TransitionDoorTrigger : MonoBehaviour
 {
     [SerializeField] GameObject controlledDoor;
+    [SerializeField] RoomInformation attachedRoom;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,9 +20,10 @@ public class TransitionDoorTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player" && controlledDoor != null)
+        if(other.tag == "Player" && controlledDoor != null )
         {
-            OpenDoor();
+            var characterTargetRoom = other.GetComponent<CharacterBase>().targetRoom;
+            if(characterTargetRoom == attachedRoom) OpenDoor();
         }
         
     }
@@ -33,9 +35,11 @@ public class TransitionDoorTrigger : MonoBehaviour
             Door door = controlledDoor.GetComponent<Door>();
             if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))
             {
-                door.isLocked = false;
-                if (!door.isOpen)
+                
+                if (!door.isOpen && door.isLocked)
                 {
+                    Debug.Log("Inside transition door trigger");
+                    door.isLocked = false;
                     door.ToggleDoor();
                 }
 
