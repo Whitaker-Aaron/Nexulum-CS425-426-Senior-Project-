@@ -35,6 +35,20 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
         }
     }
 
+    private bool _isActive;
+    public bool isActive
+    {
+        get { return _isActive; }
+        set
+        {
+            if (_isActive != value)  // Only set if the value is different
+            {
+                _isActive = value;
+                // Do the other necessary actions
+            }
+        }
+    }
+
     public enemyInt getType()
     {
         return this;

@@ -33,6 +33,20 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
         }
     }
 
+    private bool _isActive;
+    public bool isActive
+    {
+        get { return _isActive; }
+        set
+        {
+            if (_isActive != value)  // Only set if the value is different
+            {
+                _isActive = value;
+                // Do the other necessary actions
+            }
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {

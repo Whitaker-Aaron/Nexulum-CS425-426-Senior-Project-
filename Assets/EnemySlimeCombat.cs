@@ -33,6 +33,19 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
             }
         }
     }
+    private bool _isActive;
+    public bool isActive
+    {
+        get { return _isActive; }
+        set
+        {
+            if (_isActive != value)  // Only set if the value is different
+            {
+                _isActive = value;
+                // Do the other necessary actions
+            }
+        }
+    }
 
     private void OnEnable()
     {

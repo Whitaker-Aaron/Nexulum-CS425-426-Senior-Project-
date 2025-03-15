@@ -106,9 +106,10 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
         var enemies = roomInfo.GetEnemies();
         for (int i = 0; i < enemies.Count; i++)
         {
-            if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().isMiniboss)
+            if (enemies[i] != null)
             {
                 enemies[i].GetComponent<EnemyLOS>().canTarget = true;
+                enemies[i].GetComponent<enemyInt>().isActive = true;
             }
         }
     }

@@ -26,6 +26,20 @@ public class EnemyHead : MonoBehaviour, enemyInt
     private bool canMove = true;
     private bool _isAttacking;
 
+    private bool _isActive;
+    public bool isActive
+    {
+        get { return _isActive; }
+        set
+        {
+            if (_isActive != value)  // Only set if the value is different
+            {
+                _isActive = value;
+                // Do the other necessary actions
+            }
+        }
+    }
+
     void Start()
     {
         // Automatically find the Player if not set in Inspector

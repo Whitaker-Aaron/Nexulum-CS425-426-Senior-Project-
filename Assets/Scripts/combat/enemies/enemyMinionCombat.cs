@@ -16,6 +16,7 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
     //EnemyLOS los;
     //EnemyStateManager stateManager;
     public int attackDamage = 20;
+    [SerializeField] public bool tempEnemy = false;
 
     private bool _isAttacking;
     public bool isAttacking
@@ -31,10 +32,29 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
         }
     }
 
+    private bool _isActive;
+    public bool isActive
+    {
+        get { return _isActive; }
+        set
+        {
+            if (_isActive != value)  // Only set if the value is different
+            {
+                _isActive = value;
+                // Do the other necessary actions
+            }
+        }
+    }
+
     private void OnEnable()
     {
         isAttacking = false;
         canAttack = true;
+    }
+
+    private void OnDisable()
+    {
+        if(tempEnemy) Destroy(this.gameObject);
     }
 
 
