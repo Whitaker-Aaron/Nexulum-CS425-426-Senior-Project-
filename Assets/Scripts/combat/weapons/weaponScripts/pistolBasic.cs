@@ -29,6 +29,7 @@ public class pistolBasic : weaponType
         if (!canShoot || isReloading) 
             yield break;
 
+        currentHeat += overHeatRate;
         if(bulletSpawn == null || bulletSpawn != masterInput.instance.pistolBulletSpawn)
             bulletSpawn = masterInput.instance.pistolBulletSpawn;
 
@@ -36,7 +37,6 @@ public class pistolBasic : weaponType
 
         canShoot = false;
 
-        bulletCount--;
         GameObject bullet = projectileManager.Instance.getProjectile("pistolPool", bulletSpawn.position, bulletSpawn.rotation);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
         EffectsManager.instance.getFromPool("pistolFlash", bulletSpawn.position, bulletSpawn.rotation, true, true);

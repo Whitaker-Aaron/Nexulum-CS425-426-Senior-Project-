@@ -19,6 +19,7 @@ public class rifleBasic : weaponType
     {
         //int("canShoot: " + canShoot);
         //int("isReloading: " + isReloading);
+        print("currentHeast is : " + currentHeat);
     }
 
     public override IEnumerator Shoot()
@@ -27,7 +28,7 @@ public class rifleBasic : weaponType
         //int("isReloading: " + isReloading);
         if (!canShoot || isReloading)
             yield break;
-
+        currentHeat += overHeatRate;
         print("Shooting in rifleBasic");
         if (bulletSpawn == null || bulletSpawn != masterInput.instance.bulletSpawn)
             bulletSpawn = masterInput.instance.bulletSpawn;
@@ -35,7 +36,7 @@ public class rifleBasic : weaponType
 
         canShoot = false;
 
-        bulletCount--;
+        //bulletCount--;
         GameObject bullet = projectileManager.Instance.getProjectile("riflePool", bulletSpawn.position, bulletSpawn.rotation);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
         EffectsManager.instance.getFromPool("rifleFlash", bulletSpawn.position, bulletSpawn.rotation, true, true);
