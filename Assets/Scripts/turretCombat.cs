@@ -87,7 +87,12 @@ public class turretCombat : MonoBehaviour
 
     void checkPlayerRange()
     {
+
         Collider[] player = Physics.OverlapSphere(gameObject.transform.position, repairRange, playerLayer);
+        if (player == null)
+        {
+            return;
+        }
         if (player.Length > 0 && player[0].gameObject.tag == "Player" && !assigned)
         {
             assigned = true;

@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class teslaTower : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class teslaTower : MonoBehaviour
     public const float towerMaxHealth = 200f;
     float tower1Health, tower2Health = towerMaxHealth;
     bool destroyed1, destroyed2 = false;
+    private int key = 0;
 
     public int damage = 35;
     public float shockTime = 5f;
@@ -102,5 +104,15 @@ public class teslaTower : MonoBehaviour
             Destroy(gameObject);
         
         
+    }
+
+    public void assignKey(int num)
+    {
+        key = num;
+    }
+
+    public int getKey()
+    {
+        return key;
     }
 }

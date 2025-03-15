@@ -18,6 +18,8 @@ public abstract class weaponType : MonoBehaviour
     protected projectileManager projectileManager;
     protected CharacterBase character;
 
+    public float cooldownRate, cooldownVal, overHeatRate, overHeatMax, currentHeat;
+
     public abstract IEnumerator Shoot();
 
     public virtual IEnumerator Reload()
@@ -44,7 +46,8 @@ public abstract class weaponType : MonoBehaviour
         //}
             
         yield return new WaitForSeconds(reloadTime);
-        bulletCount = magSize;
+        currentHeat = 0;
+        //bulletCount = magSize;
         isReloading = false;
         canShoot = true;
         print("canShoot in weaponType: " + canShoot);
