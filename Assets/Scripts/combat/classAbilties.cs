@@ -19,7 +19,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements.Experimental;
-using static UnityEditor.PlayerSettings;
 
 public class classAbilties : MonoBehaviour
 {

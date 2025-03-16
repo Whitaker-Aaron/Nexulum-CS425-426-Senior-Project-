@@ -637,6 +637,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         isDying = false;
         RestoreLowHealth();
 
+        enemyCollisionCounter = 0;
+        wallCollisionCounter = 0;
         delayedHealthBar.value = maxHealth;
         invul = false;
     }
