@@ -215,6 +215,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     // Update is called once per frame
     void Update()
     {
+        //transform.scale = new Vector3(1, 1, 1);
         if(wallCollisionCounter >= 2)
         {
             
