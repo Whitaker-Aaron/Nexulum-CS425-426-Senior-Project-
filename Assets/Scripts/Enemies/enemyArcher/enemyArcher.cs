@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 {
@@ -65,20 +66,97 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 
         enemyState = enemyStateManager.GetCurrentState();
         print("Enemy state is: " + enemyState.GetName());
-        if((inRange && playerObj != null) && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
+        if(inRange && playerObj != null)// && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
         {
             gameObject.transform.LookAt(playerObj.transform.position, Vector3.up);
             print("Enemy can shoot bow");
             if (bow.canShoot)
             {
-                if(bow.bulletCount <= 0)
-                    StartCoroutine(bow.Reload());
-                if(bow.bulletCount >= 1)
-                    StartCoroutine(bow.Shoot());
+                print("SHooting in archer");
+                //if(bow.bulletCount <= 0)
+                    //StartCoroutine(bow.Reload());
+                //if(bow.bulletCount >= 1)
+                StartCoroutine(shootBow());
+
             }
         }
     }
 
+    public float aimTime = .4f;
+    private bool shooting = false;
+
+    private IEnumerator shootBow()
+    {
+        if (shooting)
+            yield break;
+
+        shooting = true;
+
+        Animator animator = gameObject.GetComponent<Animator>();
+        animator.SetBool("aiming", true);
+        gameObject.GetComponent<NavMeshAgent>().speed = 2;
+        if(!animator.GetCurrentAnimatorStateInfo(0).IsName("idleAim"))
+            animator.Play("drawArrow");
+        yield return new WaitForSeconds(aimTime);
+        animator.SetBool("shoot", true);
+        StartCoroutine(bow.Shoot());
+        animator.Play("shoot");
+        yield return new WaitForSeconds(.3f);
+        gameObject.GetComponent<NavMeshAgent>().speed = 0;
+
+
+        Collider[] objs = Physics.OverlapSphere(gameObject.transform.position + Vector3.up, detectionRange, Player);
+
+        if (objs.Length == 0)
+        {
+            assignPlayer(null);
+            animator.SetBool("aiming", false);
+            animator.SetBool("shoot", false);
+            animator.Play("Locomotion");
+            yield break;
+        }
+        else
+        {
+            foreach (Collider obj in objs)
+            {
+                if (obj.gameObject.tag == "Player")
+                {
+                    if (Vector3.Distance(obj.gameObject.transform.position, gameObject.transform.position) > detectionRange)
+                    {
+                        inRange = false;
+                        assignPlayer(null);
+                        animator.SetBool("aiming", false);
+                        animator.SetBool("shoot", false);
+                        animator.Play("Locomotion");
+                        yield break;
+                    }
+                    else
+                    {
+                        inRange = true;
+                        assignPlayer(obj);
+                        animator.SetBool("aiming", true);
+                        //print("SHooting at player");
+                    }
+
+
+                }
+
+            }
+        }
+
+        yield return new WaitUntil(() => bowPrefab.GetComponent<bow>().getCanShoot());
+        shooting = false;
+
+        yield break;
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
 
     public enemyInt getType()
     {
@@ -94,6 +172,11 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     {
         Collider[] objs = Physics.OverlapSphere(gameObject.transform.position + Vector3.up, detectionRange, Player);
 
+        if(objs.Length == 0) 
+        {
+            assignPlayer(null);
+            return;
+        }
         foreach(Collider obj in objs)
         {
             if(obj.gameObject.tag == "Player")
@@ -107,6 +190,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
                 {
                     inRange = true;
                     assignPlayer(obj);
+                    //print("SHooting at player");
                 }
                 
                 
@@ -117,7 +201,10 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 
     void assignPlayer(Collider obj)
     {
-        playerObj = obj.gameObject;
+        if(obj != null) 
+            playerObj = obj.gameObject;
+        else
+            playerObj = null;
     }
 
     private void OnDrawGizmos()
