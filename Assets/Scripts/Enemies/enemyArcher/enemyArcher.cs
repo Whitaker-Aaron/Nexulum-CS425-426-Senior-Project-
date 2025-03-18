@@ -8,6 +8,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     private bool _isAttacking;
     private EnemyState enemyState;
     private EnemyStateManager enemyStateManager;
+    private EnemyLOS enemyLOS;
 
     public int damage;
 
@@ -52,9 +53,16 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     void Start()
     {
         enemyStateManager = gameObject.GetComponent<EnemyStateManager>();
+        enemyLOS = gameObject.GetComponent<EnemyLOS>();
         enemyState = enemyStateManager.GetCurrentState();
         bow = bowPrefab.GetComponent<bow>();
         bow.setArcher(gameObject.GetComponent<enemyArcher>());
+
+        if (this.detectionRange > enemyLOS.detectionRange) // Catch if attack radius is larger than the vision radius - Aisling
+        {
+            Debug.LogWarning("enemyArcher.cs - Local detection range for attacks exceeds detection range for sight. Setting sight range equal to attack range.");
+            enemyLOS.detectionRange = this.detectionRange;
+        }
     }
 
 
@@ -66,7 +74,8 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 
         enemyState = enemyStateManager.GetCurrentState();
         print("Enemy state is: " + enemyState.GetName());
-        if(inRange && playerObj != null)// && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
+        bool aggressiveState = enemyState.GetName() == "Chase" || enemyState.GetName() == "Search";
+        if(inRange && playerObj != null && enemyState.GetName() == "Chase")// && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
         {
             gameObject.transform.LookAt(playerObj.transform.position, Vector3.up);
             print("Enemy can shoot bow");
@@ -77,7 +86,6 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
                     //StartCoroutine(bow.Reload());
                 //if(bow.bulletCount >= 1)
                 StartCoroutine(shootBow());
-
             }
         }
     }
@@ -94,7 +102,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 
         Animator animator = gameObject.GetComponent<Animator>();
         animator.SetBool("aiming", true);
-        gameObject.GetComponent<NavMeshAgent>().speed = 2;
+        // gameObject.GetComponent<NavMeshAgent>().speed = 2;
         if(!animator.GetCurrentAnimatorStateInfo(0).IsName("idleAim"))
             animator.Play("drawArrow");
         yield return new WaitForSeconds(aimTime);
@@ -102,7 +110,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
         StartCoroutine(bow.Shoot());
         animator.Play("shoot");
         yield return new WaitForSeconds(.3f);
-        gameObject.GetComponent<NavMeshAgent>().speed = 0;
+        // gameObject.GetComponent<NavMeshAgent>().speed = 0;
 
 
         Collider[] objs = Physics.OverlapSphere(gameObject.transform.position + Vector3.up, detectionRange, Player);
