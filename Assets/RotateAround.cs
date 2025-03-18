@@ -32,7 +32,7 @@ public class RotateAround : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             Debug.Log("PLAYER ENTERED ROTATE AROUND");
-            character.floatingPlatformCounter++;
+            if(character != null) character.floatingPlatformCounter++;
             StartCoroutine(EnableExactFollowOnCamera());
         }
     }
@@ -54,7 +54,7 @@ public class RotateAround : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            if (character.floatingPlatformCounter > 0) character.floatingPlatformCounter--;
+            if (character != null && character.floatingPlatformCounter > 0) character.floatingPlatformCounter--;
             StartCoroutine(EnableLerpFollowOnCamera());
 
         }
@@ -65,7 +65,7 @@ public class RotateAround : MonoBehaviour
         yield return new WaitForSeconds(1.3f);
         if (!playerOnPlatform)
         {
-            cameraRef.SetCameraMode(CameraFollow.FollowMode.Lerp);
+            if(cameraRef != null) cameraRef.SetCameraMode(CameraFollow.FollowMode.Lerp);
         }
         yield break;
     }
@@ -75,7 +75,7 @@ public class RotateAround : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         if (playerOnPlatform)
         {
-            cameraRef.SetCameraMode(CameraFollow.FollowMode.Exact);
+            if (cameraRef != null) cameraRef.SetCameraMode(CameraFollow.FollowMode.Exact);
         }
         yield break;
     }
