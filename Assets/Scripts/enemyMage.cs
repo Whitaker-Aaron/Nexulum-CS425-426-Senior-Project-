@@ -20,6 +20,11 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
     [SerializeField]
     private Transform spellProjSpawn;
 
+    private Animator animator;
+
+    [SerializeField] GameObject spellEffect;
+
+
 
     private bool _isAttacking;
     public bool isAttacking
@@ -65,6 +70,7 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
     void Start()
     {
         
+        animator = gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -87,11 +93,30 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
 
     public IEnumerator spellCast()
     {
+        if (!canCastSpell)
+            yield break;
+        
+        
+        
         canCastSpell = false;
         isAttacking = true;
+        if (!animator.GetBool("Attack"))
+        {
+        animator.SetBool("Attack", true);
+        //animator.Play("Attack");
+        }
+
+        //if (animator.GetCurrentAnimatorStateInfo(0).IsName("walking blend tree"))
+        //animator.Play("Attack");
+        gameObject.GetComponent<EnemyAnimation>().mageAttack();
+        yield return new WaitForSeconds(.5f);
+        spellEffect.GetComponent<ParticleSystem>().Play();
         projectileManager.Instance.getProjectile("enemyMagePoolOne", spellProjSpawn.position, spellProjSpawn.rotation);
         yield return new WaitForSeconds(castTime);
-        canCastSpell = true;
+        //animator.SetBool("Attack", false);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            animator.Play("walking blend tree");
+            canCastSpell = true;
         isAttacking = false;
         yield break;
     }
