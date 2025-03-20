@@ -30,7 +30,7 @@ public class mageProj : projectile
 
     private void Awake()
     {
-        bulletHitEffect = "bulletHitPool";
+        bulletHitEffect = "mageHitOne";
         GetDamage("Mage");
     }
 

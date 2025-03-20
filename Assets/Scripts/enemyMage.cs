@@ -22,6 +22,9 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
 
     private Animator animator;
 
+    [SerializeField] GameObject spellEffect;
+
+
 
     private bool _isAttacking;
     public bool isAttacking
@@ -99,15 +102,21 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
         isAttacking = true;
         if (!animator.GetBool("Attack"))
         {
-            animator.SetBool("Attack", true);
-            animator.Play("Attack");
+        animator.SetBool("Attack", true);
+        //animator.Play("Attack");
         }
-        yield return new WaitForSeconds(.4f);
+
+        //if (animator.GetCurrentAnimatorStateInfo(0).IsName("walking blend tree"))
+        //animator.Play("Attack");
+        gameObject.GetComponent<EnemyAnimation>().mageAttack();
+        yield return new WaitForSeconds(.5f);
+        spellEffect.GetComponent<ParticleSystem>().Play();
         projectileManager.Instance.getProjectile("enemyMagePoolOne", spellProjSpawn.position, spellProjSpawn.rotation);
         yield return new WaitForSeconds(castTime);
-        animator.SetBool("Attack", false);
-        animator.Play("walking blend tree");
-        canCastSpell = true;
+        //animator.SetBool("Attack", false);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            animator.Play("walking blend tree");
+            canCastSpell = true;
         isAttacking = false;
         yield break;
     }
