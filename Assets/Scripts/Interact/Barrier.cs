@@ -73,7 +73,7 @@ public class Barrier : MonoBehaviourID, i_Interactable
 
         if (!hasTriggered && canTrigger && doorToUnlock.isLocked)
         {
-            
+            hasTriggered = true;
             if (barrierUI != null) barrierUI.SetActive(false);
             if (lockedUI != null) lockedUI.SetActive(false);
             if (craftGlobeUI != null) craftGlobeUI.SetActive(false);
@@ -91,7 +91,6 @@ public class Barrier : MonoBehaviourID, i_Interactable
         BarrierBuildObjct buildObject = objectToBuild.GetComponent<BarrierBuildObjct>();
         camera.StartPan(buildObject.transform.position, true, true, 0.05f);
         yield return StartCoroutine(buildObject.animateBuildObject());
-        yield return new WaitForSeconds(2.5f);
         ToggleDoor();
         camera.StartPan(doorToUnlock.transform.position, true, true, 0.05f);
         yield break;

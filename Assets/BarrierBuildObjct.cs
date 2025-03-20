@@ -32,13 +32,14 @@ public class BarrierBuildObjct : MonoBehaviour
     {
         var desiredRot = new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, desiredRotation);
         var desiredEuler = Quaternion.Euler(desiredRot.x, desiredRot.y, desiredRot.z);
-        while (transform.rotation != desiredEuler)
+        while (transform.rotation.z < desiredEuler.z)
         {
             var rotation = new Vector3(0, 0, 75 * Time.deltaTime);
 
             transform.Rotate(rotation);
             if(Mathf.Abs(transform.rotation.eulerAngles.z - desiredRotation) <= 0.25f)
             {
+                break;
                 transform.rotation = Quaternion.Euler(desiredRot.x, desiredRot.y, desiredRot.z);
             }
             yield return null;
@@ -49,24 +50,24 @@ public class BarrierBuildObjct : MonoBehaviour
 
     public IEnumerator moveObjectUp()
     {
-        while(transform.position != desiredUpPos)
+        while(transform.position.y < desiredUpPos.y)
         {
-            transform.position = Vector3.MoveTowards(transform.position, desiredUpPos, Time.deltaTime * 0.15f);
-            if(Mathf.Abs(transform.position.magnitude - desiredUpPos.magnitude) <= 0.05f){
+            transform.position = Vector3.Lerp(transform.position, desiredUpPos, Time.deltaTime * 2.5f);
+            if(Mathf.Abs(transform.position.y - desiredUpPos.y) <= 0.025f){
                 transform.position = desiredUpPos;
             }
             yield return null;
         }
-        ascendFinished = true;
-        yield break;
+        //ascendFinished = true;
+        //yield break;
     }
 
     public IEnumerator moveObjectDown()
     {
-        while (transform.position != desiredDownPos)
+        while (transform.position.y > desiredDownPos.y)
         {
-            transform.position = Vector3.MoveTowards(transform.position, desiredDownPos, Time.deltaTime * 0.15f);
-            if (Mathf.Abs(transform.position.magnitude - desiredDownPos.magnitude) <= 0.05f)
+            transform.position = Vector3.Lerp(transform.position, desiredDownPos, Time.deltaTime * 2.5f);
+            if (Mathf.Abs(transform.position.y - desiredDownPos.y) <= 0.025f)
             {
                 transform.position = desiredDownPos;
             }
@@ -77,13 +78,14 @@ public class BarrierBuildObjct : MonoBehaviour
 
     public IEnumerator animateBuildObject()
     {
-        StartCoroutine(rotateObject());
-        StartCoroutine(moveObjectUp());
-        while(!rotationFinished && !ascendFinished)
-        {
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f);
+        //StartCoroutine(rotateObject());
+        yield return new WaitForSeconds(0.15f);
+        yield return StartCoroutine(moveObjectUp());
+        //while(!rotationFinished && !ascendFinished)
+        //{
+        //    yield return null;
+        //}
+        yield return new WaitForSeconds(0.25f);
         yield return StartCoroutine(moveObjectDown());
         yield break;
     }
