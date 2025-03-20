@@ -69,7 +69,7 @@ public class RoomTransition : MonoBehaviour
         {
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i] != null)
+                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null )
                 {
                     enemies[i].GetComponent<EnemyFrame>().healthRef.SetActive(true);
                 }
