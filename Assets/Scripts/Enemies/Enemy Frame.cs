@@ -171,7 +171,8 @@ public class EnemyFrame : MonoBehaviour
             Debug.Log("Enemy attacking?" + enemyType.isAttacking);
             if (!enemyType.isAttacking)
             {
-                anim.takeHit();
+                if(anim != null)
+                    anim.takeHit();
             }
             if(true)
             {

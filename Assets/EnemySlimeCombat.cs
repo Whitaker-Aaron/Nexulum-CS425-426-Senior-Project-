@@ -27,6 +27,8 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
     private Animator animator;
     private NavMeshAgent agent;
 
+    [SerializeField] GameObject slimeAnim;
+
     public bool isAttacking
     {
         get { return _isAttacking; }
@@ -62,15 +64,16 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
     void Start()
     {
         playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
-        animator = GetComponent<Animator>();
+        animator = slimeAnim.GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        slimeAnim.transform.localPosition = new Vector3(this.gameObject.transform.position.x, 0, this.gameObject.transform.position.z);
     }
 
     // Update is called once per frame
     void Update()
     {
         attackPlayer();
-        
+        slimeAnim.transform.localPosition = new Vector3(this.gameObject.transform.position.x,0, this.gameObject.transform.position.z);
     }
 
     private void FixedUpdate()
@@ -130,6 +133,10 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
 
     void checkMovement()
     {
+        if (slimeAnim == null)
+            return;
+
+
         float speed = agent.velocity.magnitude; // Get speed of NavMeshAgent
         bool isMoving = speed > 0.1f; // If speed is small, consider it idle
 
