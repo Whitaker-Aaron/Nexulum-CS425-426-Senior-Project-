@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,6 +21,11 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     public LayerMask Player;
 
     public GameObject playerObj;
+
+    Animator animator;
+
+    public GameObject warning;
+    public float promptTime = .6f;
 
     public bool isAttacking
     {
@@ -55,6 +61,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
         enemyState = enemyStateManager.GetCurrentState();
         bow = bowPrefab.GetComponent<bow>();
         bow.setArcher(gameObject.GetComponent<enemyArcher>());
+        animator = gameObject.GetComponent<Animator>();
     }
 
 
@@ -80,31 +87,60 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 
             }
         }
+        else
+        {
+            StopCoroutine(shootBow() );
+            animator.SetBool("aiming", false);
+            animator.SetBool("shoot", false);
+            animator.Play("Locomotion");
+        }
     }
 
     public float aimTime = .4f;
     private bool shooting = false;
+    bool first = true;
 
     private IEnumerator shootBow()
     {
         if (shooting)
             yield break;
+        if (first)
+        {
+            first = false;
+            yield return new WaitForSeconds(.6f);//buffer time for player entering area
+        }
+            
 
         shooting = true;
 
-        Animator animator = gameObject.GetComponent<Animator>();
+        //animator = gameObject.GetComponent<Animator>();
+
         animator.SetBool("aiming", true);
-        gameObject.GetComponent<NavMeshAgent>().speed = 2;
-        if(!animator.GetCurrentAnimatorStateInfo(0).IsName("idleAim"))
+        //gameObject.GetComponent<NavMeshAgent>().speed = 2;
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion") || animator.GetCurrentAnimatorStateInfo(0).IsName("shoot"))
             animator.Play("drawArrow");
-        yield return new WaitForSeconds(aimTime);
+        gameObject.GetComponent<EnemyStateManager>().StopMovement();
+        
+
+        yield return new WaitUntil(() => bowPrefab.GetComponent<bow>().getCanShoot());
+        warning.GetComponent<ParticleSystem>().Play();
+        yield return new WaitForSeconds(promptTime);
+        
         animator.SetBool("shoot", true);
-        StartCoroutine(bow.Shoot());
         animator.Play("shoot");
+        StartCoroutine(bow.Shoot());
+        
         yield return new WaitForSeconds(.3f);
-        gameObject.GetComponent<NavMeshAgent>().speed = 0;
 
+        gameObject.GetComponent<EnemyStateManager>().StopMovement();
+        if (playerObj == null)
+        {
+            animator.SetBool("aiming", false);
+            animator.SetBool("shoot", false);
+            animator.Play("Locomotion");
+        }
 
+        /*
         Collider[] objs = Physics.OverlapSphere(gameObject.transform.position + Vector3.up, detectionRange, Player);
 
         if (objs.Length == 0)
@@ -137,16 +173,13 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
                         animator.SetBool("aiming", true);
                         //print("SHooting at player");
                     }
-
-
                 }
-
             }
         }
-
-        yield return new WaitUntil(() => bowPrefab.GetComponent<bow>().getCanShoot());
+        */
+        //yield return new WaitUntil(() => bowPrefab.GetComponent<bow>().getCanShoot());
         shooting = false;
-
+        
         yield break;
     }
 
@@ -184,6 +217,8 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
                 if(Vector3.Distance(obj.gameObject.transform.position, gameObject.transform.position) > detectionRange)
                 {
                     inRange = false;
+                    assignPlayer(null);
+                    first = true;
                     return;
                 }
                 else
