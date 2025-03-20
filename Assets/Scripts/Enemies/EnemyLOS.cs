@@ -28,7 +28,7 @@ public class EnemyLOS : MonoBehaviour
     // ----------------------------------------------
 
     // Scope of visual field (in-editor configurable)
-    [SerializeField] private float detectionRange = 7;
+    public float detectionRange = 7;
     [SerializeField] private int visionAngle = 90;
 
     // Enable xray vision

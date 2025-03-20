@@ -34,7 +34,6 @@ public class bow : weaponType
 
         canShoot = false;
 
-        bulletCount--;
         GameObject arrow = projectileManager.Instance.getProjectile("archerPool", bulletSpawn.position, bulletSpawn.rotation);
         arrow.GetComponent<bowProj>().setArcher(archer);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
@@ -48,5 +47,10 @@ public class bow : weaponType
     public void setArcher(enemyArcher arch)
     {
         archer = arch;
+    }
+
+    public bool getCanShoot()
+    {
+        return canShoot;
     }
 }
