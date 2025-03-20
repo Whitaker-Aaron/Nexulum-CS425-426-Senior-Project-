@@ -9,6 +9,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     private bool _isAttacking;
     private EnemyState enemyState;
     private EnemyStateManager enemyStateManager;
+    private EnemyLOS enemyLOS;
 
     public int damage;
 
@@ -58,10 +59,17 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     void Start()
     {
         enemyStateManager = gameObject.GetComponent<EnemyStateManager>();
+        enemyLOS = gameObject.GetComponent<EnemyLOS>();
         enemyState = enemyStateManager.GetCurrentState();
         bow = bowPrefab.GetComponent<bow>();
         bow.setArcher(gameObject.GetComponent<enemyArcher>());
         animator = gameObject.GetComponent<Animator>();
+
+        if (this.detectionRange > enemyLOS.detectionRange) // Catch if attack radius is larger than the vision radius - Aisling
+        {
+            Debug.LogWarning("enemyArcher.cs - Local detection range for attacks exceeds detection range for sight. Setting sight range equal to attack range.");
+            enemyLOS.detectionRange = this.detectionRange;
+        }
     }
 
 
@@ -73,7 +81,8 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
 
         enemyState = enemyStateManager.GetCurrentState();
         print("Enemy state is: " + enemyState.GetName());
-        if(inRange && playerObj != null)// && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
+        bool aggressiveState = enemyState.GetName() == "Chase" || enemyState.GetName() == "Search";
+        if(inRange && playerObj != null && enemyState.GetName() == "Chase")// && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
         {
             gameObject.transform.LookAt(playerObj.transform.position, Vector3.up);
             print("Enemy can shoot bow");
@@ -84,7 +93,6 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
                     //StartCoroutine(bow.Reload());
                 //if(bow.bulletCount >= 1)
                 StartCoroutine(shootBow());
-
             }
         }
         else
