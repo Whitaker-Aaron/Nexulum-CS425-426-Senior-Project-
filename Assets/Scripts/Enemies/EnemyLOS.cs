@@ -9,9 +9,9 @@ public class EnemyLOS : MonoBehaviour
     // ----------------------------------------------
     // Targeting
     // ----------------------------------------------
-
     public GameObject currentTarget { get; set; }
-
+    [SerializeField] public List<string> targetTagWhitelist = new List<string>(); // Public, whitelist of valid targets (order matters, lower index = higher priority)
+    private List<GameObject> targetObjectList = new List<GameObject>();
     public bool isTargetSpotted = false;
     public bool canTarget = true;
 
@@ -26,7 +26,6 @@ public class EnemyLOS : MonoBehaviour
     // ----------------------------------------------
     // Visual field variables
     // ----------------------------------------------
-
     // Scope of visual field (in-editor configurable)
     [SerializeField] private float detectionRange = 7;
     [SerializeField] private int visionAngle = 90;
@@ -43,7 +42,6 @@ public class EnemyLOS : MonoBehaviour
     // ----------------------------------------------
     // Positions
     // ----------------------------------------------
-
     public Vector3 selfPos;
     public Vector3 targetPos;
     public Vector3 lastKnownTargetPos;
@@ -54,6 +52,8 @@ public class EnemyLOS : MonoBehaviour
 
     void Start()
     {
+        targetTagWhitelist.Add("Clone");
+        targetTagWhitelist.Add("Player");
         player = GameObject.FindWithTag("Player");
         ChangeTarget(player);
     }
@@ -62,6 +62,11 @@ public class EnemyLOS : MonoBehaviour
     void Update()
     {
         myHeading = transform.forward;
+        if (currentTarget == null)
+        {
+            ChangeTarget(player);
+        }
+        AcquireTarget(detectionRange);
     }
 
     public void SetDetectionRange(float range)
@@ -110,11 +115,15 @@ public class EnemyLOS : MonoBehaviour
     }
 
     // ChangeTarget takes a gameobject (a new target) and switches the current target to the new target
-    // Returns true if successful, returns false if the new target is null (a null target causes errors)
+    // Returns true if successful, returns false if the new target is null (target cannot be null)
     public bool ChangeTarget(GameObject newTarget)
     {
         if (newTarget != null)
         {
+            if (!targetObjectList.Contains(newTarget))
+            {
+                targetObjectList.Insert(0, newTarget); // Give new target priority
+            }
             currentTarget = newTarget;
             return true;
         }
@@ -202,6 +211,19 @@ public class EnemyLOS : MonoBehaviour
         if (isTargetSpotted)
         {
             Gizmos.DrawLine(selfPos, targetPos);
+        }
+    }
+
+    public void AcquireTarget(float radius)
+    {
+        Collider[] colliders = Physics.OverlapSphere(selfPos, radius);
+        int i = 0; // Index in target tag whitelist, value in dictionary
+        foreach (var collider in colliders)
+        {
+            if (targetTagWhitelist[i] == collider.tag && collider != null)
+            {
+                currentTarget = collider.gameObject;
+            }
         }
     }
 }
