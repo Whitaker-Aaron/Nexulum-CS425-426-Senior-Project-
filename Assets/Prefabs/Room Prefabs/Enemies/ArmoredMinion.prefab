@@ -4983,8 +4983,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialList:
-  - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
-  - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
+  - {fileID: 7197842624361033548, guid: b68e2e27b23f30a47b8dba3306b84ed4, type: 3}
+  - {fileID: 7197842624361033548, guid: b68e2e27b23f30a47b8dba3306b84ed4, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: b021dab17adffca40b90c8639ba2c544, type: 2}
   movementReference: {fileID: 0}
@@ -4994,6 +4994,7 @@ MonoBehaviour:
   isMiniboss: 0
   onDamaged: 0
   source: 0
+  collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
 --- !u!54 &7312136641156335363
@@ -5177,6 +5178,7 @@ MonoBehaviour:
     m_Bits: 64
   sword: {fileID: 9158560695145263301}
   attackDamage: 20
+  tempEnemy: 0
 --- !u!114 &6955319718670308413
 MonoBehaviour:
   m_ObjectHideFlags: 0

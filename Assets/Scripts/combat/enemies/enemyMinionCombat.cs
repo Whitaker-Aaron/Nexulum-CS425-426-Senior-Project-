@@ -72,7 +72,7 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
             //attack player commands
             Debug.Log("Starting attack");
             canAttack = false;
-            sword.activateAttack(true, attackDamage, this.gameObject);
+            if(sword != null) sword.activateAttack(true, attackDamage, this.gameObject);
             isAttacking = true;
             anim.minionAttack();
             enemy.pauseMovement(anim.getAnimationTime());

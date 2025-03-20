@@ -215,6 +215,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     // Update is called once per frame
     void Update()
     {
+        //transform.scale = new Vector3(1, 1, 1);
         if(wallCollisionCounter >= 2)
         {
             
@@ -637,6 +638,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         isDying = false;
         RestoreLowHealth();
 
+        enemyCollisionCounter = 0;
+        wallCollisionCounter = 0;
         delayedHealthBar.value = maxHealth;
         invul = false;
     }
