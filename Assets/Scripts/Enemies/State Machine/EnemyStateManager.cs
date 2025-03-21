@@ -16,8 +16,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public float defaultMovementSpeed = 2f; // Movement speed of enemy
     public float engagementRange = 1f; // How close, from target, the enemy will get to the target (radius). Set with SetEngagementRange(float range)
-    public float inaccuracyPointTolerance = 1; // Effectively the "range" surrounding a target point; if the enemy gets within this distance from the point, then it will flag itself as having reached the position
-    // ^ Used in EnemySearchState to allow the enemy to 
+    public float inaccuracyPointTolerance = 1.5f; // Distance away from a destination where the enemy will flag itself as having reached the destination
 
     // Debugging
     public float currentSpeed;
@@ -25,8 +24,8 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Movement pausing
     public bool movementPaused = false;
 
-    // Lock into idle state instead of patrol
-    public bool stayInIdle = true;
+    // Patrol and Idle control
+    public bool stayInIdle = true; // Switch to false in inspector to enable patrolling, set patrol points under patrol state with empty object transforms
 
     // ----------------------------------------------
     // Components
