@@ -7,6 +7,7 @@ public class EnemyBat : MonoBehaviour, enemyInt
     private EnemyStateManager estate;
     private GameObject playerObj;
     public Transform attackPoint;
+    public Transform frontDirection; // Reference to the front direction object
     CharacterBase playerRef;
 
     public LayerMask Player;
@@ -20,16 +21,28 @@ public class EnemyBat : MonoBehaviour, enemyInt
     private bool _isAttacking;
 
     // Add necessary variables for movement
-    public float diveSpeed = 3f;
+    public float diveSpeed = 5f;
     public float climbSpeed = 2f;
     private bool isDiving = false;
     private bool isFlying = true;
 
+    private Vector3 originalPosition;
+    private bool isReturning = false;
+
     // Animator
     private Animator animator;
 
+    // NavMeshAgent
+    private UnityEngine.AI.NavMeshAgent navMeshAgent;
+
     void Start()
     {
+        navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (navMeshAgent != null)
+        {
+            navMeshAgent.enabled = false; // Disable the NavMeshAgent to allow manual movement
+        }
+
         if (player == null)
         {
             playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -51,19 +64,16 @@ public class EnemyBat : MonoBehaviour, enemyInt
             Debug.LogError("EnemyStateManager not found on EnemyBat!");
         }
 
-        // Get the playerRef to access player's components
         playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
-
-        animator = GetComponent<Animator>(); // Get reference to the animator
+        animator = GetComponent<Animator>();
         if (animator == null)
         {
             Debug.LogError("Animator not found on EnemyBat!");
         }
 
-        // Set the bat's starting position to match the player's Y position + 4
-        transform.position = new Vector3(transform.position.x, playerRef.transform.position.y + 4f, transform.position.z);
+        transform.position = new Vector3(transform.position.x, playerRef.transform.position.y + 2f, transform.position.z);
+        originalPosition = transform.position;
 
-        StartCoroutine(DiveAttackRoutine()); // Start the dive attack routine
     }
 
     void Update()
@@ -71,15 +81,16 @@ public class EnemyBat : MonoBehaviour, enemyInt
         if (player != null)
         {
             attackPlayer();
-        }
+            StartCoroutine(AttackRoutine());
 
-        if (isDiving)
-        {
-            DiveMovement(); // Handle dive movement
-        }
-        else if (isFlying)
-        {
-            FlyMovement(); // Handle flying movement
+            if (isReturning)
+            {
+                FaceOriginalPosition();
+            }
+            else
+            {
+                FacePlayer();
+            }
         }
     }
 
@@ -100,6 +111,47 @@ public class EnemyBat : MonoBehaviour, enemyInt
         canAttack = true;
     }
 
+    private IEnumerator AttackRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5f); // Wait for 5 seconds before diving
+
+            if (player != null && !isDiving && !isReturning)
+            {
+                isDiving = true;
+                animator.SetTrigger("StartGliding");
+
+                Vector3 playerPosition = player.position;
+                if (Vector3.Distance(transform.position, playerPosition) > 20f)
+                {
+                    break;
+                }
+
+                while (Vector3.Distance(transform.position, playerPosition) > 1f)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, playerPosition, diveSpeed * Time.deltaTime);
+                    yield return null;
+                }
+
+                animator.SetTrigger("StopGliding");
+                yield return new WaitForSeconds(1.5f); // Pause for 1 second after reaching the player
+
+                isDiving = false;
+                isReturning = true;
+
+                while (Vector3.Distance(transform.position, originalPosition) > 0.1f)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, originalPosition, climbSpeed * Time.deltaTime);
+                    yield return null;
+                }
+
+                yield return new WaitForSeconds(5f);
+                isReturning = false;
+            }
+        }
+    }
+
     void attackPlayer()
     {
         if (!canAttack) return;
@@ -115,64 +167,28 @@ public class EnemyBat : MonoBehaviour, enemyInt
                     Vector3 knockBackDir = playerRef.transform.position - gameObject.transform.position;
                     playerRef.takeDamage(attackDamage, knockBackDir);
                     StartCoroutine(attackCooldown());
-                    break; // Prevent triggering multiple cooldowns per frame
+                    break;
                 }
             }
         }
     }
 
-    // Coroutine to handle dive attack every 15 seconds
-    private IEnumerator DiveAttackRoutine()
+    private void FacePlayer()
     {
-        while (true)
+        if (frontDirection != null && player != null)
         {
-            yield return new WaitForSeconds(15f); // Wait for 15 seconds
-            StartDiveAttack(); // Trigger the dive attack
-            yield return new WaitUntil(() => !isDiving); // Wait until diving is done
+            Vector3 directionToPlayer = (player.position - frontDirection.position).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
         }
     }
 
-    // Start the dive attack
-    private void StartDiveAttack()
+    private void FaceOriginalPosition()
     {
-        animator.SetTrigger("StartGliding"); // Trigger Armature_Air-Gliding animation
-        isDiving = true;
-        isFlying = false;
+        // Calculate direction to the original position
+        Vector3 directionToOriginal = (originalPosition - transform.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(directionToOriginal);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
     }
 
-    // Handle dive movement towards the player
-    private void DiveMovement()
-    {
-        Vector3 targetPosition = new Vector3(player.position.x, 0.2f, player.position.z); // Target Y position of 0.2
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, diveSpeed * Time.deltaTime);
-
-        // When the bat reaches y value of 0.2, switch to flying
-        if (transform.position.y <= 0.2f)
-        {
-            StopDive();
-        }
-    }
-
-    // Stop the dive and start flying up
-    private void StopDive()
-    {
-        animator.SetTrigger("StopGliding"); // Transition to flying state
-        isDiving = false;
-        isFlying = true;
-    }
-
-    // Handle flying movement
-    private void FlyMovement()
-    {
-        // Fly upwards to y = 4.5
-        if (transform.position.y < 4.5f)
-        {
-            transform.position += Vector3.up * climbSpeed * Time.deltaTime;
-        }
-        else
-        {
-            // If it reaches 4.5, continue flying
-            animator.SetTrigger("StartFlying"); // Ensure the flying animation continues
-        }
-    }
 }
