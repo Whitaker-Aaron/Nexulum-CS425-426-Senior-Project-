@@ -1169,6 +1169,12 @@ public class classAbilties : MonoBehaviour
                 //newTurret.GetComponent<turretCombat>().assignKey(totalTowerCount);
 
                 placedTurrets.Add(newTurret);
+
+                if(fireBool)
+                {
+                    newTurret.GetComponent<turretCombat>().activateFire();
+                }
+
                 if(turretNumCount < turretMaxQuantity)
                 {
                     turretNumCount++;

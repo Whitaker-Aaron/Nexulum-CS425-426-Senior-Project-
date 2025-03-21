@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using Unity.VisualScripting;
+
 //using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
@@ -38,6 +41,12 @@ public class turretCombat : MonoBehaviour
     //effect
     public GameObject inRangeEffect;
     private GameObject effect;
+
+    bool isFire = false;
+    [SerializeField] GameObject fireEffect;
+    public float flameDistance, flameRadius, fireDmgRate;
+    public int fireDmg;
+    private Collider[] enemiesInRange;
 
     private void OnEnable()
     {
@@ -131,8 +140,49 @@ public class turretCombat : MonoBehaviour
         yield break;
     }
 
+    public int turretFireDmg;
+    public float turretFireTime, turretFireRate;
+
     IEnumerator shoot()
     {
+        if (shooting)
+            yield break;
+
+        if(isFire)
+        {
+            shooting = true;
+            if(!fireEffect.GetComponent<ParticleSystem>().isPlaying)
+            {
+                fireEffect.GetComponent<ParticleSystem>().Play();
+            }
+
+            Vector3 startPoint = turretGun.transform.position + turretGun.transform.forward * .4f;
+            Vector3 endPoint = startPoint + turretGun.transform.forward * flameDistance;
+
+            Collider[] enemies = Physics.OverlapCapsule(startPoint, endPoint, flameRadius, Enemy);
+
+            foreach(Collider c in enemies)
+            {
+                //direct damage
+                c.GetComponent<EnemyFrame>().takeDamage(fireDmg, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Fire);
+                UIManager.instance.DisplayDamageNum(c.transform, fireDmg);
+
+                //damage over time from fire
+                if (!c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated)
+                {
+                    c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated = true;
+                    StartCoroutine(c.gameObject.GetComponent<EnemyFrame>().dmgOverTime(turretFireDmg, turretFireTime, turretFireRate, EnemyFrame.DamageType.Fire));
+                }
+            }
+            //yield return new WaitUntil(() => { return enemiesInRange.Length == 0; });
+            yield return new WaitForSeconds(fireDmgRate);
+            if(enemiesInRange.Length == 0)
+                fireEffect.GetComponent<ParticleSystem>().Stop();
+            shooting = false;
+            yield break;
+
+        }
+
         shooting = true;
         switchSpawn = !switchSpawn;
         if(switchSpawn)
@@ -154,9 +204,10 @@ public class turretCombat : MonoBehaviour
         
     }
 
+
     void detectEnemies()
     {
-        Collider[] enemiesInRange = Physics.OverlapSphere(turretGun.transform.position, attackRadius, Enemy);
+        enemiesInRange = Physics.OverlapSphere(turretGun.transform.position, attackRadius, Enemy);
         if (enemiesInRange.Length == 0)
             stopTurn = false;
         foreach (Collider enemy in enemiesInRange)
@@ -182,6 +233,10 @@ public class turretCombat : MonoBehaviour
                 turretGun.transform.LookAt(turretGun.transform.position + directionToEnemy, Vector3.up);
                 if(!shooting)
                     StartCoroutine(shoot());
+            }
+            else
+            {
+                fireEffect.GetComponent<ParticleSystem>().Stop();
             }
             
         }
@@ -235,6 +290,9 @@ public class turretCombat : MonoBehaviour
         {
             takeDamage(50);
         }
+
+        if (enemiesInRange.Length == 0)
+            fireEffect.GetComponent<ParticleSystem>().Stop();
     }
 
     // Update is called once per frame
@@ -275,4 +333,30 @@ public class turretCombat : MonoBehaviour
     {
         return key;
     }
+
+    public void activateFire()
+    {
+        isFire = !isFire;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        //Gizmos.color = Color.Red;
+
+        Vector3 startPoint = turretGun.transform.position + turretGun.transform.forward * .4f;
+
+        // Calculate end position based on turret's forward direction
+        Vector3 endPoint = startPoint + turretGun.transform.forward * flameDistance;
+
+        // Draw the capsule wireframe
+        Gizmos.DrawWireSphere(startPoint, flameRadius);
+        Gizmos.DrawWireSphere(endPoint, flameRadius);
+
+        // Draw the cylindrical body with connecting lines
+        //Gizmos.DrawLine(point1 + Vector3.right * radius, point2 + Vector3.right * radius);
+        //Gizmos.DrawLine(point1 - Vector3.right * radius, point2 - Vector3.right * radius);
+        //Gizmos.DrawLine(point1 + Vector3.forward * radius, point2 + Vector3.forward * radius);
+        //Gizmos.DrawLine(point1 - Vector3.forward * radius, point2 - Vector3.forward * radius);
+    }
+
 }
