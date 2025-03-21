@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
@@ -78,6 +79,7 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
                 Door door = controlledDoors[i].GetComponent<Door>();
                 if (door != null && (door.doorType == DoorType.Gate || door.doorType == DoorType.Wood))
                 {
+                    Debug.Log("IS DOOR LOCKED: " + door.isOpen);
                     if (door.isOpen)
                     {
                         door.isLocked = true;
@@ -104,9 +106,10 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
         var enemies = roomInfo.GetEnemies();
         for (int i = 0; i < enemies.Count; i++)
         {
-            if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().isMiniboss)
+            if (enemies[i] != null)
             {
                 enemies[i].GetComponent<EnemyLOS>().canTarget = true;
+                enemies[i].GetComponent<enemyInt>().isActive = true;
             }
         }
     }

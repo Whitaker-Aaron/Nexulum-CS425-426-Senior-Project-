@@ -12,6 +12,19 @@ public class GraveDigger : MonoBehaviour, enemyInt
     CharacterBase playerRef;
 
     private bool _isAttacking;
+    private bool _isActive;
+    public bool isActive
+    {
+        get { return _isActive; }
+        set
+        {
+            if (_isActive != value)  // Only set if the value is different
+            {
+                _isActive = value;
+                // Do the other necessary actions
+            }
+        }
+    }
     public LayerMask Player;
     public float attackRange = .5f;
     public float attackCooldownTime = 2f;
@@ -28,7 +41,8 @@ public class GraveDigger : MonoBehaviour, enemyInt
     private bool isSpawning = true;
     public bool canAttack = true;
 
-    void Start()
+    Coroutine curSpawnRoutine;
+    private void Awake()
     {
         // Automatically find the Player if not set in Inspector
         if (player == null)
@@ -52,8 +66,13 @@ public class GraveDigger : MonoBehaviour, enemyInt
         {
             Debug.LogError("EnemyStateManager not found on EnemyHead!");
         }
+    }
 
-        StartCoroutine(SpawnSkeletonsRoutine());
+    void Start()
+    {
+        
+
+        
     }
 
     void Update()
@@ -64,9 +83,25 @@ public class GraveDigger : MonoBehaviour, enemyInt
         }
     }
 
+    public void OnEnable()
+    {
+        curSpawnRoutine = StartCoroutine(SpawnSkeletonsRoutine());
+    }
+
+    public void OnDisable()
+    {
+        StopCoroutine(curSpawnRoutine);
+        curSpawnRoutine = null;
+    }
+
     IEnumerator SpawnSkeletonsRoutine()
     {
         // First spawn after initial delay
+        while (!isActive)
+        {
+            Debug.Log("Grave digger not active");
+            yield return null;
+        }
         yield return new WaitForSeconds(firstSpawnDelay);
         SpawnSkeletons();
 
@@ -75,6 +110,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
         {
             yield return new WaitForSeconds(spawnInterval);
             SpawnSkeletons();
+            yield return null;
         }
     }
 
@@ -99,6 +135,10 @@ public class GraveDigger : MonoBehaviour, enemyInt
             // Spawn skeletons
             GameObject skeleton1 = Instantiate(skeletonPrefab1, spawnPosition1, Quaternion.identity);
             GameObject skeleton2 = Instantiate(skeletonPrefab2, spawnPosition2, Quaternion.identity);
+            skeleton1.transform.parent = this.transform.parent;
+            skeleton2.transform.parent = this.transform.parent;
+            if (skeleton1.GetComponent<enemyMinionCombat>() != null) skeleton1.GetComponent<enemyMinionCombat>().tempEnemy = true;
+            if (skeleton2.GetComponent<enemyMinionCombat>() != null) skeleton2.GetComponent<enemyMinionCombat>().tempEnemy = true;
 
             // Warp skeletons to ensure proper positioning
             skeleton1.GetComponent<NavMeshAgent>().Warp(skeleton1.transform.position);

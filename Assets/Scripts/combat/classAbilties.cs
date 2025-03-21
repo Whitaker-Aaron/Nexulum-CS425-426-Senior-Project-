@@ -1,4 +1,4 @@
-/*-----------------------------------------------------
+﻿/*-----------------------------------------------------
  * classAbilities Script
  * Author: Spencer Garcia
  * Start Date: 9/26/2024
@@ -68,7 +68,7 @@ public class classAbilties : MonoBehaviour
     bool buffingPlayer = false;
     public float buffRate = .5f;
     public int auraAttackBuff = 25;
-    
+
 
 
     //Gunner
@@ -126,11 +126,17 @@ public class classAbilties : MonoBehaviour
     public int teslaMaxQuantity, turretMaxQuantity;
     private int towerMaxQuantity;
 
-    private GameObject[] placedTowers;
+    private List<GameObject> placedTurrets = new List<GameObject>();
+    private List<GameObject> placedTeslas = new List<GameObject>();
+
+
     private int totalTowerCount;
 
     [SerializeField] private GameObject clonePrefab;
     public GameObject currentClone;
+    bool cloning = false;
+    public float cloneRadius = 1f;
+    Collider[] enemiesInClone;
 
 
     //cooldown rates
@@ -160,14 +166,14 @@ public class classAbilties : MonoBehaviour
 
     public void activateAbilityOne(WeaponBase.weaponClassTypes currentClass)
     {
-        if (a1cooldown || acc1 != null || turretNumCount == turretMaxQuantity)
+        if (a1cooldown || acc1 != null)// || turretNumCount == turretMaxQuantity)
         {
             Debug.Log("Ability 1 is on cooldown.");
             return;
         }
         Debug.Log("Activating Ability 1.");
 
-        
+
         a1cooldown = true;
 
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !bubble)
@@ -186,12 +192,8 @@ public class classAbilties : MonoBehaviour
             StartCoroutine(abilitiesCooldown(1, ga1Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && turretNumCount < turretMaxQuantity  && teslaNumCount < teslaMaxQuantity && !placing)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && !placing)
         {
-            if(turretNumCount == turretMaxQuantity)
-            {
-                return;
-            }
             uiManager.ActivateCooldownOnAbility(1);
             print("turretCount = " + turretNumCount);
             placing = true;
@@ -230,16 +232,15 @@ public class classAbilties : MonoBehaviour
             StartCoroutine(abilitiesCooldown(2, ga2Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && teslaNumCount < teslaMaxQuantity && !placing)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && !placing)
         {
-            teslaNumCount += 1;
-            totalTowerCount += 1;
             placingTesla = true;
             placingOne = true;
             instant = true;
             gameObject.GetComponent<masterInput>().placing = true;
             StartCoroutine(abilitiesCooldown(2, ea2Time));
         }
+
     }
 
     public void activateAbilityThree(WeaponBase.weaponClassTypes currentClass)
@@ -275,7 +276,7 @@ public class classAbilties : MonoBehaviour
                 StartCoroutine(stopSword(currentEffect));
             }
 
-            
+
             acc3 = StartCoroutine(abilitiesCooldown(3, ka3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
@@ -284,7 +285,7 @@ public class classAbilties : MonoBehaviour
             shootingLaser = true;
             gameObject.GetComponent<masterInput>().shootingLaser = true;
             Transform pos = gameObject.GetComponent<masterInput>().bulletSpawn;
-            if(iceBool)
+            if (iceBool)
             {
                 currentLaserEffect = Instantiate(laserIcePrefab, pos.position, Quaternion.identity);
                 currentLaserEffect.GetComponent<ParticleSystem>().Stop();
@@ -304,7 +305,7 @@ public class classAbilties : MonoBehaviour
                 currentLaserEffect.transform.forward = masterInput.instance.bulletSpawn.forward;
                 StartCoroutine(laserStop());
             }
-            
+
             acc3 = StartCoroutine(abilitiesCooldown(3, ga3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
@@ -313,14 +314,15 @@ public class classAbilties : MonoBehaviour
             currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
             acc3 = StartCoroutine(abilitiesCooldown(3, ea3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
+            cloning = true;
         }
     }
 
     IEnumerator abilitiesCooldown(int ability, float time)
     {
-        if (turretNumCount == turretMaxQuantity || teslaNumCount == teslaMaxQuantity)
-            yield break;
-        yield return StartCoroutine(uiManager.StartCooldownSlider(ability, (0.98f/time)));
+        //if (turretNumCount == turretMaxQuantity || teslaNumCount == teslaMaxQuantity)
+        //  yield break;
+        yield return StartCoroutine(uiManager.StartCooldownSlider(ability, (0.98f / time)));
         //yield return new WaitForSeconds(time);
 
         switch (ability)
@@ -330,7 +332,7 @@ public class classAbilties : MonoBehaviour
                 a1cooldown = false;
                 acc1 = null;
                 print("ability 1 done");
-          
+
                 break;
             case 2:
                 yield return new WaitForSeconds(0.2f);
@@ -346,7 +348,7 @@ public class classAbilties : MonoBehaviour
                 break;
         }
         uiManager.DeactivateCooldownOnAbility(ability);
-        switch(masterInput.instance.currentClass)
+        switch (masterInput.instance.currentClass)
         {
             case WeaponBase.weaponClassTypes.Knight:
                 masterInput.instance.shootingSwords = false;
@@ -360,6 +362,8 @@ public class classAbilties : MonoBehaviour
 
             case WeaponBase.weaponClassTypes.Engineer:
                 //masterInput.instance.placing = false;
+                cloning = false;
+                Destroy(currentClone);
                 break;
         }
 
@@ -368,7 +372,7 @@ public class classAbilties : MonoBehaviour
     }
 
 
-    
+
 
     //Knight
 
@@ -378,7 +382,7 @@ public class classAbilties : MonoBehaviour
         player.GetComponent<CharacterBase>().bubbleShield = true;
         print("Activating shield");
 
-        if(earthBool)
+        if (earthBool)
         {
             EffectsManager.instance.getFromPool("earthShield", player.transform.position, Quaternion.identity, true, false);
             yield return new WaitForSeconds(.5f);
@@ -411,8 +415,8 @@ public class classAbilties : MonoBehaviour
         print("Deactivating shield");
         //if(currentEffect != null)
         //{
-            //currentEffect.GetComponent<ParticleSystem>().Stop();
-            //Destroy(currentEffect);
+        //currentEffect.GetComponent<ParticleSystem>().Stop();
+        //Destroy(currentEffect);
         //}
         yield break;
     }
@@ -422,7 +426,7 @@ public class classAbilties : MonoBehaviour
         checkingAura = true;
         currentAura = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
         //GameObject tempEffect = Instantiate(combatAuraEffectStart, currentAura, Quaternion.identity);
-        if(!fireBool)
+        if (!fireBool)
         {
             EffectsManager.instance.getFromPool("caPool", currentAura + new Vector3(0, .1f, 0), Quaternion.identity, false, false);
             yield return new WaitForSeconds(.3f);
@@ -444,7 +448,7 @@ public class classAbilties : MonoBehaviour
             activatedAura = false;
             currentAura = Vector3.zero;
         }
-        
+
         /*
         tempEffect.GetComponent<ParticleSystem>().Play();
         yield return new WaitForSeconds(.3f);
@@ -470,10 +474,10 @@ public class classAbilties : MonoBehaviour
 
     void buff(bool choice, string name, GameObject c)
     {
-        
+
         if (name == "attack")
         {
-            
+
             if (choice)
             {
                 switch (gameObject.GetComponent<masterInput>().currentClass)
@@ -507,16 +511,16 @@ public class classAbilties : MonoBehaviour
                         break;
                 }
             }
-            
+
         }
-        
+
     }
 
     IEnumerator swordShooting()
     {
         shotSword = true;
 
-        if(iceBool)
+        if (iceBool)
         {
             //print(projectileManager.Instance);
             GameObject sword = projectileManager.Instance.getProjectile("swordShotIcePool", swordSpawn.position, swordSpawn.rotation);
@@ -524,7 +528,7 @@ public class classAbilties : MonoBehaviour
             //sword.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * swordSpeed;
             //sword.GetComponent<swordShot>().damage = swordShotDamage;
         }
-        else if(SSExplode)
+        else if (SSExplode)
         {
             GameObject sword = projectileManager.Instance.getProjectile("swordShotExplodePool", swordSpawn.position, swordSpawn.rotation);
             sword.GetComponent<swordShot>().activateExplosion();
@@ -538,9 +542,9 @@ public class classAbilties : MonoBehaviour
             //sword.GetComponent<Rigidbody>().velocity = swordSpawn.forward * swordSpeed;
             //sword.GetComponent<swordShot>().damage = swordShotDamage;
         }
-            
 
-        
+
+
         yield return new WaitForSeconds(swordTime);
         shotSword = false;
         yield break;
@@ -554,7 +558,7 @@ public class classAbilties : MonoBehaviour
         gameObject.GetComponent<masterInput>().shootingSwords = false;
         shootingSwords = false;
         currentEffect.GetComponent<ParticleSystem>().Stop();
-        Destroy (currentEffect);
+        Destroy(currentEffect);
         yield break;
     }
 
@@ -565,7 +569,7 @@ public class classAbilties : MonoBehaviour
         shotRocket = true;
         var rocket = Instantiate(rocketPrefab, swordSpawn.position, swordSpawn.rotation);
 
-        if(fireBool)
+        if (fireBool)
             rocket.GetComponent<rocket>().fireB = true;
 
         rocket.GetComponent<Rigidbody>().velocity = swordSpawn.transform.forward * rocketSpeed;
@@ -598,7 +602,7 @@ public class classAbilties : MonoBehaviour
         {
             print("Hitting enemy");
             hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
-            if(iceBool)
+            if (iceBool)
             {
                 hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserIceDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
             }
@@ -651,22 +655,25 @@ public class classAbilties : MonoBehaviour
             {
                 currentTurret.transform.position = lookPos;// + spawnOffset;
                 currentTurret.transform.rotation = player.transform.rotation;
+
             }
             else if (distanceFromPlayer <= minPlacementDistance)
             {
                 currentTurret.transform.position = player.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
-                currentTurret.transform.position = new Vector3(
-                    currentTurret.transform.position.x,
-                    0,//spawnOffset.y,
-                    currentTurret.transform.position.z
-                );
+
                 currentTurret.transform.rotation = player.transform.rotation;
             }
             else
             {
                 currentTurret.transform.position = player.transform.position + direction * maxPlacementDistance;// + spawnOffset;
                 currentTurret.transform.rotation = player.transform.rotation;
+
             }
+            currentTurret.transform.position = new Vector3(
+                    currentTurret.transform.position.x,
+                    0,//spawnOffset.y,
+                    currentTurret.transform.position.z
+                );
         }
 
 
@@ -754,7 +761,7 @@ public class classAbilties : MonoBehaviour
                 nextCurrentTesla.transform.position = newTesla.transform.position + direction * (teslaMinPlacementRad + 0.1f); // Small buffer to avoid overlap
                 nextCurrentTesla.transform.position = new Vector3(
                     nextCurrentTesla.transform.position.x,
-                    .2f,
+                    0f,
                     nextCurrentTesla.transform.position.z
                 );
                 nextCurrentTesla.transform.rotation = newTesla.transform.rotation;
@@ -815,24 +822,26 @@ public class classAbilties : MonoBehaviour
             // Position the turret based on distance from player
             if (distanceFromPlayer <= maxPlacementDistance && distanceFromPlayer > minPlacementDistance)
             {
-                currentTurret.transform.position = lookPos + spawnOffset;
+                currentTurret.transform.position = lookPos;// + spawnOffset;
                 currentTurret.transform.rotation = player.transform.rotation;
             }
             else if (distanceFromPlayer <= minPlacementDistance)
             {
                 currentTurret.transform.position = player.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
-                currentTurret.transform.position = new Vector3(
-                    currentTurret.transform.position.x,
-                    spawnOffset.y,
-                    currentTurret.transform.position.z
-                );
+
                 currentTurret.transform.rotation = player.transform.rotation;
             }
             else
             {
-                currentTurret.transform.position = player.transform.position + direction * maxPlacementDistance + spawnOffset;
+                currentTurret.transform.position = player.transform.position + direction * maxPlacementDistance;// + spawnOffset;
                 currentTurret.transform.rotation = player.transform.rotation;
             }
+
+            currentTurret.transform.position = new Vector3(
+                    currentTurret.transform.position.x,
+                    0,//spawnOffset.y,
+                    currentTurret.transform.position.z
+                );
         }
         else
             return;
@@ -841,107 +850,234 @@ public class classAbilties : MonoBehaviour
 
     public void gamepadTeslaPlace(InputAction.CallbackContext context)
     {
+        if (playerInput.actions["MouseLook"].triggered)
+        {
+            isMouseLooking = true; // Set flag for mouse input
+            isGamepadLooking = false;
+        }
+        else if (Mathf.Abs(playerInput.actions["GamePadLook"].ReadValue<Vector2>().magnitude) > 0.1f) // Check for joystick movement
+        {
+            isMouseLooking = false; // Set flag for gamepad input
+            isGamepadLooking = true;
+        }
 
+        if (masterInput.instance.inputPaused || isMouseLooking)
+            return;
+        else if (teslaCount == 0 && currentTesla != null)
+        {
+            Vector2 rightStickInput = context.ReadValue<Vector2>();
+
+            if (rightStickInput != Vector2.zero)
+            {
+                Vector3 playerForward = Camera.main.transform.forward;
+                Vector3 playerRight = Camera.main.transform.right;
+
+                // Ignore Y axis to keep player level
+                playerForward.y = 0;
+                playerRight.y = 0;
+
+                // Normalize camera directions
+                playerForward.Normalize();
+                playerRight.Normalize();
+
+                Vector3 lookDirection = (playerRight * rightStickInput.x) + (playerForward * rightStickInput.y);
+
+                lookPos = player.transform.position + lookDirection * 2.5f; // Adjust distance as needed
+            }
+
+            float distanceFromPlayer = Vector3.Distance(player.transform.position, lookPos);
+            Vector3 direction = (lookPos - player.transform.position).normalized;
+
+            // Position the turret based on distance from player
+            if (distanceFromPlayer <= maxPlacementDistance && distanceFromPlayer > minPlacementDistance)
+            {
+                currentTesla.transform.position = lookPos;// + spawnOffset;
+                currentTesla.transform.rotation = player.transform.rotation;
+            }
+            else if (distanceFromPlayer <= minPlacementDistance)
+            {
+                currentTesla.transform.position = player.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
+                currentTesla.transform.position = new Vector3(
+                    currentTesla.transform.position.x,
+                    0,//spawnOffset.y,
+                    currentTesla.transform.position.z
+                );
+                currentTesla.transform.rotation = player.transform.rotation;
+            }
+            else
+            {
+                currentTesla.transform.position = player.transform.position + direction * maxPlacementDistance;// + spawnOffset;
+                currentTesla.transform.rotation = player.transform.rotation;
+            }
+        }
+        else if (teslaCount == 1 && nextCurrentTesla != null && newTesla != null)
+        {
+            Vector2 rightStickInput = context.ReadValue<Vector2>();
+
+            if (rightStickInput != Vector2.zero)
+            {
+                Vector3 playerForward = Camera.main.transform.forward;
+                Vector3 playerRight = Camera.main.transform.right;
+
+                // Ignore Y axis to keep player level
+                playerForward.y = 0;
+                playerRight.y = 0;
+
+                // Normalize camera directions
+                playerForward.Normalize();
+                playerRight.Normalize();
+
+                Vector3 lookDirection = (playerRight * rightStickInput.x) + (playerForward * rightStickInput.y);
+
+                lookPos = newTesla.transform.position + lookDirection * 2.5f; // Adjust distance as needed
+            }
+
+            float distanceFromTesla = Vector3.Distance(newTesla.transform.position, lookPos);
+            Vector3 direction = (lookPos - newTesla.transform.position).normalized;
+
+            // Position the turret based on distance from player
+            if (distanceFromTesla <= maxPlacementDistance && distanceFromTesla > minPlacementDistance)
+            {
+                nextCurrentTesla.transform.position = lookPos;// + spawnOffset;
+                nextCurrentTesla.transform.rotation = newTesla.transform.rotation;
+            }
+            else if (distanceFromTesla <= minPlacementDistance)
+            {
+                nextCurrentTesla.transform.position = newTesla.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
+                nextCurrentTesla.transform.position = new Vector3(
+                    nextCurrentTesla.transform.position.x,
+                    0,//spawnOffset.y,
+                    nextCurrentTesla.transform.position.z
+                );
+                nextCurrentTesla.transform.rotation = newTesla.transform.rotation;
+            }
+            else
+            {
+                nextCurrentTesla.transform.position = newTesla.transform.position + direction * maxPlacementDistance;// + spawnOffset;
+                nextCurrentTesla.transform.rotation = newTesla.transform.rotation;
+            }
+        }
+        else
+            return;
     }
 
     void removeAllTowers()
     {
-        for (int i = placedTowers.Length; i >= 0; i--) // Start from the end of the list
+        /*
+        foreach (GameObject tower in placedTowers)
         {
-            GameObject tower = placedTowers[i];
             if (tower != null)
             {
-                 // Destroy the GameObject
+                Destroy(tower);
             }
         }
+
+        placedTowers.Clear(); // ✅ Resets the list properly
+        turretNumCount = 0;
+        teslaNumCount = 0;
+        totalTowerCount = 0;
+        */
     }
+
 
     public void removeTower(int count)
     {
-        GameObject temp = placedTowers[count];
-        placedTowers[count] = null; // Remove the specific tower
-        Destroy(temp);
-
-        turretNumCount -= 1;
-        totalTowerCount -= 1;
-
-        for (int j = count + 1; j <= placedTowers.Length; j++)
+        /*
+        if (count < 0 || count >= placedTowers.Count)
         {
-            temp = placedTowers[j];
-            if (temp == null)
-                return;
-            temp.GetComponent<turretCombat>().assignKey(count);
-            placedTowers[j-1] = temp;
-            if (j == placedTowers.Length - 1)
-            {
-                placedTowers[placedTowers.Length] = null;
-                return;
-            }
+            Debug.LogWarning("Invalid tower index: " + count);
+            return;
         }
-        return;
+
+        GameObject temp = placedTowers[count];
+
+        if (temp != null)
+        {
+            Destroy(temp);
+        }
+
+        placedTowers.RemoveAt(count); // ✅ Removes the item from the list
+        turretNumCount--;
+        totalTowerCount--;
+
+        // Reassign keys for remaining turrets
+        for (int i = count; i < placedTowers.Count; i++)
+        {
+            placedTowers[i].GetComponent<turretCombat>().assignKey(i);
+        }
+        */
     }
+
 
     void activateTesla()
     {
         if (instant)
         {
             instant = false;
-            if(teslaCount == 0)
+            if (teslaCount == 0)
             {
-                currentTesla = GameObject.Instantiate(teslaTransparent, player.transform.position + new Vector3(0,0,1.5f), Quaternion.LookRotation(player.transform.forward));
+                currentTesla = Instantiate(teslaTransparent, player.transform.position + new Vector3(1.5f * player.transform.forward.x, 0, 1.5f * player.transform.forward.x), Quaternion.LookRotation(player.transform.forward));
                 currentTesla.transform.parent = player.transform;
-                currentTesla.transform.position = new Vector3(currentTesla.transform.position.x, 0, currentTesla.transform.position.z);
                 casting = true;
             }
-            if(teslaCount == 1)
+            else if (teslaCount == 1)
             {
                 casting = true;
-                nextCurrentTesla = GameObject.Instantiate(teslaTransparent, player.transform.position, Quaternion.LookRotation(player.transform.forward));
-                nextCurrentTesla.transform.position = new Vector3(newTesla.transform.position.x, 0, newTesla.transform.position.z + 2f);
-
+                nextCurrentTesla = Instantiate(teslaTransparent, newTesla.transform.position, Quaternion.LookRotation(newTesla.transform.forward));
+                //placingOne = false;
+                //placingTwo = true;
             }
-
         }
 
-
-        
-        if(playerInput.actions["Attack"].triggered && teslaCount == 0 && placingOne && !placingTwo) 
+        // **First Tesla Node**
+        if (playerInput.actions["Attack"].triggered && teslaCount == 0 && placingOne && !placingTwo)
         {
-            //print("activate 0");
-            teslaCount = 1;
+            if (teslaNumCount >= teslaMaxQuantity)
+            {
+                teslaNumCount--;
+                GameObject oldestTesla = placedTeslas[0]; // Oldest Tesla
+                placedTeslas.RemoveAt(0);
+                Destroy(oldestTesla);
+            }
+
+            //placingOne = false;
+            teslaCount++;
             instant = true;
             StartCoroutine(teslaWait());
-            if (currentTesla != null)// && teslaDistance <= turretPlacementRadius)
+
+            if (currentTesla != null)
             {
                 Vector3 pos = currentTesla.transform.position;
                 Destroy(currentTesla);
-                newTesla = Instantiate(teslaPrefab, pos + new Vector3 (0,teslaSpawnHeight,0), Quaternion.identity);
+                currentTesla = null; // Ensure reference is cleared
+                newTesla = Instantiate(teslaPrefab, pos + new Vector3(0, teslaSpawnHeight, 0), Quaternion.identity);
+                //placingTwo = true;
             }
-            
-
+            return;
         }
-        if (playerInput.actions["Attack"].triggered && teslaCount == 1 && !placingOne && placingTwo)
+
+
+        // **Second Tesla Node & Tesla Wall**
+        if (playerInput.actions["Attack"].triggered && teslaCount == 1 && !placingOne && placingTwo && newTesla != null)
         {
-            //print("activate 1");
             casting = false;
             teslaCount = 0;
-            if (nextCurrentTesla != null)// && teslaDistance <= turretPlacementRadius)
+
+            if (nextCurrentTesla != null)
             {
                 placingTesla = false;
                 Vector3 pos = nextCurrentTesla.transform.position;
                 Destroy(nextCurrentTesla);
-         
-                newTesla2 = Instantiate(teslaPrefab, pos + new Vector3(0, teslaSpawnHeight, 0), Quaternion.identity);
 
+                newTesla2 = Instantiate(teslaPrefab, pos + new Vector3(0, teslaSpawnHeight, 0), Quaternion.identity);
                 placingOne = false;
                 placingTwo = false;
 
                 Vector3 difference = (newTesla2.transform.position - newTesla.transform.position) / 2;
+                GameObject tesWall = Instantiate(teslaWall, newTesla2.transform.position - difference + new Vector3(0, 1, 0), Quaternion.identity);
+                var teslaParent = Instantiate(teslaParentPrefab, tesWall.transform.position, Quaternion.identity);
 
-                GameObject tesWall = GameObject.Instantiate(teslaWall, newTesla2.transform.position - difference + new Vector3(0, 1, 0), Quaternion.identity);
-                var teslaParent = GameObject.Instantiate(teslaParentPrefab, tesWall.transform.position, Quaternion.identity);
                 tesWall.transform.LookAt(new Vector3(newTesla2.transform.position.x, 1, newTesla2.transform.position.z));
-
                 tesWall.transform.SetParent(teslaParent.transform);
                 newTesla.transform.SetParent(teslaParent.transform);
                 newTesla2.transform.SetParent(teslaParent.transform);
@@ -950,13 +1086,20 @@ public class classAbilties : MonoBehaviour
 
                 StartCoroutine(playerInputWait());
                 gameObject.GetComponent<masterInput>().abilityInUse = false;
-                placedTowers.Append(teslaParent);
+                gameObject.GetComponent<masterInput>().placing = false;
+
+                placedTeslas.Add(teslaParent);
+                teslaNumCount++;
+                totalTowerCount++;
+
                 Destroy(currentTesla);
                 Destroy(nextCurrentTesla);
             }
-            
         }
+
     }
+
+
 
     IEnumerator playerInputWait()
     {
@@ -979,65 +1122,78 @@ public class classAbilties : MonoBehaviour
         if (instant)
         {
             instant = false;
-            if (turretTransparentPrefab != null) 
+            if (turretTransparentPrefab != null)
             {
-                currentTurret = GameObject.Instantiate(turretTransparentPrefab, player.transform.position + new Vector3(2.5f,0,0), player.transform.rotation);
-                
-                currentTurret.transform.position = player.transform.position + new Vector3(0, 0, 2.5f);
+                currentTurret = Instantiate(turretTransparentPrefab, player.transform.position + new Vector3(2.5f, 0, 0), player.transform.rotation);
                 currentTurret.transform.parent = player.transform;
                 casting = true;
             }
             else
             {
                 Debug.LogError("turretTransparentPrefab is null");
-                return; 
+                return;
             }
         }
 
         if (currentTurret == null)
         {
             Debug.LogError("currentTurret is not initialized");
-            return; // Exit if currentTurret is null
+            return;
         }
 
         if (playerInput.actions["Attack"].triggered)
         {
-            if (currentTurret != null) 
+            casting = false;
+            placing = false;
+            instant = true;
+
+            Quaternion rot = currentTurret.transform.rotation;
+            Vector3 pos = currentTurret.transform.position;
+
+            Destroy(currentTurret); // Destroy the temporary turret
+
+            // **Remove oldest turret if at max limit**
+            if (turretNumCount >= turretMaxQuantity)
             {
-                casting = false;
-                placing = false; 
-                instant = true;
-                Quaternion rot = currentTurret.transform.rotation; 
-                Vector3 pos = currentTurret.transform.position; 
-
-                Destroy(currentTurret); // Destroy the temporary turret
-
-                // Instantiate the final turret
-                if (turretPrefab != null) // Check if turretPrefab is assigned
+                if (placedTurrets.Count > 0)
                 {
-                    var newTurret = Instantiate(turretPrefab, pos + spawnOffset, rot);
-                    newTurret.GetComponent<turretCombat>().assignKey(totalTowerCount);
-                    placedTowers[totalTowerCount] = newTurret; // Add to placed towers
-                    turretNumCount += 1;
-                    totalTowerCount += 1;
-                    StartCoroutine(playerInputWait()); // Wait for input
-                }
-                else
-                {
-                    Debug.LogError("turretPrefab is null");
+                    GameObject oldestTurret = placedTurrets[0]; // Get first turret (oldest)
+                    placedTurrets.RemoveAt(0); // Remove from list
+                    Destroy(oldestTurret); // Destroy the object
                 }
             }
-            gameObject.GetComponent<masterInput>().abilityInUse = false; // Reset ability in use
-            
-            
-            
+
+            if (turretPrefab != null)
+            {
+                GameObject newTurret = Instantiate(turretPrefab, pos + spawnOffset, rot);
+                //newTurret.GetComponent<turretCombat>().assignKey(totalTowerCount);
+
+                placedTurrets.Add(newTurret);
+                if(turretNumCount < turretMaxQuantity)
+                {
+                    turretNumCount++;
+                    totalTowerCount++;
+                }
+                
+
+                StartCoroutine(playerInputWait());
+            }
+            else
+            {
+                Debug.LogError("turretPrefab is null");
+            }
+
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
     }
 
-    //-------------------------------------------
 
 
-    //--------------Main Functions---------------
+
+//-------------------------------------------
+
+
+//--------------Main Functions---------------
 
     private void OnDrawGizmos()
     {
@@ -1048,19 +1204,21 @@ public class classAbilties : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        //currentClass = gameObject.GetComponent<masterInput>().currentClass;
         player = GameObject.FindGameObjectWithTag("Player");
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+
         teslaNumCount = 0;
         turretNumCount = 0;
+        totalTowerCount = 0;
 
         skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<SkillTreeManager>();
 
-        towerMaxQuantity = turretMaxQuantity + teslaMaxQuantity;
-        placedTowers = new GameObject[towerMaxQuantity];
+        placedTurrets = new List<GameObject>(); // ✅ Use List instead of array
+        placedTeslas = new List<GameObject>();
 
         playerInput = GetComponent<PlayerInput>();
     }
+
 
     // Start is called before the first frame update
     void Start()
@@ -1068,8 +1226,8 @@ public class classAbilties : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         teslaNumCount = 0;
         turretNumCount = 0;
+        enemiesInClone = new Collider[0];
 
-        
 
         //skillTreeManagerObj = GameObject.FindGameObjectWithTag("skillTreeManager").GetComponent<skillTreeManager>();
     }
@@ -1079,14 +1237,14 @@ public class classAbilties : MonoBehaviour
     {
         if (bubble)
         {
-            
+
         }
 
-        if(checkingAura && currentAura != null)
+        if (checkingAura && currentAura != null)
         {
             Collider[] colliders = Physics.OverlapSphere(currentAura, comatAuraRadius, playerLayer);
 
-            if(colliders.Length > 0 && colliders.Length < 2) 
+            if (colliders.Length > 0 && colliders.Length < 2)
             {
                 if (colliders[0].gameObject.tag == "Player" && buffingPlayer == false)
                 {
@@ -1094,9 +1252,9 @@ public class classAbilties : MonoBehaviour
                     //player.GetComponent<CharacterBase>().buffPlayer();
                     buff(true, "attack", colliders[0].gameObject);
                 }
-                
+
             }
-            if(colliders.Length == 0 && buffingPlayer == true)
+            if (colliders.Length == 0 && buffingPlayer == true)
             {
                 buffingPlayer = false;
                 buff(false, "attack", player.gameObject);
@@ -1118,7 +1276,7 @@ public class classAbilties : MonoBehaviour
             }
 
         }
-        if(!checkingAura && buffingPlayer == true)
+        if (!checkingAura && buffingPlayer == true)
         {
             buffingPlayer = false;
             buff(false, "attack", player.gameObject);
@@ -1129,28 +1287,47 @@ public class classAbilties : MonoBehaviour
         {
             activateTurret();
         }
-        if(placingTesla)
+        if (placingTesla)
         {
             activateTesla();
         }
 
-        if(shootingSwords)
+        if(cloning && currentClone != null)
         {
-            if(playerInput.actions["Attack"].IsPressed() && !shotSword)
+            enemiesInClone = Physics.OverlapSphere(currentClone.transform.position, cloneRadius, enemy);
+
+            foreach(Collider c in enemiesInClone)
+            {
+                print("Setting new target in class for an enemy");
+                c.gameObject.transform.LookAt(player.transform);
+                //c.gameObject.GetComponent<EnemyLOS>().ChangeTarget(c.gameObject);
+            }
+        }
+        if(!cloning && enemiesInClone.Length > 0)
+        {
+            foreach (Collider c in enemiesInClone)
+            {
+                c.gameObject.GetComponent<EnemyLOS>().ChangeTarget(player.gameObject);
+            }
+        }
+
+        if (shootingSwords)
+        {
+            if (playerInput.actions["Attack"].IsPressed() && !shotSword)
             {
                 StartCoroutine(swordShooting());
             }
         }
 
-        if(shootingRocket)
+        if (shootingRocket)
         {
             if (playerInput.actions["Attack"].triggered && !shotRocket)
                 StartCoroutine(shootRocket());
         }
 
-        if(shootingLaser)
+        if (shootingLaser)
         {
-            if(playerInput.actions["Attack"].IsPressed() && !shotLaser)
+            if (playerInput.actions["Attack"].IsPressed() && !shotLaser)
             {
                 shotLaser = true;
 
@@ -1158,7 +1335,7 @@ public class classAbilties : MonoBehaviour
                 currentLaserEffect.GetComponent<ParticleSystem>().Clear(true);
                 currentLaserEffect.GetComponent<ParticleSystem>().Play();
             }
-            if(playerInput.actions["Attack"].WasReleasedThisFrame() && shotLaser)
+            if (playerInput.actions["Attack"].WasReleasedThisFrame() && shotLaser)
             {
                 shotLaser = false;
                 //if (currentLaserEffect != null)
@@ -1182,7 +1359,7 @@ public class classAbilties : MonoBehaviour
             StartCoroutine(checkLaserHit());
         }
 
-        if(throwingGrenade && !threwGrenade)
+        if (throwingGrenade && !threwGrenade)
         {
             gameObject.GetComponent<masterInput>().throwingGrenade = true;
             if (playerInput.actions["Attack"].triggered)
@@ -1190,22 +1367,22 @@ public class classAbilties : MonoBehaviour
                 threwGrenade = true;
                 //gameObject.GetComponent<masterInput>().throwingGrenade = false;
                 GameObject grenade = Instantiate(grenadePrefab, grenadeSpawn.transform.position, grenadeSpawn.transform.rotation);
-                if(earthBool)
+                if (earthBool)
                     grenade.GetComponent<grenade>().isEarth = true;
                 grenade.GetComponent<Rigidbody>().velocity = grenade.transform.forward * grenadeSpeed;
                 StartCoroutine(grenade.GetComponent<grenade>().explode());
                 StartCoroutine(grenadeWait(grenadeCooldown));
             }
-            
+
         }
 
         //skill tree upgrade testing
         //if(Input.GetKeyDown(KeyCode.T))
         //{
-            //Debug.Log("Activating skill upgrade");
-            //var temp = bubbleRadius;
-            //skillTreeManagerObj.unlockSkill("IncBubRad");
-            //print("Bubble rad has been changed from: " + temp + " to: " + bubbleRadius);
+        //Debug.Log("Activating skill upgrade");
+        //var temp = bubbleRadius;
+        //skillTreeManagerObj.unlockSkill("IncBubRad");
+        //print("Bubble rad has been changed from: " + temp + " to: " + bubbleRadius);
         //}
     }
 
@@ -1258,7 +1435,7 @@ public class classAbilties : MonoBehaviour
 
     public void activateIceRune(bool choice)
     {
-        if(choice)
+        if (choice)
         {
             iceBool = true;
         }
@@ -1317,5 +1494,5 @@ public class classAbilties : MonoBehaviour
         rocketPrefab.GetComponent<rocket>().increaseBlastRadius(amount);
     }
 
-    
+
 }

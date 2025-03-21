@@ -19,14 +19,18 @@ public class Door : MonoBehaviourID, i_Interactable
     public bool isLocked;
     public bool isOpen;
     public bool forceOpen;
+    [SerializeField] bool hasTrigger;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        if (isLocked) print("Door's guid: " + doorGuid.ToString());
+        if (hasTrigger) animator.keepAnimatorStateOnDisable = true;
+        //if (isOpen) animator.SetBool("isOpen", true);
+        //else animator.SetBool("isOpen", false);
     }
     public void Start()
     {
+        Debug.Log("INSIDE DOOR START FUNCTION");
         isOpen = false;
         forceOpen = false;
         itemManager = GameObject.Find("ItemManager").GetComponent<ItemManager>();
@@ -34,6 +38,13 @@ public class Door : MonoBehaviourID, i_Interactable
         {
             Debug.Log("No animator component found");
         }
+    }
+
+    public void OnEnable()
+    {
+        //animator = GetComponent<Animator>();
+        //if (isOpen) animator.SetBool("isOpen", true);
+        //else animator.SetBool("isOpen", false);
     }
 
     public void UnlockDoor()
@@ -153,6 +164,7 @@ public class Door : MonoBehaviourID, i_Interactable
     {
         if (doorType == DoorType.Gate || doorType == DoorType.Wood)
         {
+            Debug.Log("CLOSING DOOR BOOL: " + animator.GetBool("isOpen"));
             animator.SetBool("isOpen", false);
             Debug.Log("Closing Door");
             isOpen = false;

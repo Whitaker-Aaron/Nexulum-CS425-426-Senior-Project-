@@ -1126,6 +1126,31 @@ public class masterInput : MonoBehaviour
 
         if (currentClass == WeaponBase.weaponClassTypes.Engineer)
         {
+            if (temp.IsName("engAttackOne") || temp.IsName("engAttackTwo") || temp.IsName("engAttackThree"))
+                yield break;
+
+            if (temp.IsName("Locomotion"))
+            {
+                animationControl.engAttackOne(animTime);
+                ES1.GetComponent<ParticleSystem>().Play();
+                attackTime = engAnimTime;
+                StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+            }
+            if (temp.IsName("engWaitOne"))
+            {
+                animationControl.engAttackTwo(animTime);
+                ES2.GetComponent<ParticleSystem>().Play();
+                attackTime = engAnimTimeTwo;
+                StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+            }
+            if (temp.IsName("engWaitTwo"))
+            {
+                animationControl.engAttackThree();
+                ES3.GetComponent<ParticleSystem>().Play();
+                attackTime = engAnimTimeThree;
+                StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+            }
+            /*
             switch (attackStage)
             {
                 case 1:
@@ -1144,7 +1169,7 @@ public class masterInput : MonoBehaviour
                     attackTime = engAnimTimeThree;
                     break;
             }
-            StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
+            */
             StartCoroutine(wait(attackTime * 2));
             yield return StartCoroutine(waitAttack(attackTime * 2));
         }
@@ -1284,47 +1309,40 @@ public class masterInput : MonoBehaviour
         StartCoroutine(HandleComboAttack(isHeavy ? animTime : animTimeTwo, attackStage, isHeavy));
     }
 
-    // Knight Logic with Light and Heavy Attacks
-    /*
-    private void runKnightAttackLogic()
+    IEnumerator buildHeat()
     {
-        if (Time.time - lastClickedTime > maxComboDelay)
-        {
-            noOfClicks = 0;
-        }
+        if(!shooting)
+            yield break;
 
-        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
+        weaponType temp = character.equippedWeapon.weaponType;
+
+
+    }
+
+    bool cooling = false;
+    IEnumerator lowerHeat()
+    {
+        if (shooting || cooling || character.equippedWeapon.weaponType.isReloading)
+            yield break;
+
+        cooling = true;
+        if (character.equippedWeapon.weaponType != null)
         {
-            if (playerInput.actions["attack"].triggered)
+            print("cooldownHeat in routine");
+            yield return new WaitForSeconds(character.equippedWeapon.weaponType.cooldownRate);
+            if (character.equippedWeapon.weaponType.currentHeat - character.equippedWeapon.weaponType.cooldownVal < 0)
             {
-                lastClickedTime = Time.time;
-
-                // Light or Heavy Attack based on input
-                bool isHeavy = playerInput.actions["attack"].IsPressed();
-                noOfClicks++;
-
-                if (noOfClicks == 1)
-                {
-                    StartCoroutine(HandleComboAttack(animTime, 1, isHeavy));
-                }
-
-                if (noOfClicks >= 2)
-                {
-                    nextAttackTime = animTimeTwo;
-                    StartCoroutine(HandleComboAttack(animTimeTwo, 2, isHeavy));
-                }
-
-                if (noOfClicks >= 3)
-                {
-                    noOfClicks = 0;
-                    cooldownTime = Time.time + cooldown;
-                    StartCoroutine(HandleComboAttack(animTimeThree, 3, isHeavy));
-                }
+                character.equippedWeapon.weaponType.currentHeat = 0;
+                cooling = false;
+                yield break;
             }
-        }
-    }*/
+            else
+                character.equippedWeapon.weaponType.currentHeat -= character.equippedWeapon.weaponType.cooldownVal;
 
-    // Engineer Logic with Light and Heavy Attacks
+            cooling = false;
+        }
+    }
+
     private void runEngineerAttackLogic()
     {
         /*
@@ -1348,9 +1366,9 @@ public class masterInput : MonoBehaviour
             noOfClicks = 0;
         }
 
-        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shootingSwords)
+        if (Time.time > lastClickedTime + nextAttackTime && !isAttacking && !shooting)
         {
-            if (playerInput.actions["RightClick"].triggered && !isAttacking)
+            if (playerInput.actions["RightClick"].triggered)
             {
                 lastClickedTime = Time.time;
                 noOfClicks++;
@@ -1414,73 +1432,7 @@ public class masterInput : MonoBehaviour
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
             runKnightAttackLogic();
-            /*
-            if (Time.time - lastClickedTime > maxComboDelay)
-            {
-                noOfClicks = 0;
-            }
-            if (Time.time > lastClickedTime + nextAttackTime && isAttacking == false && !shootingSwords)//Time.time > cooldownTime && isAttacking == false)
-            {
-                if (playerInput.actions["attack"].triggered)
-                {
-                    audioManager.PlaySFX("SwordWoosh");
-                    print("click: " + noOfClicks);
-
-                    lastClickedTime = Time.time;
-
-                    noOfClicks++;
-                    if (noOfClicks == 1)
-                    {
-                        
-                        if (animationControl.getAnimationInfo().IsName("waitTwo") && animationControl.getAnimationInfo().normalizedTime > .99f)
-                        {
-                            noOfClicks = 0;
-                            return;
-                        }
-                        if (animationControl.getAnimationInfo().IsName("attackThree") && animationControl.getAnimationInfo().normalizedTime < animTimeThree)
-                        {
-                            noOfClicks = 0;
-                            return;
-                        }
-                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
-                        animationControl.knightAttackOne(animTime);
-                        StartCoroutine(waitAttack(animTime * 2));
-                        StartCoroutine(wait(animTime));
-                        SS1.GetComponent<ParticleSystem>().Play();
-                    }
-                    noOfClicks = Mathf.Clamp(noOfClicks, 0, 3);
-
-                    if (noOfClicks >= 2 && animationControl.getAnimationInfo().IsName("waitOne"))
-                    {
-                        
-                        nextAttackTime = animTimeTwo;
-                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
-                        animationControl.knightAttackTwo(animTimeTwo);
-                        StartCoroutine(wait(animTimeTwo));
-                        StartCoroutine(waitAttack(animTimeTwo * 2));
-                        SS2.GetComponent<ParticleSystem>().Play();
-                    }
-
-                    if (noOfClicks >= 3 && animationControl.getAnimationInfo().IsName("waitTwo"))
-                    {
-                        
-                        nextAttackTime = animTimeThree;
-                        noOfClicks = 0;
-                        cooldownTime = Time.time + cooldown;
-                        sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer);
-                        animationControl.knightAttackThree();
-                        StartCoroutine(wait(animTimeThree));
-                        StartCoroutine(waitAttack(animTimeThree * 2));
-                        nextAttackTime = animTime;
-                        SS3.GetComponent<ParticleSystem>().Play();
-                    }
-                    else
-                    {
-                        if (Time.time - lastClickedTime > maxComboDelay)
-                            animationControl.resetKnight();
-                    }
-                }
-            }*/
+            
 
             if (playerInput.actions["RightClick"].triggered && !isAttacking)// && animationControl.getAnimationInfo().IsName("Locomotion"))
             {
@@ -1516,13 +1468,16 @@ public class masterInput : MonoBehaviour
         //GUNNER LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket && !shootingLaser && !throwingGrenade)
         {
-            if ((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0 && equippedWeapon.isReloading == false) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize && equippedWeapon.isReloading == false))//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
-            {
+            //if ((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0 && equippedWeapon.isReloading == false) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize && equippedWeapon.isReloading == false))//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
+
+
+            //if (playerInput.actions["attack"].IsPressed() && equippedWeapon.isReloading == false)//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
+            //{
                 //pistolBulletCount = 0;
                 //canPistolShoot = false;
-                StartCoroutine(equippedWeapon.Reload());
-                StartCoroutine(animationControl.gunnerReload(equippedWeapon.reloadTime));
-            }
+                //StartCoroutine(equippedWeapon.Reload());
+                //StartCoroutine(animationControl.gunnerReload(equippedWeapon.reloadTime));
+            //}
 
 
             // Check mouse input for shooting
@@ -1544,10 +1499,22 @@ public class masterInput : MonoBehaviour
                 print("shhoting true");
             }
 
-            if (shooting)
+            if (shooting && !isReloading)
             {
+                if(character.equippedWeapon.weaponType.currentHeat >= character.equippedWeapon.weaponType.overHeatMax)
+                {
+                    shooting = false;
+                    StartCoroutine(equippedWeapon.Reload());
+                    StartCoroutine(animationControl.gunnerReload(equippedWeapon.reloadTime));
+                    return;
+                }
                 print("Calling shoot in MI");
                 StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Shoot());
+            }
+            else
+            {
+                shooting = false;
+                StartCoroutine(lowerHeat());
             }
         }
 
@@ -1562,8 +1529,8 @@ public class masterInput : MonoBehaviour
 
             if (((playerInput.actions["attack"].IsPressed() && equippedWeapon.bulletCount <= 0) || (playerInput.actions["Reload"].triggered && equippedWeapon.bulletCount < equippedWeapon.magSize)) && equippedWeapon.canShoot && equippedWeapon.isReloading == false)//playerInput.actions["attack"].IsPressed() && pistolBulletCount <= 0 && !pistolReloading && pistolBulletCount < pistolMagSize && isAttacking == false && !repairing)
             {
-                StartCoroutine(equippedWeapon.Reload());
-                StartCoroutine(animationControl.engineerReload(equippedWeapon.reloadTime));
+                //StartCoroutine(equippedWeapon.Reload());
+                //StartCoroutine(animationControl.engineerReload(equippedWeapon.reloadTime));
 
             }
 
@@ -1575,10 +1542,12 @@ public class masterInput : MonoBehaviour
             if (playerInput.actions["Attack"].WasPressedThisFrame() && !isAttacking)
             {
                 shooting = true;
+                //StartCoroutine(lowerHeat());
             }
             else if (playerInput.actions["Attack"].WasReleasedThisFrame())
             {
                 shooting = false;
+                //StartCoroutine(buildHeat());
             }
 
             float triggerValue = playerInput.actions["Attack"].ReadValue<float>();
@@ -1593,9 +1562,20 @@ public class masterInput : MonoBehaviour
             {
                 if (isAttacking)
                     return;
+                if (character.equippedWeapon.weaponType.currentHeat >= character.equippedWeapon.weaponType.overHeatMax)
+                {
+                    shooting = false;
+                    StartCoroutine(equippedWeapon.Reload());
+                    StartCoroutine(animationControl.engineerReload(equippedWeapon.reloadTime));
+                    return;
+                }
 
                 //StartCoroutine(pistolShoot());
-                StartCoroutine(character.equippedWeapon.weaponMesh.GetComponent<weaponType>().Shoot());
+                StartCoroutine(character.equippedWeapon.weaponType.Shoot());
+            }
+            else
+            {
+                StartCoroutine(lowerHeat());
             }
 
 
@@ -1619,60 +1599,6 @@ public class masterInput : MonoBehaviour
             {
                 StartCoroutine(repairWait());
             }
-            /*
-            if (Time.time - lastClickedTime > engMaxComboDelay)
-            {
-                noOfClicks = 0;
-            }
-
-            if (Time.time > lastClickedTime + engNextAttackTime && !isAttacking && !shooting && !pistolReloading && !repairing)
-            {
-                if (!playerInput.actions["RightClick"].triggered) return;
-
-                // Register attack input
-                isAttacking = true;
-                lastClickedTime = Time.time;
-                noOfClicks = Mathf.Clamp(noOfClicks + 1, 1, 3); // Ensure noOfClicks never resets prematurely
-
-                var currentAnim = animationControl.getAnimationInfo();
-
-                // Attack 1 - Ensures a follow-up can be registered right as animation ends
-                if (noOfClicks == 1 && currentAnim.normalizedTime > engAnimTime)
-                {
-                    if ((currentAnim.IsName("engWaitTwo") && currentAnim.normalizedTime > 0.9f) ||
-                        (currentAnim.IsName("engAttackThree") && currentAnim.normalizedTime > engAnimTimeThree))
-                    {
-                        noOfClicks = 0;
-                        isAttacking = false;
-                        return;
-                    }
-
-                    engNextAttackTime = engAnimTime;
-                    //StartCoroutine(PerformAttack(engAnimTime, ES1, 1));
-                }
-
-                // Attack 2 - Ensures input right as attack one ends is detected
-                else if (noOfClicks == 2 &&
-                        (currentAnim.IsName("engWaitOne") || currentAnim.IsName("engAttackOne")) &&
-                        currentAnim.normalizedTime > engAnimTimeTwo - 0.1f) // Extended input buffer
-                {
-                    engNextAttackTime = engAnimTimeTwo;
-                    //StartCoroutine(PerformAttack(engAnimTimeTwo, ES2, 2));
-                }
-
-                // Attack 3 - Ensures combo finishes correctly
-                else if (noOfClicks == 3 && currentAnim.IsName("engWaitTwo"))
-                {
-                    engNextAttackTime = engAnimTimeThree;
-                    noOfClicks = 0;
-                    engCooldown = Time.time + cooldown;
-
-                    //StartCoroutine(PerformAttack(engAnimTimeThree, ES3, 3));
-                }
-            
-            }*/
-
-
 
         }
 

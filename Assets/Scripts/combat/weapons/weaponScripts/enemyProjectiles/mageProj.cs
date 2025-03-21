@@ -30,7 +30,7 @@ public class mageProj : projectile
 
     private void Awake()
     {
-        bulletHitEffect = "bulletHitPool";
+        bulletHitEffect = "mageHitOne";
         GetDamage("Mage");
     }
 
@@ -66,7 +66,7 @@ public class mageProj : projectile
         float step = speed * Time.fixedDeltaTime;
         float distanceToHit = Vector3.Distance(transform.position, hitPoint);
 
-        if ((distanceToHit <= step || distanceToHit <= bufferDistance) && hitPoint != null)
+        if ((distanceToHit <= step || distanceToHit <= bufferDistance) && hitPoint != null && hit.collider != null)
         {
             if (hit.collider.gameObject.tag == "Enemy")
             {

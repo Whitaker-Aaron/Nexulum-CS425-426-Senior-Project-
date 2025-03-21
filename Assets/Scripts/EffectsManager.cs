@@ -54,6 +54,7 @@ public class EffectsManager : MonoBehaviour
         
 
         createNewPool("bulletHitPool",getPrefab("bulletHit"), bulletPoolSize);
+        createNewPool("archerHitPool", getPrefab("archerHit"), bulletPoolSize);
         createNewPool("pistolFlash", getPrefab("pistolFlash"), 4);
         createNewPool("rifleFlash", getPrefab("rifleFlash"), 12);
         createNewPool("revolverFlash", getPrefab("revolverFlash"), 8);

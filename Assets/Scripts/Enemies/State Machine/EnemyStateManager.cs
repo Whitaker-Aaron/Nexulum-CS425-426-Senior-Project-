@@ -85,7 +85,7 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
 
     public void Start()
     {
-        if (useDefaultConcreteStates == null)
+        if (useDefaultConcreteStates == false)
         {
             Debug.LogError("EnemyStateManager.cs Start() - State dictionary is null");
         }
@@ -236,6 +236,11 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     public void PauseMovementFor(float seconds)
     {
         StartCoroutine(StopFor(seconds));
+    }
+
+    public void StopMovement()
+    {
+        movementPaused = !movementPaused;
     }
 
     private IEnumerator StopFor(float s)

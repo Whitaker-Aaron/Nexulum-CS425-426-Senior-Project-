@@ -54,7 +54,7 @@ public class RoomTransition : MonoBehaviour
         {
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i] != null)
+                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null)
                 {
                     enemies[i].GetComponent<EnemyFrame>().healthRef.SetActive(false);
                 }
@@ -69,7 +69,7 @@ public class RoomTransition : MonoBehaviour
         {
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i] != null)
+                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null )
                 {
                     enemies[i].GetComponent<EnemyFrame>().healthRef.SetActive(true);
                 }
@@ -88,7 +88,8 @@ public class RoomTransition : MonoBehaviour
             if (!character.transitioningRoom)
             {
                 character.ResetGroundCounter();
-                if(targetRoom != null)
+                if(currentInfo.requiredEnemyRoom) GameObject.Find("UIManager").GetComponent<UIManager>().DeactivateEnemiesRemainingUI();
+                if (targetRoom != null)
                 {
                     targetRoom.SetActive(true);
                     character.targetRoom = targetInfo;

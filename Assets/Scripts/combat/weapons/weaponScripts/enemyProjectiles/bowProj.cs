@@ -66,6 +66,13 @@ public class bowProj : projectile
         GetDamage("archer");
     }
 
+    private void OnDisable()
+    {
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
     protected override void moveProj()
     {
         transform.Translate(Vector3.forward * speed * Time.deltaTime);

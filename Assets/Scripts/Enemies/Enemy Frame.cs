@@ -44,6 +44,8 @@ public class EnemyFrame : MonoBehaviour
     public bool onDamaged = false; // True on hit, used for state machine logic to aggro enemies
     public DamageSource source;
 
+    public bool collidingWithPlayer = false;
+
     public float effectTickInterval = 5.0f;
     public int iceStackMax = 4;
     public IceDamage iceEffect;
@@ -111,6 +113,25 @@ public class EnemyFrame : MonoBehaviour
         InvokeRepeating("TickIceEffect", 0.0f, effectTickInterval); // Decreases current ice stacks by 1 every effectTickInterval seconds until 0
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        if (collision.gameObject.tag == "Player")
+        {
+            collidingWithPlayer = true;
+
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+
+        if (collision.gameObject.tag == "Player")
+        {
+            collidingWithPlayer = false;
+
+        }
+    }
+
     public void DeactivateHealthBar()
     {
         if(healthRef != null)
@@ -139,6 +160,9 @@ public class EnemyFrame : MonoBehaviour
         }
         
     }
+
+    
+
 
     private void OnDestroy()
     {
@@ -171,7 +195,8 @@ public class EnemyFrame : MonoBehaviour
             Debug.Log("Enemy attacking?" + enemyType.isAttacking);
             if (!enemyType.isAttacking)
             {
-                anim.takeHit();
+                if(anim != null)
+                    anim.takeHit();
             }
             if(true)
             {
@@ -347,13 +372,22 @@ public class EnemyFrame : MonoBehaviour
         yield return (StartCoroutine(updateHealthBarsNegative()));
         if (transform.GetComponentInChildren<ParticleSystem>() != null)
         {
+
             Debug.Log("enemy has particle system");
-            var particleSys = transform.GetComponentInChildren<ParticleSystem>();
-            //particleSys.transform.SetParent(null, true);
-            //particleSys.transform.position = new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z);
-            //particleSys.GetComponentInChildren<ParticleSystem>().Play();
+            var particleSys = transform.Find("DeathParticle");
+            if(particleSys != null)
+            {
+                particleSys.transform.SetParent(null, true);
+                particleSys.transform.position = new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z);
+                particleSys.GetComponentInChildren<ParticleSystem>().Play();
+            }
+            
         }
         else Debug.Log("enemy does not have particle system");
+        if (collidingWithPlayer)
+        {
+            if(character.enemyCollisionCounter > 0) character.enemyCollisionCounter--;
+        }
         enemyType.onDeath();
         for (int i = 0; i < materialList.Length; i++)
         {
@@ -377,34 +411,7 @@ public class EnemyFrame : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        /*
-        //Debug.Log("Enemy collided with: ");
-        if (collision.gameObject.tag == "Bullet")
-        { for (int i = 0; i < materialList.Length; i++)
-            {
-                var craftMat = materialList[i].GetComponent<OverworldMaterial>();
-                Debug.Log("Craft material drop rate: ");
-                Debug.Log(craftMat.material.dropRate);
-                for (int j = 0; j < craftMat.material.dropAmount; j++)
-                {
-                    if (UnityEngine.Random.Range(0.0f, 1.0f) <= craftMat.material.dropRate)
-                    {
-                        Instantiate(materialList[i], new Vector3(transform.position.x + UnityEngine.Random.Range(-1.0f, 1.0f), transform.position.y + 2.5f, transform.position.z + UnityEngine.Random.Range(-1.0f, 1.0f)), Quaternion.identity);
-                    }
-                }
-
-
-
-            }
-            Destroy(this.gameObject);
-            //Instantiate(materialList[0], new Vector3(transform.position.x - 0.3f, transform.position.y + 2.5f, transform.position.z - 0.3f), Quaternion.identity);
-
-        }
-        */
-    }
+    
 
     private void TickIceEffect() // Tick ice effect - Aisling
     {

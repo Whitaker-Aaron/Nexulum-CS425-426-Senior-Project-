@@ -6,6 +6,7 @@ using static EnemyFrame;
 public interface enemyInt
 {
     bool isAttacking { get; set; }
+    bool isActive { get; set; }
     enemyInt getType();
 
     void onDeath();

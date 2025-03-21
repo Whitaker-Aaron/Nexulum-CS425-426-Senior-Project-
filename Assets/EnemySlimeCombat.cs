@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering.Universal.Internal;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class EnemySlimeCombat : MonoBehaviour, enemyInt
@@ -21,6 +22,13 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
     //EnemyStateManager stateManager;
     public int attackDamage = 20;
     private bool _isAttacking;
+
+    private Vector3 position = Vector3.zero;
+    private Animator animator;
+    private NavMeshAgent agent;
+
+    [SerializeField] GameObject slimeAnim;
+
     public bool isAttacking
     {
         get { return _isAttacking; }
@@ -29,6 +37,19 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
             if (_isAttacking != value)  // Only set if the value is different
             {
                 _isAttacking = value;
+                // Do the other necessary actions
+            }
+        }
+    }
+    private bool _isActive;
+    public bool isActive
+    {
+        get { return _isActive; }
+        set
+        {
+            if (_isActive != value)  // Only set if the value is different
+            {
+                _isActive = value;
                 // Do the other necessary actions
             }
         }
@@ -43,12 +64,21 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
     void Start()
     {
         playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        animator = slimeAnim.GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
+        slimeAnim.transform.localPosition = new Vector3(this.gameObject.transform.position.x, 0, this.gameObject.transform.position.z);
     }
 
     // Update is called once per frame
     void Update()
     {
         attackPlayer();
+        slimeAnim.transform.localPosition = new Vector3(this.gameObject.transform.position.x,0, this.gameObject.transform.position.z);
+    }
+
+    private void FixedUpdate()
+    {
+        checkMovement();
     }
 
     public enemyInt getType()
@@ -98,6 +128,35 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
         }
         
     }
+
+    public float animDistance = .3f;
+
+    void checkMovement()
+    {
+        if (slimeAnim == null)
+            return;
+
+
+        float speed = agent.velocity.magnitude; // Get speed of NavMeshAgent
+        bool isMoving = speed > 0.1f; // If speed is small, consider it idle
+
+        if (isMoving != animator.GetBool("moving")) // Update only when needed
+        {
+            animator.SetBool("moving", isMoving);
+
+            if (isMoving)
+            {
+                animator.CrossFade("forward", 0.2f); // Smooth transition
+            }
+            else
+            {
+                animator.CrossFade("idle", 0.2f);
+            }
+        }
+    }
+
+
+
 
     private void OnDrawGizmos()
     {

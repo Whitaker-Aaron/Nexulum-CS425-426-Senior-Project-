@@ -179,7 +179,17 @@ public class RoomInformation : MonoBehaviour
 
     public List<GameObject> GetEnemies()
     {
-        return allEnemies;
+        //return allEnemies;
+        var enemiesList = new List<GameObject>();
+        if (enemies != null)
+        {
+            for (int i = 0; i < enemies.transform.childCount; i++)
+            {
+                enemiesList.Add(enemies.transform.GetChild(i).gameObject);
+            }
+        }
+        
+        return enemiesList;
     }
 
     public void DeactivateEnemyHealthBars()

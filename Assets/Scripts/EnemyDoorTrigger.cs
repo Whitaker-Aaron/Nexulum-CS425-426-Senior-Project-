@@ -16,6 +16,10 @@ public class EnemyDoorTrigger : MonoBehaviour
         //enemies = transform.GetComponent<RoomInformation>().GetEnemies();
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         var enemies = transform.GetComponent<RoomInformation>().GetEnemies();
+        for(int i =0; i < enemies.Count; i++)
+        {
+            enemies[i].GetComponent<enemyInt>().isActive = false;
+        }
         //prevEnemyCount = 0;
     }
 
