@@ -372,11 +372,16 @@ public class EnemyFrame : MonoBehaviour
         yield return (StartCoroutine(updateHealthBarsNegative()));
         if (transform.GetComponentInChildren<ParticleSystem>() != null)
         {
+
             Debug.Log("enemy has particle system");
-            var particleSys = transform.GetComponentInChildren<ParticleSystem>();
-            particleSys.transform.SetParent(null, true);
-            particleSys.transform.position = new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z);
-            particleSys.GetComponentInChildren<ParticleSystem>().Play();
+            var particleSys = transform.Find("DeathParticle");
+            if(particleSys != null)
+            {
+                particleSys.transform.SetParent(null, true);
+                particleSys.transform.position = new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z);
+                particleSys.GetComponentInChildren<ParticleSystem>().Play();
+            }
+            
         }
         else Debug.Log("enemy does not have particle system");
         if (collidingWithPlayer)
