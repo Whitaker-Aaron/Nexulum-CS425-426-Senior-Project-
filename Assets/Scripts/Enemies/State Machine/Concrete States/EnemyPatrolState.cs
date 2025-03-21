@@ -29,15 +29,12 @@ public class EnemyPatrolState : EnemyNeutralState
         }
 
         stateContext.MoveTo(patrolPoints[currentPointIndex].position, false);
-
-        Debug.Log("NavAgent Destination: " + stateContext.agent.destination);
     }
 
     public override void RunState()
     {
         base.OnDamaged();
         stateContext.agent.isStopped = stateContext.movementPaused;
-        Debug.Log("Distance to point: " + Vector3.Distance(patrolPoints[currentPointIndex].position, stateContext.transform.position));
 
         if (stateContext.TargetSpotted() == stateContext.GetCurrentTargetTag()) // Chase if target is seen
         {
