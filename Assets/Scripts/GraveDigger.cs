@@ -31,15 +31,17 @@ public class GraveDigger : MonoBehaviour, enemyInt
     public int attackDamage = 20;
     private float timeOffset;
 
+    int curSkeletonCounter = 0;
     public GameObject skeletonPrefab1; // First skeleton prefab
     public GameObject skeletonPrefab2; // Second skeleton prefab
     public GameObject smokeEffectPrefab; // Smoke effect prefab
 
     private float firstSpawnDelay = 5f; // Initial delay before first spawn
-    private float spawnInterval = 45f; // Time in seconds between spawns
+    private float spawnInterval = 15f; // Time in seconds between spawns
 
     private bool isSpawning = true;
     public bool canAttack = true;
+    [SerializeField] bool useFirstSpawnDelay = true;
 
     Coroutine curSpawnRoutine;
     private void Awake()
@@ -102,7 +104,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
             Debug.Log("Grave digger not active");
             yield return null;
         }
-        yield return new WaitForSeconds(firstSpawnDelay);
+        if(useFirstSpawnDelay) yield return new WaitForSeconds(firstSpawnDelay);
         SpawnSkeletons();
 
         // Continue spawning at regular intervals
@@ -116,7 +118,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
 
     void SpawnSkeletons()
     {
-        if (skeletonPrefab1 != null && skeletonPrefab2 != null)
+        if (skeletonPrefab1 != null && skeletonPrefab2 != null && curSkeletonCounter < 4)
         {
             Vector3 spawnPosition1 = new Vector3(transform.position.x + 5f, transform.position.y + 1f, transform.position.z);
             Vector3 spawnPosition2 = new Vector3(transform.position.x - 5f, transform.position.y + 1f, transform.position.z);
@@ -143,6 +145,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
             // Warp skeletons to ensure proper positioning
             skeleton1.GetComponent<NavMeshAgent>().Warp(skeleton1.transform.position);
             skeleton2.GetComponent<NavMeshAgent>().Warp(skeleton2.transform.position);
+            curSkeletonCounter += 2;
         }
         else
         {

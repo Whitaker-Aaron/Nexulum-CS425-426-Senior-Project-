@@ -9,6 +9,7 @@ public class ArrowTrap : MonoBehaviour
     public GameObject arrowPrefab;
     public float arrowSpeed = 10f;
     public int damageAmount = 10;
+    Coroutine curArrowRoutine;
     public Vector3 direction = Vector3.forward; // Default direction (+z)
 
     [Header("Trap Settings")]
@@ -17,7 +18,12 @@ public class ArrowTrap : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SpawnArrows());
+        
+    }
+
+    private void OnEnable()
+    {
+        curArrowRoutine = StartCoroutine(SpawnArrows());
     }
 
     private IEnumerator SpawnArrows()
@@ -27,6 +33,12 @@ public class ArrowTrap : MonoBehaviour
             SpawnArrow();
             yield return new WaitForSeconds(spawnInterval);
         }
+    }
+
+    private void OnDisable()
+    {
+        StopCoroutine(curArrowRoutine);
+        curArrowRoutine = null;
     }
 
     private void SpawnArrow()
