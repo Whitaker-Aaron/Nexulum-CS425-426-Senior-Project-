@@ -37,6 +37,7 @@ public class ArrowTrap : MonoBehaviour
             return;
         }
         GameObject arrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
+        arrow.transform.localScale = new Vector3(3f, 3f, 3f);
 
         Arrow arrowScript = arrow.GetComponent<Arrow>();
         if (arrowScript != null)
