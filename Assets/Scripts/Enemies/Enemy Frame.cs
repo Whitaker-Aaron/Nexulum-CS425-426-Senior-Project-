@@ -49,6 +49,7 @@ public class EnemyFrame : MonoBehaviour
     public float effectTickInterval = 5.0f;
     public int iceStackMax = 4;
     public IceDamage iceEffect;
+    public float iceFreezeCooldown = 2.0f;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
@@ -110,7 +111,18 @@ public class EnemyFrame : MonoBehaviour
 
         // Status effects - Aisling
         iceEffect = new IceDamage(movementReference, iceStackMax);
+        iceEffect.SetInitialSpeed(movementReference.defaultMovementSpeed);
+        iceEffect.SetFreezeCooldown(iceFreezeCooldown);
         InvokeRepeating("TickIceEffect", 0.0f, effectTickInterval); // Decreases current ice stacks by 1 every effectTickInterval seconds until 0
+        StartCoroutine(iceEffect.FreezeCooldown());
+    }
+
+    void Update()
+    {
+        if (movementReference.isFrozen) // Delay when frozen, then unfreeze
+        {
+            iceEffect.isFreezeCooldownActive = true;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
