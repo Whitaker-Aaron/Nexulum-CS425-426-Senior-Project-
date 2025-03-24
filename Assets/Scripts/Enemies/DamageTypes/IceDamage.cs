@@ -19,6 +19,11 @@ public class IceDamage : IType
         this.originalSpeed = movementRef.defaultMovementSpeed;
     }
 
+    public float GetCurrentStacks()
+    {
+        return currentStacks;
+    }
+
     public void execute()
     {
         Debug.Log("Current stacks: " + currentStacks);
@@ -43,10 +48,8 @@ public class IceDamage : IType
         }
     }
 
-    // Add stacks to current value, can be negative
     public void AddStacks(int num)
     {
-        // Add 1 to stack on hit, work on input later
         if (currentStacks <= maxStacks)
         {
             if (num < 0 && currentStacks != 0)
@@ -60,7 +63,6 @@ public class IceDamage : IType
         }
     }
 
-    // Increase maximum stacks during runtime if desired, can be negative
     public void IncreaseMaxStacks(int num)
     {
         maxStacks += num;
