@@ -5,6 +5,7 @@ using UnityEngine;
 public class teslaBase : MonoBehaviour
 {
     public GameObject teslaParent;
+    public GameObject iceEffect;
     // Start is called before the first frame update
     void Start()
     {

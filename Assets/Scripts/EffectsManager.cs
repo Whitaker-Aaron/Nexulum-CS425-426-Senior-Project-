@@ -67,7 +67,7 @@ public class EffectsManager : MonoBehaviour
         createNewPool("rocketHit", getPrefab("rocketHit"), 3);
         createNewPool("rocketFireCircle", getPrefab("rocketHitFire"), rocketFireSize);
         createNewPool("swordShotHit", getPrefab("swordShot"), swordShotSize);
-        createNewPool("swordShotIceHit", getPrefab("swordShotIce"), swordShotSize);
+        createNewPool("swordShotIce", getPrefab("swordShotIce"), swordShotSize);
         createNewPool("bubbleShield", getPrefab("bsStart"), 3);
         createNewPool("earthShield", getPrefab("esStart"), 3);
         createNewPool("grenade", getPrefab("grenade"), 4);
@@ -78,6 +78,9 @@ public class EffectsManager : MonoBehaviour
         createNewPool("swordHeavyHit", getPrefab("swordHeavyHit"), 5);
         createNewPool("iceSwordProjHit", getPrefab("iceSwordProjHit"), 10);
         createNewPool("playerDash", getPrefab("playerDash"), 3);
+        //createNewPool("fireRuneEffect", getPrefab("fireRuneEffect"), 3);
+        //createNewPool("iceRuneEffect", getPrefab("iceRuneEffect"), 3);
+        //createNewPool("earthRuneEffect", getPrefab("earthRuneEffect"), 3);
     }
 
 

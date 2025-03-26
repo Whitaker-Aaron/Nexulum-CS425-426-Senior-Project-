@@ -133,6 +133,7 @@ public class classAbilties : MonoBehaviour
     private int totalTowerCount;
 
     [SerializeField] private GameObject clonePrefab;
+    [SerializeField] private GameObject cloneWall;
     public GameObject currentClone;
     bool cloning = false;
     public float cloneRadius = 1f;
@@ -154,6 +155,9 @@ public class classAbilties : MonoBehaviour
     //------------------Runes--------------------
     [HideInInspector] public bool fireBool, iceBool, earthBool, windBool, electricBool, waterBool = false;
 
+    [SerializeField] private GameObject fireRuneEffect, iceRuneEffect, earthRuneEffect;
+    private GameObject CFRE, CIRE, CERE; //current fire/ice/earth rune effect
+
     //knight
 
 
@@ -173,19 +177,26 @@ public class classAbilties : MonoBehaviour
         }
         Debug.Log("Activating Ability 1.");
 
-
+        
+        //EffectsManager.instance.getFromPool("fireRuneEffect", player.transform.position, Quaternion.identity, true, false);
         a1cooldown = true;
+
 
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !bubble)
         {
             uiManager.ActivateCooldownOnAbility(1);
             StartCoroutine(bubbleShield());
+            if(earthBool)
+                playRuneEffect("Earth");
             acc1 = StartCoroutine(abilitiesCooldown(1, ka1Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
             gameObject.GetComponent<masterInput>().bubble = true;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !shootingRocket)
         {
+            if (fireBool)
+                playRuneEffect("Fire");
+            gameObject.GetComponent<playerAnimationController>().gunnerRocketPod(true);
             uiManager.ActivateCooldownOnAbility(1);
             gameObject.GetComponent<masterInput>().shootingRocket = true;
             shootingRocket = true;
@@ -194,6 +205,8 @@ public class classAbilties : MonoBehaviour
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Engineer && !placing)
         {
+            if(fireBool)
+                playRuneEffect("Fire");
             uiManager.ActivateCooldownOnAbility(1);
             print("turretCount = " + turretNumCount);
             placing = true;
@@ -217,9 +230,10 @@ public class classAbilties : MonoBehaviour
         Debug.Log("Activating Ability 2.");
         uiManager.ActivateCooldownOnAbility(2);
         a2cooldown = true;
-
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !activatedAura)
         {
+            if(fireBool)
+                playRuneEffect("Fire");
             activatedAura = true;
             StartCoroutine(auraWait());
             acc2 = StartCoroutine(abilitiesCooldown(2, ka2Time));
@@ -227,19 +241,28 @@ public class classAbilties : MonoBehaviour
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !throwingGrenade)
         {
+            if (earthBool)
+                playRuneEffect("Earth");
+            gameObject.GetComponent<playerAnimationController>().gunnerRocketPod(true);
             throwingGrenade = true;
             gameObject.GetComponent<masterInput>().throwingGrenade = true;
             StartCoroutine(abilitiesCooldown(2, ga2Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && !placing)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && currentClone == null)
         {
-            placingTesla = true;
-            placingOne = true;
-            instant = true;
-            gameObject.GetComponent<masterInput>().placing = true;
-            StartCoroutine(abilitiesCooldown(2, ea2Time));
+            if (earthBool)
+            {
+                playRuneEffect("Earth");
+                currentClone = Instantiate(cloneWall, player.transform.position + (player.transform.forward * 1.5f), player.transform.rotation);
+            }
+            else
+                currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
+            acc3 = StartCoroutine(abilitiesCooldown(2, ea2Time));
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
+            cloning = true;
         }
+        
 
     }
 
@@ -254,6 +277,8 @@ public class classAbilties : MonoBehaviour
         uiManager.ActivateCooldownOnAbility(3);
         a3cooldown = true;
 
+        
+
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !shootingSwords)
         {
             shootingSwords = true;
@@ -261,6 +286,7 @@ public class classAbilties : MonoBehaviour
 
             if (iceBool)
             {
+                playRuneEffect("Ice");
                 GameObject currentEffect = Instantiate(swordShotIceEffect, player.transform.position, Quaternion.identity);
                 currentEffect.transform.SetParent(player.transform);
                 currentEffect.transform.position = player.transform.position;
@@ -276,7 +302,10 @@ public class classAbilties : MonoBehaviour
                 StartCoroutine(stopSword(currentEffect));
             }
 
-
+            if (iceBool)
+            {
+                playRuneEffect("Ice");
+            }
             acc3 = StartCoroutine(abilitiesCooldown(3, ka3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
@@ -287,6 +316,7 @@ public class classAbilties : MonoBehaviour
             Transform pos = gameObject.GetComponent<masterInput>().bulletSpawn;
             if (iceBool)
             {
+                playRuneEffect("Ice");
                 currentLaserEffect = Instantiate(laserIcePrefab, pos.position, Quaternion.identity);
                 currentLaserEffect.GetComponent<ParticleSystem>().Stop();
                 currentLaserEffect.transform.SetParent(player.transform, false);
@@ -309,13 +339,19 @@ public class classAbilties : MonoBehaviour
             acc3 = StartCoroutine(abilitiesCooldown(3, ga3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && !placing)
         {
-            currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
-            acc3 = StartCoroutine(abilitiesCooldown(3, ea3Time));
-            gameObject.GetComponent<masterInput>().abilityInUse = false;
-            cloning = true;
+            if (iceBool)
+            {
+                playRuneEffect("Ice");
+            }
+            placingTesla = true;
+            placingOne = true;
+            instant = true;
+            gameObject.GetComponent<masterInput>().placing = true;
+            StartCoroutine(abilitiesCooldown(3, ea3Time));
         }
+        
     }
 
     IEnumerator abilitiesCooldown(int ability, float time)
@@ -329,6 +365,8 @@ public class classAbilties : MonoBehaviour
         {
             case 1:
                 yield return new WaitForSeconds(0.2f);
+                if (CFRE.GetComponent<ParticleSystem>().isPlaying)
+                    CFRE.GetComponent<ParticleSystem>().Stop();
                 a1cooldown = false;
                 acc1 = null;
                 print("ability 1 done");
@@ -336,12 +374,16 @@ public class classAbilties : MonoBehaviour
                 break;
             case 2:
                 yield return new WaitForSeconds(0.2f);
+                if (CIRE.GetComponent<ParticleSystem>().isPlaying)
+                    CIRE.GetComponent<ParticleSystem>().Stop();
                 a2cooldown = false;
                 acc2 = null;
                 print("ability 2 done");
                 break;
             case 3:
                 yield return new WaitForSeconds(0.2f);
+                if (CERE.GetComponent<ParticleSystem>().isPlaying)
+                    CERE.GetComponent<ParticleSystem>().Stop();
                 a3cooldown = false;
                 acc3 = null;
                 print("ability 3 done");
@@ -371,6 +413,43 @@ public class classAbilties : MonoBehaviour
         yield break;
     }
 
+    void playRuneEffect(string name)
+    {
+        switch(name)
+        {
+            case "Fire":
+                CFRE.SetActive(true);
+                CFRE.GetComponent<ParticleSystem>().Play();
+                break;
+            case "Ice":
+                CIRE.SetActive(true);
+                CIRE.GetComponent<ParticleSystem>().Play();
+                break;
+            case "Earth":
+                CERE.SetActive(true);
+                CERE.GetComponent<ParticleSystem>().Play();
+                break;
+        }
+    }
+
+    void stopRuneEffect(string name)
+    {
+        switch(name)
+        {
+            case "Fire":
+                CFRE.SetActive(false);
+                CFRE.GetComponent<ParticleSystem>().Stop();
+                break;
+            case "Ice":
+                CIRE.SetActive(false);
+                CIRE.GetComponent<ParticleSystem>().Stop();
+                break;
+            case "Earth":
+                CERE.SetActive(false);
+                CERE.GetComponent<ParticleSystem>().Stop();
+                break;
+        }
+    }
 
 
 
@@ -384,11 +463,11 @@ public class classAbilties : MonoBehaviour
 
         if (earthBool)
         {
-            EffectsManager.instance.getFromPool("earthShield", player.transform.position, Quaternion.identity, true, false);
+            EffectsManager.instance.getFromPool("earthShield", player.transform.position + Vector3.up, Quaternion.identity, true, false);
             yield return new WaitForSeconds(.5f);
-            EffectsManager.instance.getFromPool("earthShield", player.transform.position, Quaternion.identity, true, false);
+            EffectsManager.instance.getFromPool("earthShield", player.transform.position + Vector3.up, Quaternion.identity, true, false);
             yield return new WaitForSeconds(bubbleTime);
-            EffectsManager.instance.getFromPool("earthShield", player.transform.position, Quaternion.identity, true, false);
+            EffectsManager.instance.getFromPool("earthShield", player.transform.position + Vector3.up, Quaternion.identity, true, false);
         }
         else
         {
@@ -413,6 +492,7 @@ public class classAbilties : MonoBehaviour
         bubble = false;
         player.GetComponent<CharacterBase>().bubbleShield = false;
         print("Deactivating shield");
+        stopRuneEffect("Earth");
         //if(currentEffect != null)
         //{
         //currentEffect.GetComponent<ParticleSystem>().Stop();
@@ -936,24 +1016,29 @@ public class classAbilties : MonoBehaviour
             Vector3 direction = (lookPos - newTesla.transform.position).normalized;
 
             // Position the turret based on distance from player
-            if (distanceFromTesla <= maxPlacementDistance && distanceFromTesla > minPlacementDistance)
+            if (distanceFromTesla <= teslaMinPlacementRad && distanceFromTesla > minPlacementDistance)
             {
-                nextCurrentTesla.transform.position = lookPos;// + spawnOffset;
+                nextCurrentTesla.transform.position = newTesla.transform.position + direction * teslaMinPlacementRad;// + spawnOffset;
                 nextCurrentTesla.transform.rotation = newTesla.transform.rotation;
+                //nextCurrentTesla.transform.position = new Vector3(lookPos.x, .2f, lookPos.z);
+                //nextCurrentTesla.transform.position = lookPos;// + spawnOffset;
+                //nextCurrentTesla.transform.rotation = newTesla.transform.rotation;
             }
-            else if (distanceFromTesla <= minPlacementDistance)
+            else if (distanceFromTesla <= teslaMinPlacementRad)
             {
-                nextCurrentTesla.transform.position = newTesla.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
-                nextCurrentTesla.transform.position = new Vector3(
-                    nextCurrentTesla.transform.position.x,
-                    0,//spawnOffset.y,
-                    nextCurrentTesla.transform.position.z
-                );
+                nextCurrentTesla.transform.position = newTesla.transform.position + direction * teslaMinPlacementRad;// + spawnOffset;
                 nextCurrentTesla.transform.rotation = newTesla.transform.rotation;
+                //nextCurrentTesla.transform.position = newTesla.transform.position + direction * (minPlacementDistance + 0.1f); // Small buffer to avoid overlap
+                //nextCurrentTesla.transform.position = new Vector3(
+                //nextCurrentTesla.transform.position.x,
+                //0,//spawnOffset.y,
+                //nextCurrentTesla.transform.position.z
+                //);
+                //nextCurrentTesla.transform.rotation = newTesla.transform.rotation;
             }
             else
             {
-                nextCurrentTesla.transform.position = newTesla.transform.position + direction * maxPlacementDistance;// + spawnOffset;
+                nextCurrentTesla.transform.position = newTesla.transform.position + direction * teslaMinPlacementRad;// + spawnOffset;
                 nextCurrentTesla.transform.rotation = newTesla.transform.rotation;
             }
         }
@@ -1060,7 +1145,7 @@ public class classAbilties : MonoBehaviour
         // **Second Tesla Node & Tesla Wall**
         if (playerInput.actions["Attack"].triggered && teslaCount == 1 && !placingOne && placingTwo && newTesla != null)
         {
-            casting = false;
+            //casting = false;
             teslaCount = 0;
 
             if (nextCurrentTesla != null)
@@ -1084,6 +1169,13 @@ public class classAbilties : MonoBehaviour
                 teslaParent.GetComponent<teslaTower>().assignVars(newTesla, newTesla2, tesWall);
                 teslaParent.GetComponent<teslaTower>().setParents();
 
+                if(iceBool)
+                {
+                    newTesla.gameObject.GetComponent<teslaBase>().iceEffect.GetComponent<ParticleSystem>().Play();
+                    newTesla2.gameObject.GetComponent<teslaBase>().iceEffect.GetComponent<ParticleSystem>().Play();
+                    teslaParent.GetComponent<teslaTower>().setIce(true);
+                }
+
                 StartCoroutine(playerInputWait());
                 gameObject.GetComponent<masterInput>().abilityInUse = false;
                 gameObject.GetComponent<masterInput>().placing = false;
@@ -1095,6 +1187,8 @@ public class classAbilties : MonoBehaviour
                 Destroy(currentTesla);
                 Destroy(nextCurrentTesla);
             }
+
+            casting = false;
         }
 
     }
@@ -1143,6 +1237,7 @@ public class classAbilties : MonoBehaviour
 
         if (playerInput.actions["Attack"].triggered)
         {
+            stopRuneEffect("Fire");
             casting = false;
             placing = false;
             instant = true;
@@ -1205,6 +1300,9 @@ public class classAbilties : MonoBehaviour
     {
         if (currentAura != null)
             Gizmos.DrawWireSphere(currentAura, comatAuraRadius);
+
+        if (currentClone != null)
+            Gizmos.DrawWireSphere(currentClone.transform.position + Vector3.up, cloneRadius);
     }
 
     private void Awake()
@@ -1230,6 +1328,25 @@ public class classAbilties : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+
+        //rune effect initilization
+        CFRE = Instantiate(fireRuneEffect, player.transform);
+        CIRE = Instantiate(iceRuneEffect, player.transform);
+        CERE = Instantiate(earthRuneEffect, player.transform);
+        CFRE.GetComponent<ParticleSystem>().Stop();
+        CIRE.GetComponent<ParticleSystem>().Stop();
+        CERE.GetComponent<ParticleSystem>().Stop();
+        CFRE.transform.localPosition = Vector3.zero;
+        CIRE.transform.localPosition = Vector3.zero;
+        CERE.transform.localPosition = Vector3.zero;
+        CFRE.SetActive(false);
+        CIRE.SetActive(false);
+        CERE.SetActive(false);
+        //fireRuneEffect.transform.parent = player.transform;
+        //iceRuneEffect.transform.parent = player.transform;
+        //earthRuneEffect.transform.parent = player.transform;
+
+
         teslaNumCount = 0;
         turretNumCount = 0;
         enemiesInClone = new Collider[0];
@@ -1241,10 +1358,6 @@ public class classAbilties : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (bubble)
-        {
-
-        }
 
         if (checkingAura && currentAura != null)
         {
@@ -1282,10 +1395,12 @@ public class classAbilties : MonoBehaviour
             }
 
         }
+
         if (!checkingAura && buffingPlayer == true)
         {
             buffingPlayer = false;
             buff(false, "attack", player.gameObject);
+            
         }
 
 
@@ -1300,21 +1415,25 @@ public class classAbilties : MonoBehaviour
 
         if(cloning && currentClone != null)
         {
-            enemiesInClone = Physics.OverlapSphere(currentClone.transform.position, cloneRadius, enemy);
+            enemiesInClone = Physics.OverlapSphere(currentClone.transform.position + Vector3.up, cloneRadius, enemy);
 
             foreach(Collider c in enemiesInClone)
             {
                 print("Setting new target in class for an enemy");
-                c.gameObject.transform.LookAt(player.transform);
-                //c.gameObject.GetComponent<EnemyLOS>().ChangeTarget(c.gameObject);
+                c.gameObject.transform.LookAt(currentClone.transform.position);
+                c.gameObject.GetComponent<EnemyLOS>().ChangeTarget(c.gameObject);
             }
         }
         if(!cloning && enemiesInClone.Length > 0)
         {
+            stopRuneEffect("Earth");
             foreach (Collider c in enemiesInClone)
             {
+                if(c == null) continue;
+
                 c.gameObject.GetComponent<EnemyLOS>().ChangeTarget(player.gameObject);
             }
+            enemiesInClone = new Collider[0];
         }
 
         if (shootingSwords)
@@ -1328,7 +1447,11 @@ public class classAbilties : MonoBehaviour
         if (shootingRocket)
         {
             if (playerInput.actions["Attack"].triggered && !shotRocket)
+            {
+                stopRuneEffect("Fire");
                 StartCoroutine(shootRocket());
+                gameObject.GetComponent<playerAnimationController>().gunnerRocketPod(false);
+            }
         }
 
         if (shootingLaser)
@@ -1358,6 +1481,7 @@ public class classAbilties : MonoBehaviour
                 currentLaserEffect.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 currentLaserEffect.GetComponent<ParticleSystem>().Clear(true);
             }
+            stopRuneEffect("Ice");
         }
 
         if (shotLaser && !checkHit)
@@ -1373,11 +1497,15 @@ public class classAbilties : MonoBehaviour
                 threwGrenade = true;
                 //gameObject.GetComponent<masterInput>().throwingGrenade = false;
                 GameObject grenade = Instantiate(grenadePrefab, grenadeSpawn.transform.position, grenadeSpawn.transform.rotation);
+
                 if (earthBool)
                     grenade.GetComponent<grenade>().isEarth = true;
                 grenade.GetComponent<Rigidbody>().velocity = grenade.transform.forward * grenadeSpeed;
+                gameObject.GetComponent<playerAnimationController>().gunnerRocketPod(false);
                 StartCoroutine(grenade.GetComponent<grenade>().explode());
                 StartCoroutine(grenadeWait(grenadeCooldown));
+
+                stopRuneEffect("Earth");
             }
 
         }
