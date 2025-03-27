@@ -17,6 +17,47 @@ public class teslaTower : MonoBehaviour
     public float shockTime = 5f;
     public float stunTime = 2f;
 
+    public int iceDamage = 5;
+    public float iceRadius;
+    public float iceHitRate = 1f;
+    bool iceAttacking = false;
+    bool enableIce = false;
+
+
+    public LayerMask enemyLayer;
+
+    IEnumerator iceStorm()
+    {
+        if (iceAttacking)
+            yield break;
+
+        iceAttacking = true;
+
+        Collider[] enemies = Physics.OverlapSphere(tower1.transform.position + Vector3.up, iceRadius, enemyLayer);
+        Collider[] enemies2 = Physics.OverlapSphere(tower2.transform.position + Vector3.up, iceRadius, enemyLayer);
+
+        foreach (Collider c in enemies)
+        {
+            c.GetComponent<EnemyFrame>().takeDamage(iceDamage, Vector3.zero, EnemyFrame.DamageSource.AOE, EnemyFrame.DamageType.Ice);
+            UIManager.instance.DisplayDamageNum(c.gameObject.transform, iceDamage);
+        }
+        foreach (Collider b in enemies)
+        {
+            b.GetComponent<EnemyFrame>().takeDamage(iceDamage, Vector3.zero, EnemyFrame.DamageSource.AOE, EnemyFrame.DamageType.Ice);
+            UIManager.instance.DisplayDamageNum(b.gameObject.transform, iceDamage);
+        }
+        yield return new WaitForSeconds(iceHitRate);
+        iceAttacking = false;
+
+        yield break;
+    }
+
+    public void setIce(bool choice)
+    {
+        enableIce = choice;
+
+    }
+
     public void setParents()
     {
         tower1.GetComponent<teslaBase>().teslaParent = gameObject;
@@ -102,8 +143,15 @@ public class teslaTower : MonoBehaviour
     {
         if (destroyed1 && destroyed2)
             Destroy(gameObject);
-        
-        
+
+        if (enableIce)
+            StartCoroutine(iceStorm());
+        else
+        {
+            StopCoroutine(iceStorm());
+            tower1.gameObject.GetComponent<teslaBase>().iceEffect.GetComponent<ParticleSystem>().Stop();
+            tower2.gameObject.GetComponent<teslaBase>().iceEffect.GetComponent<ParticleSystem>().Stop();
+        }
     }
 
     public void assignKey(int num)
@@ -114,5 +162,12 @@ public class teslaTower : MonoBehaviour
     public int getKey()
     {
         return key;
+    }
+
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(tower1.transform.position + Vector3.up, iceRadius);
     }
 }
