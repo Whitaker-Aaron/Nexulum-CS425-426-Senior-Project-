@@ -28,6 +28,10 @@ public class turretCombat : MonoBehaviour
 
     public GameObject bulletPrefab;
     public Transform bulletSpawnLeft, bulletSpawnRight;
+    public GameObject muzzleEffect;
+    private GameObject[] leftEffects = new GameObject[3];
+    private GameObject[] rightEffects = new GameObject[3];
+    int effectCount = 0;
 
     //Turret Health
     public const int maxHealth = 300;
@@ -182,25 +186,35 @@ public class turretCombat : MonoBehaviour
             yield break;
 
         }
-
-        shooting = true;
-        switchSpawn = !switchSpawn;
-        if(switchSpawn)
-        {
-            GameObject bullet = projectileManager.Instance.getProjectile("turretPool", bulletSpawnLeft.position, bulletSpawnLeft.rotation);
-            //var bullet = Instantiate(bulletPrefab, bulletSpawnLeft.position, bulletSpawnLeft.rotation);
-            //bullet.GetComponent<Rigidbody>().velocity = bulletSpawnLeft.forward * bulletSpeed;
-            yield return new WaitForSeconds(fireRate);
-            shooting = false;
-            yield break;
-        }
         else
         {
-            GameObject bullet = projectileManager.Instance.getProjectile("turretPool", bulletSpawnRight.position, bulletSpawnRight.rotation);
-            yield return new WaitForSeconds(fireRate);
-            shooting = false;
-            yield break;
+            shooting = true;
+            switchSpawn = !switchSpawn;
+            effectCount = effectCount % 3;
+            if (switchSpawn)
+            {
+                GameObject bullet = projectileManager.Instance.getProjectile("turretPool", bulletSpawnLeft.position, bulletSpawnLeft.rotation);
+                leftEffects[effectCount].GetComponent<ParticleSystem>().Play();
+                //var bullet = Instantiate(bulletPrefab, bulletSpawnLeft.position, bulletSpawnLeft.rotation);
+                //bullet.GetComponent<Rigidbody>().velocity = bulletSpawnLeft.forward * bulletSpeed;
+                yield return new WaitForSeconds(fireRate);
+                shooting = false;
+                effectCount++;
+                yield break;
+            }
+            else
+            {
+                GameObject bullet = projectileManager.Instance.getProjectile("turretPool", bulletSpawnRight.position, bulletSpawnRight.rotation);
+                rightEffects[effectCount].GetComponent<ParticleSystem>().Play();
+                yield return new WaitForSeconds(fireRate);
+                shooting = false;
+                effectCount++;
+                yield break;
+            }
+            
         }
+
+        
         
     }
 
@@ -270,6 +284,18 @@ public class turretCombat : MonoBehaviour
 
         leftRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + leftRotation.y, 0);
         rightRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + rightRotation.y, 0);
+        fireEffect.GetComponent<ParticleSystem>().Stop();
+        fireEffect.SetActive(false);
+
+        for(int i = 0; i < 3; i++)
+        {
+            leftEffects[i] = Instantiate(muzzleEffect, bulletSpawnLeft);
+            leftEffects[i].GetComponent<ParticleSystem>().Stop();
+            leftEffects[i].gameObject.transform.localPosition = Vector3.zero;
+            rightEffects[i] = Instantiate(muzzleEffect, bulletSpawnRight);
+            rightEffects[i].GetComponent<ParticleSystem>().Stop();
+            rightEffects[i].gameObject.transform.localPosition = Vector3.zero;
+        }
         //print("Forward andgle:" + normalizeAngle(gameObject.transform.rotation.eulerAngles.y));
         //print("Left andgle:" + leftRotation.y);
         //print("Right andgle:" + rightRotation.y);
@@ -278,7 +304,9 @@ public class turretCombat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        isFire = false;
+        fireEffect.GetComponent<ParticleSystem>().Stop();
+        fireEffect.SetActive(false);
     }
 
     void Update()
@@ -293,6 +321,12 @@ public class turretCombat : MonoBehaviour
 
         if (enemiesInRange.Length == 0)
             fireEffect.GetComponent<ParticleSystem>().Stop();
+
+        if (!isFire)
+        {
+            fireEffect.GetComponent<ParticleSystem>().Stop();
+            fireEffect.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -334,9 +368,14 @@ public class turretCombat : MonoBehaviour
         return key;
     }
 
-    public void activateFire()
+    public void activateFire(bool choice)
     {
-        isFire = !isFire;
+        isFire = choice;
+        if(isFire)
+        {
+            fireEffect.SetActive(true);
+            fireEffect.GetComponent<ParticleSystem>().Play();
+        }
     }
 
     private void OnDrawGizmosSelected()

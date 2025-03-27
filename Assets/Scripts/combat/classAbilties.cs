@@ -108,6 +108,7 @@ public class classAbilties : MonoBehaviour
     public float turretSpawnHeight;
     bool instant = false;
     public LayerMask ground;
+    public float cloneTime;
 
     bool placingTesla, placingOne, placingTwo = false;
     public GameObject teslaTransparent;
@@ -259,6 +260,7 @@ public class classAbilties : MonoBehaviour
             else
                 currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
             acc3 = StartCoroutine(abilitiesCooldown(2, ea2Time));
+            StartCoroutine(cloneStart());
             gameObject.GetComponent<masterInput>().abilityInUse = false;
             cloning = true;
         }
@@ -287,6 +289,10 @@ public class classAbilties : MonoBehaviour
             if (iceBool)
             {
                 playRuneEffect("Ice");
+                CIRE.SetActive(true);
+                CIRE.GetComponent<ParticleSystem>().Play();
+                if (CIRE.GetComponent<ParticleSystem>().isPlaying)
+                    print("Playing ice effect");
                 GameObject currentEffect = Instantiate(swordShotIceEffect, player.transform.position, Quaternion.identity);
                 currentEffect.transform.SetParent(player.transform);
                 currentEffect.transform.position = player.transform.position;
@@ -317,6 +323,7 @@ public class classAbilties : MonoBehaviour
             if (iceBool)
             {
                 playRuneEffect("Ice");
+                
                 currentLaserEffect = Instantiate(laserIcePrefab, pos.position, Quaternion.identity);
                 currentLaserEffect.GetComponent<ParticleSystem>().Stop();
                 currentLaserEffect.transform.SetParent(player.transform, false);
@@ -343,7 +350,11 @@ public class classAbilties : MonoBehaviour
         {
             if (iceBool)
             {
-                playRuneEffect("Ice");
+                //playRuneEffect("Ice");
+                CIRE.SetActive(true);
+                CIRE.GetComponent<ParticleSystem>().Play();
+                if (CIRE.GetComponent<ParticleSystem>().isPlaying)
+                    print("Playing ice effect");
             }
             placingTesla = true;
             placingOne = true;
@@ -365,8 +376,8 @@ public class classAbilties : MonoBehaviour
         {
             case 1:
                 yield return new WaitForSeconds(0.2f);
-                if (CFRE.GetComponent<ParticleSystem>().isPlaying)
-                    CFRE.GetComponent<ParticleSystem>().Stop();
+                //if (CFRE.GetComponent<ParticleSystem>().isPlaying)
+                
                 a1cooldown = false;
                 acc1 = null;
                 print("ability 1 done");
@@ -374,16 +385,16 @@ public class classAbilties : MonoBehaviour
                 break;
             case 2:
                 yield return new WaitForSeconds(0.2f);
-                if (CIRE.GetComponent<ParticleSystem>().isPlaying)
-                    CIRE.GetComponent<ParticleSystem>().Stop();
+                //if (CIRE.GetComponent<ParticleSystem>().isPlaying)
+                //CIRE.GetComponent<ParticleSystem>().Stop();
                 a2cooldown = false;
                 acc2 = null;
                 print("ability 2 done");
                 break;
             case 3:
                 yield return new WaitForSeconds(0.2f);
-                if (CERE.GetComponent<ParticleSystem>().isPlaying)
-                    CERE.GetComponent<ParticleSystem>().Stop();
+                //if (CERE.GetComponent<ParticleSystem>().isPlaying)
+                //CERE.GetComponent<ParticleSystem>().Stop();
                 a3cooldown = false;
                 acc3 = null;
                 print("ability 3 done");
@@ -636,6 +647,7 @@ public class classAbilties : MonoBehaviour
         gameObject.GetComponent<playerAnimationController>().stopShootSword();
         yield return new WaitUntil(() => gameObject.GetComponent<playerAnimationController>().getAnimationInfo().IsName("Locomotion"));
         gameObject.GetComponent<masterInput>().shootingSwords = false;
+        stopRuneEffect("Ice");
         shootingSwords = false;
         currentEffect.GetComponent<ParticleSystem>().Stop();
         Destroy(currentEffect);
@@ -667,6 +679,7 @@ public class classAbilties : MonoBehaviour
         shootingLaser = false;
         gameObject.GetComponent<masterInput>().shootingLaser = false;
         currentLaserEffect.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        stopRuneEffect("Ice");
         Destroy(currentLaserEffect);
         yield break;
     }
@@ -703,6 +716,17 @@ public class classAbilties : MonoBehaviour
     }
 
     //Engineer
+
+    IEnumerator cloneStart()
+    {
+        yield return new WaitForSeconds(cloneTime);
+
+        cloning = false;
+        Destroy(currentClone);
+        stopRuneEffect("Earth");
+        currentClone = null;
+        yield break;
+    }
 
     public void mouseTurretPlace(InputAction.CallbackContext context)
     {
@@ -1187,7 +1211,7 @@ public class classAbilties : MonoBehaviour
                 Destroy(currentTesla);
                 Destroy(nextCurrentTesla);
             }
-
+            stopRuneEffect("Ice");
             casting = false;
         }
 
@@ -1267,10 +1291,12 @@ public class classAbilties : MonoBehaviour
 
                 if(fireBool)
                 {
-                    newTurret.GetComponent<turretCombat>().activateFire();
+                    newTurret.GetComponent<turretCombat>().activateFire(true);
                 }
+                else
+                    newTurret.GetComponent<turretCombat>().activateFire(false);
 
-                if(turretNumCount < turretMaxQuantity)
+                if (turretNumCount < turretMaxQuantity)
                 {
                     turretNumCount++;
                     totalTowerCount++;
@@ -1283,7 +1309,7 @@ public class classAbilties : MonoBehaviour
             {
                 Debug.LogError("turretPrefab is null");
             }
-
+            stopRuneEffect("Fire");
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
     }
@@ -1400,7 +1426,7 @@ public class classAbilties : MonoBehaviour
         {
             buffingPlayer = false;
             buff(false, "attack", player.gameObject);
-            
+            stopRuneEffect("Fire");
         }
 
 
@@ -1426,7 +1452,7 @@ public class classAbilties : MonoBehaviour
         }
         if(!cloning && enemiesInClone.Length > 0)
         {
-            stopRuneEffect("Earth");
+            //stopRuneEffect("Earth");
             foreach (Collider c in enemiesInClone)
             {
                 if(c == null) continue;
@@ -1481,7 +1507,7 @@ public class classAbilties : MonoBehaviour
                 currentLaserEffect.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 currentLaserEffect.GetComponent<ParticleSystem>().Clear(true);
             }
-            stopRuneEffect("Ice");
+            
         }
 
         if (shotLaser && !checkHit)
