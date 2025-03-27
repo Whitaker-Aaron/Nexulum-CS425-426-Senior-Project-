@@ -54,7 +54,8 @@ public class SpinningBlades : MonoBehaviour , i_Trap
 
         if (playerHealth != null)
         {
-            playerHealth.takeDamage(damageAmount, Vector3.zero);
+            var knockbackDir = other.transform.position - transform.position;
+            playerHealth.takeDamage(damageAmount, knockbackDir);
             Debug.Log("Player hit by spikes and took " + damageAmount + " damage.");
         }
     }

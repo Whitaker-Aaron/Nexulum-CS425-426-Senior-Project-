@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8332181315518048764}
   - component: {fileID: 7684270999161126358}
   m_Layer: 13
-  m_Name: Particle System
+  m_Name: DeathParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4982,8 +4982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialList:
-  - {fileID: 4723205142248317531, guid: c14915a184aa3fd4cb6774622b2f2e9e, type: 3}
-  - {fileID: 4723205142248317531, guid: c9801d99265d14947ba29a875ee8c798, type: 3}
+  - {fileID: 4723205142248317531, guid: 09baec435c5e5894db7a0b599de245ce, type: 3}
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: 22bbc4fea7fd07444a21f525ea11ba42, type: 2}
   movementReference: {fileID: 0}
@@ -4993,6 +4992,7 @@ MonoBehaviour:
   isMiniboss: 0
   onDamaged: 0
   source: 0
+  collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
 --- !u!54 &7312136641156335363
@@ -5176,6 +5176,7 @@ MonoBehaviour:
     m_Bits: 64
   sword: {fileID: 3105803359770851279}
   attackDamage: 25
+  tempEnemy: 0
 --- !u!114 &6955319718670308413
 MonoBehaviour:
   m_ObjectHideFlags: 0

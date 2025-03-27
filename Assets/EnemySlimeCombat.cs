@@ -22,6 +22,7 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
     //EnemyStateManager stateManager;
     public int attackDamage = 20;
     private bool _isAttacking;
+    [SerializeField] public bool spawnLessers = true;
 
     private Vector3 position = Vector3.zero;
     private Animator animator;
@@ -112,7 +113,7 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
 
     public void onDeath()
     {
-        if(smallSlimeRef != null)
+        if(smallSlimeRef != null && spawnLessers)
         {
             for(int i =0; i < 2; i++)
             {
