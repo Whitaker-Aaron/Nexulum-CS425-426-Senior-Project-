@@ -101,6 +101,7 @@ MonoBehaviour:
   isMiniboss: 0
   onDamaged: 0
   source: 0
+  collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
 --- !u!54 &7312136641156335363
@@ -197,8 +198,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7686125088459755243}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: d21ed803646a18d499cec8a2e4479c72, type: 3}
-  m_Controller: {fileID: 9100000, guid: 5447976ac97f42b45809b351b81d7052, type: 2}
+  m_Avatar: {fileID: 9000000, guid: 71dbefdf9002cb1499591eb9a727f10d, type: 3}
+  m_Controller: {fileID: 9100000, guid: 4dfe11a62a5367440874a7d25e22754e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -284,6 +285,7 @@ MonoBehaviour:
     m_Bits: 64
   sword: {fileID: 0}
   attackDamage: 5
+  tempEnemy: 0
 --- !u!114 &6955319718670308413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,6 +352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   attackPoint: {fileID: 6782279903350017760}
+  frontDirection: {fileID: 6782279903350017760}
   Player:
     serializedVersion: 2
     m_Bits: 64
@@ -357,6 +360,10 @@ MonoBehaviour:
   attackRange: 0.5
   attackCooldownTime: 2
   canAttack: 1
+  diveSpeed: 5
+  climbSpeed: 2
+  rotationSpeed: 20
+  rotationDuration: 3
 --- !u!1001 &2415426750661876944
 PrefabInstance:
   m_ObjectHideFlags: 0
