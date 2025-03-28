@@ -49,7 +49,7 @@ public class pistolBasicProj : projectile
 
         //RaycastHit hit;
         GetDamage("Player");
-        ignore = LayerMask.GetMask("Material", "Ignore Raycast");
+        ignore = LayerMask.GetMask("Material", "Ignore Raycast", "Shield");
 
     }
 
@@ -92,6 +92,12 @@ public class pistolBasicProj : projectile
                 uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
 
             }
+            else
+            {
+                playEffect(hitPoint);
+                stop = true;
+            }
+
             playEffect(hitPoint);
             // We've reached the hit point, stop the projectile
             stop = true;

@@ -40,6 +40,7 @@ public interface PlayerAnimation
     void resetEngineer();
 
     IEnumerator gunnerReload(float time);
+    void gunnerRocketPod(bool choice);
     void stop();
 
     void changeClassLayer(int layerOne, int layerTwo);

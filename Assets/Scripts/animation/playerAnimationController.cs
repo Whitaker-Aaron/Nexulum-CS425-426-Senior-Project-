@@ -297,6 +297,20 @@ public class playerAnimationController : MonoBehaviour, PlayerAnimation
         yield break;
     }
 
+    public void gunnerRocketPod(bool choice)
+    {
+        if(choice)
+        {
+            animator.SetBool("rocket", true);
+            animator.CrossFade("rocket", 0.2f, 1);
+        }
+        else
+        {
+            animator.SetBool("rocket", false);
+            animator.CrossFade("Locomotion", 0.2f, 1);
+        }
+    }
+
 
     //-------------------------------------------------------
 
