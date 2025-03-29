@@ -10,6 +10,9 @@ public class EnemyBat : MonoBehaviour, enemyInt
     public Transform attackPoint;
     public Transform frontDirection; // Reference to the front direction object
     CharacterBase playerRef;
+    private Animator animator;
+    private UnityEngine.AI.NavMeshAgent navMeshAgent;
+    private Coroutine attackRoutineInstance = null;
 
     public LayerMask Player;
 
@@ -28,20 +31,15 @@ public class EnemyBat : MonoBehaviour, enemyInt
     private bool isDiving = false;
     private bool isFlying = true;
     private bool isReturning = false;
-    private bool finishedAttack = true;
+    private bool faceplayer = true;
 
     private bool rotatingAroundPlayer = false;
-    private float rotationSpeed = 20f;
+    public float rotationSpeed = 20f;
     private float rotationDuration = 3f;
     private int rotationDirection;
 
     private Vector3 originalPosition;
 
-    // Animator
-    private Animator animator;
-
-    // NavMeshAgent
-    private UnityEngine.AI.NavMeshAgent navMeshAgent;
 
     void Start()
     {
@@ -88,10 +86,13 @@ public class EnemyBat : MonoBehaviour, enemyInt
         if (player != null)
         {
             attackPlayer();
-            StartCoroutine(AttackRoutine());
+            if (attackRoutineInstance == null)
+            {
+                StartCoroutine(AttackRoutine());
+            }
         }
 
-        if (finishedAttack)
+        if (faceplayer)
         {
             FacePlayer();
         }
@@ -116,15 +117,19 @@ public class EnemyBat : MonoBehaviour, enemyInt
 
     private IEnumerator AttackRoutine()
     {
-        while (true)
-        {
             yield return new WaitForSeconds(5f); // Wait for 5 seconds before diving
 
             if (player != null && !isDiving && !isReturning)
             {
-                isDiving = true;
+                Vector3 playerPosition = player.position;
+                if (Vector3.Distance(transform.position, playerPosition) > 20f)
+                {
+                    attackRoutineInstance = null;
+                    yield break;
+                }
 
-                finishedAttack = false;
+                isDiving = true;
+                faceplayer = false;
 
                 StartCoroutine(RotateAroundPlayer());
 
@@ -133,11 +138,7 @@ public class EnemyBat : MonoBehaviour, enemyInt
                 originalPosition = transform.position;
                 animator.SetTrigger("StartGliding");
 
-                Vector3 playerPosition = player.position;
-                if (Vector3.Distance(transform.position, playerPosition) > 20f)
-                {
-                    break;
-                }
+                yield return new WaitForSeconds(0.8f);
 
                 while (Vector3.Distance(transform.position, playerPosition) > 1f && transform.position.y > playerRef.transform.position.y + 0.3f)
                 {
@@ -146,7 +147,7 @@ public class EnemyBat : MonoBehaviour, enemyInt
                 }
 
                 animator.SetTrigger("StopGliding");
-                yield return new WaitForSeconds(1.5f); // Pause for 1 second after reaching the player
+                yield return new WaitForSeconds(0.8f); // Pause for 1 second after reaching the player
 
                 isDiving = false;
                 isReturning = true;
@@ -158,11 +159,15 @@ public class EnemyBat : MonoBehaviour, enemyInt
                     yield return null;
                 }
 
+
+                faceplayer = true;
                 yield return new WaitForSeconds(5f);
-                finishedAttack = true;
+
+
                 isReturning = false;
-            }
         }
+
+        attackRoutineInstance = null;
     }
 
     void attackPlayer()
@@ -206,19 +211,13 @@ public class EnemyBat : MonoBehaviour, enemyInt
             Quaternion targetRotation = Quaternion.LookRotation(directionToOriginal);
 
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
-
-            if (Quaternion.Angle(transform.rotation, targetRotation) <= 1f &&
-                Vector3.Distance(transform.position, originalPosition) <= 0.1f)
-            {
-                isReturning = false; // Mark return as completed
-                FacePlayer(); // Smoothly start looking at the player again
-            }
         }
     }
     private IEnumerator RotateAroundPlayer()
     {
         rotatingAroundPlayer = true;
         rotationDirection = Random.value < 0.5f ? -1 : 1;
+        rotationDuration = Random.Range(1.5f, 3.25f);
 
         float elapsed = 0f;
 
