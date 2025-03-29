@@ -38,6 +38,8 @@ public class EnemyBat : MonoBehaviour, enemyInt
     private float rotationDuration = 3f;
     private int rotationDirection;
 
+    public float routineCooldown = 3f;
+
     private Vector3 originalPosition;
 
 
@@ -88,7 +90,7 @@ public class EnemyBat : MonoBehaviour, enemyInt
             attackPlayer();
             if (attackRoutineInstance == null)
             {
-                StartCoroutine(AttackRoutine());
+                attackRoutineInstance = StartCoroutine(AttackRoutine());
             }
         }
 
@@ -97,6 +99,7 @@ public class EnemyBat : MonoBehaviour, enemyInt
             FacePlayer();
         }
     }
+
 
     public void onDeath() { }
 
@@ -117,58 +120,57 @@ public class EnemyBat : MonoBehaviour, enemyInt
 
     private IEnumerator AttackRoutine()
     {
-            yield return new WaitForSeconds(5f); // Wait for 5 seconds before diving
+        yield return new WaitForSeconds(routineCooldown); // Wait before diving
 
-            if (player != null && !isDiving && !isReturning)
+        if (player != null && !isDiving && !isReturning)
+        {
+            if (Vector3.Distance(transform.position, player.position) > 20f)
             {
-                Vector3 playerPosition = player.position;
-                if (Vector3.Distance(transform.position, playerPosition) > 20f)
-                {
-                    attackRoutineInstance = null;
-                    yield break;
-                }
+                Debug.Log("Player is too far away. Cancelling attack routine.");
+                attackRoutineInstance = null;
+                yield break;
+            }
 
-                isDiving = true;
-                faceplayer = false;
+            Vector3 playerPosition = player.position;
+            Debug.Log("New player position stored: " + playerPosition);
 
-                StartCoroutine(RotateAroundPlayer());
+            rotationDuration = Random.Range(1.5f, 4f); // Set random rotation duration
+            StartCoroutine(RotateAroundPlayer());
 
-                yield return new WaitForSeconds(rotationDuration);
+            yield return new WaitForSeconds(rotationDuration); // Wait for rotation to finish
 
-                originalPosition = transform.position;
-                animator.SetTrigger("StartGliding");
+            originalPosition = transform.position;
+            animator.SetTrigger("StartGliding");
 
-                yield return new WaitForSeconds(0.8f);
+            isDiving = true;
+            faceplayer = false;
 
-                while (Vector3.Distance(transform.position, playerPosition) > 1f && transform.position.y > playerRef.transform.position.y + 0.3f)
-                {
-                    transform.position = Vector3.MoveTowards(transform.position, playerPosition, diveSpeed * Time.deltaTime);
-                    yield return null;
-                }
+            while (Vector3.Distance(transform.position, playerPosition) > 1f && transform.position.y > playerRef.transform.position.y + 0.3f)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, playerPosition, diveSpeed * Time.deltaTime);
+                yield return null;
+            }
 
-                animator.SetTrigger("StopGliding");
-                yield return new WaitForSeconds(0.8f); // Pause for 1 second after reaching the player
+            animator.SetTrigger("StopGliding");
 
-                isDiving = false;
-                isReturning = true;
+            isDiving = false;
+            yield return new WaitForSeconds(0.6f);
+            isReturning = true;
 
-                while (Vector3.Distance(transform.position, originalPosition) > 0.1f)
-                {
-                    transform.position = Vector3.MoveTowards(transform.position, originalPosition, climbSpeed * Time.deltaTime);
-                    FaceOriginalPosition(); // Continuously call this to ensure rotation is applied
-                    yield return null;
-                }
+            while (Vector3.Distance(transform.position, originalPosition) > 0.2f)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, originalPosition, climbSpeed * Time.deltaTime);
+                FaceOriginalPosition();
+                yield return null;
+            }
 
-
-                faceplayer = true;
-                yield return new WaitForSeconds(5f);
-
-
-                isReturning = false;
+            faceplayer = true;
+            isReturning = false;
         }
 
         attackRoutineInstance = null;
     }
+
 
     void attackPlayer()
     {
@@ -195,12 +197,15 @@ public class EnemyBat : MonoBehaviour, enemyInt
     {
         if (!isReturning && frontDirection != null && player != null)
         {
+            Debug.Log("FacePlayer is executing!");
+
             Vector3 directionToPlayer = (player.position - frontDirection.position).normalized;
             Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 7f);
         }
     }
+
 
 
     private void FaceOriginalPosition()
@@ -217,11 +222,11 @@ public class EnemyBat : MonoBehaviour, enemyInt
     {
         rotatingAroundPlayer = true;
         rotationDirection = Random.value < 0.5f ? -1 : 1;
-        rotationDuration = Random.Range(1.5f, 3.25f);
 
+        float randomizedRotationDuration = Random.Range(1.5f, 4f); // Random duration between 1.5s and 4s
         float elapsed = 0f;
 
-        while (elapsed < rotationDuration)
+        while (elapsed < randomizedRotationDuration)
         {
             elapsed += Time.deltaTime;
             if (player != null)
@@ -233,6 +238,7 @@ public class EnemyBat : MonoBehaviour, enemyInt
 
         rotatingAroundPlayer = false;
     }
+
 
     public bool isActive
     {
