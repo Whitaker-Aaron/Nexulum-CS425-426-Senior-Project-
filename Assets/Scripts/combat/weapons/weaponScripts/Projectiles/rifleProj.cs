@@ -46,7 +46,7 @@ public class rifleProj : projectile
 
         //RaycastHit hit;
         GetDamage("Player");
-        ignore = LayerMask.GetMask("Material", "Ignore Raycast");
+        ignore = LayerMask.GetMask("Material", "Ignore Raycast", "Shield");
 
     }
 

@@ -12,7 +12,7 @@ public class WeaponsManager : MonoBehaviour
     GameObject currentWeapon;
     GameObject currentTool;
     GameObject toolPrefab;
-    GameObject currentShield, shieldPrefab;
+    GameObject currentShield, shieldPrefab, currentRocketPod, rocketPodPrefab;
     CharacterBase characterReference;
     void Start()
     {
@@ -29,6 +29,7 @@ public class WeaponsManager : MonoBehaviour
         weaponInventory = GameObject.Find("WeaponsInventory");
         weaponPrefab = characterReference.equippedWeapon.weaponMesh;
         shieldPrefab = characterReference.knightShield.weaponMesh;
+        rocketPodPrefab = characterReference.gunnerRocketPod.weaponMesh;
         toolPrefab = characterReference.engineerTool.weaponMesh;
         GameObject inputManager = GameObject.Find("InputandAnimationManager");
 
@@ -37,6 +38,7 @@ public class WeaponsManager : MonoBehaviour
         if (characterReference.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
+            currentRocketPod = Instantiate(rocketPodPrefab, characterReference.leftForearm);
             GameObject.FindGameObjectWithTag("projectileManager").GetComponent<projectileManager>().updateProjectileDamage("bulletPool", characterReference.gunnerObject.baseAttack + characterReference.equippedWeapon.weaponAttack);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 1);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 1);
@@ -85,7 +87,8 @@ public class WeaponsManager : MonoBehaviour
             case WeaponBase.weaponClassTypes.Knight:
                 Destroy(currentShield);
                 break;
-            case WeaponBase.weaponClassTypes.Gunner:                              
+            case WeaponBase.weaponClassTypes.Gunner: 
+                Destroy(currentRocketPod);
                 break;
             case WeaponBase.weaponClassTypes.Engineer:
                 Destroy(currentTool);
@@ -105,6 +108,7 @@ public class WeaponsManager : MonoBehaviour
         if (newWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner)
         {
             currentWeapon = Instantiate(weaponPrefab, characterReference.wrist);
+            currentRocketPod = Instantiate(rocketPodPrefab, characterReference.leftForearm);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(0, 1);
             inputManager.GetComponent<playerAnimationController>().changeClassLayer(2, 1);
         }

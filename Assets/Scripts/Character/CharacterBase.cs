@@ -16,6 +16,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     [SerializeField] public WeaponBase equippedWeapon;
     [SerializeField] public WeaponBase engineerTool;
     [SerializeField] public WeaponBase knightShield;
+    [SerializeField] public WeaponBase gunnerRocketPod;
 
     [SerializeField] public WeaponClass knightObject;
     [SerializeField] public WeaponClass gunnerObject;

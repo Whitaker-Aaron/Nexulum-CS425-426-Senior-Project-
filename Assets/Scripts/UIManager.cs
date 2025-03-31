@@ -13,6 +13,8 @@ using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager instance;
+
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject CheckpointText;
     [SerializeField] GameObject levelUpText;
@@ -68,6 +70,7 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
+        instance = this;
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         knightHUD.SetActive(false);
