@@ -400,6 +400,7 @@ public class EquipMenuTransition : MonoBehaviour
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = weaponsInventory[i].weaponName;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = weaponsInventory[i].weaponDescription;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionButton.SetActive(true);
+                if (weaponsInventory[i].weaponTexture != null) equipOptionPrefab.GetComponent<EquipOptionPrefab>().image.GetComponent<RawImage>().texture = weaponsInventory[i].weaponTexture;
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().equipOptionEquipText.SetActive(true);
                 equipOptionPrefab.GetComponent<EquipOptionPrefab>().unequipOptionButton.SetActive(false);
 
