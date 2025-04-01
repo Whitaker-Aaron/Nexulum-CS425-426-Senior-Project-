@@ -6,10 +6,17 @@ public class SpikeTimer : MonoBehaviour
 {
     [SerializeField] GameObject activeSpikes;
     [SerializeField] float waitTime;
+    [SerializeField] float delay;
+    [SerializeField] float restart;
+
+    Animator animator;
+
     // Start is called before the first frame update
 
     private void OnEnable()
     {
+        animator = GetComponent<Animator>();
+
         StartCoroutine(LoopSpikes());
     }
 
@@ -17,11 +24,14 @@ public class SpikeTimer : MonoBehaviour
     {
         while (true)
         {
-            activeSpikes.SetActive(false);
-            yield return new WaitForSeconds(waitTime);
             activeSpikes.SetActive(true);
+            yield return new WaitForSeconds(delay);
+            animator.SetTrigger("Activate");
             yield return new WaitForSeconds(waitTime);
-            yield return null;
+            animator.SetTrigger("Deactivate");
+            yield return new WaitForSeconds(restart);
+            activeSpikes.SetActive(false);
+
         }
     }
 
