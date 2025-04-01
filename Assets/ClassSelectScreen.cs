@@ -17,11 +17,13 @@ public class ClassSelectScreen : MonoBehaviour
     LifetimeManager lifetimeManager;
     void Start()
     {
+
         EventSystem.current.SetSelectedGameObject(knightButton.gameObject);
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
         var player = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         player.inEvent = true;
         player.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        StartCoroutine(lifetimeManager.DeanimateTransitionScreen());
         StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().AnimateTypewriterCheckpoint(chooseClassText, chooseClassText.text, "|", 0.06f, false));
     }
 
@@ -82,5 +84,6 @@ public class ClassSelectScreen : MonoBehaviour
         player.inEvent = false;
         player.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
         lifetimeManager.Load(1);
+        GameObject.Find("UIManager").GetComponent<UIManager>().EnableHUD();
     }
 }

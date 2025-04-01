@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject knightHUD;
     [SerializeField] GameObject engineerHUD;
     [SerializeField] GameObject gunnerHUD;
+    [SerializeField] GameObject topHUD;
+    [SerializeField] GameObject bottomHUD;
 
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
@@ -143,6 +145,25 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
         yield break;
+    }
+
+    public void EnableHUD()
+    {
+        topHUD.SetActive(true);
+        bottomHUD.SetActive(true);
+        dialogue_box.SetActive(true);
+    }
+
+    public void EnableDialogueBox()
+    {
+        dialogue_box.SetActive(true);
+    }
+
+    public void DisableHUD()
+    {
+        GameObject.Find("TopHUD").SetActive(false);
+        GameObject.Find("BottomHUD").SetActive(false);
+        GameObject.Find("DialogueBox").SetActive(false);
     }
 
     public void DeactivateEnemiesRemainingUI()
@@ -441,6 +462,21 @@ public class UIManager : MonoBehaviour
         currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("left"));
         currentDialogueBox = AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer);
         StartCoroutine(currentDialogueBox);
+        //Debug.Log("Returned from dialogue coroutine");
+        //dialogueObject.dialogueFinished = true;
+        yield break;
+    }
+
+    public IEnumerator AwaitLoadDialogueBox(DialogueObject dialogueObject)
+    {
+        if (currentDialogueBox != null) UnloadDialogue();
+        foreach (var text in dialogueObject.dialogueList)
+        {
+            dialogueText.Enqueue(text);
+        }
+        currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("left"));
+        currentDialogueBox = AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer);
+        yield return StartCoroutine(currentDialogueBox);
         //Debug.Log("Returned from dialogue coroutine");
         //dialogueObject.dialogueFinished = true;
         yield break;
@@ -1094,7 +1130,7 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator DecreaseImageOpacity(GameObject image, float rate)
+    public IEnumerator DecreaseImageOpacity(GameObject image, float rate)
     {
         var reference = image.GetComponent<Image>();
         while (reference.color.a >= 0.0 && reference != null)
@@ -1108,9 +1144,15 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator IncreaseImageOpacity(GameObject image, float rate)
+    public IEnumerator IncreaseImageOpacity(GameObject image, float rate, bool setToZero=false)
     {
         var reference = image.GetComponent<Image>();
+        if (setToZero)
+        {
+            Color imgColor = reference.color;
+            imgColor.a = 0;
+            reference.color = imgColor;
+        }
         while (reference.color.a < 1.0 && reference != null)
         {
             Color imgColor = reference.color;

@@ -4,8 +4,7 @@ using static UnityEngine.GridBrushBase;
 
 public class EnemyBat : MonoBehaviour, enemyInt
 {
-    public Transform player; // Reference to the player's transform
-    private EnemyStateManager estate;
+    public Transform player;
     private GameObject playerObj;
     public Transform attackPoint;
     public Transform frontDirection; // Reference to the front direction object
@@ -64,12 +63,6 @@ public class EnemyBat : MonoBehaviour, enemyInt
             }
 
             canAttack = true;
-        }
-
-        estate = GetComponent<EnemyStateManager>();
-        if (estate == null)
-        {
-            Debug.LogError("EnemyStateManager not found on EnemyBat!");
         }
 
         playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
