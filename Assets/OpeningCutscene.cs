@@ -79,6 +79,15 @@ public class OpeningCutscene : MonoBehaviour
         StartCoroutine(uiManager.IncreaseImageOpacity(imagesToDisplay[1], 1.0f, true));
         StartCoroutine(uiManager.DecreaseImageOpacity(imagesToDisplay[0], 1.0f));
         yield return StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().AwaitLoadDialogueBox(transmissionDialogues[2]));
+        StartCoroutine(uiManager.IncreaseImageOpacity(imagesToDisplay[2], 1.0f, true));
+        StartCoroutine(uiManager.DecreaseImageOpacity(imagesToDisplay[1], 1.0f));
+        yield return StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().AwaitLoadDialogueBox(transmissionDialogues[3]));
+        StartCoroutine(uiManager.IncreaseImageOpacity(imagesToDisplay[3], 1.0f, true));
+        StartCoroutine(uiManager.DecreaseImageOpacity(imagesToDisplay[2], 1.0f));
+        yield return StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().AwaitLoadDialogueBox(transmissionDialogues[4]));
+        yield return StartCoroutine(lifetimeManager.AnimateTransitionScreen());
+        yield return new WaitForSeconds(3f);
+        yield return StartCoroutine(lifetimeManager.GoToScene(0, false, "ClassSelect"));
         yield return null;
     }
 
