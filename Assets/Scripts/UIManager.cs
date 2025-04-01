@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject knightHUD;
     [SerializeField] GameObject engineerHUD;
     [SerializeField] GameObject gunnerHUD;
+    [SerializeField] GameObject topHUD;
+    [SerializeField] GameObject bottomHUD;
 
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
@@ -147,9 +149,9 @@ public class UIManager : MonoBehaviour
 
     public void EnableHUD()
     {
-        GameObject.Find("TopHUD").SetActive(true);
-        GameObject.Find("BottomHUD").SetActive(true);
-        GameObject.Find("DialogueBox").SetActive(true);
+        topHUD.SetActive(true);
+        bottomHUD.SetActive(true);
+        dialogue_box.SetActive(true);
     }
 
     public void EnableDialogueBox()

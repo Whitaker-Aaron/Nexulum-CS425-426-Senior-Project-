@@ -115,6 +115,14 @@ public class LifetimeManager : MonoBehaviour
     {
         InitializeManagers();
         SceneManager.LoadSceneAsync(1);
+        StartCoroutine(enableHudOnLoad());
+
+    }
+
+    public IEnumerator enableHudOnLoad()    
+    {
+        yield return new WaitForSeconds(1f);
+        uiManager.EnableHUD();
     }
 
     public IEnumerator StartNewGame()
