@@ -13,6 +13,7 @@ public class TitleScreen : MonoBehaviour
     [SerializeField] GameObject startPanel;
     SaveManager SaveManager;
     LifetimeManager LifetimeManager;
+    UIManager uiManager;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,8 @@ public class TitleScreen : MonoBehaviour
         loadPanel.SetActive(false);
         SaveManager = GameObject.Find("SaveManager").GetComponent<SaveManager>();
         LifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        uiManager.DisableHUD();
         if (!SaveManager.hasData) loadGameButton.interactable = false;
     }
 
