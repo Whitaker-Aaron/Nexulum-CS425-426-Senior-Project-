@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 4903923262536536871}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.23, z: 0.6}
+  m_LocalPosition: {x: 0, y: 0.853, z: 0.462}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 8061995712609356680}
   - component: {fileID: 6955319718670308413}
   - component: {fileID: 6996728658863666810}
+  - component: {fileID: 6706401412895186205}
   m_Layer: 7
   m_Name: Vampire
   m_TagString: Enemy
@@ -147,10 +148,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.58814085
+  m_Radius: 0.28743982
   m_Height: 2.2607422
   m_Direction: 1
-  m_Center: {x: -0.013775706, y: 1.0270386, z: 0.00029432794}
+  m_Center: {x: -0.013775707, y: 1.0270386, z: -0.020688593}
 --- !u!195 &4928959221387099164
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -302,6 +303,27 @@ MonoBehaviour:
   selfPos: {x: 0, y: 0, z: 0}
   targetPos: {x: 0, y: 0, z: 0}
   lastKnownTargetPos: {x: 0, y: 0, z: 0}
+--- !u!114 &6706401412895186205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7686125088459755243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad18a5f6e592f4c46a31ba9882ff5ea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  attackPoint: {fileID: 6782279903350017760}
+  Player:
+    serializedVersion: 2
+    m_Bits: 64
+  attackDamage: 20
+  attackRange: 1
+  attackCooldownTime: 1
+  canAttack: 1
 --- !u!1001 &333855989693233559
 PrefabInstance:
   m_ObjectHideFlags: 0

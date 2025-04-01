@@ -1,42 +1,57 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpikeTimer : MonoBehaviour
 {
-    [SerializeField] GameObject activeSpikes;
-    [SerializeField] float waitTime;
-    [SerializeField] float delay;
-    [SerializeField] float restart;
+    [SerializeField] private GameObject activeSpikes;
+    [SerializeField] private float waitTime = 5f;
+    [SerializeField] private float delay = 55f;
+    [SerializeField] private float restart = 60f;
 
-    Animator animator;
+    private Animator animator;
+    private Coroutine spikeCoroutine;
 
-    // Start is called before the first frame update
-
-    private void OnEnable()
+    private void Start()
     {
+        activeSpikes.SetActive(false);
+
         animator = GetComponent<Animator>();
 
-        StartCoroutine(LoopSpikes());
-    }
-
-    public IEnumerator LoopSpikes()
-    {
-        while (true)
+        if (animator == null)
         {
-            activeSpikes.SetActive(true);
-            yield return new WaitForSeconds(delay);
-            animator.SetTrigger("Activate");
-            yield return new WaitForSeconds(waitTime);
-            animator.SetTrigger("Deactivate");
-            yield return new WaitForSeconds(restart);
-            activeSpikes.SetActive(false);
+            Debug.LogWarning("No Animator component found on " + gameObject.name);
+        }
 
+        if (activeSpikes == null)
+        {
+            Debug.LogWarning("activeSpikes GameObject is not assigned in " + gameObject.name);
+            return;
         }
     }
 
-    private void OnDisable()
+    private void Update()
     {
-        StopCoroutine(LoopSpikes());
+        if (spikeCoroutine == null)
+        {
+            spikeCoroutine = StartCoroutine(LoopSpikes());
+        }
+    }
+
+    private IEnumerator LoopSpikes()
+    {
+        Debug.Log("Spike Routine Started");
+
+        activeSpikes.SetActive(true);
+        yield return new WaitForSeconds(delay);
+
+        animator.SetTrigger("Activate");
+        yield return new WaitForSeconds(waitTime);
+
+        animator.SetTrigger("Deactivate");
+
+        yield return new WaitForSeconds(restart);
+        activeSpikes.SetActive(false);
+
+        yield return null;
     }
 }
