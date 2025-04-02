@@ -164,6 +164,11 @@ public class EnemyBat : MonoBehaviour, enemyInt
         attackRoutineInstance = null;
     }
 
+    private void OnDisable()
+    {
+        attackRoutineInstance = null;
+    }
+
 
     void attackPlayer()
     {
