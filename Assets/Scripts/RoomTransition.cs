@@ -42,7 +42,7 @@ public class RoomTransition : MonoBehaviour
             if (enemies[i] != null)
             {
                 enemies[i].GetComponent<EnemyFrame>().resetPosition();
-                enemies[i].GetComponent<EnemyStateManager>().ResetEnemyState();
+                if(enemies[i].GetComponent<EnemyStateManager>() != null) enemies[i].GetComponent<EnemyStateManager>().ResetEnemyState();
             }           
         }
     }

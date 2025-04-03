@@ -14,9 +14,9 @@ public class IceDamage : IType
 
     public IceDamage(EnemyStateManager movementRef, int maxStacks)
     {
-        this.movementRef = movementRef;
-        this.maxStacks = maxStacks;
-        this.originalSpeed = movementRef.defaultMovementSpeed;
+        if(movementRef != null) this.movementRef = movementRef;
+        if(maxStacks != null) this.maxStacks = maxStacks;
+        if(movementRef != null) this.originalSpeed = movementRef.defaultMovementSpeed;
     }
 
     public float GetCurrentStacks()
