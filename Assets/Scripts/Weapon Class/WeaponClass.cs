@@ -26,12 +26,14 @@ public class WeaponClass : ScriptableObject
     public bool updateExperience(float enemyExp)
     {
         totalExp += enemyExp;
+        GameObject.Find("UIManager").GetComponent<UIManager>().StartAnimateExpText(enemyExp.ToString());
         bool leveledUp = false;
         Debug.Log(classType + " has gained " + enemyExp + " experience! Class now has " +  totalExp + " total experience."); 
         foreach (var item in levelUnlocks)
         {
             if (totalExp >= item.Key && currentLvl < item.Value)
             {
+                GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().PlayLevelUpParticle();
                 Debug.Log("Player is now level " + item.Value + "!");
                 leveledUp = true;
                 currentLvl = item.Value;

@@ -18,10 +18,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject CheckpointText;
     [SerializeField] GameObject levelUpText;
+    [SerializeField] GameObject expText;
+    float ogExpTextXPos;
     [SerializeField] GameObject mainHUD;
     [SerializeField] GameObject knightHUD;
     [SerializeField] GameObject engineerHUD;
     [SerializeField] GameObject gunnerHUD;
+    [SerializeField] GameObject topHUD;
+    [SerializeField] GameObject bottomHUD;
 
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
@@ -30,6 +34,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject criticalText;
     [SerializeField] GameObject criticalTextBorder;
     [SerializeField] GameObject florentineUI;
+    
 
     [SerializeField] GameObject damageNumPrefab;
     [SerializeField] GameObject viewItemPrefab;
@@ -48,6 +53,7 @@ public class UIManager : MonoBehaviour
     IEnumerator currentDialogueBox;
     Coroutine currentDialogueBoxAnimation;
     Coroutine currentCheckpointAnimator;
+    Coroutine currentExpText;
     Coroutine currentBorderStretch;
     Coroutine currentFlorentineAnimator;
 
@@ -76,6 +82,7 @@ public class UIManager : MonoBehaviour
         knightHUD.SetActive(false);
         gunnerHUD.SetActive(false);
         engineerHUD.SetActive(false);
+        ogExpTextXPos = expText.transform.localPosition.x;
 
         initialEnemyRemainingUIPos = enemiesRemainingUI.transform.position;
     }
@@ -143,6 +150,25 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
         yield break;
+    }
+
+    public void EnableHUD()
+    {
+        topHUD.SetActive(true);
+        bottomHUD.SetActive(true);
+        dialogue_box.SetActive(true);
+    }
+
+    public void EnableDialogueBox()
+    {
+        dialogue_box.SetActive(true);
+    }
+
+    public void DisableHUD()
+    {
+        GameObject.Find("TopHUD").SetActive(false);
+        GameObject.Find("BottomHUD").SetActive(false);
+        GameObject.Find("DialogueBox").SetActive(false);
     }
 
     public void DeactivateEnemiesRemainingUI()
@@ -441,6 +467,21 @@ public class UIManager : MonoBehaviour
         currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("left"));
         currentDialogueBox = AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer);
         StartCoroutine(currentDialogueBox);
+        //Debug.Log("Returned from dialogue coroutine");
+        //dialogueObject.dialogueFinished = true;
+        yield break;
+    }
+
+    public IEnumerator AwaitLoadDialogueBox(DialogueObject dialogueObject)
+    {
+        if (currentDialogueBox != null) UnloadDialogue();
+        foreach (var text in dialogueObject.dialogueList)
+        {
+            dialogueText.Enqueue(text);
+        }
+        currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("left"));
+        currentDialogueBox = AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer);
+        yield return StartCoroutine(currentDialogueBox);
         //Debug.Log("Returned from dialogue coroutine");
         //dialogueObject.dialogueFinished = true;
         yield break;
@@ -1040,6 +1081,50 @@ public class UIManager : MonoBehaviour
         StartCoroutine(AnimateLevelUpText());
     }
 
+    public void StartAnimateExpText(string exp)
+    {
+        if(currentExpText != null)
+        {
+            StopCoroutine(currentExpText);
+            Vector3 ogPosition = new Vector3(ogExpTextXPos, expText.transform.localPosition.y, expText.transform.localPosition.z);
+            expText.transform.localPosition = ogPosition;
+        }
+        currentExpText = StartCoroutine(AnimateExpText(exp));
+    }
+
+    public IEnumerator AnimateExpText(string exp)
+    {
+        expText.GetComponent<TMP_Text>().text = "+" + exp;
+        Vector3 ogPosition = new Vector3(expText.transform.localPosition.x, expText.transform.localPosition.y, expText.transform.localPosition.z);
+        Vector3 desPos = new Vector3(expText.transform.localPosition.x + 50f, expText.transform.localPosition.y, expText.transform.localPosition.z);
+        //8.900024
+        expText.transform.localPosition = ogPosition;
+
+
+
+        bool increasingOpacity = false;
+        while (expText.transform.localPosition.x < desPos.x)
+        {
+            if (!increasingOpacity)
+            {
+                StartCoroutine(IncreaseTextOpacity(expText, 2.0f));
+            }
+            if (Mathf.Abs(expText.transform.localPosition.x - (desPos.x)) < 0.3f)
+            {
+                expText.transform.localPosition = desPos;
+            }
+            else
+            {
+                expText.transform.localPosition = Vector3.Lerp(expText.transform.localPosition, desPos, 5.0f * Time.deltaTime);
+            }
+            yield return null;
+        }
+        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(ReduceTextOpacity(expText, 1.0f));
+        
+        yield break;
+    }
+
     public IEnumerator AnimateLevelUpText()
     {
         Vector3 ogPosition = levelUpText.transform.localPosition;
@@ -1094,7 +1179,7 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator DecreaseImageOpacity(GameObject image, float rate)
+    public IEnumerator DecreaseImageOpacity(GameObject image, float rate)
     {
         var reference = image.GetComponent<Image>();
         while (reference.color.a >= 0.0 && reference != null)
@@ -1108,9 +1193,15 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator IncreaseImageOpacity(GameObject image, float rate)
+    public IEnumerator IncreaseImageOpacity(GameObject image, float rate, bool setToZero=false)
     {
         var reference = image.GetComponent<Image>();
+        if (setToZero)
+        {
+            Color imgColor = reference.color;
+            imgColor.a = 0;
+            reference.color = imgColor;
+        }
         while (reference.color.a < 1.0 && reference != null)
         {
             Color imgColor = reference.color;
