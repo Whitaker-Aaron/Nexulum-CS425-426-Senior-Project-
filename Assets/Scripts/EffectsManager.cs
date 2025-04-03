@@ -78,6 +78,8 @@ public class EffectsManager : MonoBehaviour
         createNewPool("swordHeavyHit", getPrefab("swordHeavyHit"), 5);
         createNewPool("iceSwordProjHit", getPrefab("iceSwordProjHit"), 10);
         createNewPool("playerDash", getPrefab("playerDash"), 3);
+        createNewPool("levelUpExplosion", getPrefab("levelUpExplosion"), 1);
+        createNewPool("levelUpLightball", getPrefab("levelUpLightball"), 1);
         //createNewPool("fireRuneEffect", getPrefab("fireRuneEffect"), 3);
         //createNewPool("iceRuneEffect", getPrefab("iceRuneEffect"), 3);
         //createNewPool("earthRuneEffect", getPrefab("earthRuneEffect"), 3);
@@ -111,7 +113,7 @@ public class EffectsManager : MonoBehaviour
                 if(i==0)
                 {
                     GameObject temp = Instantiate(prefab);
-                    if (poolName == "bubbleShield" || poolName == "earthShield")
+                    if (poolName == "bubbleShield" || poolName == "earthShield" || poolName == "levelUpLightball")
                     {
                         temp.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
                         //if(poolName == "earthShield")
