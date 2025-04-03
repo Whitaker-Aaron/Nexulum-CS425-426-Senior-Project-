@@ -21,6 +21,13 @@ public class golemBoss : MonoBehaviour
 
     public LayerMask playerLayer; // Player layer for detection
 
+    [SerializeField] GameObject weapon;
+
+    public Vector3 weaponOffset;
+    public float weaponRad;
+    public int weaponDmg;
+    public bool hitPlayer = false;
+    public float hitPlayerCooldown;
 
 
     //Health
@@ -29,12 +36,15 @@ public class golemBoss : MonoBehaviour
 
     //attack effects
     [SerializeField]
-    private List<GameObject> attackList = new List<GameObject>();
+    private List<Vector3> attackList = new List<Vector3>();
     private List<Vector3> atckPos = new List<Vector3>();
+
+    public float jumpSpeed, jumpLength, jumpCooldown, longJumpSpeed, longJumpLength, longJumpCooldown;
+    public bool canJump = true, canLongJump = true;
 
 
     //Damage
-    public float atkRng1;
+    public float atkRng1, atkRng2, atkRng3, atkRng4, atkRng5;
     public int atkDmg1, atkDmg2, atkDmg3, atkDmg4, atkDmg5;
 
     //-----------------Main Functions------------------------------
@@ -50,6 +60,9 @@ public class golemBoss : MonoBehaviour
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
         if (player == null) return;
+
+        //if (hitPlayer)
+            //StartCoroutine(hitPlayerWait());
 
         // Check if player is within detection range
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectionRadius, playerLayer);
@@ -69,7 +82,8 @@ public class golemBoss : MonoBehaviour
             animator.SetFloat("Forward", 0); // Stop movement animation
             return; // Stop processing if player is out of range
         }
-
+        checkWeaponArea();
+        checkAttackAreas();
         if (isAttacking || isRecovering)
         {
             agent.isStopped = true;
@@ -102,11 +116,19 @@ public class golemBoss : MonoBehaviour
         // Attack if in range
         if (Vector3.Distance(transform.position, player.position) <= attackRange)
         {
-            StartCoroutine(AttackSequence());
+            //StartCoroutine(AttackSequence());
         }
+
+        
+        
     }
 
-
+    IEnumerator hitPlayerWait()
+    {
+        yield return new WaitForSeconds(hitPlayerCooldown);
+        hitPlayer = false;
+        yield break;
+    }
 
 
     //-----------------Turning------------------------------
@@ -143,25 +165,187 @@ public class golemBoss : MonoBehaviour
 
     //-----------------ATTACKING------------------------------
 
+    void checkAttackAreas()
+    {
+        if (isAttacking || isRecovering || !canJump)
+            return;
+
+        for(int i = 0; i < attackList.Count; i++)
+        {
+            switch(i)
+            {
+                case 0:
+                    if (Vector3.Distance(player.transform.position, gameObject.transform.position + transform.rotation * (attackList[i] + Vector3.up + Vector3.forward)) <= atkRng1)
+                        StartCoroutine(AttackSequence());
+                    break;
+
+                case 1:
+                    if (Vector3.Distance(player.transform.position, gameObject.transform.position + transform.rotation * (attackList[i] + Vector3.up + Vector3.forward)) <= atkRng2 && canJump)
+                        StartCoroutine(JumpAttack(jumpSpeed, jumpLength));
+                    break;
+                    
+                case 2:
+                    if (Vector3.Distance(player.transform.position, gameObject.transform.position + transform.rotation * (attackList[i] + Vector3.up + Vector3.forward)) <= atkRng3 && canLongJump)
+                        StartCoroutine(longJumpAttack(longJumpSpeed, longJumpLength));
+                    break;
+            }
+        }
+    }
+
+    void checkWeaponArea()
+    {
+        if (!isAttacking || hitPlayer || isRecovering)
+            return;
+
+        Debug.Log("golem: checkingWeapon");
+        Collider[] player = Physics.OverlapSphere(weapon.GetComponent<golemBossWeapon>().headPosition.transform.position + weaponOffset, weaponRad, playerLayer);
+        foreach(Collider p in player)
+        {
+            hitPlayer = true;
+            p.GetComponent<CharacterBase>().takeDamage(weaponDmg, gameObject.transform.forward);
+            UIManager.instance.DisplayDamageNum(p.transform, weaponDmg);
+            StartCoroutine(hitPlayerWait());
+        }
+    }
+
+    IEnumerator longJumpAttack(float moveSpeed, float duration)
+    {
+        if (isAttacking || !canLongJump)
+            yield break;
+
+        canLongJump = false;
+        isAttacking = true;
+        agent.isStopped = true;
+
+        Debug.Log("golem: Starting longJump Attack");
+
+        animator.SetFloat("Forward", 0);
+        animator.SetBool("jumpAttack", true);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            animator.Play("jumpAttack");
+        animator.SetBool("jumpAttack", false);
+
+        float elapsedTime = 0f;
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = startPosition + transform.forward * (moveSpeed * duration);
+
+        while (elapsedTime < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+
+        Debug.Log("golem: long Jump Attack Complete, Entering Recovery");
+
+        isRecovering = true;
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Recovery Complete, Ready to Attack Again");
+
+        isRecovering = false;
+        isAttacking = false;
+        agent.isStopped = false;
+        yield return new WaitForSeconds(longJumpCooldown);
+
+        //animator.SetTrigger("ReturnToIdle"); // Use a trigger for animation transition
+        canLongJump = true;
+        yield break;
+    }
+
+    IEnumerator JumpAttack(float moveSpeed, float duration)
+    {
+        if (isAttacking || !canJump)
+            yield break;
+
+        canJump = false;
+        isAttacking = true;
+        agent.isStopped = true;
+
+        Debug.Log("golem: Starting Jump Attack");
+
+        animator.SetFloat("Forward", 0);
+        animator.SetBool("jump", true);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            animator.Play("jumpAtck");
+        animator.SetBool("jump", false);
+
+        float elapsedTime = 0f;
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = startPosition + transform.forward * (moveSpeed * duration);
+
+        while (elapsedTime < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+
+        Debug.Log("golem: Jump Attack Complete, Entering Recovery");
+
+        isRecovering = true;
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Recovery Complete, Ready to Attack Again");
+
+        isRecovering = false;
+        isAttacking = false;
+        agent.isStopped = false;
+        yield return new WaitForSeconds(jumpCooldown);
+
+        //animator.SetTrigger("ReturnToIdle"); // Use a trigger for animation transition
+        canJump = true;
+    }
+
 
     IEnumerator AttackSequence()
     {
+        if (isAttacking)
+            yield break;
+
         isAttacking = true;
         agent.isStopped = true;
-        animator.SetBool("Attack", true);
+        
         animator.SetFloat("Forward", 0);
 
         int attackCount = Random.Range(1, maxAttacks + 1);
 
+        switch(attackCount)
+        {
+            case 1:
+                animator.SetBool("Attack", true);
+                if(animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+                    animator.Play("attack1");
+                animator.SetBool("Attack", false);
+                break;
+            case 2:
+                animator.SetBool("Attack2", true);
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+                    animator.Play("attack2");
+                animator.SetBool("Attack2", false);
+                break;
+            case 3:
+                animator.SetBool("Attack3", true);
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+                    animator.Play("attack3");
+                animator.SetBool("Attack3", false);
+                break;
+        }
 
-        animator.SetBool("Attack", false);
-        yield return new WaitForSeconds(attackCooldown);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"));
+        
+        //yield return new WaitForSeconds(attackCooldown);
 
         isRecovering = true;
         yield return new WaitForSeconds(1f);
 
         isRecovering = false;
         isAttacking = false;
+        hitPlayer = false;
         agent.isStopped = false;
     }
 
@@ -182,8 +366,37 @@ public class golemBoss : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(weapon.GetComponent<golemBossWeapon>().headPosition.transform.position + weaponOffset, weaponRad);
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, atkRng1);
+        for (int i = 0; i < attackList.Count; i++)
+        {
+            Vector3 vec = attackList[i];
+            switch (i)
+            {
+                case 0:
+                    //Gizmos.DrawWireSphere(gameObject.transform.position + vec + Vector3.up + gameObject.transform.forward, atkRng1);
+                    Gizmos.DrawWireSphere(gameObject.transform.position + transform.rotation * (vec + Vector3.up + Vector3.forward), atkRng1);
+
+                    break;
+                case 1:
+                    Gizmos.DrawWireSphere(gameObject.transform.position + transform.rotation * (vec + Vector3.up + Vector3.forward), atkRng2);
+                    break;
+                case 2:
+                    Gizmos.DrawWireSphere(gameObject.transform.position + transform.rotation * (vec + Vector3.up + Vector3.forward) , atkRng3);
+                    break;
+                case 3:
+                    Gizmos.DrawWireSphere(gameObject.transform.position + vec + Vector3.up, atkRng4);
+                    break;
+                case 4:
+                    Gizmos.DrawWireSphere(gameObject.transform.position + vec + Vector3.up, atkRng5); // Use atkRng5 if available
+                    break;
+                default:
+                    Gizmos.DrawWireSphere(gameObject.transform.position + vec + Vector3.up, atkRng4); // Fallback if index > 4
+                    break;
+            }
+        }
+
     }
 
 
