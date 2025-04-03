@@ -4,8 +4,7 @@ using static UnityEngine.GridBrushBase;
 
 public class EnemyBat : MonoBehaviour, enemyInt
 {
-    public Transform player; // Reference to the player's transform
-    private EnemyStateManager estate;
+    public Transform player;
     private GameObject playerObj;
     public Transform attackPoint;
     public Transform frontDirection; // Reference to the front direction object
@@ -66,12 +65,6 @@ public class EnemyBat : MonoBehaviour, enemyInt
             canAttack = true;
         }
 
-        estate = GetComponent<EnemyStateManager>();
-        if (estate == null)
-        {
-            Debug.LogError("EnemyStateManager not found on EnemyBat!");
-        }
-
         playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         animator = GetComponent<Animator>();
         if (animator == null)
@@ -79,7 +72,6 @@ public class EnemyBat : MonoBehaviour, enemyInt
             Debug.LogError("Animator not found on EnemyBat!");
         }
 
-        transform.position = new Vector3(transform.position.x, playerRef.transform.position.y + 2f, transform.position.z);
         originalPosition = transform.position;
     }
 
@@ -145,6 +137,8 @@ public class EnemyBat : MonoBehaviour, enemyInt
             isDiving = true;
             faceplayer = false;
 
+            playerPosition = player.position;
+
             while (Vector3.Distance(transform.position, playerPosition) > 1f && transform.position.y > playerRef.transform.position.y + 0.3f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, playerPosition, diveSpeed * Time.deltaTime);
@@ -168,6 +162,11 @@ public class EnemyBat : MonoBehaviour, enemyInt
             isReturning = false;
         }
 
+        attackRoutineInstance = null;
+    }
+
+    private void OnDisable()
+    {
         attackRoutineInstance = null;
     }
 

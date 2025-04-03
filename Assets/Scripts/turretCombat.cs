@@ -46,7 +46,7 @@ public class turretCombat : MonoBehaviour
     public GameObject inRangeEffect;
     private GameObject effect;
 
-    bool isFire = false;
+    [SerializeField] bool isFire = false;
     [SerializeField] GameObject fireEffect;
     public float flameDistance, flameRadius, fireDmgRate;
     public int fireDmg;
@@ -157,6 +157,7 @@ public class turretCombat : MonoBehaviour
             shooting = true;
             if(!fireEffect.GetComponent<ParticleSystem>().isPlaying)
             {
+                fireEffect.SetActive(true);
                 fireEffect.GetComponent<ParticleSystem>().Play();
             }
 
@@ -304,7 +305,7 @@ public class turretCombat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isFire = false;
+        //isFire = false;
         fireEffect.GetComponent<ParticleSystem>().Stop();
         fireEffect.SetActive(false);
     }
@@ -322,7 +323,7 @@ public class turretCombat : MonoBehaviour
         if (enemiesInRange.Length == 0)
             fireEffect.GetComponent<ParticleSystem>().Stop();
 
-        if (!isFire)
+        if (!isFire && fireEffect.GetComponent<ParticleSystem>().isPlaying)
         {
             fireEffect.GetComponent<ParticleSystem>().Stop();
             fireEffect.SetActive(false);
@@ -370,11 +371,13 @@ public class turretCombat : MonoBehaviour
 
     public void activateFire(bool choice)
     {
+        print("activateFire() in TurCom");
         isFire = choice;
         if(isFire)
         {
+            print("fire is true");
             fireEffect.SetActive(true);
-            fireEffect.GetComponent<ParticleSystem>().Play();
+            //fireEffect.GetComponent<ParticleSystem>().Play();
         }
     }
 

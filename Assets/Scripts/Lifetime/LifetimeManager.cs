@@ -115,13 +115,23 @@ public class LifetimeManager : MonoBehaviour
     {
         InitializeManagers();
         SceneManager.LoadSceneAsync(1);
+        StartCoroutine(enableHudOnLoad());
+
+    }
+
+    public IEnumerator enableHudOnLoad()    
+    {
+        yield return new WaitForSeconds(1f);
+        uiManager.EnableHUD();
     }
 
     public IEnumerator StartNewGame()
     {
         InitializeManagers();
-        yield return new WaitForSeconds(0.2f);
-        SceneManager.LoadSceneAsync("ClassSelect");
+        StartCoroutine(AnimateTransitionScreen());
+        yield return new WaitForSeconds(1.5f);
+        SceneManager.LoadSceneAsync("OpeningCutscene");
+        //SceneManager.LoadSceneAsync("ClassSelect");
         yield break;
     }
 
@@ -292,6 +302,18 @@ public class LifetimeManager : MonoBehaviour
             yield return null;
         }
         yield break;
+    }
+
+    public IEnumerator AnimateTransitionScreen()
+    {
+        yield return StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
+        yield return null;
+    }
+
+    public IEnumerator DeanimateTransitionScreen()
+    {
+        yield return StartCoroutine(ReduceOpacity(GameObject.Find("TransitionScreen"), 1.00f));
+        yield return null;
     }
 
     public IEnumerator AnimateRoomTransition()

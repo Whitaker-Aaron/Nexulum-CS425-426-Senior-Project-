@@ -250,21 +250,23 @@ public class classAbilties : MonoBehaviour
             StartCoroutine(abilitiesCooldown(2, ga2Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && currentClone == null)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && !placing)
         {
-            if (earthBool)
+            if (iceBool)
             {
-                playRuneEffect("Earth");
-                currentClone = Instantiate(cloneWall, player.transform.position + (player.transform.forward * 1.5f), player.transform.rotation);
+                //playRuneEffect("Ice");
+                CIRE.SetActive(true);
+                CIRE.GetComponent<ParticleSystem>().Play();
+                if (CIRE.GetComponent<ParticleSystem>().isPlaying)
+                    print("Playing ice effect");
             }
-            else
-                currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
-            acc3 = StartCoroutine(abilitiesCooldown(2, ea2Time));
-            StartCoroutine(cloneStart());
-            gameObject.GetComponent<masterInput>().abilityInUse = false;
-            cloning = true;
+            placingTesla = true;
+            placingOne = true;
+            instant = true;
+            gameObject.GetComponent<masterInput>().placing = true;
+            StartCoroutine(abilitiesCooldown(2, ea2Time));
         }
-        
+
 
     }
 
@@ -346,22 +348,21 @@ public class classAbilties : MonoBehaviour
             acc3 = StartCoroutine(abilitiesCooldown(3, ga3Time));
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
-        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && !placing)
+        else if (currentClass == WeaponBase.weaponClassTypes.Engineer && currentClone == null)
         {
-            if (iceBool)
+            if (earthBool)
             {
-                //playRuneEffect("Ice");
-                CIRE.SetActive(true);
-                CIRE.GetComponent<ParticleSystem>().Play();
-                if (CIRE.GetComponent<ParticleSystem>().isPlaying)
-                    print("Playing ice effect");
+                playRuneEffect("Earth");
+                currentClone = Instantiate(cloneWall, player.transform.position + (player.transform.forward * 1.5f), player.transform.rotation);
             }
-            placingTesla = true;
-            placingOne = true;
-            instant = true;
-            gameObject.GetComponent<masterInput>().placing = true;
-            StartCoroutine(abilitiesCooldown(3, ea3Time));
+            else
+                currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
+            acc3 = StartCoroutine(abilitiesCooldown(3, ea3Time));
+            StartCoroutine(cloneStart());
+            gameObject.GetComponent<masterInput>().abilityInUse = false;
+            cloning = true;
         }
+        
         
     }
 
@@ -1286,15 +1287,17 @@ public class classAbilties : MonoBehaviour
             {
                 GameObject newTurret = Instantiate(turretPrefab, pos + spawnOffset, rot);
                 //newTurret.GetComponent<turretCombat>().assignKey(totalTowerCount);
-
-                placedTurrets.Add(newTurret);
-
-                if(fireBool)
+                if (fireBool)
                 {
+                    print("Firebool true in turretplace");
                     newTurret.GetComponent<turretCombat>().activateFire(true);
                 }
                 else
                     newTurret.GetComponent<turretCombat>().activateFire(false);
+
+                placedTurrets.Add(newTurret);
+
+                
 
                 if (turretNumCount < turretMaxQuantity)
                 {

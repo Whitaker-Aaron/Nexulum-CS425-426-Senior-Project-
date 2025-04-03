@@ -44,13 +44,10 @@ GameObject:
   - component: {fileID: 7312136641156335363}
   - component: {fileID: 1193779176018578354}
   - component: {fileID: 4928959221387099164}
-  - component: {fileID: 1594236488427524553}
   - component: {fileID: 4744574494873604198}
   - component: {fileID: 7623458557635841475}
   - component: {fileID: 6266777104380410059}
   - component: {fileID: 8061995712609356680}
-  - component: {fileID: 6955319718670308413}
-  - component: {fileID: 6996728658863666810}
   - component: {fileID: 6225356360548365343}
   m_Layer: 7
   m_Name: VampireBat
@@ -175,19 +172,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1594236488427524553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7686125088459755243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06766f528e3d77848bcb9dc8b961c29a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
 --- !u!95 &4744574494873604198
 Animator:
   serializedVersion: 5
@@ -265,58 +249,6 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
---- !u!114 &6955319718670308413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7686125088459755243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4560e331573441e46bfabaed7fd56f60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultMovementSpeed: 2
-  engagementRange: 1
-  inaccuracyPointTolerance: 1
-  currentSpeed: 0
-  movementPaused: 0
-  stayInIdle: 1
-  agent: {fileID: 4928959221387099164}
-  enemyLOS: {fileID: 0}
-  enemyFrame: {fileID: 0}
-  useDefaultConcreteStates: 1
-  concreteStates:
-    _serializedList: []
-  patrolState:
-    patrolPoints: []
-  enableStateDebugLogs: 0
-  isFrozen: 0
---- !u!114 &6996728658863666810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7686125088459755243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f32dc590940c6494890a27fe81efdc00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isTargetSpotted: 0
-  canTarget: 1
-  player: {fileID: 0}
-  detectionRange: 7
-  visionAngle: 90
-  canSeeThroughWalls: 0
-  distancetotarget: 0
-  headingtotarget: {x: 0, y: 0, z: 0}
-  myHeading: {x: 0, y: 0, z: 0}
-  selfPos: {x: 0, y: 0, z: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  lastKnownTargetPos: {x: 0, y: 0, z: 0}
 --- !u!114 &6225356360548365343
 MonoBehaviour:
   m_ObjectHideFlags: 0

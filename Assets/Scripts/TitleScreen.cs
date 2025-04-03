@@ -13,6 +13,9 @@ public class TitleScreen : MonoBehaviour
     [SerializeField] GameObject startPanel;
     SaveManager SaveManager;
     LifetimeManager LifetimeManager;
+    UIManager uiManager;
+    CharacterBase character;
+    MenuManager menuManager;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +24,11 @@ public class TitleScreen : MonoBehaviour
         loadPanel.SetActive(false);
         SaveManager = GameObject.Find("SaveManager").GetComponent<SaveManager>();
         LifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>(); 
+        menuManager.menusPaused = true;
+        uiManager.DisableHUD();
         if (!SaveManager.hasData) loadGameButton.interactable = false;
     }
 
