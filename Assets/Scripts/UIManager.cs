@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject CheckpointText;
     [SerializeField] GameObject levelUpText;
+    [SerializeField] GameObject expText;
+    float ogExpTextXPos;
     [SerializeField] GameObject mainHUD;
     [SerializeField] GameObject knightHUD;
     [SerializeField] GameObject engineerHUD;
@@ -32,6 +34,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject criticalText;
     [SerializeField] GameObject criticalTextBorder;
     [SerializeField] GameObject florentineUI;
+    
 
     [SerializeField] GameObject damageNumPrefab;
     [SerializeField] GameObject viewItemPrefab;
@@ -50,6 +53,7 @@ public class UIManager : MonoBehaviour
     IEnumerator currentDialogueBox;
     Coroutine currentDialogueBoxAnimation;
     Coroutine currentCheckpointAnimator;
+    Coroutine currentExpText;
     Coroutine currentBorderStretch;
     Coroutine currentFlorentineAnimator;
 
@@ -78,6 +82,7 @@ public class UIManager : MonoBehaviour
         knightHUD.SetActive(false);
         gunnerHUD.SetActive(false);
         engineerHUD.SetActive(false);
+        ogExpTextXPos = expText.transform.localPosition.x;
 
         initialEnemyRemainingUIPos = enemiesRemainingUI.transform.position;
     }
@@ -1074,6 +1079,50 @@ public class UIManager : MonoBehaviour
     public void StartLevelUpText()
     {
         StartCoroutine(AnimateLevelUpText());
+    }
+
+    public void StartAnimateExpText(string exp)
+    {
+        if(currentExpText != null)
+        {
+            StopCoroutine(currentExpText);
+            Vector3 ogPosition = new Vector3(ogExpTextXPos, expText.transform.localPosition.y, expText.transform.localPosition.z);
+            expText.transform.localPosition = ogPosition;
+        }
+        currentExpText = StartCoroutine(AnimateExpText(exp));
+    }
+
+    public IEnumerator AnimateExpText(string exp)
+    {
+        expText.GetComponent<TMP_Text>().text = "+" + exp;
+        Vector3 ogPosition = new Vector3(expText.transform.localPosition.x, expText.transform.localPosition.y, expText.transform.localPosition.z);
+        Vector3 desPos = new Vector3(expText.transform.localPosition.x + 50f, expText.transform.localPosition.y, expText.transform.localPosition.z);
+        //8.900024
+        expText.transform.localPosition = ogPosition;
+
+
+
+        bool increasingOpacity = false;
+        while (expText.transform.localPosition.x < desPos.x)
+        {
+            if (!increasingOpacity)
+            {
+                StartCoroutine(IncreaseTextOpacity(expText, 2.0f));
+            }
+            if (Mathf.Abs(expText.transform.localPosition.x - (desPos.x)) < 0.3f)
+            {
+                expText.transform.localPosition = desPos;
+            }
+            else
+            {
+                expText.transform.localPosition = Vector3.Lerp(expText.transform.localPosition, desPos, 5.0f * Time.deltaTime);
+            }
+            yield return null;
+        }
+        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(ReduceTextOpacity(expText, 1.0f));
+        
+        yield break;
     }
 
     public IEnumerator AnimateLevelUpText()
