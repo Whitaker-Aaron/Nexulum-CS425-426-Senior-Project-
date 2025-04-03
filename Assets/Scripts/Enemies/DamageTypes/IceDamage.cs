@@ -13,8 +13,8 @@ public class IceDamage : IType
 
     public float currentStacks = 0;
     float maxStacks;
-    public bool isFreezeCooldownActive = false;
-    private float cooldown = 2f;
+    public bool isFrozen = false;
+    private bool resetNext = false;
 
     public IceDamage(EnemyStateManager movementRef, int maxStacks)
     {
@@ -48,40 +48,58 @@ public class IceDamage : IType
         initialSpeed = speed;
     }
 
-    public void SetFreezeCooldown(float cd)
-    {
-        cooldown = cd;
-    }
-
     public void execute()
     {
-        // Percent movement reduction
+        if (isFrozen)
+        {
+            resetNext = true;
+        }
+
         float percentage = (currentStacks / maxStacks);
-        // float newSpeed = initialSpeed -  (initialSpeed * percentage);
         float newSpeed = originalSpeed -  (originalSpeed * percentage);
 
         movementRef.currentSpeed = newSpeed;
 
-        Debug.Log("Current speed: " + movementRef.currentSpeed + " Calculated speed: " + newSpeed);
-        Debug.Log("Previous speed: " + originalSpeed);
-        Debug.Log("Current stacks: " + currentStacks);
-        Debug.Log("Percentage: " + percentage);
+        // Debug.Log("Current ice stacks: " + currentStacks);
+        // Debug.Log("Current speed: " + movementRef.currentSpeed + " Calculated speed: " + newSpeed);
+        // Debug.Log("Is frozen? " + isFrozen);
+        // Debug.Log("Previous speed: " + originalSpeed);
+        // Debug.Log("Percentage: " + percentage);
     }
 
     public void AddStacks(float num)
     {
-        if (currentStacks <= maxStacks)
+        if (currentStacks <= maxStacks) // Ensure current stacks are <= max
         {
-            if (num < 0 && currentStacks != 0)
+            if (num < 0 && currentStacks != 0) // For adding negative stacks
             {
                 currentStacks += num;
+                isFrozen = false; // Always going to be false when reducing stacks since current <= max
+                if (resetNext) // Means that previously the stacks were max/enemy was frozen, reset the current stacks
+                {
+                    currentStacks = 0;
+                    resetNext = false;
+                }
             }
-            else if (currentStacks < maxStacks)
+            else if (currentStacks < maxStacks) // For adding positive stacks
             {
                 currentStacks += num;
+                if (currentStacks == maxStacks)
+                {
+                    isFrozen = true;
+                    Debug.Log("Enemy is at max stacks and frozen.");
+                }
+                else
+                {
+                    isFrozen = false;
+                }
+            }
+            else // If current stacks exceeds max somehow, set it to max
+            {
+                currentStacks = maxStacks;
             }
         }
-        Debug.Log("Stacks increased by " + num);
+        // Debug.Log("Stacks increased by " + num);
     }
 
     public void IncreaseMaxStacks(float num)
@@ -91,20 +109,6 @@ public class IceDamage : IType
         if (maxStacks < 0)
         {
             maxStacks = 0;
-        }
-    }
-
-    public IEnumerator FreezeCooldown()
-    {
-        Debug.Log("Freeze cooldown start: " + isFreezeCooldownActive);
-        while (isFreezeCooldownActive)
-        {
-            Debug.Log("Freeze cooldown true, starting cooldown");
-            yield return new WaitForSeconds(cooldown);
-            AddStacks(-1f * maxStacks);
-            // movementRef.currentSpeed = initialSpeed;
-            // previousSpeed = initialSpeed;
-            isFreezeCooldownActive = false;
         }
     }
 }

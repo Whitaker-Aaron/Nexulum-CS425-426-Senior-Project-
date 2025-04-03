@@ -46,10 +46,13 @@ public class EnemyFrame : MonoBehaviour
 
     public bool collidingWithPlayer = false;
 
-    public float effectTickInterval = 5.0f;
+    public float effectTickInterval = 15.0f;
     public int iceStackMax = 4;
     public IceDamage iceEffect;
-    public float iceFreezeCooldown = 2.0f;
+    public bool statusImmunity_Ice = false;
+    public bool statusImmunity_Fire = false;
+    public bool statusImmunity_Earth = false;
+    public bool statusImmunity_Electric = false;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
@@ -111,18 +114,7 @@ public class EnemyFrame : MonoBehaviour
 
         // Status effects - Aisling
         iceEffect = new IceDamage(movementReference, iceStackMax);
-        iceEffect.SetInitialSpeed(movementReference.defaultMovementSpeed);
-        iceEffect.SetFreezeCooldown(iceFreezeCooldown);
         InvokeRepeating("TickIceEffect", 0.0f, effectTickInterval); // Decreases current ice stacks by 1 every effectTickInterval seconds until 0
-    }
-
-    void Update()
-    {
-        if (iceEffect.GetCurrentStacks() == iceEffect.GetMaxStacks()) // Delay when frozen, then unfreeze
-        {
-            Debug.Log("Enemy is frozen");
-            iceEffect.isFreezeCooldownActive = true;
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -195,9 +187,13 @@ public class EnemyFrame : MonoBehaviour
         Debug.Log("Taken damage of type " + damageType);
         switch(damageType)
         {
-            case DamageType.Ice:
-                iceEffect.AddStacks(1);
-                iceEffect.execute();
+            case DamageType.Ice: // Ice dmg - Aisling
+                if (!statusImmunity_Ice)
+                {
+                    iceEffect.AddStacks(1);
+                    Debug.Log("Current stacks: " + iceEffect.GetCurrentStacks());
+                    iceEffect.execute();
+                }
                 break;
         }
         
@@ -427,22 +423,11 @@ public class EnemyFrame : MonoBehaviour
 
     private void TickIceEffect() // Tick ice effect - Aisling
     {
-        // NOTE - FIX LATER
-        bool unfreezeNextTick = false;
-        if (unfreezeNextTick)
+        if (iceEffect.GetCurrentStacks() > 0)
         {
-            iceEffect.SetCurrentStacks(0); // Reset stacks
-            iceEffect.execute();
-            unfreezeNextTick = false;
-        }
-        else if (iceEffect.GetCurrentStacks() > 0)
-        {
-            if (iceEffect.GetCurrentStacks() == iceEffect.GetMaxStacks())
-            {
-                unfreezeNextTick = true;
-            }
             iceEffect.AddStacks(-1);
             iceEffect.execute();
+            Debug.Log("Current stacks: " + iceEffect.GetCurrentStacks());
         }
     }
 
