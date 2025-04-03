@@ -9,6 +9,7 @@ public class IceDamage : IType
     EnemyStateManager movementRef;
     float previousSpeed; // Speed before iteration
     float initialSpeed; // Speed before any ice effects were applied at all
+    float originalSpeed;
 
     public float currentStacks = 0;
     float maxStacks;
@@ -17,9 +18,9 @@ public class IceDamage : IType
 
     public IceDamage(EnemyStateManager movementRef, int maxStacks)
     {
-        this.movementRef = movementRef;
-        this.maxStacks = maxStacks;
-        this.previousSpeed = movementRef.defaultMovementSpeed;
+        if(movementRef != null) this.movementRef = movementRef;
+        if(maxStacks != null) this.maxStacks = maxStacks;
+        if(movementRef != null) this.originalSpeed = movementRef.defaultMovementSpeed;
     }
 
     public float GetCurrentStacks()
@@ -57,12 +58,12 @@ public class IceDamage : IType
         // Percent movement reduction
         float percentage = (currentStacks / maxStacks);
         // float newSpeed = initialSpeed -  (initialSpeed * percentage);
-        float newSpeed = previousSpeed -  (previousSpeed * percentage);
+        float newSpeed = originalSpeed -  (originalSpeed * percentage);
 
         movementRef.currentSpeed = newSpeed;
 
         Debug.Log("Current speed: " + movementRef.currentSpeed + " Calculated speed: " + newSpeed);
-        Debug.Log("Previous speed: " + previousSpeed);
+        Debug.Log("Previous speed: " + originalSpeed);
         Debug.Log("Current stacks: " + currentStacks);
         Debug.Log("Percentage: " + percentage);
     }

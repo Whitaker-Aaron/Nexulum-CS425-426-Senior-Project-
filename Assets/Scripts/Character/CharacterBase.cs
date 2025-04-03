@@ -213,6 +213,17 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
+    public void PlayLevelUpParticle()
+    {
+        var particleSys = transform.Find("LevelUpParticle");
+        if (particleSys != null)
+        {
+            particleSys.transform.SetParent(null, true);
+            particleSys.transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+            particleSys.GetComponentInChildren<ParticleSystem>().Play();
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
