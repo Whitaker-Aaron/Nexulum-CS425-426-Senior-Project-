@@ -114,13 +114,13 @@ public class EnemyFrame : MonoBehaviour
         iceEffect.SetInitialSpeed(movementReference.defaultMovementSpeed);
         iceEffect.SetFreezeCooldown(iceFreezeCooldown);
         InvokeRepeating("TickIceEffect", 0.0f, effectTickInterval); // Decreases current ice stacks by 1 every effectTickInterval seconds until 0
-        StartCoroutine(iceEffect.FreezeCooldown());
     }
 
     void Update()
     {
-        if (movementReference.isFrozen) // Delay when frozen, then unfreeze
+        if (iceEffect.GetCurrentStacks() == iceEffect.GetMaxStacks()) // Delay when frozen, then unfreeze
         {
+            Debug.Log("Enemy is frozen");
             iceEffect.isFreezeCooldownActive = true;
         }
     }
@@ -427,8 +427,20 @@ public class EnemyFrame : MonoBehaviour
 
     private void TickIceEffect() // Tick ice effect - Aisling
     {
-        if (iceEffect.currentStacks > 0)
+        // NOTE - FIX LATER
+        bool unfreezeNextTick = false;
+        if (unfreezeNextTick)
         {
+            iceEffect.SetCurrentStacks(0); // Reset stacks
+            iceEffect.execute();
+            unfreezeNextTick = false;
+        }
+        else if (iceEffect.GetCurrentStacks() > 0)
+        {
+            if (iceEffect.GetCurrentStacks() == iceEffect.GetMaxStacks())
+            {
+                unfreezeNextTick = true;
+            }
             iceEffect.AddStacks(-1);
             iceEffect.execute();
         }

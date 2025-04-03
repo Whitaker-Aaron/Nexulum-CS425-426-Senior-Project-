@@ -24,7 +24,8 @@ public class BehaviorTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (toggle) // This represents whatever your condition is
+        int i = 0;
+        if (toggle)
         {
             enemyFrame.takeDamage(0, Vector3.zero, EnemyFrame.DamageSource.Enemy, EnemyFrame.DamageType.Ice);
         }

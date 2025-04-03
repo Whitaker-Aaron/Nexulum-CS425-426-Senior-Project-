@@ -27,6 +27,11 @@ public class IceDamage : IType
         return currentStacks;
     }
 
+    public void SetCurrentStacks(float stacks)
+    {
+        currentStacks = stacks;
+    }
+
     public float GetMaxStacks()
     {
         return maxStacks;
@@ -49,30 +54,20 @@ public class IceDamage : IType
 
     public void execute()
     {
-        Debug.Log("Current stacks: " + currentStacks);
-        Debug.Log("Max stacks: " + maxStacks);
-
         // Percent movement reduction
         float percentage = (currentStacks / maxStacks);
-        Debug.Log("Percentage: " + percentage);
-        float newSpeed = initialSpeed -  (initialSpeed * percentage);
-        // float newSpeed = previousSpeed -  (previousSpeed * percentage);
+        // float newSpeed = initialSpeed -  (initialSpeed * percentage);
+        float newSpeed = previousSpeed -  (previousSpeed * percentage);
 
         movementRef.currentSpeed = newSpeed;
 
         Debug.Log("Current speed: " + movementRef.currentSpeed + " Calculated speed: " + newSpeed);
-
-        if (currentStacks == maxStacks)
-        {
-            movementRef.isFrozen = true;
-        }
-        else
-        {
-            movementRef.isFrozen = false;
-        }
+        Debug.Log("Previous speed: " + previousSpeed);
+        Debug.Log("Current stacks: " + currentStacks);
+        Debug.Log("Percentage: " + percentage);
     }
 
-    public void AddStacks(int num)
+    public void AddStacks(float num)
     {
         if (currentStacks <= maxStacks)
         {
@@ -85,9 +80,10 @@ public class IceDamage : IType
                 currentStacks += num;
             }
         }
+        Debug.Log("Stacks increased by " + num);
     }
 
-    public void IncreaseMaxStacks(int num)
+    public void IncreaseMaxStacks(float num)
     {
         maxStacks += num;
 
@@ -99,12 +95,14 @@ public class IceDamage : IType
 
     public IEnumerator FreezeCooldown()
     {
+        Debug.Log("Freeze cooldown start: " + isFreezeCooldownActive);
         while (isFreezeCooldownActive)
         {
+            Debug.Log("Freeze cooldown true, starting cooldown");
             yield return new WaitForSeconds(cooldown);
-            SetMaxStacks(0);
-            movementRef.currentSpeed = initialSpeed;
-            previousSpeed = initialSpeed;
+            AddStacks(-1f * maxStacks);
+            // movementRef.currentSpeed = initialSpeed;
+            // previousSpeed = initialSpeed;
             isFreezeCooldownActive = false;
         }
     }
