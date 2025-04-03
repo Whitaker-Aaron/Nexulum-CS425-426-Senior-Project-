@@ -5,6 +5,7 @@ using UnityEngine;
 public class BehaviorTest : MonoBehaviour
 {
     EnemyStateManager enemyStateMananger;
+    EnemyFrame enemyFrame;
     public bool toggle = false;
 
     void Awake()
@@ -15,17 +16,18 @@ public class BehaviorTest : MonoBehaviour
     {
         Debug.Log("Enemy test behavior script start");
 
-        EnemyStateManager enemyStateMananger = gameObject.GetComponent<EnemyStateManager>();
+        enemyStateMananger = gameObject.GetComponent<EnemyStateManager>();
+        enemyFrame = gameObject.GetComponent<EnemyFrame>();
         // enemyStateMananger.PauseMovementFor(5f);
     }
 
-    // // Update is called once per frame
-    // void Update()
-    // {
-    //     EnemyStateManager enemyStateMananger = gameObject.GetComponent<EnemyStateManager>();
-    //     if (toggle) // This represents whatever your condition is
-    //     {
-    //         enemyStateMananger.PauseMovementFor(5f);
-    //     }
-    // }
+    // Update is called once per frame
+    void Update()
+    {
+        int i = 0;
+        if (toggle)
+        {
+            enemyFrame.takeDamage(0, Vector3.zero, EnemyFrame.DamageSource.Enemy, EnemyFrame.DamageType.Ice);
+        }
+    }
 }
