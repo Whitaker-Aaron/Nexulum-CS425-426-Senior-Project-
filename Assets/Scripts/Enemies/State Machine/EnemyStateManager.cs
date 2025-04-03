@@ -61,7 +61,6 @@ public class EnemyStateManager : MonoBehaviour, IStateMachine
     // Debugging and status effects
     [Header("Debugging and Status Effects")]
     public bool enableStateDebugLogs = false;
-    public bool isFrozen = false;
 
     // ----------------------------------------------
     // Methods

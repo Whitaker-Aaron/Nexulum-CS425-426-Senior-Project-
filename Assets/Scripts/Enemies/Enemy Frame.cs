@@ -46,9 +46,13 @@ public class EnemyFrame : MonoBehaviour
 
     public bool collidingWithPlayer = false;
 
-    public float effectTickInterval = 5.0f;
+    public float effectTickInterval = 15.0f;
     public int iceStackMax = 4;
     public IceDamage iceEffect;
+    public bool statusImmunity_Ice = false;
+    public bool statusImmunity_Fire = false;
+    public bool statusImmunity_Earth = false;
+    public bool statusImmunity_Electric = false;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
@@ -183,9 +187,13 @@ public class EnemyFrame : MonoBehaviour
         Debug.Log("Taken damage of type " + damageType);
         switch(damageType)
         {
-            case DamageType.Ice:
-                iceEffect.AddStacks(1);
-                iceEffect.execute();
+            case DamageType.Ice: // Ice dmg - Aisling
+                if (!statusImmunity_Ice)
+                {
+                    iceEffect.AddStacks(1);
+                    Debug.Log("Current stacks: " + iceEffect.GetCurrentStacks());
+                    iceEffect.execute();
+                }
                 break;
         }
         
@@ -415,10 +423,11 @@ public class EnemyFrame : MonoBehaviour
 
     private void TickIceEffect() // Tick ice effect - Aisling
     {
-        if (iceEffect.currentStacks > 0)
+        if (iceEffect.GetCurrentStacks() > 0)
         {
             iceEffect.AddStacks(-1);
             iceEffect.execute();
+            Debug.Log("Current stacks: " + iceEffect.GetCurrentStacks());
         }
     }
 
