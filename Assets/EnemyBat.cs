@@ -72,7 +72,6 @@ public class EnemyBat : MonoBehaviour, enemyInt
             Debug.LogError("Animator not found on EnemyBat!");
         }
 
-        transform.position = new Vector3(transform.position.x, playerRef.transform.position.y + 2f, transform.position.z);
         originalPosition = transform.position;
     }
 
@@ -137,6 +136,8 @@ public class EnemyBat : MonoBehaviour, enemyInt
 
             isDiving = true;
             faceplayer = false;
+
+            playerPosition = player.position;
 
             while (Vector3.Distance(transform.position, playerPosition) > 1f && transform.position.y > playerRef.transform.position.y + 0.3f)
             {
