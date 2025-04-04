@@ -57,6 +57,11 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
         if(tempEnemy) Destroy(this.gameObject);
     }
 
+    private void Awake()
+    {
+        isActive = true;
+    }
+
 
     public enemyInt getType()
     {

@@ -99,6 +99,7 @@ public class AudioManager : MonoBehaviour
 
     public void ChangeTrack(string newTrack)
     {
+        if (newTrack == currentLoop) return;
         if (loopSources[newTrack] != null)
         {
             StartCoroutine(FadeTracks(newTrack));
@@ -108,16 +109,17 @@ public class AudioManager : MonoBehaviour
     public IEnumerator FadeTracks(string newTrack)
     {
 
+        
         if (currentLoop != null && currentLoop != "")
         {
             var startLoop = ReduceVolOnLoop(0.050f);
-            yield return StartCoroutine(startLoop);
-            StopCoroutine(startLoop);
+            StartCoroutine(startLoop);
+            yield return new WaitForSeconds(2f);
             loopSources[currentLoop].StopLoop();
         }
         currentLoop = newTrack;
         loopSources[currentLoop].PlayLoop();
-        yield return StartCoroutine(IncreaseVolOnLoop(0.050f));
+        StartCoroutine(IncreaseVolOnLoop(0.050f));
         yield break;
     }
 
