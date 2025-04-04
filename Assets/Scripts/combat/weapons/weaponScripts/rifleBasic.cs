@@ -19,7 +19,7 @@ public class rifleBasic : weaponType
     {
         //int("canShoot: " + canShoot);
         //int("isReloading: " + isReloading);
-        print("currentHeast is : " + currentHeat);
+        //print("currentHeast is : " + currentHeat);
     }
 
     public override IEnumerator Shoot()

@@ -111,7 +111,7 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
     // Update is called once per frame
     void Update()
     {
-        if (canAttack) {
+        if (canAttack && isActive) {
             attackPlayer();
         }
         else

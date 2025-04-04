@@ -177,6 +177,7 @@ public class EnemyFrame : MonoBehaviour
     public void takeDamage(int damage, Vector3 forwardDir, DamageSource targetSource, DamageType damageType)
     {
         if (enemyReference.isInvincible) return;
+        if (!enemyType.isActive) return;
         
         // Damage info for state - Aisling
         onDamaged = true;

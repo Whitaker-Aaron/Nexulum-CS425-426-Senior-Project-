@@ -56,7 +56,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(menusPaused);
+        //Debug.Log(menusPaused);
     }
 
     public void SaveData(ref SaveData data)

@@ -9,6 +9,7 @@ public class RoomInformation : MonoBehaviour
     [SerializeField] public string roomName;
     [SerializeField] GameObject enemies;
     [SerializeField] bool lockYAxis = false;
+    [SerializeField] bool lockEnemiesOnLoad = false;
     [SerializeField] public Vector3 roomSpawnPoint;
     List<GameObject> allEnemies = new List<GameObject>();
     public List<GameObject> allLockedDoors = new List<GameObject>();
@@ -52,11 +53,25 @@ public class RoomInformation : MonoBehaviour
             Debug.Log("Unlocking camera y-axis");
         }
         ActivateEnemyHealthBars();
+        if (lockEnemiesOnLoad) LockEnemies();
     }
 
     private void OnDisable()
     {
         DeactivateEnemyHealthBars();
+    }
+
+    public void LockEnemies()
+    {
+        var enemies = GetEnemies();
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (enemies[i] != null)
+            {
+                enemies[i].GetComponent<EnemyLOS>().canTarget = false;
+                enemies[i].GetComponent<enemyInt>().isActive = false;
+            }
+        }
     }
 
     private void Update()

@@ -8,7 +8,7 @@ public abstract class EnemyNeutralState : EnemyState
 {
     protected virtual void OnDamaged()
     {
-        if (stateContext.enemyFrame.onDamaged)
+        if (stateContext.enemyFrame.onDamaged && stateContext.enemyLOS.canTarget)
         {
             Debug.Log("EnemyNeutralState.cs - Enemy damaged by " + stateContext.enemyFrame.source);
             switch (stateContext.enemyFrame.source)
