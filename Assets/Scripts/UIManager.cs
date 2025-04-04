@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject CheckpointText;
     [SerializeField] GameObject levelUpText;
+    [SerializeField] GameObject attackUpText;
     [SerializeField] GameObject expText;
     float ogExpTextXPos;
     [SerializeField] GameObject mainHUD;
@@ -1083,6 +1084,10 @@ public class UIManager : MonoBehaviour
     {
         StartCoroutine(AnimateLevelUpText());
     }
+    public void StartAttackUpText()
+    {
+        StartCoroutine(AnimateAttackUpText());
+    }
 
     public void StartAnimateExpText(string exp)
     {
@@ -1139,6 +1144,7 @@ public class UIManager : MonoBehaviour
              if((levelUpText.transform.localPosition.x > ogPosition.x - 1000.0f) && !increasingOpacity)
             {
                 StartCoroutine(IncreaseImageOpacity(levelUpText, 4.0f));
+                increasingOpacity = true;
             }
              if(Mathf.Abs(levelUpText.transform.localPosition.x - ogPosition.x) < 0.3f){
                 levelUpText.transform.localPosition = ogPosition;
@@ -1149,8 +1155,36 @@ public class UIManager : MonoBehaviour
              }
             yield return null;
         }
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         yield return StartCoroutine(DecreaseImageOpacity(levelUpText, 1.0f));
+        yield return StartCoroutine(AnimateAttackUpText());
+        yield break;
+    }
+
+    public IEnumerator AnimateAttackUpText()
+    {
+        Vector3 ogPosition = attackUpText.transform.localPosition;
+        attackUpText.transform.localPosition = new Vector3(attackUpText.transform.localPosition.x - 2000.0f, attackUpText.transform.localPosition.y, attackUpText.transform.localPosition.z);
+
+        bool increasingOpacity = false;
+        while (attackUpText.transform.localPosition.x < ogPosition.x)
+        {
+            if ((attackUpText.transform.localPosition.x > ogPosition.x - 1000.0f) && !increasingOpacity)
+            {
+                StartCoroutine(IncreaseTextOpacity(attackUpText, 4.0f));
+            }
+            if (Mathf.Abs(attackUpText.transform.localPosition.x - ogPosition.x) < 0.3f)
+            {
+                attackUpText.transform.localPosition = ogPosition;
+            }
+            else
+            {
+                attackUpText.transform.localPosition = Vector3.Lerp(attackUpText.transform.localPosition, ogPosition, 15.0f * Time.deltaTime);
+            }
+            yield return null;
+        }
+        yield return new WaitForSeconds(3f);
+        yield return StartCoroutine(ReduceTextOpacity(attackUpText, 1.0f));
         yield break;
     }
 

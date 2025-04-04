@@ -56,6 +56,8 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
                 var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
                 var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
                 uiManager.startTutorialAnimate(mainTutorial);
+                var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+                menuManager.menusPaused = true;
                 inputManager.pausePlayerInput();
                 Time.timeScale = 0.0f;
             }
@@ -88,6 +90,8 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
                     var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
                     uiManager.startTutorialAnimate(mainTutorial);
                     inputManager.pausePlayerInput();
+                    var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+                    menuManager.menusPaused = true;
                     Time.timeScale = 0.0f;
                 }
                 

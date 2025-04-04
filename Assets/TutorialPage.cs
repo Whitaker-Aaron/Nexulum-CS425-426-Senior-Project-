@@ -150,6 +150,8 @@ public class TutorialPage : MonoBehaviour
     public void OnExit()
     {
         GameObject.Find("InputandAnimationManager").GetComponent<masterInput>().resumePlayerInput();
+        var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        menuManager.menusPaused = false;
         Destroy(trigger);
         Destroy(this.gameObject);
         Time.timeScale = 1.0f;
