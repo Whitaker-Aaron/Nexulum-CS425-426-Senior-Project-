@@ -464,6 +464,7 @@ public class UIManager : MonoBehaviour
         {
             dialogueText.Enqueue(text);
         }
+        if(currentDialogueBoxAnimation != null) StopCoroutine(currentDialogueBoxAnimation);
         currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("left"));
         currentDialogueBox = AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer);
         StartCoroutine(currentDialogueBox);
@@ -479,6 +480,7 @@ public class UIManager : MonoBehaviour
         {
             dialogueText.Enqueue(text);
         }
+        advanceTextbox = false;
         currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("left"));
         currentDialogueBox = AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer);
         yield return StartCoroutine(currentDialogueBox);
@@ -516,6 +518,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
+            if (currentDialogueBoxAnimation != null) StopCoroutine(currentDialogueBoxAnimation);
            currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("right"));
         }
         yield break;
@@ -1146,7 +1149,7 @@ public class UIManager : MonoBehaviour
              }
             yield return null;
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(5f);
         yield return StartCoroutine(DecreaseImageOpacity(levelUpText, 1.0f));
         yield break;
     }

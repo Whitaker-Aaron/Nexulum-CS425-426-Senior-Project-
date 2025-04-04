@@ -305,7 +305,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     public void StartLevelUpExplosion()
     {
         GameObject.Find("EffectsManager").GetComponent<EffectsManager>().getFromPool(("levelUpExplosion"), this.transform.position, Quaternion.identity, false, false);
-        GameObject.Find("EffectsManager").GetComponent<EffectsManager>().getFromPool(("levelUpLightball"), this.transform.position, Quaternion.identity, false, false);
+        GameObject.Find("EffectsManager").GetComponent<EffectsManager>().getFromPool(("levelUpLightball"), this.transform.position, Quaternion.identity, true, false);
     }
 
     public void RemoveFlorentine(float amount)
