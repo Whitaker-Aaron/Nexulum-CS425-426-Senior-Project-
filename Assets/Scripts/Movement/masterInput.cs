@@ -1484,6 +1484,7 @@ public class masterInput : MonoBehaviour
             // Check mouse input for shooting
             if (playerInput.actions["attack"].WasPressedThisFrame())
             {
+                
                 shooting = true;
             }
             else if (playerInput.actions["attack"].WasReleasedThisFrame())
