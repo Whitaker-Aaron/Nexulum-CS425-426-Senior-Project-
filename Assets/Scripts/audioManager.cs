@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
     private AudioSource audioSource;
     private AudioSource player;
     private string currentLoop = "";
+    public bool playingFootsteps;
     [Range(0f, 1f)] public float loopAudio;
     [SerializedDictionary("SFXName", "SFX")]
     public SerializedDictionary<string, SFX> sfxSources;
@@ -69,12 +70,14 @@ public class AudioManager : MonoBehaviour
 
     public void PlayFootsteps(string footstepName)
     {
-        footstepSources[footstepName].Resume();
+        playingFootsteps = true;
+        footstepSources[footstepName].PlayLoop();
     }
 
     public void PauseFootsteps(string footstepName)
     {
-        footstepSources[footstepName].Pause();
+        playingFootsteps = false;
+        footstepSources[footstepName].StopLoop();
     }
 
     public void PlaySFX(string sfx)

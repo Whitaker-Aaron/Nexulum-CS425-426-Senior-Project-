@@ -77,6 +77,12 @@ public class EnemyHead : MonoBehaviour, enemyInt
         timeOffset = Time.time;
     }
 
+    private void Awake()
+    {
+        isActive = true;
+    }
+
+
     void Update()
     {
         if (player != null)

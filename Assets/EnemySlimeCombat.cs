@@ -56,6 +56,12 @@ public class EnemySlimeCombat : MonoBehaviour, enemyInt
         }
     }
 
+    private void Awake()
+    {
+        isActive = true;
+    }
+
+
     private void OnEnable()
     {
         isAttacking = false;

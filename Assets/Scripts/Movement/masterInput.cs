@@ -384,7 +384,7 @@ public class masterInput : MonoBehaviour
         }
         if(playFootsteps)
         {
-            audioManager.PlayFootsteps("TestWalk");
+            if(!audioManager.playingFootsteps && character.isTouchingGround && !isDashing) audioManager.PlayFootsteps("TestWalk");
         }
         else
         {
@@ -636,6 +636,7 @@ public class masterInput : MonoBehaviour
             //dashStarted = true;
             if (!isDashing)
             {
+                audioManager.PauseFootsteps("TestWalk");
                 audioManager.PlaySFX("Dash");
                 EffectsManager.instance.getFromPool("playerDash", player.transform.position + new Vector3(0, .8f, 0), player.transform.rotation, true, false);
                 uiManager.startBorderStretch();

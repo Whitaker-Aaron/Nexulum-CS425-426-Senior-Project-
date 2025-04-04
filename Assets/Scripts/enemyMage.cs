@@ -64,6 +64,7 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
         //gameObject.GetComponent<SphereCollider>().radius = detectionRadius;
         enemies = new List<GameObject>();
         player = null;
+        isActive = true;
     }
 
     // Start is called before the first frame update

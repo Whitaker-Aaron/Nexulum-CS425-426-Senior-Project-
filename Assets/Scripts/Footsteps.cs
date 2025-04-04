@@ -38,6 +38,6 @@ public class Footsteps : ScriptableObject
 
     public void StopLoop()
     {
-        source.Stop();
+        source.loop= false;
     }
 }

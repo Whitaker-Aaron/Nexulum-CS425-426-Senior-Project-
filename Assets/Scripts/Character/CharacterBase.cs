@@ -229,7 +229,8 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     void Update()
     {
         //transform.scale = new Vector3(1, 1, 1);
-        if(wallCollisionCounter >= 2)
+        if(transitioningRoom || inEvent) audioManager.PauseFootsteps("TestWalk");
+        if (wallCollisionCounter >= 2)
         {
             
                physicMat.dynamicFriction = 0f;
@@ -283,7 +284,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         yield return new WaitForSeconds(0.25f);
         isTouchingGround = false;
-        if (masterInput.gameObject.activeSelf && !isTouchingGround && activatingFall && floatingPlatformCounter < 1) masterInput.ActivateFallAnimation();
+        if (masterInput.gameObject.activeSelf && !isTouchingGround && activatingFall && floatingPlatformCounter < 1)
+        {
+            masterInput.ActivateFallAnimation();
+            audioManager.PauseFootsteps("TestWalk");
+        }
 
     }
 

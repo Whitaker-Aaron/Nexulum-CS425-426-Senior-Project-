@@ -75,6 +75,12 @@ public class EnemyBat : MonoBehaviour, enemyInt
         originalPosition = transform.position;
     }
 
+    private void Awake()
+    {
+        isActive = true;
+    }
+
+
     void Update()
     {
         if (player != null)

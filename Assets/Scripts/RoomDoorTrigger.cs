@@ -87,6 +87,7 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
                         door.ToggleDoor();
                         var enemies = roomInfo.GetEnemies();
                         if (roomInfo.requiredEnemyRoom) GameObject.Find("UIManager").GetComponent<UIManager>().ActivateEnemiesRemainingUI(enemies.Count);
+                        GameObject.Find("AudioManager").GetComponent<AudioManager>().ChangeTrack("Battle1");
                         UnlockEnemies();
                     }
 
