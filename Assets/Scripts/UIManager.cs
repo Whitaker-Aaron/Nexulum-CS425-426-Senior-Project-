@@ -27,6 +27,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject gunnerHUD;
     [SerializeField] GameObject topHUD;
     [SerializeField] GameObject bottomHUD;
+    [SerializeField] GameObject topRedBorder;
+    [SerializeField] GameObject bottomRedBorder;
 
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
@@ -1073,6 +1075,61 @@ public class UIManager : MonoBehaviour
         yield break;
         //
         
+    }
+
+    public void EnableCriticalBorders()
+    {
+        StartCoroutine(AnimateCriticalBorders());
+    }
+
+    public void DisableCriticalBorders()
+    {
+        topRedBorder.SetActive(false);
+        bottomRedBorder.SetActive(false);
+        StopCoroutine(AnimateCriticalBorders());
+    }
+
+    public IEnumerator AnimateCriticalBorders()
+    {
+        topRedBorder.SetActive(true);
+        bottomRedBorder.SetActive(true);
+        var top = topRedBorder.GetComponent<Image>();
+        var bottom = bottomRedBorder.GetComponent<Image>();
+
+        Color imgColorTop = top.color;
+        Color imgColorBottom = bottom.color;
+        imgColorTop.a = 0;
+        imgColorBottom.a = 0;
+        top.color = imgColorTop;
+        bottom.color = imgColorBottom;
+        //Color 
+
+        while(true)
+        {
+            while(top.color.a < 1)
+            {
+                Color imgColorTopA = top.color;
+                Color imgColorBottomA = bottom.color;
+                imgColorTopA.a += 3f * Time.deltaTime;
+                imgColorBottomA.a += 3f * Time.deltaTime;
+                top.color = imgColorTopA;
+                bottom.color = imgColorBottomA;
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.75f);
+            while (top.color.a > 0)
+            {
+                Color imgColorTopA = top.color;
+                Color imgColorBottomA = bottom.color;
+                imgColorTopA.a -= 3f * Time.deltaTime;
+                imgColorBottomA.a -= 3f * Time.deltaTime;
+                top.color = imgColorTopA;
+                bottom.color = imgColorBottomA;
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.75f);
+            yield return null;
+        }
     }
 
     public void UpdateExperienceLevel(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)

@@ -739,6 +739,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         ColorUtility.TryParseHtmlString("#F7315D", out color);
         healthBar.fillRect.GetComponent<Image>().color = color;
         uiManager.ShowCriticalText();
+        uiManager.EnableCriticalBorders();
         audioManager.PlaySFX("LowHealth");
         lowHealthReached = true;
     }
@@ -749,6 +750,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         ColorUtility.TryParseHtmlString("#31F7A9", out color);
         healthBar.fillRect.GetComponent<Image>().color = color;
         uiManager.HideCriticalText();
+        uiManager.DisableCriticalBorders();
         lowHealthReached = false;
     }
 
