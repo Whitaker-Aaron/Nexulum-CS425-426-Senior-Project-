@@ -69,7 +69,7 @@ public class OpeningCutscene : MonoBehaviour
         pointLight.SetActive(true);
         StartCoroutine(uiManager.DecreaseImageOpacity(playerCover, 1.0f));
 
-        yield return new WaitForSeconds(4.5f);
+        yield return new WaitForSeconds(1.5f);
         StartCoroutine(uiManager.AnimateTypewriterCheckpoint(headerText, "Incoming Transmission...", "|", 0.06f, false));
         yield return new WaitForSeconds(1f);
         uiManager.EnableDialogueBox();

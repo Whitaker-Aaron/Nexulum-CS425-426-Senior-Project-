@@ -461,6 +461,7 @@ public class UIManager : MonoBehaviour
     public IEnumerator LoadDialogueBox(DialogueObject dialogueObject)
     {
         if (currentDialogueBox != null) UnloadDialogue();
+        if(dialogueText.Count <= 0) audioManager.PlaySFX("DialogueStart");
         foreach (var text in dialogueObject.dialogueList)
         {
             dialogueText.Enqueue(text);
@@ -651,7 +652,7 @@ public class UIManager : MonoBehaviour
                 }
                 tmp_text.text += c;
                 tmp_text.text += leadingChar;
-                audioManager.PlaySFX("KeyTap");
+                audioManager.PlaySFX("DialogueKey");
                 yield return new WaitForSeconds(rate);
             }
             int counter = 0;

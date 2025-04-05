@@ -129,7 +129,7 @@ public class LifetimeManager : MonoBehaviour
     public IEnumerator StartNewGame()
     {
         InitializeManagers();
-        StartCoroutine(AnimateTransitionScreen());
+        yield return StartCoroutine(AnimateTransitionScreen());
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadSceneAsync("OpeningCutscene");
         //SceneManager.LoadSceneAsync("ClassSelect");
