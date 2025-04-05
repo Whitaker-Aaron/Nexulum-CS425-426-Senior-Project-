@@ -38,6 +38,7 @@ public class subMachine : weaponType
         GameObject bullet = projectileManager.Instance.getProjectile("subMachinePool", bulletSpawn.position, bulletSpawn.rotation);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawn.forward * 50f; // Standard speed
         EffectsManager.instance.getFromPool("subMachineFlash", bulletSpawn.position, bulletSpawn.rotation, true, true);
+        GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("Laser");
         yield return new WaitForSeconds(fireRateTime);
 
         canShoot = true;

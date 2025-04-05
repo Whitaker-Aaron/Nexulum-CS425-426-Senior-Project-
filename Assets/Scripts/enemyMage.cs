@@ -24,6 +24,8 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
 
     [SerializeField] GameObject spellEffect;
 
+    AudioManager audioManager;
+
 
 
     private bool _isAttacking;
@@ -70,7 +72,7 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         animator = gameObject.GetComponent<Animator>();
     }
 
@@ -112,6 +114,7 @@ public class enemyMage : MonoBehaviour, mageInterface, enemyInt
         gameObject.GetComponent<EnemyAnimation>().mageAttack();
         yield return new WaitForSeconds(.5f);
         spellEffect.GetComponent<ParticleSystem>().Play();
+        audioManager.PlaySFX("MageFire");
         projectileManager.Instance.getProjectile("enemyMagePoolOne", spellProjSpawn.position, spellProjSpawn.rotation);
         yield return new WaitForSeconds(castTime);
         //animator.SetBool("Attack", false);

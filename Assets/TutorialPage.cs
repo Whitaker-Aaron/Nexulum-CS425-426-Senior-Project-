@@ -28,17 +28,20 @@ public class TutorialPage : MonoBehaviour
     public int curPage = 0;
 
     masterInput inputManager;
+    AudioManager audioManager;
 
     // Start is called before the first frame update
     public void Awake()
     {
         inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     public void Start()
     {
         Debug.Log("Gamepad active?: " + inputManager.getGamepadActive());
         if (inputManager.getGamepadActive()) usingController = true;
+        audioManager.PauseFootsteps("TestWalk");
         LoadPage();
 
         //EventSystem.
@@ -145,6 +148,8 @@ public class TutorialPage : MonoBehaviour
     {
         if(curPage -1 >= 0) curPage--;
         LoadPage();
+        audioManager.PlaySFX("UIConfirm");
+        
     }
 
     public void OnExit()
@@ -152,6 +157,7 @@ public class TutorialPage : MonoBehaviour
         GameObject.Find("InputandAnimationManager").GetComponent<masterInput>().resumePlayerInput();
         var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         menuManager.menusPaused = false;
+        audioManager.PlaySFX("UIConfirm");
         Destroy(trigger);
         Destroy(this.gameObject);
         Time.timeScale = 1.0f;
@@ -162,6 +168,7 @@ public class TutorialPage : MonoBehaviour
     {
         curPage++;
         LoadPage();
+        audioManager.PlaySFX("UIConfirm");
     }
 
 }

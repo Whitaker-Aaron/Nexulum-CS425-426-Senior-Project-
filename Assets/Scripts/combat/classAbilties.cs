@@ -363,6 +363,7 @@ public class classAbilties : MonoBehaviour
                 currentClone = Instantiate(clonePrefab, player.transform.position, player.transform.rotation);
             acc3 = StartCoroutine(abilitiesCooldown(3, ea3Time));
             StartCoroutine(cloneStart());
+            audioManager.PlaySFX("CombatAura");
             gameObject.GetComponent<masterInput>().abilityInUse = false;
             cloning = true;
         }

@@ -36,6 +36,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
     GameObject currentMenuObject;
     GameObject canvas;
     GameObject materialManager;
+    AudioManager audioManager;
     masterInput inputManager;
     CharacterBase character;
     Chest currentChest;
@@ -50,6 +51,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
         canvas = GameObject.FindGameObjectWithTag("UI");
         materialManager = GameObject.FindGameObjectWithTag("ScrollManager");
         inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
     }
 
@@ -218,6 +220,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void openTerminalMenu()
     {
+        audioManager.PauseFootsteps("TestWalk");
         if (menuActive)
         {
             Destroy(currentMenuObject);  
@@ -327,6 +330,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
         if (!pauseMenuActive && !character.transitioningRoom && !menusPaused && context.performed)
         {
+            audioManager.PauseFootsteps("TestWalk");
             if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
                 Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
@@ -389,6 +393,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
     {
         if (character.usingTerminal) return;
         if(!menuActive && !pauseMenuActive && !character.inEvent && !character.transitioningRoom && !character.inDialogueBox && !menusPaused && context.performed) {
+            audioManager.PauseFootsteps("TestWalk");
             if (chestMenuActive && currentMenuObject != null) closeChestMenu();
             currentMenuObject = Instantiate(materialsMenuReference);
             populateInventoryMaterials();

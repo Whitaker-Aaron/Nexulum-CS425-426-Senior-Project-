@@ -194,6 +194,7 @@ public class turretCombat : MonoBehaviour
             effectCount = effectCount % 3;
             if (switchSpawn)
             {
+                GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("Laser");
                 GameObject bullet = projectileManager.Instance.getProjectile("turretPool", bulletSpawnLeft.position, bulletSpawnLeft.rotation);
                 leftEffects[effectCount].GetComponent<ParticleSystem>().Play();
                 //var bullet = Instantiate(bulletPrefab, bulletSpawnLeft.position, bulletSpawnLeft.rotation);

@@ -1133,6 +1133,7 @@ public class masterInput : MonoBehaviour
             if (temp.IsName("Locomotion"))
             {
                 animationControl.engAttackOne(animTime);
+                audioManager.PlaySFX("Sword1");
                 ES1.GetComponent<ParticleSystem>().Play();
                 attackTime = engAnimTime;
                 StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
@@ -1140,6 +1141,7 @@ public class masterInput : MonoBehaviour
             if (temp.IsName("engWaitOne"))
             {
                 animationControl.engAttackTwo(animTime);
+                audioManager.PlaySFX("Sword2");
                 ES2.GetComponent<ParticleSystem>().Play();
                 attackTime = engAnimTimeTwo;
                 StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
@@ -1147,6 +1149,7 @@ public class masterInput : MonoBehaviour
             if (temp.IsName("engWaitTwo"))
             {
                 animationControl.engAttackThree();
+                audioManager.PlaySFX("Sword3");
                 ES3.GetComponent<ParticleSystem>().Play();
                 attackTime = engAnimTimeThree;
                 StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));

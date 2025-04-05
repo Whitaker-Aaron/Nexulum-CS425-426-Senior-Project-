@@ -24,7 +24,7 @@ public class SceneInformation : MonoBehaviour
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         //audioManager.StopLoop();
-        if(beginningTrack != "" && beginningTrack != null)
+        if(beginningTrack != "" && beginningTrack != null && !characterRef.teleporting)
         {
             audioManager.ChangeTrack(beginningTrack);
         }
