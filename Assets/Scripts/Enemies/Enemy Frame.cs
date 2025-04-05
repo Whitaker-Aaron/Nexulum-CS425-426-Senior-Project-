@@ -397,6 +397,7 @@ public class EnemyFrame : MonoBehaviour
         {
             if(character.enemyCollisionCounter > 0) character.enemyCollisionCounter--;
         }
+        GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("EnemyDeath");
         enemyType.onDeath();
         for (int i = 0; i < materialList.Length; i++)
         {

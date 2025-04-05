@@ -31,6 +31,7 @@ public class classAbilties : MonoBehaviour
     public LayerMask enemy;
     public LayerMask playerLayer;
     UIManager uiManager;
+    AudioManager audioManager;
 
     private PlayerInput playerInput;
     private bool usingMouseInput = false;
@@ -186,6 +187,7 @@ public class classAbilties : MonoBehaviour
         if (currentClass == WeaponBase.weaponClassTypes.Knight && !bubble)
         {
             uiManager.ActivateCooldownOnAbility(1);
+            audioManager.PlaySFX("BubbleShield");
             StartCoroutine(bubbleShield());
             if(earthBool)
                 playRuneEffect("Earth");
@@ -238,6 +240,7 @@ public class classAbilties : MonoBehaviour
             activatedAura = true;
             StartCoroutine(auraWait());
             acc2 = StartCoroutine(abilitiesCooldown(2, ka2Time));
+            audioManager.PlaySFX("CombatAura");
             gameObject.GetComponent<masterInput>().abilityInUse = false;
         }
         else if (currentClass == WeaponBase.weaponClassTypes.Gunner && !throwingGrenade)
@@ -306,6 +309,7 @@ public class classAbilties : MonoBehaviour
                 GameObject currentEffect = Instantiate(swordShotEffect, player.transform.position, Quaternion.identity);
                 currentEffect.transform.SetParent(player.transform);
                 currentEffect.transform.position = player.transform.position;
+                audioManager.PlaySFX("CombatAura");
                 currentEffect.GetComponent<ParticleSystem>().Play();
                 StartCoroutine(stopSword(currentEffect));
             }
@@ -611,7 +615,7 @@ public class classAbilties : MonoBehaviour
     IEnumerator swordShooting()
     {
         shotSword = true;
-
+        GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("SwordShot");
         if (iceBool)
         {
             //print(projectileManager.Instance);
@@ -1339,6 +1343,7 @@ public class classAbilties : MonoBehaviour
         instance = this;
         player = GameObject.FindGameObjectWithTag("Player");
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 
         teslaNumCount = 0;
         turretNumCount = 0;

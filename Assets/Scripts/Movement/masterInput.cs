@@ -1186,6 +1186,7 @@ public class masterInput : MonoBehaviour
             {
                 animationControl.knightHeavyOne(animHeavyTimeOne);
                 HS1.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword1");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, 1));
             }
             if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
@@ -1193,12 +1194,14 @@ public class masterInput : MonoBehaviour
                 StopCoroutine(wait(attackStage));
                 animationControl.knightHeavyTwo(animHeavyTimeTwo);
                 HS2.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword2");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, 2));
             }
             if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
             {
                 animationControl.knightHeavyThree();
                 HS3.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword3");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, 3));
             }
             /*
@@ -1230,18 +1233,21 @@ public class masterInput : MonoBehaviour
             {
                 animationControl.knightAttackOne(animTime);
                 SS1.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword1");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, 1));
             }
             if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
             {
                 animationControl.knightAttackTwo(animTimeTwo);
                 SS2.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword2");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, 2));
             }
             if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
             {
                 animationControl.knightAttackThree();
                 SS3.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword3");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, 3));
             }
             /*
@@ -1617,6 +1623,7 @@ public class masterInput : MonoBehaviour
             {
                 print("Using ability One");
                 abilityInUse = true;
+
                 gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
 
                 if (currentClass == WeaponBase.weaponClassTypes.Knight)
@@ -1646,6 +1653,7 @@ public class masterInput : MonoBehaviour
                 abilityInUse = true;
                 if (currentClass == WeaponBase.weaponClassTypes.Knight && !classAbilties.instance.a3cooldown)
                 {
+                    //audioManager.PlaySFX("SwordShot");
                     animationControl.knightShootSwords();
                     shootingSwords = true;
                 }

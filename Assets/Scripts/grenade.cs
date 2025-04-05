@@ -29,6 +29,7 @@ public class grenade : MonoBehaviour
         yield return new WaitForSeconds(fuseTime);
         var exp = Instantiate(explosion, gameObject.transform.position, Quaternion.identity);
         exp.GetComponent<ParticleSystem>().Play();
+        GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("ExplosionHit");
 
         Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, blastRadius, enemy);
 

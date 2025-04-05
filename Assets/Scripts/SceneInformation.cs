@@ -12,7 +12,7 @@ public class SceneInformation : MonoBehaviour
     [SerializeField] public bool screenTransition;
     [SerializeField] RoomInformation beginningRoom;
     [SerializeField] SceneAudio sceneAudio;
-    [SerializeField] string beginningTrack;
+    [SerializeField] public string beginningTrack;
     [SerializeField] FloorInformation floorInfo;
     AudioManager audioManager;
     RoomManager roomManager;

@@ -34,6 +34,8 @@ public class Florentine : MonoBehaviourID, Collectible
         if(other.tag == "Player")
         {
             character.AddFlorentine(florentineAmount);
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("Florentine");
+            GameObject.Find("EffectsManager").GetComponent<EffectsManager>().getFromPool(("florentineCollect"), this.transform.position, Quaternion.identity, false, false);
             hasCollected = true;
             UpdateCollectible();
             DisableCollectible();

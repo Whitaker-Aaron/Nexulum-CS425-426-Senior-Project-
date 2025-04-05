@@ -72,6 +72,7 @@ public class swordShot : projectile
         //print("Colliding with: " + other.name);
         if (other.gameObject.tag == "Enemy")
         {
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("SwordShotExplosion");
             other.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
             uiManager.DisplayDamageNum(other.gameObject.transform, damage);
             //other.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;

@@ -9,6 +9,7 @@ public class EnemyDoorTrigger : MonoBehaviour
     [SerializeField] public List<GameObject> controlledDoors;
     [SerializeField] public List<GameObject> roomTriggerObjects;
     bool doorsTriggered = false;
+    bool encounterComplete = true;
     int prevEnemyCount;
     UIManager uiManager;
     void Start()
@@ -31,7 +32,7 @@ public class EnemyDoorTrigger : MonoBehaviour
         
         if (enemies.Count > 0)
         {
-            
+            encounterComplete = false;
             //Debug.Log("There are still enemies");
 
         }
@@ -40,6 +41,13 @@ public class EnemyDoorTrigger : MonoBehaviour
             //Debug.Log("All enemies killed");
             if(!doorsTriggered)
             {
+                if (!encounterComplete)
+                {
+                    encounterComplete = true;
+                    var audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+                    audioManager.ChangeTrack(GameObject.Find("SceneInformation").GetComponent<SceneInformation>().beginningTrack);
+                    audioManager.PlaySFX("BattleComplete");
+                }
                 doorsTriggered = true;
                 StartCoroutine(OpenDoors());
             }

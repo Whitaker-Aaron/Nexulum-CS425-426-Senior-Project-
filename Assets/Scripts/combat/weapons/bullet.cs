@@ -39,6 +39,7 @@ public class bullet : MonoBehaviour
             collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
             collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             collision.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
             Destroy(gameObject);
             return;
         }

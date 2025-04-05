@@ -80,6 +80,7 @@ public class EffectsManager : MonoBehaviour
         createNewPool("playerDash", getPrefab("playerDash"), 3);
         createNewPool("levelUpExplosion", getPrefab("levelUpExplosion"), 1);
         createNewPool("levelUpLightball", getPrefab("levelUpLightball"), 1);
+        createNewPool("florentineCollect", getPrefab("florentineCollect"), 3);
         //createNewPool("fireRuneEffect", getPrefab("fireRuneEffect"), 3);
         //createNewPool("iceRuneEffect", getPrefab("iceRuneEffect"), 3);
         //createNewPool("earthRuneEffect", getPrefab("earthRuneEffect"), 3);
