@@ -35,12 +35,14 @@ public class CraftMenuTransition : MonoBehaviour
     ScrollRect runesScrollRect;
     ScrollRect itemsScrollRect;
 
+    AudioManager audioManager;
+    string curEventSystem;
     ScrollSelection curScrollSelection = ScrollSelection.none;
     public bool isTerminal = false;
     
     void Start()
     {
-        
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     private void Awake()
@@ -79,7 +81,14 @@ public class CraftMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(curScrollSelection != ScrollSelection.none && EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "CraftRecipe(Clone)")
+        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+        else if (EventSystem.current.currentSelectedGameObject.name != curEventSystem)
+        {
+            curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+            audioManager.PlaySFX("UIChange");
+        }
+
+        if (curScrollSelection != ScrollSelection.none && EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "CraftRecipe(Clone)")
         {
             var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
             RectTransform selectedItemRect = selectedItem.GetComponent<RectTransform>();
@@ -213,6 +222,7 @@ public class CraftMenuTransition : MonoBehaviour
 
     public void NavigateToMaterialMenu()
     {
+        audioManager.PlaySFX("UIBack");
         Debug.Log("Back Button pressed");
         if (isTerminal) GameObject.Find("MenuManager").GetComponent<MenuManager>().openTerminalMenu();
         else GameObject.Find("MenuManager").GetComponent<MenuManager>().navigateToMaterialMenu();
@@ -220,6 +230,7 @@ public class CraftMenuTransition : MonoBehaviour
 
     public void NavigateToWeaponCraftMenu()
     {
+        audioManager.PlaySFX("UIConfirm");
         curScrollSelection = ScrollSelection.weapons;
         EventSystem.current.SetSelectedGameObject(null);
         backButton.SetActive(false);
@@ -242,6 +253,7 @@ public class CraftMenuTransition : MonoBehaviour
 
     public void NavigateToRunesCraftMenu()
     {
+        audioManager.PlaySFX("UIConfirm");
         curScrollSelection = ScrollSelection.runes;
         Debug.Log("Rune Button pressed");
         EventSystem.current.SetSelectedGameObject(null);
@@ -263,6 +275,7 @@ public class CraftMenuTransition : MonoBehaviour
 
     public void NavigateToItemsCraftMenu()
     {
+        audioManager.PlaySFX("UIConfirm");
         curScrollSelection = ScrollSelection.items;
         Debug.Log("Items Button pressed");
         EventSystem.current.SetSelectedGameObject(null);
