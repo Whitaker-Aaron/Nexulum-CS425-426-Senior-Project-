@@ -51,7 +51,7 @@ public class golemBoss : MonoBehaviour
 
     //effects
     [SerializeField] GameObject slash1, slash2, slashSlam, slashSlam1, slashSlam2, jumpSlam;
-    public float slash1Time = 1f;
+    public float slash1Time = 1f, slash2Time = 1f, slashSlamTime = 1f;
     public float slamRadius = 2.5f, slamTime1, slamTime2;
 
 
@@ -145,6 +145,7 @@ public class golemBoss : MonoBehaviour
     }
 
 
+
     public void takeDamage(int damage)
     {
         if (health - damage > 0)
@@ -166,15 +167,16 @@ public class golemBoss : MonoBehaviour
         yield break;
     }
 
+    public Vector3 slamOffset;
 
     IEnumerator slamArea()
     {
 
         yield return new WaitForSeconds(slamTime1);
-
+        jumpSlam.GetComponent<ParticleSystem>().Play();
         yield break;
     }
-    public Vector3 slamOffset;
+    
     IEnumerator slamArea2()
     {
 
@@ -269,7 +271,7 @@ public class golemBoss : MonoBehaviour
         canLongJump = false;
         isAttacking = true;
         agent.isStopped = true;
-
+        StartCoroutine(slamArea2());
         Debug.Log("golem: Starting longJump Attack");
 
         animator.SetFloat("Forward", 0);
@@ -292,7 +294,7 @@ public class golemBoss : MonoBehaviour
         transform.position = targetPosition;
 
         Debug.Log("golem: long Jump Attack Complete, Entering Recovery");
-
+        //jumpSlam.GetComponent<ParticleSystem>().Play();
         isRecovering = true;
         yield return new WaitForSeconds(1f);
 
@@ -316,7 +318,7 @@ public class golemBoss : MonoBehaviour
         canJump = false;
         isAttacking = true;
         agent.isStopped = true;
-
+        StartCoroutine(slamArea());
         Debug.Log("golem: Starting Jump Attack");
 
         animator.SetFloat("Forward", 0);
@@ -339,7 +341,7 @@ public class golemBoss : MonoBehaviour
         transform.position = targetPosition;
 
         Debug.Log("golem: Jump Attack Complete, Entering Recovery");
-
+        //jumpSlam.GetComponent<ParticleSystem>().Play();
         isRecovering = true;
         yield return new WaitForSeconds(1f);
 
@@ -382,12 +384,16 @@ public class golemBoss : MonoBehaviour
                 if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
                     animator.Play("attack2");
                 animator.SetBool("Attack2", false);
+                yield return new WaitForSeconds(slash2Time);
+                slash2.GetComponent<ParticleSystem>().Play();
                 break;
             case 3:
                 animator.SetBool("Attack3", true);
                 if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
                     animator.Play("attack3");
                 animator.SetBool("Attack3", false);
+                yield return new WaitForSeconds(slashSlamTime);
+                slashSlam.GetComponent<ParticleSystem>().Play();
                 break;
         }
         
