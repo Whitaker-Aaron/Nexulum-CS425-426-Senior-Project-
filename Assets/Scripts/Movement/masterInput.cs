@@ -1309,15 +1309,6 @@ public class masterInput : MonoBehaviour
         StartCoroutine(HandleComboAttack(isHeavy ? animTime : animTimeTwo, attackStage, isHeavy));
     }
 
-    IEnumerator buildHeat()
-    {
-        if(!shooting)
-            yield break;
-
-        weaponType temp = character.equippedWeapon.weaponType;
-
-
-    }
 
     bool cooling = false;
     IEnumerator lowerHeat()

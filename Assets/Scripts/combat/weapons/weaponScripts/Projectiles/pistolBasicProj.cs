@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class pistolBasicProj : projectile
@@ -71,6 +72,27 @@ public class pistolBasicProj : projectile
 
         if ((distanceToHit <= step || distanceToHit <= bufferDistance || hitEnemy) && hitPoint != null)
         {
+            if (hit.collider == null || hit.collider.gameObject == null)
+            {
+                playEffect(hitPoint);
+                stop = true;
+            }
+            if(hit.collider.gameObject.tag == "bossPart")
+            {
+                hitEnemy = true;
+                int updatedDamage = damage;
+                if (Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)// && playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
+                {
+                    updatedDamage = damage / masterInput.instance.engrDmgMod;
+
+                }
+                if(hit.collider.gameObject.GetComponent<bossPart>() != null)
+                {
+                    hit.collider.gameObject.GetComponent<bossPart>().takeDamage(damage);
+                    uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
+                }
+                    
+            }
             if (hit.collider.gameObject.tag == "Enemy")
             {
                 hitEnemy = true;
@@ -91,11 +113,6 @@ public class pistolBasicProj : projectile
                 hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(updatedDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
                 uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
 
-            }
-            else
-            {
-                playEffect(hitPoint);
-                stop = true;
             }
 
             playEffect(hitPoint);

@@ -758,7 +758,7 @@ public class classAbilties : MonoBehaviour
 
             if (distanceFromPlayer <= maxPlacementDistance && distanceFromPlayer > minPlacementDistance)
             {
-                currentTurret.transform.position = lookPos;// + spawnOffset;
+                currentTurret.transform.position = player.transform.position + direction;// + spawnOffset;
                 currentTurret.transform.rotation = player.transform.rotation;
 
             }
@@ -815,7 +815,7 @@ public class classAbilties : MonoBehaviour
 
             if (distanceFromPlayer <= maxPlacementDistance && distanceFromPlayer > minPlacementDistance)
             {
-                currentTesla.transform.position = lookPos + new Vector3(0, 0, 0);// + spawnOffset;
+                currentTesla.transform.position = player.transform.position + direction;// + spawnOffset;
                 currentTesla.transform.rotation = player.transform.rotation;
             }
             else if (distanceFromPlayer <= minPlacementDistance)

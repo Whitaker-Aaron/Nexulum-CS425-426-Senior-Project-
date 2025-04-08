@@ -82,7 +82,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
         enemyState = enemyStateManager.GetCurrentState();
         print("Enemy state is: " + enemyState.GetName());
         bool aggressiveState = enemyState.GetName() == "Chase" || enemyState.GetName() == "Search";
-        if(inRange && playerObj != null && enemyState.GetName() == "Chase")// && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
+        if(inRange && playerObj != null)// && enemyState.GetName() == "Chase")// && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
         {
             gameObject.transform.LookAt(playerObj.transform.position, Vector3.up);
             print("Enemy can shoot bow");
@@ -112,20 +112,21 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
     {
         if (shooting)
             yield break;
+        shooting = true;
         if (first)
         {
             first = false;
             yield return new WaitForSeconds(.6f);//buffer time for player entering area
         }
-            
 
-        shooting = true;
 
-        //animator = gameObject.GetComponent<Animator>();
 
+
+        animator = gameObject.GetComponent<Animator>();
+        StartCoroutine(gameObject.GetComponent<enemyAnimController>().wait(6));
         animator.SetBool("aiming", true);
         //gameObject.GetComponent<NavMeshAgent>().speed = 2;
-        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion") || animator.GetCurrentAnimatorStateInfo(0).IsName("shoot"))
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"))// || animator.GetCurrentAnimatorStateInfo(0).IsName("shoot"))
             animator.Play("drawArrow");
         gameObject.GetComponent<EnemyStateManager>().StopMovement();
         
@@ -143,6 +144,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
         gameObject.GetComponent<EnemyStateManager>().StopMovement();
         if (playerObj == null)
         {
+            gameObject.GetComponent<enemyAnimController>().stopAllRoutines();
             animator.SetBool("aiming", false);
             animator.SetBool("shoot", false);
             animator.Play("Locomotion");

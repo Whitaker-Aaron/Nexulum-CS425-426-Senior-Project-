@@ -33,6 +33,7 @@ public class golemBoss : MonoBehaviour
     //Health
     public int MAXHEALTH;
     private int health;
+    bool bossDying = false;
 
     //attack effects
     [SerializeField]
@@ -47,15 +48,28 @@ public class golemBoss : MonoBehaviour
     public float atkRng1, atkRng2, atkRng3, atkRng4, atkRng5;
     public int atkDmg1, atkDmg2, atkDmg3, atkDmg4, atkDmg5;
 
+
+    //effects
+    [SerializeField] GameObject slash1, slash2, slashSlam, slashSlam1, slashSlam2, jumpSlam;
+    public float slash1Time = 1f;
+    public float slamRadius = 2.5f, slamTime1, slamTime2;
+
+
     //-----------------Main Functions------------------------------
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        slash1.GetComponent<ParticleSystem>().Stop();
+        health = MAXHEALTH;
+        animator.SetBool("death", false);
     }
 
     void Update()
     {
+        if (bossDying)
+            return;
+
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
@@ -130,6 +144,45 @@ public class golemBoss : MonoBehaviour
         yield break;
     }
 
+
+    public void takeDamage(int damage)
+    {
+        if (health - damage > 0)
+            health -= damage;
+        else
+            StartCoroutine(bossDeath());
+    }
+
+    public IEnumerator bossDeath()
+    {
+        if (bossDying)
+            yield break;
+
+        bossDying = true;
+
+        animator.SetBool("death", true);
+        animator.Play("death");
+        animator.SetBool("death", false);
+        yield break;
+    }
+
+
+    IEnumerator slamArea()
+    {
+
+        yield return new WaitForSeconds(slamTime1);
+
+        yield break;
+    }
+    public Vector3 slamOffset;
+    IEnumerator slamArea2()
+    {
+
+        yield return new WaitForSeconds(slamTime2);
+        jumpSlam.GetComponent<ParticleSystem>().Play();
+        Collider[] temp = Physics.OverlapSphere(gameObject.transform.position + slamOffset, slamRadius);
+        yield break;
+    }
 
     //-----------------Turning------------------------------
 
@@ -321,6 +374,8 @@ public class golemBoss : MonoBehaviour
                 if(animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
                     animator.Play("attack1");
                 animator.SetBool("Attack", false);
+                yield return new WaitForSeconds(slash1Time);
+                slash1.GetComponent<ParticleSystem>().Play();
                 break;
             case 2:
                 animator.SetBool("Attack2", true);
@@ -335,7 +390,7 @@ public class golemBoss : MonoBehaviour
                 animator.SetBool("Attack3", false);
                 break;
         }
-
+        
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"));
         
         //yield return new WaitForSeconds(attackCooldown);
@@ -368,6 +423,7 @@ public class golemBoss : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(weapon.GetComponent<golemBossWeapon>().headPosition.transform.position + weaponOffset, weaponRad);
+        Gizmos.DrawWireSphere(gameObject.transform.position + slamOffset, slamRadius);
         Gizmos.color = Color.green;
         for (int i = 0; i < attackList.Count; i++)
         {
