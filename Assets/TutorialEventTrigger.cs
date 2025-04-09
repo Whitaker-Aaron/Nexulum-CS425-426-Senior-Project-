@@ -54,8 +54,12 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
                 curTutorial = Instantiate(tutorialRef);
                 curTutorial.transform.SetParent(canvas.transform, false);
                 var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+                var audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
                 var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
                 uiManager.startTutorialAnimate(mainTutorial);
+                var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+                menuManager.menusPaused = true;
+                audioManager.PauseFootsteps("TestWalk");
                 inputManager.pausePlayerInput();
                 Time.timeScale = 0.0f;
             }
@@ -88,6 +92,8 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
                     var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
                     uiManager.startTutorialAnimate(mainTutorial);
                     inputManager.pausePlayerInput();
+                    var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+                    menuManager.menusPaused = true;
                     Time.timeScale = 0.0f;
                 }
                 

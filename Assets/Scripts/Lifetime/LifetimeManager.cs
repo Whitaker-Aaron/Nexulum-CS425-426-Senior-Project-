@@ -76,15 +76,16 @@ public class LifetimeManager : MonoBehaviour
         menuManager.menusPaused = true;
         characterRef.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         StartCoroutine(GoToScene(characterRef.teleportSpawnObject.sceneNum));
-        
+
         //characterRef.transitionedRoom = false;
         //characterRef.transitioningRoom = false;
 
         //StartCoroutine(IncreaseOpacity(GameObject.Find("TransitionScreen"), 1.00f));
-        
+
         //yield return new WaitForSeconds(2);
         //Load(characterRef.teleportSpawnObject.sceneNum);
         yield return new WaitForSeconds(3);
+        audioManager.ChangeTrack("CheckpointRoom");
         inputManager.resumePlayerInput();
         characterRef.teleporting = false;
         yield break;
@@ -128,7 +129,7 @@ public class LifetimeManager : MonoBehaviour
     public IEnumerator StartNewGame()
     {
         InitializeManagers();
-        StartCoroutine(AnimateTransitionScreen());
+        yield return StartCoroutine(AnimateTransitionScreen());
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadSceneAsync("OpeningCutscene");
         //SceneManager.LoadSceneAsync("ClassSelect");

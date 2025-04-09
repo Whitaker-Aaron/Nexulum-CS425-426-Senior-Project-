@@ -95,6 +95,7 @@ public class pistolBasicProj : projectile
             }
             if (hit.collider.gameObject.tag == "Enemy")
             {
+                GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
                 hitEnemy = true;
                 int updatedDamage = damage;
                 //if (playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Gunner && Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)

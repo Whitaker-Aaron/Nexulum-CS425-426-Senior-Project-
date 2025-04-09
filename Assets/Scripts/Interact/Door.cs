@@ -146,15 +146,25 @@ public class Door : MonoBehaviourID, i_Interactable
         {
             animator.SetBool("isOpen", true);
             Debug.Log("Forcing Iron Gate to Open");
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
             isOpen = true;
             isLocked = false;
             return;
         }
 
-        if (doorType == DoorType.Gate || doorType == DoorType.Wood)
+        if (doorType == DoorType.Gate)
         {
             animator.SetBool("isOpen", true);
             Debug.Log("Opening the Door");
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
+            isOpen = true;
+            isLocked = false;
+        }
+        if (doorType == DoorType.Wood)
+        {
+            animator.SetBool("isOpen", true);
+            Debug.Log("Opening the Door");
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
             isOpen = true;
             isLocked = false;
         }
@@ -166,6 +176,7 @@ public class Door : MonoBehaviourID, i_Interactable
         {
             Debug.Log("CLOSING DOOR BOOL: " + animator.GetBool("isOpen"));
             animator.SetBool("isOpen", false);
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
             Debug.Log("Closing Door");
             isOpen = false;
         }

@@ -31,8 +31,9 @@ public class rocket : MonoBehaviour
     {
         //GameObject currentExplosion = Instantiate(explosionEffect, gameObject.transform.position, Quaternion.identity);
         //currentExplosion.GetComponent<ParticleSystem>().Play();
+        GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("ExplosionHit");
 
-        if(fireB)
+        if (fireB)
         {
             EffectsManager.instance.getFromPool("rocketFireCircle", gameObject.transform.position, Quaternion.identity, false, false);
             GameObject tempAura = Instantiate(rocketFireAura, gameObject.transform.position, Quaternion.identity);

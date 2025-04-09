@@ -16,6 +16,7 @@ public class engineerTool : MonoBehaviour
         {
             if (collider.gameObject.tag == "Enemy")
             {
+                GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("SwordCollide");
                 collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }
         }

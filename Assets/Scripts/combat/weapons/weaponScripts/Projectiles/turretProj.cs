@@ -69,6 +69,7 @@ public class turretProj : projectile
         {
             if (hit.collider.gameObject.tag == "Enemy")
             {
+                GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
                 GetDamage("Ability-Turret");
                 hitEnemy = true;
                 int updatedDamage = damage;

@@ -12,7 +12,7 @@ public class SceneInformation : MonoBehaviour
     [SerializeField] public bool screenTransition;
     [SerializeField] RoomInformation beginningRoom;
     [SerializeField] SceneAudio sceneAudio;
-    [SerializeField] string beginningTrack;
+    [SerializeField] public string beginningTrack;
     [SerializeField] FloorInformation floorInfo;
     AudioManager audioManager;
     RoomManager roomManager;
@@ -24,7 +24,7 @@ public class SceneInformation : MonoBehaviour
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         //audioManager.StopLoop();
-        if(beginningTrack != "" && beginningTrack != null)
+        if(beginningTrack != "" && beginningTrack != null && !characterRef.teleporting)
         {
             audioManager.ChangeTrack(beginningTrack);
         }

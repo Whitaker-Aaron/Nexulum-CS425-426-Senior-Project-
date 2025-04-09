@@ -222,13 +222,15 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
             particleSys.transform.position = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
             particleSys.GetComponentInChildren<ParticleSystem>().Play();
         }
+        StartLevelUpExplosion();
     }
 
     // Update is called once per frame
     void Update()
     {
         //transform.scale = new Vector3(1, 1, 1);
-        if(wallCollisionCounter >= 2)
+        if(transitioningRoom || inEvent) audioManager.PauseFootsteps("TestWalk");
+        if (wallCollisionCounter >= 2)
         {
             
                physicMat.dynamicFriction = 0f;
@@ -282,7 +284,11 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         yield return new WaitForSeconds(0.25f);
         isTouchingGround = false;
-        if (masterInput.gameObject.activeSelf && !isTouchingGround && activatingFall && floatingPlatformCounter < 1) masterInput.ActivateFallAnimation();
+        if (masterInput.gameObject.activeSelf && !isTouchingGround && activatingFall && floatingPlatformCounter < 1)
+        {
+            masterInput.ActivateFallAnimation();
+            audioManager.PauseFootsteps("TestWalk");
+        }
 
     }
 
@@ -299,6 +305,12 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         }
         uiManager.UpdateFlorentine((int)florentineAmount, "Up");
         
+    }
+
+    public void StartLevelUpExplosion()
+    {
+        GameObject.Find("EffectsManager").GetComponent<EffectsManager>().getFromPool(("levelUpExplosion"), this.transform.position, Quaternion.identity, false, false);
+        GameObject.Find("EffectsManager").GetComponent<EffectsManager>().getFromPool(("levelUpLightball"), this.transform.position, Quaternion.identity, true, false);
     }
 
     public void RemoveFlorentine(float amount)
@@ -727,6 +739,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         ColorUtility.TryParseHtmlString("#F7315D", out color);
         healthBar.fillRect.GetComponent<Image>().color = color;
         uiManager.ShowCriticalText();
+        uiManager.EnableCriticalBorders();
         audioManager.PlaySFX("LowHealth");
         lowHealthReached = true;
     }
@@ -737,6 +750,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         ColorUtility.TryParseHtmlString("#31F7A9", out color);
         healthBar.fillRect.GetComponent<Image>().color = color;
         uiManager.HideCriticalText();
+        uiManager.DisableCriticalBorders();
         lowHealthReached = false;
     }
 

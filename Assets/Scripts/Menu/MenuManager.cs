@@ -36,6 +36,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
     GameObject currentMenuObject;
     GameObject canvas;
     GameObject materialManager;
+    AudioManager audioManager;
     masterInput inputManager;
     CharacterBase character;
     Chest currentChest;
@@ -50,13 +51,14 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
         canvas = GameObject.FindGameObjectWithTag("UI");
         materialManager = GameObject.FindGameObjectWithTag("ScrollManager");
         inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //Debug.Log(menusPaused);
     }
 
     public void SaveData(ref SaveData data)
@@ -218,6 +220,8 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
     public void openTerminalMenu()
     {
+        audioManager.PauseFootsteps("TestWalk");
+        audioManager.PlaySFX("Pause");
         if (menuActive)
         {
             Destroy(currentMenuObject);  
@@ -237,6 +241,7 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
             Destroy(currentMenuObject);
         }
         currentChest = chestRef;
+        audioManager.PlaySFX("Pause");
         var chestDeposit = chestMenuReference.GetComponent<ChestMaterialDeposit>();
         for(int i =0; i < chestDeposit.itemDisplays.Count; i++)
         {
@@ -327,6 +332,8 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
 
         if (!pauseMenuActive && !character.transitioningRoom && !menusPaused && context.performed)
         {
+            audioManager.PauseFootsteps("TestWalk");
+            audioManager.PlaySFX("Pause");
             if (GameObject.FindGameObjectWithTag("MainMenu") != null)
             {
                 Destroy(GameObject.FindGameObjectWithTag("MainMenu"));
@@ -389,6 +396,8 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
     {
         if (character.usingTerminal) return;
         if(!menuActive && !pauseMenuActive && !character.inEvent && !character.transitioningRoom && !character.inDialogueBox && !menusPaused && context.performed) {
+            audioManager.PauseFootsteps("TestWalk");
+            audioManager.PlaySFX("Pause");
             if (chestMenuActive && currentMenuObject != null) closeChestMenu();
             currentMenuObject = Instantiate(materialsMenuReference);
             populateInventoryMaterials();

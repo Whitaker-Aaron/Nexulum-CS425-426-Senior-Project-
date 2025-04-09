@@ -30,6 +30,7 @@ public class PauseMenuTransition : MonoBehaviour
     CharacterBase characterRef;
     List<GameObject> checkpointList = new List<GameObject>(); 
     LifetimeManager lifetimeManager;
+    AudioManager audioManager;
     RoomManager roomManager;
 
     GameObject checkpointContent = null;
@@ -40,6 +41,7 @@ public class PauseMenuTransition : MonoBehaviour
 
     Vector2 initialMapPos;
     string curRoom;
+    string curEventSystem;
     
     Vector3 curRoomCoordinates;
 
@@ -49,7 +51,8 @@ public class PauseMenuTransition : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        //audioManager.PlaySFX("Pause");
     }
 
     private void OnEnable()
@@ -59,6 +62,11 @@ public class PauseMenuTransition : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(MapButton);
 
+    }
+
+    private void OnDisable()
+    {
+        audioManager.PlaySFX("Pause");
     }
 
 
@@ -117,6 +125,13 @@ public class PauseMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+        else if (EventSystem.current.currentSelectedGameObject.name != curEventSystem)
+        {
+            curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+            audioManager.PlaySFX("UIChange");
+        }
+
         if (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.name == "Scrollbar Vertical"
             || EventSystem.current.currentSelectedGameObject.name == "Scrollbar Horizontal")
         {
@@ -159,11 +174,13 @@ public class PauseMenuTransition : MonoBehaviour
 
     public void SaveGame()
     {
+        audioManager.PlaySFX("UIConfirm");
         GameObject.Find("SaveManager").GetComponent<SaveManager>().SaveGame();
     }
 
     public void returnToMainSkills()
     {
+        audioManager.PlaySFX("UIConfirm");
         SkillMenu.SetActive(true);
         KnightSkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(false);
@@ -172,6 +189,7 @@ public class PauseMenuTransition : MonoBehaviour
 
     public void returnToMainPause()
     {
+        audioManager.PlaySFX("UIConfirm");
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(MapButton);
 
@@ -187,6 +205,7 @@ public class PauseMenuTransition : MonoBehaviour
     public void ReturnToBase()
     {
         //Time.timeScale = 1.0f;
+        audioManager.PlaySFX("UIConfirm");
         var reference = GameObject.Find("TransitionScreen").GetComponent<Image>();
         Color imgColor = reference.color;
         imgColor.a = 1;
@@ -203,35 +222,41 @@ public class PauseMenuTransition : MonoBehaviour
 
     public void ExitGame()
     {
+        audioManager.PlaySFX("UIConfirm");
         Application.Quit();
     }
 
     public void OpenSkills()
     {
+        audioManager.PlaySFX("UIConfirm");
         PauseMenu.SetActive(false);
         SkillMenu.SetActive(true);
     }
 
     public void OpenKnightSkills()
     {
+        audioManager.PlaySFX("UIConfirm");
         SkillMenu.SetActive(false);
         KnightSkillMenu.SetActive(true);
     }
 
     public void OpenGunnerSkills()
     {
+        audioManager.PlaySFX("UIConfirm");
         SkillMenu.SetActive(false);
         GunnerSkillMenu.SetActive(true);
     }
 
     public void OpenEngineerSkills()
     {
+        audioManager.PlaySFX("UIConfirm");
         SkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(true);
     }
 
     public void OpenMapMenu()
     {
+        audioManager.PlaySFX("UIConfirm");
         PauseMenu.SetActive(false);
         MapMenu.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);

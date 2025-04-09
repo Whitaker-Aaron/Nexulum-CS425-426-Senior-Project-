@@ -57,6 +57,11 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
         if(tempEnemy) Destroy(this.gameObject);
     }
 
+    private void Awake()
+    {
+        isActive = true;
+    }
+
 
     public enemyInt getType()
     {
@@ -111,7 +116,7 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
     // Update is called once per frame
     void Update()
     {
-        if (canAttack) {
+        if (canAttack && isActive) {
             attackPlayer();
         }
         else

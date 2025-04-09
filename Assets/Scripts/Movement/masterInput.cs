@@ -384,7 +384,7 @@ public class masterInput : MonoBehaviour
         }
         if(playFootsteps)
         {
-            audioManager.PlayFootsteps("TestWalk");
+            if(!audioManager.playingFootsteps && character.isTouchingGround && !isDashing) audioManager.PlayFootsteps("TestWalk");
         }
         else
         {
@@ -636,6 +636,7 @@ public class masterInput : MonoBehaviour
             //dashStarted = true;
             if (!isDashing)
             {
+                audioManager.PauseFootsteps("TestWalk");
                 audioManager.PlaySFX("Dash");
                 EffectsManager.instance.getFromPool("playerDash", player.transform.position + new Vector3(0, .8f, 0), player.transform.rotation, true, false);
                 uiManager.startBorderStretch();
@@ -1132,6 +1133,7 @@ public class masterInput : MonoBehaviour
             if (temp.IsName("Locomotion"))
             {
                 animationControl.engAttackOne(animTime);
+                audioManager.PlaySFX("Sword1");
                 ES1.GetComponent<ParticleSystem>().Play();
                 attackTime = engAnimTime;
                 StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
@@ -1139,6 +1141,7 @@ public class masterInput : MonoBehaviour
             if (temp.IsName("engWaitOne"))
             {
                 animationControl.engAttackTwo(animTime);
+                audioManager.PlaySFX("Sword2");
                 ES2.GetComponent<ParticleSystem>().Play();
                 attackTime = engAnimTimeTwo;
                 StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
@@ -1146,6 +1149,7 @@ public class masterInput : MonoBehaviour
             if (temp.IsName("engWaitTwo"))
             {
                 animationControl.engAttackThree();
+                audioManager.PlaySFX("Sword3");
                 ES3.GetComponent<ParticleSystem>().Play();
                 attackTime = engAnimTimeThree;
                 StartCoroutine(tool.GetComponent<engineerTool>().activateAttack(attackTime, toolAttackPoint, toolAttackRadius, layer));
@@ -1185,6 +1189,7 @@ public class masterInput : MonoBehaviour
             {
                 animationControl.knightHeavyOne(animHeavyTimeOne);
                 HS1.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword1");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, 1));
             }
             if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
@@ -1192,12 +1197,14 @@ public class masterInput : MonoBehaviour
                 StopCoroutine(wait(attackStage));
                 animationControl.knightHeavyTwo(animHeavyTimeTwo);
                 HS2.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword2");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, 2));
             }
             if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
             {
                 animationControl.knightHeavyThree();
                 HS3.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword3");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, true, animHeavyTimeOne, 3));
             }
             /*
@@ -1229,18 +1236,21 @@ public class masterInput : MonoBehaviour
             {
                 animationControl.knightAttackOne(animTime);
                 SS1.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword1");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, 1));
             }
             if (temp.IsName("waitOne") || temp.IsName("heavyWaitOne"))
             {
                 animationControl.knightAttackTwo(animTimeTwo);
                 SS2.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword2");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, 2));
             }
             if (temp.IsName("waitTwo") || (temp.IsName("heavyWaitTwo") && temp.normalizedTime < .8f))
             {
                 animationControl.knightAttackThree();
                 SS3.GetComponent<ParticleSystem>().Play();
+                audioManager.PlaySFX("Sword3");
                 StartCoroutine(sword.GetComponent<swordCombat>().activateAttack(swordAttackPoint, swordAttackRadius, layer, false, animTime, 3));
             }
             /*
@@ -1474,6 +1484,7 @@ public class masterInput : MonoBehaviour
             // Check mouse input for shooting
             if (playerInput.actions["attack"].WasPressedThisFrame())
             {
+                
                 shooting = true;
             }
             else if (playerInput.actions["attack"].WasReleasedThisFrame())
@@ -1606,6 +1617,7 @@ public class masterInput : MonoBehaviour
             {
                 print("Using ability One");
                 abilityInUse = true;
+
                 gameObject.GetComponent<classAbilties>().activateAbilityOne(currentClass);
 
                 if (currentClass == WeaponBase.weaponClassTypes.Knight)
@@ -1635,6 +1647,7 @@ public class masterInput : MonoBehaviour
                 abilityInUse = true;
                 if (currentClass == WeaponBase.weaponClassTypes.Knight && !classAbilties.instance.a3cooldown)
                 {
+                    //audioManager.PlaySFX("SwordShot");
                     animationControl.knightShootSwords();
                     shootingSwords = true;
                 }

@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
     private AudioSource audioSource;
     private AudioSource player;
     private string currentLoop = "";
+    public bool playingFootsteps;
     [Range(0f, 1f)] public float loopAudio;
     [SerializedDictionary("SFXName", "SFX")]
     public SerializedDictionary<string, SFX> sfxSources;
@@ -69,12 +70,14 @@ public class AudioManager : MonoBehaviour
 
     public void PlayFootsteps(string footstepName)
     {
-        footstepSources[footstepName].Resume();
+        playingFootsteps = true;
+        footstepSources[footstepName].PlayLoop();
     }
 
     public void PauseFootsteps(string footstepName)
     {
-        footstepSources[footstepName].Pause();
+        playingFootsteps = false;
+        footstepSources[footstepName].StopLoop();
     }
 
     public void PlaySFX(string sfx)
@@ -99,6 +102,7 @@ public class AudioManager : MonoBehaviour
 
     public void ChangeTrack(string newTrack)
     {
+        if (newTrack == currentLoop) return;
         if (loopSources[newTrack] != null)
         {
             StartCoroutine(FadeTracks(newTrack));
@@ -108,16 +112,17 @@ public class AudioManager : MonoBehaviour
     public IEnumerator FadeTracks(string newTrack)
     {
 
+        
         if (currentLoop != null && currentLoop != "")
         {
             var startLoop = ReduceVolOnLoop(0.050f);
-            yield return StartCoroutine(startLoop);
-            StopCoroutine(startLoop);
+            StartCoroutine(startLoop);
+            yield return new WaitForSeconds(2f);
             loopSources[currentLoop].StopLoop();
         }
         currentLoop = newTrack;
         loopSources[currentLoop].PlayLoop();
-        yield return StartCoroutine(IncreaseVolOnLoop(0.050f));
+        StartCoroutine(IncreaseVolOnLoop(0.050f));
         yield break;
     }
 

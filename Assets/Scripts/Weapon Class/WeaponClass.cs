@@ -34,6 +34,7 @@ public class WeaponClass : ScriptableObject
             if (totalExp >= item.Key && currentLvl < item.Value)
             {
                 GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().PlayLevelUpParticle();
+                GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("LevelUp");
                 Debug.Log("Player is now level " + item.Value + "!");
                 leveledUp = true;
                 currentLvl = item.Value;

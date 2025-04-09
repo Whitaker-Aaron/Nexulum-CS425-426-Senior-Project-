@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject CheckpointText;
     [SerializeField] GameObject levelUpText;
+    [SerializeField] GameObject attackUpText;
     [SerializeField] GameObject expText;
     float ogExpTextXPos;
     [SerializeField] GameObject mainHUD;
@@ -26,6 +27,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject gunnerHUD;
     [SerializeField] GameObject topHUD;
     [SerializeField] GameObject bottomHUD;
+    [SerializeField] GameObject topRedBorder;
+    [SerializeField] GameObject bottomRedBorder;
 
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
@@ -460,10 +463,12 @@ public class UIManager : MonoBehaviour
     public IEnumerator LoadDialogueBox(DialogueObject dialogueObject)
     {
         if (currentDialogueBox != null) UnloadDialogue();
+        if(dialogueText.Count <= 0) audioManager.PlaySFX("DialogueStart");
         foreach (var text in dialogueObject.dialogueList)
         {
             dialogueText.Enqueue(text);
         }
+        if(currentDialogueBoxAnimation != null) StopCoroutine(currentDialogueBoxAnimation);
         currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("left"));
         currentDialogueBox = AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer);
         StartCoroutine(currentDialogueBox);
@@ -479,6 +484,7 @@ public class UIManager : MonoBehaviour
         {
             dialogueText.Enqueue(text);
         }
+        advanceTextbox = false;
         currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("left"));
         currentDialogueBox = AnimateTypewriterDialogue(GameObject.Find("DialogueText").GetComponent<TMP_Text>(), dialogueObject.leadingChar, dialogueObject.textRate, dialogueObject.stopPlayer);
         yield return StartCoroutine(currentDialogueBox);
@@ -516,6 +522,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
+            if (currentDialogueBoxAnimation != null) StopCoroutine(currentDialogueBoxAnimation);
            currentDialogueBoxAnimation = StartCoroutine(AnimateDialogueBoxMovement("right"));
         }
         yield break;
@@ -647,7 +654,7 @@ public class UIManager : MonoBehaviour
                 }
                 tmp_text.text += c;
                 tmp_text.text += leadingChar;
-                audioManager.PlaySFX("KeyTap");
+                audioManager.PlaySFX("DialogueKey");
                 yield return new WaitForSeconds(rate);
             }
             int counter = 0;
@@ -1070,6 +1077,61 @@ public class UIManager : MonoBehaviour
         
     }
 
+    public void EnableCriticalBorders()
+    {
+        StartCoroutine(AnimateCriticalBorders());
+    }
+
+    public void DisableCriticalBorders()
+    {
+        topRedBorder.SetActive(false);
+        bottomRedBorder.SetActive(false);
+        StopCoroutine(AnimateCriticalBorders());
+    }
+
+    public IEnumerator AnimateCriticalBorders()
+    {
+        topRedBorder.SetActive(true);
+        bottomRedBorder.SetActive(true);
+        var top = topRedBorder.GetComponent<Image>();
+        var bottom = bottomRedBorder.GetComponent<Image>();
+
+        Color imgColorTop = top.color;
+        Color imgColorBottom = bottom.color;
+        imgColorTop.a = 0;
+        imgColorBottom.a = 0;
+        top.color = imgColorTop;
+        bottom.color = imgColorBottom;
+        //Color 
+
+        while(true)
+        {
+            while(top.color.a < 1)
+            {
+                Color imgColorTopA = top.color;
+                Color imgColorBottomA = bottom.color;
+                imgColorTopA.a += 3f * Time.deltaTime;
+                imgColorBottomA.a += 3f * Time.deltaTime;
+                top.color = imgColorTopA;
+                bottom.color = imgColorBottomA;
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.75f);
+            while (top.color.a > 0)
+            {
+                Color imgColorTopA = top.color;
+                Color imgColorBottomA = bottom.color;
+                imgColorTopA.a -= 3f * Time.deltaTime;
+                imgColorBottomA.a -= 3f * Time.deltaTime;
+                top.color = imgColorTopA;
+                bottom.color = imgColorBottomA;
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.75f);
+            yield return null;
+        }
+    }
+
     public void UpdateExperienceLevel(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)
     {
         StartCoroutine(AnimateExperienceUpdate(weaponClass, experienceLVL, changingClass));
@@ -1079,6 +1141,10 @@ public class UIManager : MonoBehaviour
     public void StartLevelUpText()
     {
         StartCoroutine(AnimateLevelUpText());
+    }
+    public void StartAttackUpText()
+    {
+        StartCoroutine(AnimateAttackUpText());
     }
 
     public void StartAnimateExpText(string exp)
@@ -1136,6 +1202,7 @@ public class UIManager : MonoBehaviour
              if((levelUpText.transform.localPosition.x > ogPosition.x - 1000.0f) && !increasingOpacity)
             {
                 StartCoroutine(IncreaseImageOpacity(levelUpText, 4.0f));
+                increasingOpacity = true;
             }
              if(Mathf.Abs(levelUpText.transform.localPosition.x - ogPosition.x) < 0.3f){
                 levelUpText.transform.localPosition = ogPosition;
@@ -1146,8 +1213,36 @@ public class UIManager : MonoBehaviour
              }
             yield return null;
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
         yield return StartCoroutine(DecreaseImageOpacity(levelUpText, 1.0f));
+        yield return StartCoroutine(AnimateAttackUpText());
+        yield break;
+    }
+
+    public IEnumerator AnimateAttackUpText()
+    {
+        Vector3 ogPosition = attackUpText.transform.localPosition;
+        attackUpText.transform.localPosition = new Vector3(attackUpText.transform.localPosition.x - 2000.0f, attackUpText.transform.localPosition.y, attackUpText.transform.localPosition.z);
+
+        bool increasingOpacity = false;
+        while (attackUpText.transform.localPosition.x < ogPosition.x)
+        {
+            if ((attackUpText.transform.localPosition.x > ogPosition.x - 1000.0f) && !increasingOpacity)
+            {
+                StartCoroutine(IncreaseTextOpacity(attackUpText, 4.0f));
+            }
+            if (Mathf.Abs(attackUpText.transform.localPosition.x - ogPosition.x) < 0.3f)
+            {
+                attackUpText.transform.localPosition = ogPosition;
+            }
+            else
+            {
+                attackUpText.transform.localPosition = Vector3.Lerp(attackUpText.transform.localPosition, ogPosition, 15.0f * Time.deltaTime);
+            }
+            yield return null;
+        }
+        yield return new WaitForSeconds(3f);
+        yield return StartCoroutine(ReduceTextOpacity(attackUpText, 1.0f));
         yield break;
     }
 

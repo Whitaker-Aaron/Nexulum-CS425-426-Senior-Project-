@@ -72,6 +72,11 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
         }
     }
 
+    private void Awake()
+    {
+        isActive = true;
+    }
+
 
     // Update is called once per frame
     void Update()

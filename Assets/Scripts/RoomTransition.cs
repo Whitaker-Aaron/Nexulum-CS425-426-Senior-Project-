@@ -186,6 +186,12 @@ public class RoomTransition : MonoBehaviour
         {
             Debug.Log("Need to animate checkpoint");
             StartCoroutine(uiManager.AnimateCheckpointReached());
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().ChangeTrack("CheckpointRoom");
+        }
+        else
+        {
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().ChangeTrack(
+                GameObject.Find("SceneInformation").GetComponent<SceneInformation>().beginningTrack);
         }
         
         yield return null;

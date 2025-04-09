@@ -28,6 +28,8 @@ public class TutorialManager : MonoBehaviour
     {
         
     }
+    
+    
 
     public TutorialObject returnTutorial(string tutorialToReturn)
     {
@@ -43,9 +45,12 @@ public class TutorialManager : MonoBehaviour
         curTutorial = Instantiate(tutorialRef);
         curTutorial.transform.SetParent(canvas.transform, false);
         var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
+        menuManager.menusPaused = true;
         uiManager.startTutorialAnimate(mainTutorial);
         inputManager.pausePlayerInput();
+        
         Time.timeScale = 0.0f;
     }
 }

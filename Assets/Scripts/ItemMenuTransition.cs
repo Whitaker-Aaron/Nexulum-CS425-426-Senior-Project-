@@ -10,10 +10,13 @@ public class ItemMenuTransition : MonoBehaviour
     public GameObject itemsScrollContent;
     ScrollRect itemsScrollRect;
     public GameObject backButton;
+    string curEventSystem;
+    AudioManager audioManager;
     List<GameObject> currentItemScrollObjects = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         itemsScrollContent = GameObject.Find("ItemsScrollContent");
         var itemsScroll = GameObject.Find("ItemsScroll");
         itemsScrollRect = itemsScroll.GetComponent<ScrollRect>();
@@ -25,6 +28,13 @@ public class ItemMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+        else if (EventSystem.current.currentSelectedGameObject.name != curEventSystem)
+        {
+            curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+            audioManager.PlaySFX("UIChange");
+        }
+
         if (EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "ItemOption(Clone)")
         {
             var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
@@ -43,6 +53,7 @@ public class ItemMenuTransition : MonoBehaviour
     public void NavigateToMaterialMenu()
     {
         Debug.Log("Back Button pressed");
+        audioManager.PlaySFX("UIBack");
         GameObject.Find("MenuManager").GetComponent<MenuManager>().navigateToMaterialMenu();
     }
 

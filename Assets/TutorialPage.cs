@@ -25,24 +25,35 @@ public class TutorialPage : MonoBehaviour
     [SerializeField] GameObject exitButton;
     [SerializeField] GameObject pageCount;
     bool usingController = false;
+    bool canProgress;
     public int curPage = 0;
 
     masterInput inputManager;
+    AudioManager audioManager;
 
     // Start is called before the first frame update
     public void Awake()
     {
         inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     public void Start()
     {
         Debug.Log("Gamepad active?: " + inputManager.getGamepadActive());
         if (inputManager.getGamepadActive()) usingController = true;
+        audioManager.PauseFootsteps("TestWalk");
+        audioManager.PlaySFX("TutorialStart");
+        canProgress = false;
+        StartCoroutine(InputDelay());
         LoadPage();
-
         //EventSystem.
         
+    }
+
+    private void Update()
+    {
+        //Debug.Log(canProgress);
     }
 
     public void LoadPage()
@@ -141,15 +152,32 @@ public class TutorialPage : MonoBehaviour
         }
     }
 
+    public IEnumerator InputDelay()
+    {
+        Debug.Log("Inside input delay");
+        yield return new WaitForSecondsRealtime(0.25f);
+        canProgress = true;
+        Debug.Log("Inside input delay2");
+        yield return new WaitForSecondsRealtime(0.25f);
+        Debug.Log("Inside input delay3");
+    }
+
     public void OnBack()
     {
+        if (!canProgress) return;
         if(curPage -1 >= 0) curPage--;
         LoadPage();
+        audioManager.PlaySFX("UIConfirm");
+        
     }
 
     public void OnExit()
     {
+        if (!canProgress) return;
         GameObject.Find("InputandAnimationManager").GetComponent<masterInput>().resumePlayerInput();
+        var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        menuManager.menusPaused = false;
+        audioManager.PlaySFX("UIConfirm");
         Destroy(trigger);
         Destroy(this.gameObject);
         Time.timeScale = 1.0f;
@@ -158,8 +186,10 @@ public class TutorialPage : MonoBehaviour
 
     public void OnNext()
     {
+        if (!canProgress) return;
         curPage++;
         LoadPage();
+        audioManager.PlaySFX("UIConfirm");
     }
 
 }

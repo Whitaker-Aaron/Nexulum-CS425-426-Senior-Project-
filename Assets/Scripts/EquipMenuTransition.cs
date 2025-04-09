@@ -57,6 +57,8 @@ public class EquipMenuTransition : MonoBehaviour
 
     GameObject equippedBackdrop;
 
+    AudioManager audioManager;
+    string curEventSystem;
     ScrollSelection curScrollSelection = ScrollSelection.none;
     public bool isTerminal = false;
 
@@ -100,6 +102,8 @@ public class EquipMenuTransition : MonoBehaviour
         weaponsScrollRect = weaponsScroll.GetComponent<ScrollRect>();
         runesScrollRect = runesScroll.GetComponent<ScrollRect>();
 
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+
 
         FillEquipment();
         
@@ -135,6 +139,13 @@ public class EquipMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+        else if (EventSystem.current.currentSelectedGameObject.name != curEventSystem)
+        {
+            curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+            audioManager.PlaySFX("UIChange");
+        }
+
         if (curScrollSelection != ScrollSelection.none && EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "EquipOption(Clone)")
         {
             var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
@@ -175,6 +186,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void NavigateToMaterialMenu()
     {
+        audioManager.PlaySFX("UIBack");
         Debug.Log("Back Button pressed");
         if (isTerminal) GameObject.Find("MenuManager").GetComponent<MenuManager>().openTerminalMenu();
         else GameObject.Find("MenuManager").GetComponent<MenuManager>().navigateToMaterialMenu();
@@ -182,6 +194,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void NavigateToWeaponEquipMenu()
     {
+        audioManager.PlaySFX("UIConfirm");
         curScrollSelection = ScrollSelection.weapons;
         Debug.Log("Weapon Button pressed");
         mainButtons.SetActive(false);
@@ -204,6 +217,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void NavigateToClassEquipMenu()
     {
+        audioManager.PlaySFX("UIConfirm");
         Debug.Log("Weapon Button pressed");
         mainButtons.SetActive(false);
         mainSelection.SetActive(false);
@@ -223,6 +237,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void NavigateToRuneEquipMenu()
     {
+        audioManager.PlaySFX("UIConfirm");
         curScrollSelection = ScrollSelection.runes;
         Debug.Log("Weapon Button pressed");
         mainButtons.SetActive(false);
@@ -620,6 +635,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void changeClassKnight()
     {
+        audioManager.PlaySFX("UIConfirm");
         Debug.Log("Changing class to Knight");
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Knight);
@@ -629,6 +645,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void changeClassGunner()
     {
+        audioManager.PlaySFX("UIConfirm");
         Debug.Log("Changing class to Gunner");
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Gunner);
@@ -637,6 +654,7 @@ public class EquipMenuTransition : MonoBehaviour
 
     public void changeClassEngineer()
     {
+        audioManager.PlaySFX("UIConfirm");
         Debug.Log("Changing class to Engineer");
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Engineer);
