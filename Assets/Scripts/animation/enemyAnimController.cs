@@ -77,6 +77,18 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
 
     }
 
+    public void drawArrow()
+    {
+        isAttacking = true;
+        animator.SetBool("shoot", true);
+        animator.Play("shoot");
+    }
+
+    public void shootArrow()
+    {
+
+    }
+
     public void takeHit()
     {
         if (getAnimationInfo().IsName("takeHit") && getAnimationInfo().normalizedTime < takeHitTime)
@@ -86,11 +98,17 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
         animator.SetBool("takeHit", false);
     }
 
-    IEnumerator wait(float time)
+    public IEnumerator wait(float time)
     {
         yield return new WaitForSeconds(time);
         isAttacking = false;
         yield break;
+    }
+
+    public void stopAllRoutines()
+    {
+        StopAllCoroutines();
+        isAttacking = false;
     }
 
     private void Start()
