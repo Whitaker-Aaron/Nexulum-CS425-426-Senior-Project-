@@ -15,7 +15,7 @@ public class golemBoss : MonoBehaviour
     public float maxAngle = 4f;
 
     private NavMeshAgent agent;
-    private bool isAttacking = false;
+    public bool isAttacking = false;
     private bool isRecovering = false;
     private bool isTurning = false;
 
@@ -51,7 +51,7 @@ public class golemBoss : MonoBehaviour
 
     //effects
     [SerializeField] GameObject slash1, slash2, slashSlam, slashSlam1, slashSlam2, jumpSlam;
-    public float slash1Time = 1f, slash2Time = 1f, slashSlamTime = 1f;
+    public float slash1Time = 1f, slash2Time = 1f, slashSlamTime = 1f, slashSlam2Time = 1f, slashSlam3Time = 1f;
     public float slamRadius = 2.5f, slamTime1, slamTime2;
 
 
@@ -61,6 +61,7 @@ public class golemBoss : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         slash1.GetComponent<ParticleSystem>().Stop();
+        animator.GetComponent<Animator>();
         health = MAXHEALTH;
         animator.SetBool("death", false);
     }
@@ -222,7 +223,7 @@ public class golemBoss : MonoBehaviour
 
     void checkAttackAreas()
     {
-        if (isAttacking || isRecovering || !canJump)
+        if (isAttacking || isRecovering)
             return;
 
         for(int i = 0; i < attackList.Count; i++)
@@ -265,9 +266,10 @@ public class golemBoss : MonoBehaviour
 
     IEnumerator longJumpAttack(float moveSpeed, float duration)
     {
-        if (isAttacking || !canLongJump)
+        if (isAttacking || !canLongJump || isRecovering)
             yield break;
-
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            yield break;
         canLongJump = false;
         isAttacking = true;
         agent.isStopped = true;
@@ -296,12 +298,13 @@ public class golemBoss : MonoBehaviour
         Debug.Log("golem: long Jump Attack Complete, Entering Recovery");
         //jumpSlam.GetComponent<ParticleSystem>().Play();
         isRecovering = true;
+        isAttacking = false;
         yield return new WaitForSeconds(1f);
 
         Debug.Log("Recovery Complete, Ready to Attack Again");
 
         isRecovering = false;
-        isAttacking = false;
+        
         agent.isStopped = false;
         yield return new WaitForSeconds(longJumpCooldown);
 
@@ -312,7 +315,9 @@ public class golemBoss : MonoBehaviour
 
     IEnumerator JumpAttack(float moveSpeed, float duration)
     {
-        if (isAttacking || !canJump)
+        if (isAttacking || !canJump || isRecovering)
+            yield break;
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
             yield break;
 
         canJump = false;
@@ -343,12 +348,12 @@ public class golemBoss : MonoBehaviour
         Debug.Log("golem: Jump Attack Complete, Entering Recovery");
         //jumpSlam.GetComponent<ParticleSystem>().Play();
         isRecovering = true;
+        isAttacking = false;
         yield return new WaitForSeconds(1f);
 
         Debug.Log("Recovery Complete, Ready to Attack Again");
 
         isRecovering = false;
-        isAttacking = false;
         agent.isStopped = false;
         yield return new WaitForSeconds(jumpCooldown);
 
@@ -359,7 +364,9 @@ public class golemBoss : MonoBehaviour
 
     IEnumerator AttackSequence()
     {
-        if (isAttacking)
+        if (isAttacking || isRecovering)
+            yield break;
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
             yield break;
 
         isAttacking = true;
@@ -394,6 +401,10 @@ public class golemBoss : MonoBehaviour
                 animator.SetBool("Attack3", false);
                 yield return new WaitForSeconds(slashSlamTime);
                 slashSlam.GetComponent<ParticleSystem>().Play();
+                yield return new WaitForSeconds(slashSlam2Time);
+                slashSlam1.GetComponent<ParticleSystem>().Play();
+                yield return new WaitForSeconds(slashSlam3Time);
+                slashSlam2.GetComponent<ParticleSystem>().Play();
                 break;
         }
         
