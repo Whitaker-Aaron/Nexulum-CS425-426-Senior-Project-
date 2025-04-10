@@ -1,0 +1,229 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5429265461319573650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5291970985106248336}
+  - component: {fileID: 3157791337462920937}
+  - component: {fileID: 2440071426602558779}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5291970985106248336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5429265461319573650}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3157791337462920937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5429265461319573650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d98c14f0e63253d4a9091fde1d7c66ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playingFootsteps: 0
+  loopAudio: 0.075
+  sfxSources:
+    _serializedList:
+    - Key: Dash
+      Value: {fileID: 11400000, guid: e129f56a91c75da4794c7136b41e42ae, type: 2}
+    - Key: UIBack
+      Value: {fileID: 11400000, guid: 788c36b22b25cba4bb5ca854048bd76b, type: 2}
+    - Key: Pause
+      Value: {fileID: 11400000, guid: 3fdbaf349bdc2be4aa0b9017466a617b, type: 2}
+    - Key: TutorialStart
+      Value: {fileID: 11400000, guid: 770fb64267c6d684296e6d67925a8671, type: 2}
+    - Key: DialogueStart
+      Value: {fileID: 11400000, guid: b8dbd43c539ae5d4eba824bc74db2da7, type: 2}
+    - Key: DialogueKey
+      Value: {fileID: 11400000, guid: 9f94fb8198c144f4abae4f02621e1863, type: 2}
+    - Key: UIChange
+      Value: {fileID: 11400000, guid: 7235c70cb307a26419f73140c4c232a1, type: 2}
+    - Key: MageFire
+      Value: {fileID: 11400000, guid: 2cb32abf26d2f5e4e88529949cf203ed, type: 2}
+    - Key: GateOpen
+      Value: {fileID: 11400000, guid: 2ef19b05be1435347b0bf7f581e92cda, type: 2}
+    - Key: UIConfirm
+      Value: {fileID: 11400000, guid: 39fa2d47cec02d54698506864e8f7718, type: 2}
+    - Key: SwordShotExplosion
+      Value: {fileID: 11400000, guid: e13d06ebef920ea419cfff797781eeea, type: 2}
+    - Key: SwordShot
+      Value: {fileID: 11400000, guid: 3d5e8073b19931f44a627ad3117f9449, type: 2}
+    - Key: BubbleShield
+      Value: {fileID: 11400000, guid: aee789539df620840aaf17f1cf088c45, type: 2}
+    - Key: CombatAura
+      Value: {fileID: 11400000, guid: b0b7099002088c347ba6710da6c62791, type: 2}
+    - Key: Sword1
+      Value: {fileID: 11400000, guid: e7e6558380f6097439a2a4e238dd29a3, type: 2}
+    - Key: Sword2
+      Value: {fileID: 11400000, guid: be5431bf1bd42d4429157df1086d3cc1, type: 2}
+    - Key: Sword3
+      Value: {fileID: 11400000, guid: 735cb4706441c754e8ac6bf936877785, type: 2}
+    - Key: ExplosionHit
+      Value: {fileID: 11400000, guid: aaccd43e0df2ad246b178b045a2686d1, type: 2}
+    - Key: BattleComplete
+      Value: {fileID: 11400000, guid: f6ca50cc3660ae54586b80c854147975, type: 2}
+    - Key: Florentine
+      Value: {fileID: 11400000, guid: df7ef69ec7c04354080b4d4d02124423, type: 2}
+    - Key: EnemyDeath
+      Value: {fileID: 11400000, guid: d254d706ba5c4b7498a282bbeebe065b, type: 2}
+    - Key: BulletImpact
+      Value: {fileID: 11400000, guid: c7090e02a52ace94a880bf26578811a7, type: 2}
+    - Key: LevelUp
+      Value: {fileID: 11400000, guid: 5706bd4606f5762429ae8916b1ae71e5, type: 2}
+    - Key: KeyTap
+      Value: {fileID: 11400000, guid: 6ff1297f8828faf48873dabe27690a60, type: 2}
+    - Key: Laser
+      Value: {fileID: 11400000, guid: a21827cfc5e6bdc4080fa93b58e35d22, type: 2}
+    - Key: DamageTaken
+      Value: {fileID: 11400000, guid: 56c1b43d328bf3248a11341fb04ee699, type: 2}
+    - Key: Bell
+      Value: {fileID: 11400000, guid: 6d36edb9f86d9d04ab39c87c00143b0a, type: 2}
+    - Key: LeverClick
+      Value: {fileID: 11400000, guid: 9723f9bd8e64a934f8adaa32dcedb39e, type: 2}
+    - Key: SwordCollide
+      Value: {fileID: 11400000, guid: 32493531db838a8498c1c4a02d661184, type: 2}
+    - Key: SwordWoosh
+      Value: {fileID: 11400000, guid: 58c9c11a7fe4c7648836372cbe21e27b, type: 2}
+    - Key: MaterialCollect
+      Value: {fileID: 11400000, guid: 305a5b1285219b54e9af22da7bff497c, type: 2}
+    - Key: LowHealth
+      Value: {fileID: 11400000, guid: 18968fd76086c9f48a58733e8b2c47e3, type: 2}
+  loopSources:
+    _serializedList:
+    - Key: TitleScreen
+      Value: {fileID: 11400000, guid: e9754ede054cb234581837079c41e310, type: 2}
+    - Key: CheckpointRoom
+      Value: {fileID: 11400000, guid: 4566942b81759054b806192ce2b6b428, type: 2}
+    - Key: Battle1
+      Value: {fileID: 11400000, guid: b0064ef9fb5cc8e4e8343ed8bd62f4cb, type: 2}
+    - Key: ClassSelect
+      Value: {fileID: 11400000, guid: 6f072e42c4e476744a1b5b506e12cc91, type: 2}
+    - Key: Base
+      Value: {fileID: 11400000, guid: 80165dcb3ad72424380a17f712e635f7, type: 2}
+    - Key: MainPlayTest
+      Value: {fileID: 11400000, guid: 7fa70c31ab091914eadac4ced7e5dc44, type: 2}
+  footstepSources:
+    _serializedList:
+    - Key: TestWalk
+      Value: {fileID: 11400000, guid: 43b0d16c5d37cb442b15e50524f2fffe, type: 2}
+--- !u!82 &2440071426602558779
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5429265461319573650}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
