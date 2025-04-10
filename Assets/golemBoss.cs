@@ -34,6 +34,7 @@ public class golemBoss : MonoBehaviour
     public int MAXHEALTH;
     private int health;
     bool bossDying = false;
+    private bool isHalfHealth = false; // Flag to track if half health event has triggered
 
     //attack effects
     [SerializeField]
@@ -45,17 +46,30 @@ public class golemBoss : MonoBehaviour
 
 
     //Damage
-    public float atkRng1, atkRng2, atkRng3, atkRng4, atkRng5;
-    public int atkDmg1, atkDmg2, atkDmg3, atkDmg4, atkDmg5;
+    public float atkRng1, atkRng2, atkRng3, atkRng4, atkRng5, atkRng6;
+    public int atkDmg1, atkDmg2, atkDmg3, atkDmg4, atkDmg5, atkDmg6;
 
+    // New attack properties
+    public float lungeSpeed, lungeLength, lungeCooldown;
+    public float backAttackRange, backAttackCooldown;
+    public float spawnEnemiesCooldown = 15f;
+    public float dashSpeed, dashLength, dashCooldown;
+    public float medJumpSpeed, medJumpLength, medJumpCooldown;
+    public bool canLunge = true, canBackAttack = true, canSpawnEnemies = true, canDash = true, canMedJump = true;
+    public int lungeDamage, backAttackDamage, dashDamage, medJumpDamage;
+    public float lungeRadius, backAttackRadius, dashRadius, medJumpRadius;
 
     //effects
     [SerializeField] GameObject slash1, slash2, slashSlam, slashSlam1, slashSlam2, jumpSlam;
+    [SerializeField] GameObject lungeEffect, backAttackEffect, dashEffect, medJumpEffect;
+    [SerializeField] GameObject enemyPrefab; // Enemy to spawn
     public float slash1Time = 1f, slash2Time = 1f, slashSlamTime = 1f, slashSlam2Time = 1f, slashSlam3Time = 1f;
     public float slamRadius = 2.5f, slamTime1, slamTime2;
 
 
     //-----------------Main Functions------------------------------
+
+    private float spawnEnemiesTimer = 0f;
 
     void Start()
     {
@@ -64,6 +78,9 @@ public class golemBoss : MonoBehaviour
         animator.GetComponent<Animator>();
         health = MAXHEALTH;
         animator.SetBool("death", false);
+        
+        // Initialize spawn enemies timer with a random offset
+        spawnEnemiesTimer = Random.Range(0f, spawnEnemiesCooldown * 0.5f);
     }
 
     void Update()
@@ -78,6 +95,17 @@ public class golemBoss : MonoBehaviour
 
         //if (hitPlayer)
             //StartCoroutine(hitPlayerWait());
+
+        // Update spawn enemies timer
+        if (canSpawnEnemies)
+        {
+            spawnEnemiesTimer += Time.deltaTime;
+            if (spawnEnemiesTimer >= spawnEnemiesCooldown)
+            {
+                StartCoroutine(SpawnEnemies());
+                spawnEnemiesTimer = 0f;
+            }
+        }
 
         // Check if player is within detection range
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectionRadius, playerLayer);
@@ -150,7 +178,16 @@ public class golemBoss : MonoBehaviour
     public void takeDamage(int damage)
     {
         if (health - damage > 0)
+        {
             health -= damage;
+            
+            // Check if health has dropped below half and the half health event hasn't triggered yet
+            if (!isHalfHealth && health <= MAXHEALTH / 2)
+            {
+                isHalfHealth = true;
+                StartCoroutine(HalfHealth());
+            }
+        }
         else
             StartCoroutine(bossDeath());
     }
@@ -165,6 +202,75 @@ public class golemBoss : MonoBehaviour
         animator.SetBool("death", true);
         animator.Play("death");
         animator.SetBool("death", false);
+        yield break;
+    }
+    
+    public IEnumerator HalfHealth()
+    {
+        // Stop current actions
+        isAttacking = true;
+        isRecovering = true;
+        agent.isStopped = true;
+        
+        Debug.Log("Boss has reached half health! Entering rage mode!");
+        
+        // Play a special animation or effect
+        animator.SetBool("halfHealth", true);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            animator.Play("halfHealth"); // Make sure this animation exists
+        
+        // Wait for animation to play
+        yield return new WaitForSeconds(1f);
+        animator.SetBool("halfHealth", false);
+        
+        // Enhance boss abilities in second phase
+        // For example, increase speed, damage, or unlock new attacks
+        agent.speed *= 1.25f; // 25% speed increase
+        turnSpeed *= 1.2f; // 20% turn speed increase
+        
+        // Reduce cooldowns for more aggressive attacks
+        lungeCooldown *= 0.8f;
+        backAttackCooldown *= 0.8f;
+        dashCooldown *= 0.8f;
+        jumpCooldown *= 0.8f;
+        longJumpCooldown *= 0.8f;
+        medJumpCooldown *= 0.8f;
+        spawnEnemiesCooldown *= 0.7f; // More frequent enemy spawns
+        
+        // Increase damage
+        weaponDmg = (int)(weaponDmg * 1.3f);
+        lungeDamage = (int)(lungeDamage * 1.3f);
+        backAttackDamage = (int)(backAttackDamage * 1.3f);
+        dashDamage = (int)(dashDamage * 1.3f);
+        medJumpDamage = (int)(medJumpDamage * 1.3f);
+        
+        // Optional: Spawn enemies as part of the phase transition
+        if (enemyPrefab != null)
+        {
+            int enemyCount = 4; // Spawn more enemies at half health
+            for (int i = 0; i < enemyCount; i++)
+            {
+                float angle = i * (360f / enemyCount);
+                float radians = angle * Mathf.Deg2Rad;
+                Vector3 spawnOffset = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians)) * 4f;
+                Vector3 spawnPosition = transform.position + spawnOffset;
+                
+                GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+                if (enemy != null)
+                {
+                    enemy.transform.LookAt(transform.position);
+                }
+            }
+        }
+        
+        // Optional: Visual indication of rage mode
+        // You could change the boss's color, add particle effects, etc.
+        
+        // Resume normal behavior
+        isAttacking = false;
+        isRecovering = false;
+        agent.isStopped = false;
+        
         yield break;
     }
 
@@ -244,17 +350,47 @@ public class golemBoss : MonoBehaviour
                     if (Vector3.Distance(player.transform.position, gameObject.transform.position + transform.rotation * (attackList[i] + Vector3.up + Vector3.forward)) <= atkRng3 && canLongJump)
                         StartCoroutine(longJumpAttack(longJumpSpeed, longJumpLength));
                     break;
+                    
+                case 3:
+                    if (Vector3.Distance(player.transform.position, gameObject.transform.position + transform.rotation * (attackList[i] + Vector3.up + Vector3.forward)) <= atkRng4 && canLunge)
+                        StartCoroutine(LungeAttack(lungeSpeed, lungeLength));
+                    break;
+                    
+                case 4:
+                    if (Vector3.Distance(player.transform.position, gameObject.transform.position + transform.rotation * (attackList[i] + Vector3.up + Vector3.forward)) <= atkRng5 && canBackAttack)
+                        StartCoroutine(BackAttack());
+                    break;
+                    
+                case 5:
+                    if (Vector3.Distance(player.transform.position, gameObject.transform.position + transform.rotation * (attackList[i] + Vector3.up + Vector3.forward)) <= atkRng6 && canDash)
+                        StartCoroutine(DashAttack(dashSpeed, dashLength));
+                    break;
+                    
+                case 6:
+                    if (Vector3.Distance(player.transform.position, gameObject.transform.position + transform.rotation * (attackList[i] + Vector3.up + Vector3.forward)) <= atkRng6 && canMedJump)
+                        StartCoroutine(MedJumpAttack(medJumpSpeed, medJumpLength));
+                    break;
             }
         }
     }
 
+    // Add these variables for the weapon capsule
+    public Vector3 weaponBaseOffset;
+    
     void checkWeaponArea()
     {
         if (!isAttacking || hitPlayer || isRecovering)
             return;
 
         Debug.Log("golem: checkingWeapon");
-        Collider[] player = Physics.OverlapSphere(weapon.GetComponent<golemBossWeapon>().headPosition.transform.position + weaponOffset, weaponRad, playerLayer);
+        
+        // Get the head and base positions for the capsule
+        Vector3 headPos = weapon.GetComponent<golemBossWeapon>().headPosition.transform.position + weaponOffset;
+        Vector3 basePos = weapon.transform.position + weaponBaseOffset;
+        
+        // Use OverlapCapsule to check for player hits along the weapon
+        Collider[] player = Physics.OverlapCapsule(headPos, basePos, weaponRad, playerLayer);
+        
         foreach(Collider p in player)
         {
             hitPlayer = true;
@@ -426,6 +562,321 @@ public class golemBoss : MonoBehaviour
 
     //IEnumerator checkAttack(float attackTime,)
 
+    // New attack methods
+    IEnumerator LungeAttack(float moveSpeed, float duration)
+    {
+        if (isAttacking || !canLunge || isRecovering)
+            yield break;
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            yield break;
+            
+        canLunge = false;
+        isAttacking = true;
+        agent.isStopped = true;
+        Debug.Log("golem: Starting Lunge Attack");
+
+        animator.SetFloat("Forward", 0);
+        animator.SetBool("lungeAttack", true);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            animator.Play("lungeAttack"); // Make sure this animation exists
+        animator.SetBool("lungeAttack", false);
+
+        // Quick forward movement
+        float elapsedTime = 0f;
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = startPosition + transform.forward * (moveSpeed * duration);
+
+        while (elapsedTime < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+        
+        // Check for player hit with Physics.OverlapSphere
+        if (lungeEffect != null)
+            lungeEffect.GetComponent<ParticleSystem>().Play();
+            
+        Collider[] hitPlayers = Physics.OverlapSphere(
+            gameObject.transform.position + transform.rotation * (attackList[3] + Vector3.up + Vector3.forward), 
+            lungeRadius, 
+            playerLayer);
+            
+        foreach (Collider p in hitPlayers)
+        {
+            p.GetComponent<CharacterBase>().takeDamage(lungeDamage, gameObject.transform.forward);
+            UIManager.instance.DisplayDamageNum(p.transform, lungeDamage);
+        }
+
+        Debug.Log("golem: Lunge Attack Complete, Entering Recovery");
+        isRecovering = true;
+        isAttacking = false;
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Recovery Complete, Ready to Attack Again");
+        isRecovering = false;
+        agent.isStopped = false;
+        yield return new WaitForSeconds(lungeCooldown);
+
+        canLunge = true;
+        yield break;
+    }
+
+    IEnumerator BackAttack()
+    {
+        if (isAttacking || !canBackAttack || isRecovering)
+            yield break;
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            yield break;
+            
+        canBackAttack = false;
+        isAttacking = true;
+        agent.isStopped = true;
+        Debug.Log("golem: Starting Back Attack");
+
+        animator.SetFloat("Forward", 0);
+        animator.SetBool("backAttack", true);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            animator.Play("backAttack"); // Make sure this animation exists
+        animator.SetBool("backAttack", false);
+        
+        // Quickly rotate 180 degrees to face behind
+        float startRotation = transform.eulerAngles.y;
+        float targetRotation = startRotation + 180f;
+        float rotationTime = 0.3f;
+        float elapsedTime = 0f;
+        
+        while (elapsedTime < rotationTime)
+        {
+            float yRotation = Mathf.Lerp(startRotation, targetRotation, elapsedTime / rotationTime);
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRotation, transform.eulerAngles.z);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        // Ensure exact rotation
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, targetRotation, transform.eulerAngles.z);
+        
+        // Check for player hit with Physics.OverlapSphere
+        if (backAttackEffect != null)
+            backAttackEffect.GetComponent<ParticleSystem>().Play();
+            
+        Collider[] hitPlayers = Physics.OverlapSphere(
+            gameObject.transform.position + transform.rotation * (attackList[4] + Vector3.up + Vector3.forward), 
+            backAttackRadius, 
+            playerLayer);
+            
+        foreach (Collider p in hitPlayers)
+        {
+            p.GetComponent<CharacterBase>().takeDamage(backAttackDamage, gameObject.transform.forward);
+            UIManager.instance.DisplayDamageNum(p.transform, backAttackDamage);
+        }
+
+        Debug.Log("golem: Back Attack Complete, Entering Recovery");
+        isRecovering = true;
+        isAttacking = false;
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Recovery Complete, Ready to Attack Again");
+        isRecovering = false;
+        agent.isStopped = false;
+        yield return new WaitForSeconds(backAttackCooldown);
+
+        canBackAttack = true;
+        yield break;
+    }
+
+    IEnumerator SpawnEnemies()
+    {
+        if (isAttacking || isRecovering || !canSpawnEnemies)
+            yield break;
+            
+        canSpawnEnemies = false;
+        isAttacking = true;
+        agent.isStopped = true;
+        Debug.Log("golem: Spawning Enemies");
+
+        animator.SetFloat("Forward", 0);
+        animator.SetBool("spawnEnemies", true);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            animator.Play("spawnEnemies"); // Make sure this animation exists
+        animator.SetBool("spawnEnemies", false);
+        
+        // Spawn 2-4 enemies around the boss
+        int enemyCount = Random.Range(2, 5);
+        for (int i = 0; i < enemyCount; i++)
+        {
+            if (enemyPrefab != null)
+            {
+                // Calculate spawn position in a circle around the boss
+                float angle = i * (360f / enemyCount);
+                float radians = angle * Mathf.Deg2Rad;
+                Vector3 spawnOffset = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians)) * 3f; // 3 units away
+                Vector3 spawnPosition = transform.position + spawnOffset;
+                
+                // Instantiate the enemy
+                GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+                
+                // Optional: Make the enemy face the boss
+                if (enemy != null)
+                {
+                    enemy.transform.LookAt(transform.position);
+                }
+            }
+            
+            // Small delay between spawns
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        Debug.Log("golem: Enemies Spawned, Entering Recovery");
+        isRecovering = true;
+        isAttacking = false;
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Recovery Complete");
+        isRecovering = false;
+        agent.isStopped = false;
+        canSpawnEnemies = true;
+        yield break;
+    }
+    
+    IEnumerator DashAttack(float moveSpeed, float duration)
+    {
+        if (isAttacking || !canDash || isRecovering)
+            yield break;
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            yield break;
+            
+        canDash = false;
+        isAttacking = true;
+        agent.isStopped = true;
+        Debug.Log("golem: Starting Forward Dash Attack");
+
+        animator.SetFloat("Forward", 0);
+        animator.SetBool("dashAttack", true);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            animator.Play("dashAttack"); // Make sure this animation exists
+        
+
+        // Quick forward dash movement
+        float elapsedTime = 0f;
+        Vector3 startPosition = transform.position;
+        
+        // Dash straight ahead
+        Vector3 targetPosition = startPosition + transform.forward * (moveSpeed * duration);
+
+        while (elapsedTime < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+        animator.SetBool("dashAttack", false);
+        // Check for player hit with Physics.OverlapSphere
+        if (dashEffect != null)
+            dashEffect.GetComponent<ParticleSystem>().Play();
+            
+        Collider[] hitPlayers = Physics.OverlapSphere(
+            gameObject.transform.position + transform.rotation * (attackList[5] + Vector3.up + Vector3.forward), 
+            dashRadius, 
+            playerLayer);
+            
+        foreach (Collider p in hitPlayers)
+        {
+            p.GetComponent<CharacterBase>().takeDamage(dashDamage, gameObject.transform.forward);
+            UIManager.instance.DisplayDamageNum(p.transform, dashDamage);
+        }
+
+        Debug.Log("golem: Dash Attack Complete, Entering Recovery");
+        isRecovering = true;
+        isAttacking = false;
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Recovery Complete, Ready to Attack Again");
+        isRecovering = false;
+        agent.isStopped = false;
+        yield return new WaitForSeconds(dashCooldown);
+
+        canDash = true;
+        yield break;
+    }
+    
+    IEnumerator MedJumpAttack(float moveSpeed, float duration)
+    {
+        if (isAttacking || !canMedJump || isRecovering)
+            yield break;
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            yield break;
+            
+        canMedJump = false;
+        isAttacking = true;
+        agent.isStopped = true;
+        Debug.Log("golem: Starting Medium Jump Attack");
+
+        animator.SetFloat("Forward", 0);
+        animator.SetBool("medJumpAttack", true);
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            animator.Play("medJumpAttack"); // Make sure this animation exists
+        animator.SetBool("medJumpAttack", false);
+
+        // Medium jump movement (between regular jump and long jump)
+        float elapsedTime = 0f;
+        Vector3 startPosition = transform.position;
+        
+        // Jump toward the player
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        Vector3 targetPosition = startPosition + directionToPlayer * (moveSpeed * duration);
+
+        // Add vertical movement for jump
+        float jumpHeight = 2f; // Adjust as needed
+        
+        while (elapsedTime < duration)
+        {
+            float normalizedTime = elapsedTime / duration;
+            float verticalOffset = Mathf.Sin(normalizedTime * Mathf.PI) * jumpHeight;
+            
+            Vector3 newPosition = Vector3.Lerp(startPosition, targetPosition, normalizedTime);
+            newPosition.y = startPosition.y + verticalOffset;
+            
+            transform.position = newPosition;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = new Vector3(targetPosition.x, startPosition.y, targetPosition.z);
+        
+        // Check for player hit with Physics.OverlapSphere
+        if (medJumpEffect != null)
+            medJumpEffect.GetComponent<ParticleSystem>().Play();
+            
+        Collider[] hitPlayers = Physics.OverlapSphere(
+            gameObject.transform.position + transform.rotation * (attackList[6] + Vector3.up + Vector3.forward), 
+            medJumpRadius, 
+            playerLayer);
+            
+        foreach (Collider p in hitPlayers)
+        {
+            p.GetComponent<CharacterBase>().takeDamage(medJumpDamage, gameObject.transform.forward);
+            UIManager.instance.DisplayDamageNum(p.transform, medJumpDamage);
+        }
+
+        Debug.Log("golem: Medium Jump Attack Complete, Entering Recovery");
+        isRecovering = true;
+        isAttacking = false;
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Recovery Complete, Ready to Attack Again");
+        isRecovering = false;
+        agent.isStopped = false;
+        yield return new WaitForSeconds(medJumpCooldown);
+
+        canMedJump = true;
+        yield break;
+    }
 
 
 
@@ -436,40 +887,75 @@ public class golemBoss : MonoBehaviour
     // Draw Gizmo Sphere to visualize detection range
     void OnDrawGizmos()
     {
+        if (weapon == null) return;
+        
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        
+        // Draw weapon capsule using two spheres
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(weapon.GetComponent<golemBossWeapon>().headPosition.transform.position + weaponOffset, weaponRad);
+        Vector3 headPos = weapon.GetComponent<golemBossWeapon>().headPosition.transform.position + weaponOffset;
+        Vector3 basePos = weapon.transform.position + weaponBaseOffset;
+        Gizmos.DrawWireSphere(headPos, weaponRad);
+        Gizmos.DrawWireSphere(basePos, weaponRad);
+        Gizmos.DrawLine(headPos, basePos);
+        
         Gizmos.DrawWireSphere(gameObject.transform.position + slamOffset, slamRadius);
+        
         Gizmos.color = Color.green;
         for (int i = 0; i < attackList.Count; i++)
         {
             Vector3 vec = attackList[i];
+            Vector3 attackPos = gameObject.transform.position + transform.rotation * (vec + Vector3.up + Vector3.forward);
+            
             switch (i)
             {
                 case 0:
-                    //Gizmos.DrawWireSphere(gameObject.transform.position + vec + Vector3.up + gameObject.transform.forward, atkRng1);
-                    Gizmos.DrawWireSphere(gameObject.transform.position + transform.rotation * (vec + Vector3.up + Vector3.forward), atkRng1);
-
+                    Gizmos.DrawWireSphere(attackPos, atkRng1);
                     break;
                 case 1:
-                    Gizmos.DrawWireSphere(gameObject.transform.position + transform.rotation * (vec + Vector3.up + Vector3.forward), atkRng2);
+                    Gizmos.DrawWireSphere(attackPos, atkRng2);
                     break;
                 case 2:
-                    Gizmos.DrawWireSphere(gameObject.transform.position + transform.rotation * (vec + Vector3.up + Vector3.forward) , atkRng3);
+                    Gizmos.DrawWireSphere(attackPos, atkRng3);
                     break;
                 case 3:
-                    Gizmos.DrawWireSphere(gameObject.transform.position + vec + Vector3.up, atkRng4);
+                    // Lunge attack visualization
+                    Gizmos.color = Color.cyan;
+                    Gizmos.DrawWireSphere(attackPos, atkRng4);
+                    // Also visualize the lunge radius
+                    Gizmos.DrawWireSphere(attackPos, lungeRadius);
+                    Gizmos.color = Color.green;
                     break;
                 case 4:
-                    Gizmos.DrawWireSphere(gameObject.transform.position + vec + Vector3.up, atkRng5); // Use atkRng5 if available
+                    // Back attack visualization
+                    Gizmos.color = Color.magenta;
+                    Gizmos.DrawWireSphere(attackPos, atkRng5);
+                    // Also visualize the back attack radius
+                    Gizmos.DrawWireSphere(attackPos, backAttackRadius);
+                    Gizmos.color = Color.green;
+                    break;
+                case 5:
+                    // Dash attack visualization
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawWireSphere(attackPos, atkRng6);
+                    // Also visualize the dash radius
+                    Gizmos.DrawWireSphere(attackPos, dashRadius);
+                    Gizmos.color = Color.green;
+                    break;
+                case 6:
+                    // Medium jump attack visualization
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawWireSphere(attackPos, atkRng6);
+                    // Also visualize the medium jump radius
+                    Gizmos.DrawWireSphere(attackPos, medJumpRadius);
+                    Gizmos.color = Color.green;
                     break;
                 default:
-                    Gizmos.DrawWireSphere(gameObject.transform.position + vec + Vector3.up, atkRng4); // Fallback if index > 4
+                    Gizmos.DrawWireSphere(attackPos, atkRng4); // Fallback if index > 6
                     break;
             }
         }
-
     }
 
 
