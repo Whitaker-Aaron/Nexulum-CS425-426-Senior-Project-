@@ -599,16 +599,17 @@ public class golemBoss : MonoBehaviour
         if (lungeEffect != null)
             lungeEffect.GetComponent<ParticleSystem>().Play();
             
-        Collider[] hitPlayers = Physics.OverlapSphere(
-            gameObject.transform.position + transform.rotation * (attackList[3] + Vector3.up + Vector3.forward), 
-            lungeRadius, 
-            playerLayer);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"));
+        //Collider[] hitPlayers = Physics.OverlapSphere(
+            //gameObject.transform.position + transform.rotation * (attackList[3] + Vector3.up + Vector3.forward), 
+            //lungeRadius, 
+            //playerLayer);
             
-        foreach (Collider p in hitPlayers)
-        {
-            p.GetComponent<CharacterBase>().takeDamage(lungeDamage, gameObject.transform.forward);
-            UIManager.instance.DisplayDamageNum(p.transform, lungeDamage);
-        }
+        //foreach (Collider p in hitPlayers)
+        //{
+            //p.GetComponent<CharacterBase>().takeDamage(lungeDamage, gameObject.transform.forward);
+            //UIManager.instance.DisplayDamageNum(p.transform, lungeDamage);
+        //}
 
         Debug.Log("golem: Lunge Attack Complete, Entering Recovery");
         isRecovering = true;
@@ -623,6 +624,8 @@ public class golemBoss : MonoBehaviour
         canLunge = true;
         yield break;
     }
+
+    public float rotationTime = 0.3f;
 
     IEnumerator BackAttack()
     {
@@ -645,7 +648,7 @@ public class golemBoss : MonoBehaviour
         // Quickly rotate 180 degrees to face behind
         float startRotation = transform.eulerAngles.y;
         float targetRotation = startRotation + 180f;
-        float rotationTime = 0.3f;
+        //float rotationTime = 0.3f;
         float elapsedTime = 0f;
         
         while (elapsedTime < rotationTime)
@@ -663,17 +666,18 @@ public class golemBoss : MonoBehaviour
         if (backAttackEffect != null)
             backAttackEffect.GetComponent<ParticleSystem>().Play();
             
-        Collider[] hitPlayers = Physics.OverlapSphere(
-            gameObject.transform.position + transform.rotation * (attackList[4] + Vector3.up + Vector3.forward), 
-            backAttackRadius, 
-            playerLayer);
+        //Collider[] hitPlayers = Physics.OverlapSphere(
+            //gameObject.transform.position + transform.rotation * (attackList[4] + Vector3.up + Vector3.forward), 
+            //backAttackRadius, 
+            //playerLayer);
             
-        foreach (Collider p in hitPlayers)
-        {
-            p.GetComponent<CharacterBase>().takeDamage(backAttackDamage, gameObject.transform.forward);
-            UIManager.instance.DisplayDamageNum(p.transform, backAttackDamage);
-        }
-
+        //foreach (Collider p in hitPlayers)
+        //{
+           // p.GetComponent<CharacterBase>().takeDamage(backAttackDamage, gameObject.transform.forward);
+            //UIManager.instance.DisplayDamageNum(p.transform, backAttackDamage);
+        //}
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"));
+        
         Debug.Log("golem: Back Attack Complete, Entering Recovery");
         isRecovering = true;
         isAttacking = false;
