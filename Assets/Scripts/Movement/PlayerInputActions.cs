@@ -206,6 +206,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""3f382605-babe-4116-a9ec-d5e80fef95ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -714,6 +723,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""LeftClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ac12243a-0ddc-493e-af2e-7d86d7ee951a"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -832,6 +852,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_player_ActivateKeyboard = m_player.FindAction("ActivateKeyboard", throwIfNotFound: true);
         m_player_ActivateGamepad = m_player.FindAction("ActivateGamepad", throwIfNotFound: true);
         m_player_Submit = m_player.FindAction("Submit", throwIfNotFound: true);
+        m_player_Scroll = m_player.FindAction("Scroll", throwIfNotFound: true);
         // MenuControl
         m_MenuControl = asset.FindActionMap("MenuControl", throwIfNotFound: true);
         m_MenuControl_Pause = m_MenuControl.FindAction("Pause", throwIfNotFound: true);
@@ -918,6 +939,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_ActivateKeyboard;
     private readonly InputAction m_player_ActivateGamepad;
     private readonly InputAction m_player_Submit;
+    private readonly InputAction m_player_Scroll;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -942,6 +964,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @ActivateKeyboard => m_Wrapper.m_player_ActivateKeyboard;
         public InputAction @ActivateGamepad => m_Wrapper.m_player_ActivateGamepad;
         public InputAction @Submit => m_Wrapper.m_player_Submit;
+        public InputAction @Scroll => m_Wrapper.m_player_Scroll;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1011,6 +1034,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Submit.started += instance.OnSubmit;
             @Submit.performed += instance.OnSubmit;
             @Submit.canceled += instance.OnSubmit;
+            @Scroll.started += instance.OnScroll;
+            @Scroll.performed += instance.OnScroll;
+            @Scroll.canceled += instance.OnScroll;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1075,6 +1101,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Submit.started -= instance.OnSubmit;
             @Submit.performed -= instance.OnSubmit;
             @Submit.canceled -= instance.OnSubmit;
+            @Scroll.started -= instance.OnScroll;
+            @Scroll.performed -= instance.OnScroll;
+            @Scroll.canceled -= instance.OnScroll;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1176,6 +1205,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnActivateKeyboard(InputAction.CallbackContext context);
         void OnActivateGamepad(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
     }
     public interface IMenuControlActions
     {
