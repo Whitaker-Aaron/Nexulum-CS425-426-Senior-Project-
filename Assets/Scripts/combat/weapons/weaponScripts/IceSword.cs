@@ -63,6 +63,31 @@ public class IceSword : swordCombat
                 //knockBackDir *= 1.5f;
                 //collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }
+            else if (collider.gameObject.tag == "bossPart" && !bossHit)
+            {
+                // Only process the first boss part hit
+                bossHit = true;
+                
+                if (audioManager == null)
+                {
+                    audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+                }
+                if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+                audioManager.PlaySFX("SwordCollide");
+                
+                if (isHeavy)
+                {
+                    uiManager.DisplayDamageNum(collider.gameObject.transform, heavyDamage);
+                    collider.GetComponent<bossPart>().takeDamage(heavyDamage);
+                    EffectsManager.instance.getFromPool("swordHeavyHit", new Vector3(collider.transform.position.x - gameObject.transform.position.x * 1.2f, .75f, collider.transform.position.z - gameObject.transform.position.x * 1.2f), Quaternion.identity, false, true);
+                }
+                else
+                {
+                    uiManager.DisplayDamageNum(collider.gameObject.transform, damage);
+                    collider.GetComponent<bossPart>().takeDamage(damage);
+                    EffectsManager.instance.getFromPool("swordHit", new Vector3(collider.transform.position.x - gameObject.transform.position.x * 1.2f, .75f, collider.transform.position.z - gameObject.transform.position.x * 1.2f), Quaternion.identity, false, true);
+                }
+            }
         }
 
         checking = false;
