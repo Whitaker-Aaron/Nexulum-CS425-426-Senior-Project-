@@ -275,21 +275,58 @@ public class golemBoss : MonoBehaviour
     }
 
     public Vector3 slamOffset;
+    public Vector3 medJumpOffset; // New offset vector for medium jump attack
 
     IEnumerator slamArea()
     {
-
         yield return new WaitForSeconds(slamTime1);
         jumpSlam.GetComponent<ParticleSystem>().Play();
+        Collider[] temp = Physics.OverlapSphere(gameObject.transform.position + transform.rotation * (slamOffset + Vector3.up + Vector3.forward), slamRadius);
+        foreach (Collider p in temp)
+        {
+            if (p.CompareTag("Player"))
+            {
+                // Use atkDmg2 for the regular jump attack
+                p.GetComponent<CharacterBase>().takeDamage(atkDmg2, gameObject.transform.forward);
+                UIManager.instance.DisplayDamageNum(p.transform, atkDmg2);
+            }
+        }
+
         yield break;
     }
     
     IEnumerator slamArea2()
     {
-
         yield return new WaitForSeconds(slamTime2);
         jumpSlam.GetComponent<ParticleSystem>().Play();
-        Collider[] temp = Physics.OverlapSphere(gameObject.transform.position + slamOffset, slamRadius);
+        Collider[] temp = Physics.OverlapSphere(gameObject.transform.position + transform.rotation * (slamOffset + Vector3.up + Vector3.forward), slamRadius);
+        foreach (Collider p in temp)
+        {
+            if (p.CompareTag("Player"))
+            {
+                // Use atkDmg3 for the long jump attack
+                p.GetComponent<CharacterBase>().takeDamage(atkDmg3, gameObject.transform.forward);
+                UIManager.instance.DisplayDamageNum(p.transform, atkDmg3);
+            }
+        }
+        yield break;
+    }
+
+    public float medJumpTime = 0.8f;
+    IEnumerator medJumpSlice()
+    {
+        yield return new WaitForSeconds(medJumpTime);
+        medJumpEffect.GetComponent<ParticleSystem>().Play();
+        Collider[] temp = Physics.OverlapSphere(gameObject.transform.position + transform.rotation * (medJumpOffset + Vector3.up + Vector3.forward), slamRadius);
+        foreach (Collider p in temp)
+        {
+            if (p.CompareTag("Player"))
+            {
+                // Use medJumpDamage for the medium jump attack
+                p.GetComponent<CharacterBase>().takeDamage(medJumpDamage, gameObject.transform.forward);
+                UIManager.instance.DisplayDamageNum(p.transform, medJumpDamage);
+            }
+        }
         yield break;
     }
 
@@ -816,6 +853,7 @@ public class golemBoss : MonoBehaviour
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
             yield break;
             
+        StartCoroutine(medJumpSlice());
         canMedJump = false;
         isAttacking = true;
         agent.isStopped = true;
@@ -857,8 +895,9 @@ public class golemBoss : MonoBehaviour
         if (medJumpEffect != null)
             medJumpEffect.GetComponent<ParticleSystem>().Play();
             
+        // Use the dedicated medJumpOffset for consistency with medJumpSlice
         Collider[] hitPlayers = Physics.OverlapSphere(
-            gameObject.transform.position + transform.rotation * (attackList[6] + Vector3.up + Vector3.forward), 
+            gameObject.transform.position + medJumpOffset, 
             medJumpRadius, 
             playerLayer);
             
@@ -904,7 +943,11 @@ public class golemBoss : MonoBehaviour
         Gizmos.DrawWireSphere(basePos, weaponRad);
         Gizmos.DrawLine(headPos, basePos);
         
-        Gizmos.DrawWireSphere(gameObject.transform.position + slamOffset, slamRadius);
+        // Draw slam offset sphere in yellow
+        Gizmos.DrawWireSphere(gameObject.transform.position + transform.rotation * (slamOffset + Vector3.up + Vector3.forward), slamRadius);
+        
+        // Draw medium jump offset sphere in yellow
+        Gizmos.DrawWireSphere(gameObject.transform.position + transform.rotation * (medJumpOffset + Vector3.up + Vector3.forward), slamRadius);
         
         Gizmos.color = Color.green;
         for (int i = 0; i < attackList.Count; i++)
