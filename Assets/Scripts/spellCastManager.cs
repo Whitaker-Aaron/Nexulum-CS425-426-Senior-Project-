@@ -12,7 +12,7 @@ public class spellCastManager : MonoBehaviour
     private PlayerInput playerInput;
 
 
-    [SerializeField] private GameObject lightningSpell, lightingStrike, waterShield;
+    [SerializeField] private GameObject lightningSpell, lightingStrike, waterSpell, waterSplash;
 
     Transform player;
 
@@ -203,7 +203,13 @@ public class spellCastManager : MonoBehaviour
                         break;
 
                     case "WaterCast":
-                        tempEffect = Instantiate(waterShield, currentEffect.transform.position, Quaternion.identity);
+                        tempEffect = Instantiate(waterSplash, currentEffect.transform.position, Quaternion.identity);
+                        damageSphere(tempEffect.transform.position, lightningRad, lightningDamage, EnemyFrame.DamageType.Electric);
+                        tempEffect.GetComponent<ParticleSystem>().Play();
+                        currentEffect.gameObject.GetComponent<ParticleSystem>().Stop();
+                        Destroy(tempEffect, 5f);
+                        Destroy(currentEffect.gameObject);
+                        deactivateSpellCast();
                         //tempEffect.gameObject.GetComponent<>
                         break;
                 }
@@ -224,7 +230,7 @@ public class spellCastManager : MonoBehaviour
 
             case "WaterCast":
                 currentRune = rune;
-                activateWaterShield();
+                activateWaterSplash();
                 break;
         }
 
@@ -252,12 +258,12 @@ public class spellCastManager : MonoBehaviour
         
     }
 
-    void activateWaterShield()
+    void activateWaterSplash()
     {
         print("Activating water shield");
         gameObject.GetComponent <masterInput>().placing = true;
         casting = true;
-        currentEffect = Instantiate(waterShield, player.position + spawnOffset, Quaternion.identity);
+        currentEffect = Instantiate(waterSpell, player.position + spawnOffset, Quaternion.identity);
         currentEffect.transform.parent = player.transform;
         currentEffect.transform.position = player.position;
     }

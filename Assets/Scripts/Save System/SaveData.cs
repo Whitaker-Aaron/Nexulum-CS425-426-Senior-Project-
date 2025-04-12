@@ -58,6 +58,9 @@ public class SaveData
         runeInventory[1] = "Ice";
         runeInventory[2] = "Earth";
         runeInventory[4] = "Regen";
+        //runeInventory[5] = "LightningCast";
+        //runeInventory[6] = "WaterCast";
+        //runeInventory[7] = "WindCast";
 
         itemInventory = new PlayerItemSaveData[100];
         for(int i = 0; i < itemInventory.Length; i++)

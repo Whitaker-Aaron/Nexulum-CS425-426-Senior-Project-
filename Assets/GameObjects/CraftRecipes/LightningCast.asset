@@ -9,12 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f80596499d67c34d915a3ee520715ed, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c1a56c6f615ae943b22a9e534f4375a, type: 3}
   m_Name: LightningCast
   m_EditorClassIdentifier: 
-  runeName: LightningCast
-  runeDescription: has a S H O C K I N G result
-  runeEffect: Electric
-  runeTexture: {fileID: 0}
-  runeType: 2
-  runeRecipe: {fileID: 11400000, guid: 857e9008c40102b4ba1a601691d0bc80, type: 2}
+  requiredMaterials:
+    _serializedList:
+    - Key: {fileID: 11400000, guid: aca877d090b50a046b79c4cc2675d69e, type: 2}
+      Value: 1
+  type: 2
+  recipeName: LightningCast
+  shopCost: 0
+  hasCrafted: 1
+  hasPurchased: 1

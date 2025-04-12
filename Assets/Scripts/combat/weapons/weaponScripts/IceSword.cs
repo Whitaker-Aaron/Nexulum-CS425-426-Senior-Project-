@@ -63,8 +63,7 @@ public class IceSword : swordCombat
                 //knockBackDir *= 1.5f;
                 //collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }
-            else if (collider.gameObject.tag == "bossPart")
-            //else if (collider.gameObject.tag == "bossPart" && !bossHit)
+            else if (collider.gameObject.tag == "bossPart")// && !bossHit)
             {
                 // Only process the first boss part hit
                 //bossHit = true;
