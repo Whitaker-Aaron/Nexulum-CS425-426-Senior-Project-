@@ -573,7 +573,7 @@ public class masterInput : MonoBehaviour
         }
         if(rCount > 0)
         {
-            usingSpellRunes = !usingSpellRunes;
+            //usingSpellRunes = !usingSpellRunes;
             print("usingSpellRunes = " + usingSpellRunes);
         }
         else
@@ -1611,7 +1611,8 @@ public class masterInput : MonoBehaviour
         }
 
         //Class ability Logic
-        if(!usingSpellRunes && !spellsTriggered)
+        //if(!usingSpellRunes && !spellsTriggered)
+        if (!spellsTriggered)
         {
             if (placing || shootingLaser || shootingRocket || throwingGrenade)
             {
@@ -1708,8 +1709,8 @@ public class masterInput : MonoBehaviour
                 abilityInUse = true;
                 if (currentClass == WeaponBase.weaponClassTypes.Knight)
                 {
-                    animationControl.knightShootSwords();
-                    shootingSwords = true;
+                    //animationControl.knightShootSwords();
+                    //shootingSwords = true;
                 }
                 gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[2]);
                 uiManager.ActivateCooldownOnAbility(3, true);

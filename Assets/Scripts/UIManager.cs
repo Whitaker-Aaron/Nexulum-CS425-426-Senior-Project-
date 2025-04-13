@@ -36,6 +36,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject ability_spell1;
     [SerializeField] GameObject ability_spell2;
     [SerializeField] GameObject ability_spell3;
+    [SerializeField] GameObject Spell_Text;
+    [SerializeField] GameObject Abilities_Text;
     [SerializeField] GameObject dashSmear;
     [SerializeField] GameObject criticalText;
     [SerializeField] GameObject criticalTextBorder;
@@ -57,6 +59,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject spellAbility1;
     [SerializeField] GameObject spellAbility2;
     [SerializeField] GameObject spellAbility3;
+    [SerializeField] GameObject classAbility1;
+    [SerializeField] GameObject classAbility2;
+    [SerializeField] GameObject classAbility3;
 
     [SerializeField] GameObject viewItemGradient;
 
@@ -941,9 +946,10 @@ public class UIManager : MonoBehaviour
         
         if (!isSpell)
         {
-            var reducedAlpha_local = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
-            reducedAlpha_local.a = 0.5f;
-            ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = reducedAlpha_local;
+            //var reducedAlpha_local = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
+            //reducedAlpha_local.a = 0.5f;
+            //ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = reducedAlpha_local;
+            ReduceClassAbilityAlphas(abilityNum);
         }
         else
         {
@@ -1051,9 +1057,10 @@ public class UIManager : MonoBehaviour
 
         if (!isSpell)
         {
-            var increasedAlpha_local = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
-            increasedAlpha_local.a = 1.0f;
-            ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = increasedAlpha_local;
+            //var increasedAlpha_local = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
+            //increasedAlpha_local.a = 1.0f;
+            //ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = increasedAlpha_local;
+            IncreaseClassAbilityAlphas(abilityNum);
         }
         else
         {
@@ -1092,6 +1099,7 @@ public class UIManager : MonoBehaviour
                 break;
         }
         UpdateExperienceLevel(weaponClass, experienceLVL, changingClass);
+        PopulateClassAbilities();
         
     }
 
@@ -1230,12 +1238,17 @@ public class UIManager : MonoBehaviour
             spellsUI.SetActive(true);
             abilityUIActive = false;
             PopulateSpellRunes();
+            Spell_Text.SetActive(true);
+            Abilities_Text.SetActive(false);
         }
         else
         {
             abilitiesUI.SetActive(true);
             spellsUI.SetActive(false);
             abilityUIActive = true;
+            PopulateClassAbilities();
+            Spell_Text.SetActive(false);
+            Abilities_Text.SetActive(true);
         }
         StopCoroutine(greyOutSwapIcon());
         StartCoroutine(greyOutSwapIcon());
@@ -1286,6 +1299,51 @@ public class UIManager : MonoBehaviour
         
     }
 
+    public void ReduceClassAbilityAlphas(int index)
+    {
+        int count = classAbility1.transform.childCount;
+        switch (index)
+        {
+            case 1:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = classAbility1.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 0.5f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+            case 2:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = classAbility2.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 0.5f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+            case 3:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = classAbility3.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 0.5f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+        }
+
+    }
+
     public void IncreaseSpellRuneAlphas(int index)
     {
         int count = spellAbility1.transform.childCount;
@@ -1319,6 +1377,51 @@ public class UIManager : MonoBehaviour
                 for (int j = 0; j < count; j++)
                 {
                     var child = spellAbility3.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 1.0f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+        }
+
+    }
+
+    public void IncreaseClassAbilityAlphas(int index)
+    {
+        int count = spellAbility1.transform.childCount;
+        switch (index)
+        {
+            case 1:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = classAbility1.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 1.0f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+            case 2:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = classAbility2.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 1.0f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+            case 3:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = classAbility3.transform.GetChild(j);
                     if (child.gameObject.activeSelf)
                     {
                         var reducedAlpha = child.gameObject.GetComponent<Image>().color;
@@ -1386,6 +1489,49 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void PopulateClassAbilities()
+    {
+        var currentClass = character.weaponClass.classType;
+        string abilityIconToActivate = "";
+        switch (currentClass)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                abilityIconToActivate = "KnightAbilityIcon";
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                abilityIconToActivate = "GunnerAbilityIcon";
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                abilityIconToActivate = "EngineerAbilityIcon";
+                break;
+        }
+
+        int count = classAbility1.transform.childCount;
+        for (int j = 0; j < count; j++)
+        {
+            var child = classAbility1.transform.GetChild(j);
+            if (child.name == abilityIconToActivate) child.gameObject.SetActive(true);
+            else child.gameObject.SetActive(false);
+        }
+
+        count = classAbility2.transform.childCount;
+        for (int j = 0; j < count; j++)
+        {
+            var child = classAbility2.transform.GetChild(j);
+            if (child.name == abilityIconToActivate) child.gameObject.SetActive(true);
+            else child.gameObject.SetActive(false);
+        }
+
+        count = classAbility3.transform.childCount;
+        for (int j = 0; j < count; j++)
+        {
+            var child = classAbility3.transform.GetChild(j);
+            if (child.name == abilityIconToActivate) child.gameObject.SetActive(true);
+            else child.gameObject.SetActive(false);
+        }
+
     }
 
     public void UpdateExperienceLevel(WeaponBase.weaponClassTypes weaponClass, int experienceLVL, bool changingClass = false)

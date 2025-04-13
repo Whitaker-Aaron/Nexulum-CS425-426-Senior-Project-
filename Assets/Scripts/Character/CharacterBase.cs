@@ -583,6 +583,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
         runeInt.Remove();
         equippedRunes[position] = runeToEquip;
         runeInt.Apply();
+        uiManager.PopulateSpellRunes();
     }
     
 
