@@ -33,6 +33,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
     [SerializeField] GameObject ability3;
+    [SerializeField] GameObject ability_spell1;
+    [SerializeField] GameObject ability_spell2;
+    [SerializeField] GameObject ability_spell3;
     [SerializeField] GameObject dashSmear;
     [SerializeField] GameObject criticalText;
     [SerializeField] GameObject criticalTextBorder;
@@ -894,22 +897,40 @@ public class UIManager : MonoBehaviour
 
 
 
-    public void ActivateCooldownOnAbility(int abilityNum)
+    public void ActivateCooldownOnAbility(int abilityNum, bool isSpell=false)
     {
         GameObject ability = null;
-        switch (abilityNum)
-        { 
-            case 1:
-                ability = ability1;
-                
-                break;
-            case 2:
-                ability = ability2;
-                break;
-            case 3:
-                ability = ability3;
-                break;
+        if (!isSpell)
+        {
+            switch (abilityNum)
+            {
+                case 1:
+                    ability = ability1;
+                    break;
+                case 2:
+                    ability = ability2;
+                    break;
+                case 3:
+                    ability = ability3;
+                    break;
+            }
         }
+        else
+        {
+            switch (abilityNum)
+            {
+                case 1:
+                    ability = ability_spell1;
+                    break;
+                case 2:
+                    ability = ability_spell2;
+                    break;
+                case 3:
+                    ability = ability_spell3;
+                    break;
+            }
+        }
+        
         ability.transform.Find("AbilityCooldownFill").gameObject.SetActive(true);
         ability.transform.Find("AbilityBorderCooldown").gameObject.SetActive(true);
         ability.transform.Find("AbilityBorderNormal").gameObject.SetActive(false);
@@ -917,11 +938,19 @@ public class UIManager : MonoBehaviour
         ability.transform.Find("AbilityCooldownBorderDeactivated").gameObject.SetActive(true);
 
 
-        var reducedAlpha = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
-        reducedAlpha.a = 0.5f;
-        ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = reducedAlpha;
+        
+        if (!isSpell)
+        {
+            var reducedAlpha_local = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
+            reducedAlpha_local.a = 0.5f;
+            ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = reducedAlpha_local;
+        }
+        else
+        {
+            ReduceSpellRuneAlphas(abilityNum);
+        }
 
-        reducedAlpha = ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color;
+        var reducedAlpha = ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color;
         reducedAlpha.a = 0.5f;
         ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color = reducedAlpha;
 
@@ -942,39 +971,77 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
-    public IEnumerator StartCooldownSlider(int abilityNum, float rate)
+    public IEnumerator StartCooldownSlider(int abilityNum, float rate, bool isSpell=false)
     {
         Slider currentAbilitySlider = null;
-        switch (abilityNum)
+        if (!isSpell)
         {
-            case 1:
-                currentAbilitySlider = ability1.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
-                break;
-            case 2:
-                currentAbilitySlider = ability2.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
-                break;
-            case 3:
-                currentAbilitySlider = ability3.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
-                break;
+            switch (abilityNum)
+            {
+                case 1:
+                    currentAbilitySlider = ability1.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
+                    break;
+                case 2:
+                    currentAbilitySlider = ability2.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
+                    break;
+                case 3:
+                    currentAbilitySlider = ability3.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
+                    break;
+            }
         }
+        else
+        {
+            switch (abilityNum)
+            {
+                case 1:
+                    currentAbilitySlider = ability_spell1.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
+                    break;
+                case 2:
+                    currentAbilitySlider = ability_spell2.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
+                    break;
+                case 3:
+                    currentAbilitySlider = ability_spell3.transform.Find("AbilityCooldownFill").GetComponent<Slider>();
+                    break;
+            }
+        }
+        
         yield return StartCoroutine(AnimateCooldownSlider(currentAbilitySlider, rate));
     }
 
-    public void DeactivateCooldownOnAbility(int abilityNum)
+    public void DeactivateCooldownOnAbility(int abilityNum, bool isSpell=false)
     {
         GameObject ability = null;
-        switch (abilityNum)
+        if (!isSpell)
         {
-            case 1:
-                ability = ability1;
-                break;
-            case 2:
-                ability = ability2;
-                break;
-            case 3:
-                ability = ability3;
-                break;
+            switch (abilityNum)
+            {
+                case 1:
+                    ability = ability1;
+                    break;
+                case 2:
+                    ability = ability2;
+                    break;
+                case 3:
+                    ability = ability3;
+                    break;
+            }
         }
+        else
+        {
+            switch (abilityNum)
+            {
+                case 1:
+                    ability = ability_spell1;
+                    break;
+                case 2:
+                    ability = ability_spell2;
+                    break;
+                case 3:
+                    ability = ability_spell3;
+                    break;
+            }
+        }
+         
         ability.transform.Find("AbilityCooldownFill").gameObject.GetComponent<Slider>().value = 0.0f;
         ability.transform.Find("AbilityCooldownFill").gameObject.SetActive(false);
         ability.transform.Find("AbilityBorderCooldown").gameObject.SetActive(false);
@@ -982,11 +1049,19 @@ public class UIManager : MonoBehaviour
         ability.transform.Find("AbilityCooldownBorder").gameObject.SetActive(true);
         ability.transform.Find("AbilityCooldownBorderDeactivated").gameObject.SetActive(false);
 
-        var increasedAlpha = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
-        increasedAlpha.a = 1.0f;
-        ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = increasedAlpha;
+        if (!isSpell)
+        {
+            var increasedAlpha_local = ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color;
+            increasedAlpha_local.a = 1.0f;
+            ability.transform.Find("AbilityIcon").gameObject.GetComponent<Image>().color = increasedAlpha_local;
+        }
+        else
+        {
+            IncreaseSpellRuneAlphas(abilityNum);
+        }
+        
 
-        increasedAlpha = ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color;
+        var increasedAlpha = ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color;
         increasedAlpha.a = 1.0f;
         ability.transform.Find("AbilityNumber").gameObject.GetComponent<TMP_Text>().color = increasedAlpha;
 
@@ -1166,19 +1241,114 @@ public class UIManager : MonoBehaviour
         StartCoroutine(greyOutSwapIcon());
     }
 
+    public void ReduceSpellRuneAlphas(int index)
+    {
+        int count = spellAbility1.transform.childCount;
+        switch (index)
+        {
+            case 1:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = spellAbility1.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 0.5f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+            case 2:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = spellAbility2.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 0.5f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+            case 3:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = spellAbility3.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 0.5f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+        }
+        
+    }
+
+    public void IncreaseSpellRuneAlphas(int index)
+    {
+        int count = spellAbility1.transform.childCount;
+        switch (index)
+        {
+            case 1:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = spellAbility1.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 1.0f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+            case 2:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = spellAbility2.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 1.0f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+            case 3:
+                for (int j = 0; j < count; j++)
+                {
+                    var child = spellAbility3.transform.GetChild(j);
+                    if (child.gameObject.activeSelf)
+                    {
+                        var reducedAlpha = child.gameObject.GetComponent<Image>().color;
+                        reducedAlpha.a = 1.0f;
+                        child.gameObject.GetComponent<Image>().color = reducedAlpha;
+                    }
+                }
+                break;
+        }
+
+    }
+
     public void PopulateSpellRunes()
     {
         var runes = character.equippedRunes;
         for(int i =0; i < runes.Length; i++)
         {
-            if(runes[i] == null) continue;
-            if(i == 0)
+            
+            if (i == 0)
             {
                 int count = spellAbility1.transform.childCount;
                 
                 for (int j = 0; j < count; j++)
                 {
                     var child = spellAbility1.transform.GetChild(j);
+                    if (runes[i] == null)
+                    {
+                        child.gameObject.SetActive(false);
+                        continue;
+                    }
                     if (child.name == runes[i].runeName) child.gameObject.SetActive(true);
                     else child.gameObject.SetActive(false);
                 }
@@ -1190,6 +1360,11 @@ public class UIManager : MonoBehaviour
                 for (int j = 0; j < count; j++)
                 {
                     var child = spellAbility2.transform.GetChild(j);
+                    if (runes[i] == null)
+                    {
+                        child.gameObject.SetActive(false);
+                        continue;
+                    }
                     if (child.name == runes[i].runeName) child.gameObject.SetActive(true);
                     else child.gameObject.SetActive(false);
                 }
@@ -1201,6 +1376,11 @@ public class UIManager : MonoBehaviour
                 for (int j = 0; j < count; j++)
                 {
                     var child = spellAbility3.transform.GetChild(j);
+                    if (runes[i] == null)
+                    {
+                        child.gameObject.SetActive(false);
+                        continue;
+                    }
                     if (child.name == runes[i].runeName) child.gameObject.SetActive(true);
                     else child.gameObject.SetActive(false);
                 }

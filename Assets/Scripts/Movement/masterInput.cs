@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -336,7 +337,7 @@ public class masterInput : MonoBehaviour
         if (playerInput.actions["SwitchAbilities"].triggered)
         {
             onSwitchToSpell();
-            uiManager.SwitchAbilityUI();
+            
         }
 
         if (animationControl != null)
@@ -555,6 +556,7 @@ public class masterInput : MonoBehaviour
             print("cant switch, ability active");
             return;
         }
+        uiManager.SwitchAbilityUI();
         int rCount = 0;
         foreach(Rune rune in character.equippedRunes)
         {
@@ -1674,10 +1676,13 @@ public class masterInput : MonoBehaviour
                 print("Using spellCast One");
                 abilityInUse = true;
                 gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[0]);
+                uiManager.ActivateCooldownOnAbility(1, true);
+                StartCoroutine(abilityCooldown(1f, 1));
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
                     StartCoroutine(abilityWait(1));
+                    
                 }
             }
             else if (playerInput.actions["AbilityTwo"].triggered && !abilityInUse && character.equippedRunes[1].runeType == Rune.RuneType.Spell)
@@ -1685,10 +1690,13 @@ public class masterInput : MonoBehaviour
                 print("Using spellCast Two");
                 abilityInUse = true;
                 gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[1]);
+                uiManager.ActivateCooldownOnAbility(2, true);
+                StartCoroutine(abilityCooldown(1f, 2));
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
                     StartCoroutine(abilityWait(1));
+                    
                 }
             }
             else if (playerInput.actions["AbilityThree"].triggered && !abilityInUse && character.equippedRunes[2].runeType == Rune.RuneType.Spell)
@@ -1701,10 +1709,13 @@ public class masterInput : MonoBehaviour
                     shootingSwords = true;
                 }
                 gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[2]);
+                uiManager.ActivateCooldownOnAbility(3, true);
+                StartCoroutine(abilityCooldown(1f, 3));
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
                     StartCoroutine(abilityWait(1));
+                    
                 }
             }
         }
@@ -1717,6 +1728,13 @@ public class masterInput : MonoBehaviour
         yield return new WaitForSeconds(time);
         abilityInUse = false;
         yield break;
+    }
+
+    IEnumerator abilityCooldown(float time, int abilityIndex)
+    {
+        yield return StartCoroutine(uiManager.StartCooldownSlider(abilityIndex, (0.98f / time), true));
+        yield return new WaitForSeconds(0.2f);
+        uiManager.DeactivateCooldownOnAbility(abilityIndex, true);
     }
 
 
