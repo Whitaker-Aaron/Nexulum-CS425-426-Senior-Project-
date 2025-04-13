@@ -48,6 +48,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject dialogue_box;
     [SerializeField] GameObject advance_textbox_obj;
 
+    [SerializeField] GameObject abilitiesUI;
+    [SerializeField] GameObject spellsUI;
+    [SerializeField] GameObject greyedOutSwapUI;
+    [SerializeField] GameObject spellAbility1;
+    [SerializeField] GameObject spellAbility2;
+    [SerializeField] GameObject spellAbility3;
+
     [SerializeField] GameObject viewItemGradient;
 
     Coroutine currentCriticalOpacity;
@@ -74,6 +81,7 @@ public class UIManager : MonoBehaviour
     bool advanceTextbox = false;
     bool advanceLeadChar = false;
     bool viewItemActive = false;
+    bool abilityUIActive = true;
 
     Vector3 initialEnemyRemainingUIPos;
     // Start is called before the first frame update
@@ -1129,6 +1137,74 @@ public class UIManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.75f);
             yield return null;
+        }
+    }
+
+    public IEnumerator greyOutSwapIcon()
+    {
+        greyedOutSwapUI.SetActive(true);
+        yield return new WaitForSeconds(0.2f);
+        greyedOutSwapUI.SetActive(false);
+    }
+
+    public void SwitchAbilityUI()
+    {
+        if (abilityUIActive)
+        {
+            abilitiesUI.SetActive(false);
+            spellsUI.SetActive(true);
+            abilityUIActive = false;
+            PopulateSpellRunes();
+        }
+        else
+        {
+            abilitiesUI.SetActive(true);
+            spellsUI.SetActive(false);
+            abilityUIActive = true;
+        }
+        StopCoroutine(greyOutSwapIcon());
+        StartCoroutine(greyOutSwapIcon());
+    }
+
+    public void PopulateSpellRunes()
+    {
+        var runes = character.equippedRunes;
+        for(int i =0; i < runes.Length; i++)
+        {
+            if(runes[i] == null) continue;
+            if(i == 0)
+            {
+                int count = spellAbility1.transform.childCount;
+                
+                for (int j = 0; j < count; j++)
+                {
+                    var child = spellAbility1.transform.GetChild(j);
+                    if (child.name == runes[i].runeName) child.gameObject.SetActive(true);
+                    else child.gameObject.SetActive(false);
+                }
+            }
+            if (i == 1)
+            {
+                int count = spellAbility2.transform.childCount;
+
+                for (int j = 0; j < count; j++)
+                {
+                    var child = spellAbility2.transform.GetChild(j);
+                    if (child.name == runes[i].runeName) child.gameObject.SetActive(true);
+                    else child.gameObject.SetActive(false);
+                }
+            }
+            if (i == 2)
+            {
+                int count = spellAbility3.transform.childCount;
+
+                for (int j = 0; j < count; j++)
+                {
+                    var child = spellAbility3.transform.GetChild(j);
+                    if (child.name == runes[i].runeName) child.gameObject.SetActive(true);
+                    else child.gameObject.SetActive(false);
+                }
+            }
         }
     }
 

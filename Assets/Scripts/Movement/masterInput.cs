@@ -336,6 +336,7 @@ public class masterInput : MonoBehaviour
         if (playerInput.actions["SwitchAbilities"].triggered)
         {
             onSwitchToSpell();
+            uiManager.SwitchAbilityUI();
         }
 
         if (animationControl != null)
