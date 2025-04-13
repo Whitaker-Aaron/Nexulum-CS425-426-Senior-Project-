@@ -191,6 +191,7 @@ public class masterInput : MonoBehaviour
 
     //abilities
     public bool placing = false;
+    public bool spellsTriggered = false;
     GameObject[] towersToRepair;
 
     //repair
@@ -336,6 +337,8 @@ public class masterInput : MonoBehaviour
 
         if (playerInput.actions["SwitchAbilities"].triggered)
         {
+            if(!placing && !shootingLaser && !shootingRocket && 
+                !throwingGrenade && !shootingSwords) spellsTriggered = !spellsTriggered;
             onSwitchToSpell();
             
         }
@@ -1608,7 +1611,7 @@ public class masterInput : MonoBehaviour
         }
 
         //Class ability Logic
-        if(!usingSpellRunes)
+        if(!usingSpellRunes && !spellsTriggered)
         {
             if (placing || shootingLaser || shootingRocket || throwingGrenade)
             {
@@ -1664,14 +1667,14 @@ public class masterInput : MonoBehaviour
                     StartCoroutine(abilityWait(classAbilties.instance.ea3Time - .05f));
             }
         }
-        else
+        else if(spellsTriggered)
         {
             if (placing || shootingLaser || shootingRocket || throwingGrenade || shootingSwords)
             {
                 print("abiity in use cant use spell cast");
                 return;
             }
-            if (playerInput.actions["AbilityOne"].triggered && !abilityInUse && character.equippedRunes[0].runeType == Rune.RuneType.Spell)
+            if (character.equippedRunes[0] != null && playerInput.actions["AbilityOne"].triggered && !abilityInUse && character.equippedRunes[0].runeType == Rune.RuneType.Spell)
             {
                 print("Using spellCast One");
                 abilityInUse = true;
@@ -1685,7 +1688,7 @@ public class masterInput : MonoBehaviour
                     
                 }
             }
-            else if (playerInput.actions["AbilityTwo"].triggered && !abilityInUse && character.equippedRunes[1].runeType == Rune.RuneType.Spell)
+            else if (character.equippedRunes[1] != null && playerInput.actions["AbilityTwo"].triggered && !abilityInUse && character.equippedRunes[1].runeType == Rune.RuneType.Spell)
             {
                 print("Using spellCast Two");
                 abilityInUse = true;
@@ -1699,7 +1702,7 @@ public class masterInput : MonoBehaviour
                     
                 }
             }
-            else if (playerInput.actions["AbilityThree"].triggered && !abilityInUse && character.equippedRunes[2].runeType == Rune.RuneType.Spell)
+            else if (character.equippedRunes[2] != null && playerInput.actions["AbilityThree"].triggered && !abilityInUse && character.equippedRunes[2].runeType == Rune.RuneType.Spell)
             {
                 print("Using spellCast Three");
                 abilityInUse = true;
