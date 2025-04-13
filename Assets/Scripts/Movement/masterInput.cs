@@ -1679,9 +1679,9 @@ public class masterInput : MonoBehaviour
             {
                 print("Using spellCast One");
                 abilityInUse = true;
-                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[0]);
+                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[0], 1);
                 uiManager.ActivateCooldownOnAbility(1, true);
-                StartCoroutine(abilityCooldown(1f, 1));
+                //StartCoroutine(abilityCooldown(1f, 1));
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
@@ -1693,9 +1693,9 @@ public class masterInput : MonoBehaviour
             {
                 print("Using spellCast Two");
                 abilityInUse = true;
-                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[1]);
+                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[1], 2);
                 uiManager.ActivateCooldownOnAbility(2, true);
-                StartCoroutine(abilityCooldown(1f, 2));
+                //StartCoroutine(abilityCooldown(1f, 2));
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
@@ -1712,9 +1712,9 @@ public class masterInput : MonoBehaviour
                     //animationControl.knightShootSwords();
                     //shootingSwords = true;
                 }
-                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[2]);
+                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[2], 3);
                 uiManager.ActivateCooldownOnAbility(3, true);
-                StartCoroutine(abilityCooldown(1f, 3));
+                //StartCoroutine(abilityCooldown(1f, 3));
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {

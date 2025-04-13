@@ -31,6 +31,7 @@ public class spellCastManager : MonoBehaviour
     public int lightningDamage = 50;
 
     public Vector3 spawnOffset = new Vector3(0, .2f, 0);
+    UIManager uiManager;
 
     public void OnMouseLook(InputAction.CallbackContext context)
     {
@@ -180,6 +181,7 @@ public class spellCastManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerInput = GetComponent<PlayerInput>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
     }
 
     // Update is called once per frame
@@ -217,10 +219,11 @@ public class spellCastManager : MonoBehaviour
         }
     }
 
-    public void activateSpellCast(Rune rune)
+    public void activateSpellCast(Rune rune, int abilityIndex)
     {
         print("activating spellCast in SCManager");
         print("Rune Name is: " + rune.runeName);
+        if (!rune.canCast) return;
         switch (rune.runeName)
         {
             case "LightningCast":
@@ -233,9 +236,19 @@ public class spellCastManager : MonoBehaviour
                 activateWaterSplash();
                 break;
         }
+        rune.canCast = false;
+        StartCoroutine(abilityCooldown(rune.cooldownTime, abilityIndex, rune));
 
 
 
+    }
+
+    IEnumerator abilityCooldown(float time, int abilityIndex, Rune rune)
+    {
+        yield return StartCoroutine(uiManager.StartCooldownSlider(abilityIndex, (0.98f / time), true));
+        yield return new WaitForSeconds(0.2f);
+        rune.canCast = true;
+        uiManager.DeactivateCooldownOnAbility(abilityIndex, true);
     }
 
     public void deactivateSpellCast()
