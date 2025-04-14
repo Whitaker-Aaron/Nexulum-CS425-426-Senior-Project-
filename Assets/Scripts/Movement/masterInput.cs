@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -190,6 +191,7 @@ public class masterInput : MonoBehaviour
 
     //abilities
     public bool placing = false;
+    public bool spellsTriggered = false;
     GameObject[] towersToRepair;
 
     //repair
@@ -335,7 +337,10 @@ public class masterInput : MonoBehaviour
 
         if (playerInput.actions["SwitchAbilities"].triggered)
         {
+            if(!placing && !shootingLaser && !shootingRocket && 
+                !throwingGrenade && !shootingSwords) spellsTriggered = !spellsTriggered;
             onSwitchToSpell();
+            
         }
 
         if (animationControl != null)
@@ -554,6 +559,7 @@ public class masterInput : MonoBehaviour
             print("cant switch, ability active");
             return;
         }
+        uiManager.SwitchAbilityUI();
         int rCount = 0;
         foreach(Rune rune in character.equippedRunes)
         {
@@ -567,7 +573,7 @@ public class masterInput : MonoBehaviour
         }
         if(rCount > 0)
         {
-            usingSpellRunes = !usingSpellRunes;
+            //usingSpellRunes = !usingSpellRunes;
             print("usingSpellRunes = " + usingSpellRunes);
         }
         else
@@ -1605,7 +1611,8 @@ public class masterInput : MonoBehaviour
         }
 
         //Class ability Logic
-        if(!usingSpellRunes)
+        //if(!usingSpellRunes && !spellsTriggered)
+        if (!spellsTriggered)
         {
             if (placing || shootingLaser || shootingRocket || throwingGrenade)
             {
@@ -1661,49 +1668,58 @@ public class masterInput : MonoBehaviour
                     StartCoroutine(abilityWait(classAbilties.instance.ea3Time - .05f));
             }
         }
-        else
+        else if(spellsTriggered)
         {
             if (placing || shootingLaser || shootingRocket || throwingGrenade || shootingSwords)
             {
                 print("abiity in use cant use spell cast");
                 return;
             }
-            if (playerInput.actions["AbilityOne"].triggered && !abilityInUse && character.equippedRunes[0].runeType == Rune.RuneType.Spell)
+            if (character.equippedRunes[0] != null && playerInput.actions["AbilityOne"].triggered && !abilityInUse && character.equippedRunes[0].runeType == Rune.RuneType.Spell)
             {
                 print("Using spellCast One");
                 abilityInUse = true;
-                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[0]);
+                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[0], 1);
+                uiManager.ActivateCooldownOnAbility(1, true);
+                //StartCoroutine(abilityCooldown(1f, 1));
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
                     StartCoroutine(abilityWait(1));
+                    
                 }
             }
-            else if (playerInput.actions["AbilityTwo"].triggered && !abilityInUse && character.equippedRunes[1].runeType == Rune.RuneType.Spell)
+            else if (character.equippedRunes[1] != null && playerInput.actions["AbilityTwo"].triggered && !abilityInUse && character.equippedRunes[1].runeType == Rune.RuneType.Spell)
             {
                 print("Using spellCast Two");
                 abilityInUse = true;
-                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[1]);
+                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[1], 2);
+                uiManager.ActivateCooldownOnAbility(2, true);
+                //StartCoroutine(abilityCooldown(1f, 2));
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
                     StartCoroutine(abilityWait(1));
+                    
                 }
             }
-            else if (playerInput.actions["AbilityThree"].triggered && !abilityInUse && character.equippedRunes[2].runeType == Rune.RuneType.Spell)
+            else if (character.equippedRunes[2] != null && playerInput.actions["AbilityThree"].triggered && !abilityInUse && character.equippedRunes[2].runeType == Rune.RuneType.Spell)
             {
                 print("Using spellCast Three");
                 abilityInUse = true;
                 if (currentClass == WeaponBase.weaponClassTypes.Knight)
                 {
-                    animationControl.knightShootSwords();
-                    shootingSwords = true;
+                    //animationControl.knightShootSwords();
+                    //shootingSwords = true;
                 }
-                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[2]);
+                gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[2], 3);
+                uiManager.ActivateCooldownOnAbility(3, true);
+                //StartCoroutine(abilityCooldown(1f, 3));
                 //StartCoroutine(abilityWait());
                 if (currentClass == WeaponBase.weaponClassTypes.Knight || currentClass == WeaponBase.weaponClassTypes.Gunner)
                 {
                     StartCoroutine(abilityWait(1));
+                    
                 }
             }
         }
@@ -1716,6 +1732,13 @@ public class masterInput : MonoBehaviour
         yield return new WaitForSeconds(time);
         abilityInUse = false;
         yield break;
+    }
+
+    IEnumerator abilityCooldown(float time, int abilityIndex)
+    {
+        yield return StartCoroutine(uiManager.StartCooldownSlider(abilityIndex, (0.98f / time), true));
+        yield return new WaitForSeconds(0.2f);
+        uiManager.DeactivateCooldownOnAbility(abilityIndex, true);
     }
 
 

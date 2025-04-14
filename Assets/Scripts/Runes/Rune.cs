@@ -10,7 +10,9 @@ public class Rune : ScriptableObject
     public string runeEffect;
     public Texture runeTexture;
     public RuneType runeType;
-    public CraftRecipe runeRecipe; 
+    public CraftRecipe runeRecipe;
+    public bool canCast;
+    public float cooldownTime;
     
     //more variables needed for type of rune and effect
     public enum RuneType {
