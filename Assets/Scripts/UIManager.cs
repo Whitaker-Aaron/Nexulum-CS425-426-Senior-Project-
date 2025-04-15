@@ -42,6 +42,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject dashSmear;
     [SerializeField] GameObject criticalText;
     [SerializeField] GameObject criticalTextBorder;
+    [SerializeField] GameObject warningScreen;
     [SerializeField] GameObject florentineUI;
     
 
@@ -850,6 +851,15 @@ public class UIManager : MonoBehaviour
         {
             yield return currentCriticalBorderOpacity = StartCoroutine(IncreaseTextOpacity(criticalTextBorder, 1.0f));
             yield return currentCriticalBorderOpacity = StartCoroutine(ReduceTextOpacity(criticalTextBorder, 1.0f));
+        }
+    }
+
+    public IEnumerator AnimateWarningScreen()
+    {
+        while (true)
+        {
+            yield return currentCriticalBorderOpacity = StartCoroutine(IncreaseTextOpacity(warningScreen, 1.0f));
+            yield return currentCriticalBorderOpacity = StartCoroutine(ReduceTextOpacity(warningScreen, 1.0f));
         }
     }
 

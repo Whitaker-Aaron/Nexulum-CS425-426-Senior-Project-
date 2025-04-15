@@ -64,7 +64,7 @@ public class CameraFollow : MonoBehaviour
         panYAxisLocked = lockY;
         target.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         target.GetComponent<CharacterBase>().inEvent = true;
-        if(delay!= 0.0f) StartCoroutine(PanToPosition(positionToPanTo, rate, delay));
+        if(delay != 0.0f) StartCoroutine(PanToPosition(positionToPanTo, rate, delay));
         else StartCoroutine(PanToPosition(positionToPanTo, rate));
     }
 
