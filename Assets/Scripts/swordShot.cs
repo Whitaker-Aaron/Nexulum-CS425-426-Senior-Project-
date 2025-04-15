@@ -85,6 +85,12 @@ public class swordShot : projectile
 
                 foreach (Collider c in enemies)
                 {
+                    if(c.gameObject.tag == "bossPart")
+                    {
+                        //print("slow down the enemy");
+                        c.gameObject.GetComponent<bossPart>().takeDamage(damage);
+                        uiManager.DisplayDamageNum(c.gameObject.transform, damage);
+                    }
                     if (c.gameObject.tag == "Enemy")
                     {
                         //print("slow down the enemy");
@@ -114,6 +120,12 @@ public class swordShot : projectile
 
             foreach (Collider c in enemies)
             {
+                if(c.gameObject.tag == "bossPart")
+                    {
+                        //print("slow down the enemy");
+                        c.gameObject.GetComponent<bossPart>().takeDamage(damage);
+                        uiManager.DisplayDamageNum(c.gameObject.transform, damage);
+                    }
                 if (c.gameObject.tag == "Enemy")
                 {
                     //print("slow down the enemy");
@@ -143,6 +155,12 @@ public class swordShot : projectile
 
         foreach(Collider c in enemies)
         {
+            if(c.gameObject.tag == "bossPart")
+            {
+                //print("slow down the enemy");
+                c.gameObject.GetComponent<bossPart>().takeDamage(iceDamage);
+                uiManager.DisplayDamageNum(c.gameObject.transform, iceDamage);
+            }
             if (c.gameObject.tag == "Enemy")
             {
                 //print("slow down the enemy");

@@ -32,7 +32,7 @@ public class golemBoss : MonoBehaviour
 
     //Health
     public int MAXHEALTH;
-    private int health;
+    [SerializeField] private int health;
     bool bossDying = false;
     private bool isHalfHealth = false; // Flag to track if half health event has triggered
 
