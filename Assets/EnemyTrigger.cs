@@ -52,11 +52,15 @@ public class EnemyTrigger : MonoBehaviour
 
     public IEnumerator bossPan()
     {
-        
-        camera.StartPan(enemies[0].transform.position, true, true, 0.05f, 5f);
+        var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        uiManager.DisableHUD();
+        camera.StartPan(enemies[0].transform.position, true, true, 0.05f, 7f);
         yield return new WaitForSeconds(3f);
+        StartCoroutine(uiManager.AnimateBossName("Gollurk"));
         EnableEnemies();
         yield return new WaitForSeconds(5f);
+        uiManager.EnableHUD();
+        yield return new WaitForSeconds(2f);
         UnlockEnemies();
         yield break;
     }
