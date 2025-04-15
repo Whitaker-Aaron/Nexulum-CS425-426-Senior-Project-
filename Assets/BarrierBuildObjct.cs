@@ -89,4 +89,9 @@ public class BarrierBuildObjct : MonoBehaviour
         yield return StartCoroutine(moveObjectDown());
         yield break;
     }
+
+    public void placeBuildObjectInFinishedState()
+    {
+        transform.position = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
+    }
 }

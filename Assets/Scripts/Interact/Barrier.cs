@@ -34,6 +34,19 @@ public class Barrier : MonoBehaviourID, i_Interactable
 
         itemManager = GameObject.Find("ItemManager").GetComponent<ItemManager>();
         camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>();
+        if (!doorToUnlock.isLocked)
+        {
+            StartCoroutine(unlockBarrierDelay());
+        }
+    }
+
+    public IEnumerator unlockBarrierDelay()
+    {
+        yield return new WaitForSeconds(0.2f);
+        UnlockBarrier();
+        yield return new WaitForSeconds(0.1f);
+        objectToBuild.GetComponent<BarrierBuildObjct>().placeBuildObjectInFinishedState();
+
     }
 
     public void OnEnable()
@@ -73,17 +86,22 @@ public class Barrier : MonoBehaviourID, i_Interactable
 
         if (!hasTriggered && canTrigger && doorToUnlock.isLocked)
         {
-            hasTriggered = true;
-            if (barrierUI != null) barrierUI.SetActive(false);
-            if (lockedUI != null) lockedUI.SetActive(false);
-            if (craftGlobeUI != null) craftGlobeUI.SetActive(false);
-            if (particleSystem != null) particleSystem.SetActive(false);
+            UnlockBarrier();
             requirementUI.removeMatFromInventory();
-            if(objectToBuild != null) objectToBuild.SetActive(true);
             StartCoroutine(animateCraft());
         }
 
         return true;
+    }
+
+    public void UnlockBarrier()
+    {
+        hasTriggered = true;
+        if (barrierUI != null) barrierUI.SetActive(false);
+        if (lockedUI != null) lockedUI.SetActive(false);
+        if (craftGlobeUI != null) craftGlobeUI.SetActive(false);
+        if (particleSystem != null) particleSystem.SetActive(false);
+        if (objectToBuild != null) objectToBuild.SetActive(true);
     }
 
     public IEnumerator animateCraft()
@@ -131,7 +149,8 @@ public class Barrier : MonoBehaviourID, i_Interactable
 
     public void ToggleDoor()
     {
-        if (doorToUnlock.isOpen)
+        doorToUnlock.ToggleDoor();
+        /*if (doorToUnlock.isOpen)
         {
             CloseDoor();
         }
@@ -139,7 +158,7 @@ public class Barrier : MonoBehaviourID, i_Interactable
         {
             OpenDoor();
             
-        }
+        }*/
         //pdateDoorState();
     }
 

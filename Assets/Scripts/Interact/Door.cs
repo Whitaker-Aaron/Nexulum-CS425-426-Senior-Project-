@@ -66,7 +66,11 @@ public class Door : MonoBehaviourID, i_Interactable
 
     public void UpdateDoorState()
     {
-        if(doorGuid != null && roomInfo != null) roomInfo.UpdateDoorState(doorGuid, isLocked);
+        if (doorGuid != null && roomInfo != null)
+        {
+            Debug.Log("Updating door state");
+            roomInfo.UpdateDoorState(doorGuid, isLocked);
+        }
     }
 
     public bool Interact(Interactor interactor)
@@ -135,7 +139,6 @@ public class Door : MonoBehaviourID, i_Interactable
         else
         {
             OpenDoor();
-            
         }
         UpdateDoorState();
     }
