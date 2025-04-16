@@ -934,11 +934,11 @@ public class masterInput : MonoBehaviour
                     laserLine.SetPosition(1, hit.point);
 
 
-                if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) > shootingRange)
+                if((hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "Boss") && Vector3.Distance(player.transform.position, hit.point) > shootingRange)
                 {
                     laserLine.startColor = Color.red;
                 }
-                else if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) <= shootingRange)
+                else if((hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "Boss") && Vector3.Distance(player.transform.position, hit.point) <= shootingRange)
                 {
                     laserLine.startColor = Color.green;
                 }
@@ -1329,7 +1329,7 @@ public class masterInput : MonoBehaviour
     bool cooling = false;
     IEnumerator lowerHeat()
     {
-        if (shooting || cooling || character.equippedWeapon.weaponType.isReloading)
+        if (shooting || cooling || character.equippedWeapon.weaponType == null || character.equippedWeapon.weaponType.isReloading)
             yield break;
 
         cooling = true;
@@ -1509,6 +1509,9 @@ public class masterInput : MonoBehaviour
 
             if (shooting && !isReloading)
             {
+                if(character.equippedWeapon.weaponType == null)
+                    print("weapon is null in MI");
+                    //return;
                 if(character.equippedWeapon.weaponType.currentHeat >= character.equippedWeapon.weaponType.overHeatMax)
                 {
                     shooting = false;

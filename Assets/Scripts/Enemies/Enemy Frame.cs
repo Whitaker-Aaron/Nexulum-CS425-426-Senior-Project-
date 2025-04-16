@@ -53,6 +53,8 @@ public class EnemyFrame : MonoBehaviour
     public bool statusImmunity_Fire = false;
     public bool statusImmunity_Earth = false;
     public bool statusImmunity_Electric = false;
+    public bool statusImmunity_Water = false;
+    public bool statusImmunity_Wind = false;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
@@ -468,7 +470,8 @@ public class EnemyFrame : MonoBehaviour
         Ice,
         Earth,
         Electric,
-        Wind
+        Wind,
+        Water
     }
 
 }

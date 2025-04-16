@@ -36,16 +36,70 @@ public class teslaTower : MonoBehaviour
         Collider[] enemies = Physics.OverlapSphere(tower1.transform.position + Vector3.up, iceRadius, enemyLayer);
         Collider[] enemies2 = Physics.OverlapSphere(tower2.transform.position + Vector3.up, iceRadius, enemyLayer);
 
+        // Process enemies from first tower
         foreach (Collider c in enemies)
         {
-            c.GetComponent<EnemyFrame>().takeDamage(iceDamage, Vector3.zero, EnemyFrame.DamageSource.AOE, EnemyFrame.DamageType.Ice);
-            UIManager.instance.DisplayDamageNum(c.gameObject.transform, iceDamage);
+            if (c.CompareTag("Boss"))
+            {
+                golemBoss boss = c.gameObject.GetComponent<golemBoss>();
+                if (boss != null)
+                {
+                    boss.takeDamage(iceDamage);
+                    UIManager.instance.DisplayDamageNum(c.gameObject.transform, iceDamage);
+                }
+            }
+            else if (c.CompareTag("bossPart"))
+            {
+                bossPart part = c.gameObject.GetComponent<bossPart>();
+                if (part != null)
+                {
+                    part.takeDamage(iceDamage);
+                    UIManager.instance.DisplayDamageNum(c.gameObject.transform, iceDamage);
+                }
+            }
+            else if (c.CompareTag("Enemy"))
+            {
+                EnemyFrame enemy = c.gameObject.GetComponent<EnemyFrame>();
+                if (enemy != null)
+                {
+                    enemy.takeDamage(iceDamage, Vector3.zero, EnemyFrame.DamageSource.AOE, EnemyFrame.DamageType.Ice);
+                    UIManager.instance.DisplayDamageNum(c.gameObject.transform, iceDamage);
+                }
+            }
         }
-        foreach (Collider b in enemies)
+        
+        // Process enemies from second tower
+        foreach (Collider b in enemies2)
         {
-            b.GetComponent<EnemyFrame>().takeDamage(iceDamage, Vector3.zero, EnemyFrame.DamageSource.AOE, EnemyFrame.DamageType.Ice);
-            UIManager.instance.DisplayDamageNum(b.gameObject.transform, iceDamage);
+            if (b.CompareTag("Boss"))
+            {
+                golemBoss boss = b.gameObject.GetComponent<golemBoss>();
+                if (boss != null)
+                {
+                    boss.takeDamage(iceDamage);
+                    UIManager.instance.DisplayDamageNum(b.gameObject.transform, iceDamage);
+                }
+            }
+            else if (b.CompareTag("bossPart"))
+            {
+                bossPart part = b.gameObject.GetComponent<bossPart>();
+                if (part != null)
+                {
+                    part.takeDamage(iceDamage);
+                    UIManager.instance.DisplayDamageNum(b.gameObject.transform, iceDamage);
+                }
+            }
+            else if (b.CompareTag("Enemy"))
+            {
+                EnemyFrame enemy = b.gameObject.GetComponent<EnemyFrame>();
+                if (enemy != null)
+                {
+                    enemy.takeDamage(iceDamage, Vector3.zero, EnemyFrame.DamageSource.AOE, EnemyFrame.DamageType.Ice);
+                    UIManager.instance.DisplayDamageNum(b.gameObject.transform, iceDamage);
+                }
+            }
         }
+        
         yield return new WaitForSeconds(iceHitRate);
         iceAttacking = false;
 
@@ -67,8 +121,32 @@ public class teslaTower : MonoBehaviour
 
     public void attackEnemy(Collider enemy)
     {
-        EnemyFrame temp = enemy.gameObject.GetComponent<EnemyFrame>();
-        temp.takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Explosion);
+        if (enemy.CompareTag("Boss"))
+        {
+            golemBoss temp = enemy.gameObject.GetComponent<golemBoss>();
+            if (temp != null)
+            {
+                temp.takeDamage(damage);
+                UIManager.instance.DisplayDamageNum(enemy.transform, damage);
+            }
+        }
+        else if (enemy.CompareTag("bossPart"))
+        {
+            bossPart temp = enemy.gameObject.GetComponent<bossPart>();
+            if (temp != null)
+            {
+                temp.takeDamage(damage);
+                UIManager.instance.DisplayDamageNum(enemy.transform, damage);
+            }
+        }
+        else if (enemy.CompareTag("Enemy"))
+        {
+            EnemyFrame temp = enemy.gameObject.GetComponent<EnemyFrame>();
+            if (temp != null)
+            {
+                temp.takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Explosion);
+            }
+        }
     }
 
     public void takeDamage1(float damage)
@@ -84,7 +162,7 @@ public class teslaTower : MonoBehaviour
         if (tower2Health - damage <= 0)
             destroyTwo();
         else
-            tower1Health -= damage;
+            tower2Health -= damage;
     }
 
     void destroyOne()

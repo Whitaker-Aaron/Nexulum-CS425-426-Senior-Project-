@@ -168,15 +168,49 @@ public class turretCombat : MonoBehaviour
 
             foreach(Collider c in enemies)
             {
-                //direct damage
-                c.GetComponent<EnemyFrame>().takeDamage(fireDmg, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Fire);
-                UIManager.instance.DisplayDamageNum(c.transform, fireDmg);
-
-                //damage over time from fire
-                if (!c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated)
+                string tag = c.gameObject.tag;
+                
+                if (tag == "bossPart")
                 {
-                    c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated = true;
-                    StartCoroutine(c.gameObject.GetComponent<EnemyFrame>().dmgOverTime(turretFireDmg, turretFireTime, turretFireRate, EnemyFrame.DamageType.Fire));
+                    // Handle bossPart damage
+                    if (c.gameObject.GetComponent<bossPart>() != null)
+                    {
+                        // Direct damage
+                        c.gameObject.GetComponent<bossPart>().takeDamage(fireDmg);
+                        UIManager.instance.DisplayDamageNum(c.transform, fireDmg);
+                        
+                        // Damage over time
+                        StartCoroutine(c.gameObject.GetComponent<bossPart>().dmgOverTime(turretFireDmg, turretFireTime, turretFireRate, EnemyFrame.DamageType.Fire));
+                    }
+                }
+                else if (tag == "Boss")
+                {
+                    // Handle golemBoss damage
+                    if (c.gameObject.GetComponent<golemBoss>() != null)
+                    {
+                        // Direct damage
+                        c.gameObject.GetComponent<golemBoss>().takeDamage(fireDmg);
+                        UIManager.instance.DisplayDamageNum(c.transform, fireDmg);
+                        
+                        // Damage over time
+                        StartCoroutine(c.gameObject.GetComponent<golemBoss>().dmgOverTime(turretFireDmg, turretFireTime, turretFireRate, EnemyFrame.DamageType.Fire));
+                    }
+                }
+                else if(tag == "Enemy") // Default to EnemyFrame for "Enemy" tag
+                {
+                    // Direct damage
+                    if (c.gameObject.GetComponent<EnemyFrame>() != null)
+                    {
+                        c.gameObject.GetComponent<EnemyFrame>().takeDamage(fireDmg, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Fire);
+                        UIManager.instance.DisplayDamageNum(c.transform, fireDmg);
+                        
+                        // Damage over time
+                        if (!c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated)
+                        {
+                            c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated = true;
+                            StartCoroutine(c.gameObject.GetComponent<EnemyFrame>().dmgOverTime(turretFireDmg, turretFireTime, turretFireRate, EnemyFrame.DamageType.Fire));
+                        }
+                    }
                 }
             }
             //yield return new WaitUntil(() => { return enemiesInRange.Length == 0; });

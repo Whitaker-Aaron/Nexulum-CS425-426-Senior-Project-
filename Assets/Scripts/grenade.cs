@@ -13,6 +13,7 @@ public class grenade : MonoBehaviour
     UIManager uiManager;
     public int damage = 25;
     public int earthDamage = 25;
+    public float earthKnockbackForce = 10f; // Controllable variable for earth knockback force
 
     public bool isEarth = false;
 
@@ -40,19 +41,32 @@ public class grenade : MonoBehaviour
                 c.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Explosion);
                 uiManager.DisplayDamageNum(c.gameObject.transform, damage);
             }
+            if (c.gameObject.tag == "Boss")
+            {
+                c.gameObject.GetComponent<golemBoss>().takeDamage(damage);
+                uiManager.DisplayDamageNum(c.gameObject.transform, damage);
+            }
         }
 
         if (isEarth)
         {
-
             EffectsManager.instance.getFromPool("earthGrenade", gameObject.transform.position, Quaternion.identity, false, false);
             enemies = Physics.OverlapSphere(gameObject.transform.position, earthBlastRadius, enemy);
             foreach (Collider c in enemies)
             {
+                // Calculate direction from explosion to enemy for knockback
+                Vector3 knockbackDir = (c.transform.position - gameObject.transform.position).normalized;
+                Vector3 knockbackForce = knockbackDir * earthKnockbackForce;
+                
                 if (c.gameObject.tag == "Enemy")
                 {
-                    c.GetComponent<EnemyFrame>().takeDamage(earthDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Earth);
+                    c.GetComponent<EnemyFrame>().takeDamage(earthDamage, knockbackForce, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Earth);
                     uiManager.DisplayDamageNum(c.gameObject.transform, damage);
+                }
+                if (c.gameObject.tag == "Boss")
+                {
+                    c.gameObject.GetComponent<golemBoss>().takeDamage(earthDamage);
+                    uiManager.DisplayDamageNum(c.gameObject.transform, earthDamage);
                 }
             }
         }

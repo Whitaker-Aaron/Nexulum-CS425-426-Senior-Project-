@@ -32,9 +32,14 @@ public class golemBoss : MonoBehaviour, enemyInt
 
     //Health
     public int MAXHEALTH;
-    private int health;
+    [SerializeField] private int health;
     bool bossDying = false;
     private bool isHalfHealth = false; // Flag to track if half health event has triggered
+    
+    // Damage over time tracking
+    public bool dmgOverTimeActivated = false;
+    private bool takingDmgOT = false;
+    private UIManager uiManager;
 
     //attack effects
     [SerializeField]
@@ -110,7 +115,8 @@ public class golemBoss : MonoBehaviour, enemyInt
 
         // Initialize spawn enemies timer with a random offset
         spawnEnemiesTimer = Random.Range(0f, spawnEnemiesCooldown * 0.5f);
-
+        // Get UI Manager reference
+        uiManager = GameObject.Find("UIManager")?.GetComponent<UIManager>();
     }
 
     void Update()
@@ -242,6 +248,52 @@ public class golemBoss : MonoBehaviour, enemyInt
         animator.SetBool("death", true);
         animator.Play("death");
         animator.SetBool("death", false);
+        yield break;
+    }
+    
+    // Damage over time method for fire rune effects
+    public IEnumerator dmgOverTime(int dmg, float statusTime, float dmgRate, EnemyFrame.DamageType dmgType)
+    {
+        // If already taking damage over time, don't start another instance
+        if (takingDmgOT)
+            yield break;
+            
+        takingDmgOT = true;
+        dmgOverTimeActivated = true;
+        
+        float endTime = Time.time + statusTime;
+        
+        Debug.Log("Boss starting damage over time at: " + Time.time + " Until: " + endTime);
+        
+        // Continue applying damage over time until the statusTime expires
+        while (Time.time < endTime && !bossDying)
+        {
+            // Apply damage once per dmgTime interval
+            if (this == null)
+            {
+                yield break;
+            }
+            
+            // Apply damage to the boss
+            takeDamage(dmg);
+            
+            // Display damage number if UI manager is available
+            if (uiManager != null)
+            {
+                uiManager.DisplayDamageNum(gameObject.transform, dmg);
+            }
+            
+            Debug.Log("Boss damage taken: " + dmg + " at time: " + Time.time);
+            
+            // Wait for the next damage tick
+            yield return new WaitForSeconds(dmgRate);
+        }
+        
+        // Once the effect duration ends, reset flags and exit the coroutine
+        Debug.Log("Boss finished dmgOverTime at: " + Time.time);
+        dmgOverTimeActivated = false;
+        takingDmgOT = false;
+        
         yield break;
     }
     

@@ -7,7 +7,6 @@ public class areaOfEffect : MonoBehaviour
 
     bool check = false;
     public float checkTime = 5f;
-    int enemyLayer;
 
     Vector3 position;
     float radius, damageT, damageR;
@@ -17,7 +16,7 @@ public class areaOfEffect : MonoBehaviour
 
     public void startCheck(Vector3 pos, float rad, int fireDmg, float dmgTime, float dmgRate, float abilityTime)
     {
-        enemyLayer = LayerMask.GetMask("Enemy");
+        // We no longer need the enemy layer mask since we're checking tags directly
         position = pos;
         radius = rad;
         damageT = dmgTime;
@@ -52,63 +51,90 @@ public class areaOfEffect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (check)
         {
-            // Get enemies within the radius
-            Collider[] enemiesInRange = Physics.OverlapSphere(position, radius, enemyLayer);
+            // Get entities within the radius - we'll check for both enemies and bosses
+            Collider[] entitiesInRange = Physics.OverlapSphere(position, radius);
 
-            HashSet<GameObject> currentEnemies = new HashSet<GameObject>();
+            HashSet<GameObject> currentEntities = new HashSet<GameObject>();
 
-            foreach (Collider c in enemiesInRange)
+            foreach (Collider c in entitiesInRange)
             {
-                GameObject enemy = c.gameObject;
-
-                // Add enemy to set of current enemies
-                currentEnemies.Add(enemy);
-
-                // If enemy is not already burning, apply burning effect
-                if (!burningEnemies.ContainsKey(enemy))
+                GameObject entity = c.gameObject;
+                
+                // Only process entities with Enemy or Boss tag
+                if (entity.CompareTag("Enemy") || entity.CompareTag("Boss"))
                 {
-                    // Start the damage-over-time coroutine and store it in the dictionary
-                    Coroutine burnCoroutine = StartCoroutine(ApplyBurnEffect(enemy));
-                    burningEnemies.Add(enemy, burnCoroutine);
+                    // Add entity to set of current entities
+                    currentEntities.Add(entity);
+
+                    // If entity is not already burning, apply burning effect
+                    if (!burningEnemies.ContainsKey(entity))
+                    {
+                        // Start the damage-over-time coroutine and store it in the dictionary
+                        Coroutine burnCoroutine = StartCoroutine(ApplyBurnEffect(entity));
+                        burningEnemies.Add(entity, burnCoroutine);
+                    }
                 }
             }
 
-            // Remove enemies that are no longer in range
-            List<GameObject> enemiesToRemove = new List<GameObject>();
+            // Remove entities that are no longer in range
+            List<GameObject> entitiesToRemove = new List<GameObject>();
 
-            foreach (var enemy in burningEnemies.Keys)
+            foreach (var entity in burningEnemies.Keys)
             {
-                if (!currentEnemies.Contains(enemy))
+                if (!currentEntities.Contains(entity))
                 {
                     // Stop applying the effect immediately, but let the burning continue on its own
-                    enemiesToRemove.Add(enemy);
+                    entitiesToRemove.Add(entity);
                 }
             }
 
-            // Remove out-of-range enemies from the dictionary
-            foreach (var enemy in enemiesToRemove)
+            // Remove out-of-range entities from the dictionary
+            foreach (var entity in entitiesToRemove)
             {
-                burningEnemies.Remove(enemy);
+                burningEnemies.Remove(entity);
             }
         }
     }
 
 
-    private IEnumerator ApplyBurnEffect(GameObject enemy)
+    private IEnumerator ApplyBurnEffect(GameObject entity)
     {
-        EnemyFrame enemyFrame = enemy.GetComponent<EnemyFrame>();
-
-        // Apply damage-over-time to the enemy
-        if (enemyFrame != null && !enemyFrame.dmgOverTimeActivated)
+        // Check the tag of the entity
+        if (entity.CompareTag("Enemy"))
         {
-            enemyFrame.dmgOverTimeActivated = true;
-            yield return enemyFrame.StartCoroutine(enemyFrame.dmgOverTime(fireDamage, damageT, damageR, EnemyFrame.DamageType.Fire));
+            // Handle regular enemy
+            EnemyFrame enemyFrame = entity.GetComponent<EnemyFrame>();
 
-            // Ensure that the burning effect ends after the duration
-            enemyFrame.dmgOverTimeActivated = false;
+            // Apply damage-over-time to the enemy
+            if (enemyFrame != null && !enemyFrame.dmgOverTimeActivated)
+            {
+                enemyFrame.dmgOverTimeActivated = true;
+                yield return enemyFrame.StartCoroutine(enemyFrame.dmgOverTime(fireDamage, damageT, damageR, EnemyFrame.DamageType.Fire));
+
+                // Ensure that the burning effect ends after the duration
+                enemyFrame.dmgOverTimeActivated = false;
+            }
+        }
+        else if (entity.CompareTag("Boss"))
+        {
+            // Handle boss enemy
+            golemBoss boss = entity.GetComponent<golemBoss>();
+            
+            if (boss != null)
+            {
+                // Apply damage to the boss at regular intervals for the duration
+                float endTime = Time.time + damageT;
+                
+                while (Time.time < endTime)
+                {
+                    boss.takeDamage(fireDamage);
+                    
+                    // Wait for the next damage tick
+                    yield return new WaitForSeconds(damageR);
+                }
+            }
         }
     }
 }
