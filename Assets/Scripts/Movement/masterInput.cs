@@ -934,11 +934,11 @@ public class masterInput : MonoBehaviour
                     laserLine.SetPosition(1, hit.point);
 
 
-                if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) > shootingRange)
+                if((hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "Boss") && Vector3.Distance(player.transform.position, hit.point) > shootingRange)
                 {
                     laserLine.startColor = Color.red;
                 }
-                else if(hit.collider.gameObject.tag == "Enemy" && Vector3.Distance(player.transform.position, hit.point) <= shootingRange)
+                else if((hit.collider.gameObject.tag == "Enemy" || hit.collider.gameObject.tag == "Boss") && Vector3.Distance(player.transform.position, hit.point) <= shootingRange)
                 {
                     laserLine.startColor = Color.green;
                 }
