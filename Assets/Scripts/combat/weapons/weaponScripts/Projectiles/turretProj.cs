@@ -32,6 +32,7 @@ public class turretProj : projectile
     {
         bulletHitEffect = "bulletHitPool";
         GetDamage("Ability-Turret");
+        ignore = LayerMask.GetMask("Material", "Ignore Raycast");
     }
 
     private void OnEnable()
@@ -57,7 +58,7 @@ public class turretProj : projectile
     void checkDistance()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity))// && poolName != "enemyMagePoolOne")
+        if (Physics.Raycast(transform.position, transform.forward, out hit, Mathf.Infinity, ~ignore))// && poolName != "enemyMagePoolOne")
         {
             hitPoint = hit.point;
         }

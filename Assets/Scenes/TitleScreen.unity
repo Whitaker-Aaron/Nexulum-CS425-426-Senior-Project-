@@ -22070,6 +22070,15 @@ MonoBehaviour:
   maxPlacementDistance: 5
   lightningRad: 6
   lightningDamage: 50
+  waterRad: 3
+  waterDamage: 40
+  windRad: 4
+  windDamage: 35
+  windVortexDuration: 5
+  windDamageInterval: 0.5
+  windPullForce: 15
+  windSpell: {fileID: 0}
+  windBlast: {fileID: 0}
   spawnOffset: {x: 0, y: 0.2, z: 0}
 --- !u!114 &905795150 stripped
 MonoBehaviour:
@@ -22720,6 +22729,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: laserDamage
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: grenadeSpawn
       value: 
       objectReference: {fileID: 3567916853414067966}
@@ -22739,6 +22752,10 @@ PrefabInstance:
       propertyPath: fireRuneEffect
       value: 
       objectReference: {fileID: 9171465890992002785, guid: 9a6d375b8be98f245bf3c4a3a1a4230d, type: 3}
+    - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: laserIceDamage
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1175182273367415644, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: laserIcePrefab
       value: 
@@ -23171,6 +23188,10 @@ PrefabInstance:
       propertyPath: m_ActionEvents.Array.data[20].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 5258961968933099944, guid: 2121826842b90ce47926846314379b94, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a1efb59804352a2458135e8203cbcc37, type: 2}
     - target: {fileID: 5258961968933099944, guid: 2121826842b90ce47926846314379b94, type: 3}
       propertyPath: m_Parameters.colorGradient.atime1
       value: 1157
@@ -26436,9 +26457,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1886349204}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 50, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1228320050
@@ -47968,6 +47989,8 @@ MonoBehaviour:
   statusImmunity_Fire: 0
   statusImmunity_Earth: 0
   statusImmunity_Electric: 0
+  statusImmunity_Water: 0
+  statusImmunity_Wind: 0
 --- !u!114 &3407612437688631064
 MonoBehaviour:
   m_ObjectHideFlags: 0

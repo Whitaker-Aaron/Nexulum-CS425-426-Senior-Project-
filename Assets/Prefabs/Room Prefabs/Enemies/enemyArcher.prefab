@@ -101,7 +101,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -5131,7 +5131,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 2
@@ -5289,15 +5289,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 909ea9d14d1c72a44ad4c7f2887cc68b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.477614
+      value: 477.09576
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 909ea9d14d1c72a44ad4c7f2887cc68b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.032000065
+      value: 2.2918608
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 909ea9d14d1c72a44ad4c7f2887cc68b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -20.278343
+      value: 515.1947
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 909ea9d14d1c72a44ad4c7f2887cc68b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5882,6 +5882,12 @@ MonoBehaviour:
   collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
+  statusImmunity_Ice: 0
+  statusImmunity_Fire: 0
+  statusImmunity_Earth: 0
+  statusImmunity_Electric: 0
+  statusImmunity_Water: 0
+  statusImmunity_Wind: 0
 --- !u!54 &5464377193801173177
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5995,7 +6001,6 @@ MonoBehaviour:
   patrolState:
     patrolPoints: []
   enableStateDebugLogs: 0
-  isFrozen: 0
 --- !u!114 &8439177289778162704
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -81,6 +81,17 @@ public class turretCombat : MonoBehaviour
     public void destroyTurret()
     {
         print("calling destroy turret with key: " + key);
+        
+        // Make sure to clean up fire effects before destroying
+        if (fireEffect != null && fireEffect.GetComponent<ParticleSystem>().isPlaying)
+        {
+            fireEffect.GetComponent<ParticleSystem>().Stop();
+            fireEffect.SetActive(false);
+        }
+        
+        // Reset fire state
+        isFire = false;
+        
         classAbilties.instance.removeTower(key);
     }
 
@@ -215,8 +226,16 @@ public class turretCombat : MonoBehaviour
             }
             //yield return new WaitUntil(() => { return enemiesInRange.Length == 0; });
             yield return new WaitForSeconds(fireDmgRate);
-            if(enemiesInRange.Length == 0)
-                fireEffect.GetComponent<ParticleSystem>().Stop();
+            
+            // Check if there are still enemies in range
+            if(enemiesInRange == null || enemiesInRange.Length == 0)
+            {
+                if (fireEffect != null && fireEffect.GetComponent<ParticleSystem>().isPlaying)
+                {
+                    fireEffect.GetComponent<ParticleSystem>().Stop();
+                }
+            }
+            
             shooting = false;
             yield break;
 
@@ -259,12 +278,21 @@ public class turretCombat : MonoBehaviour
     {
         enemiesInRange = Physics.OverlapSphere(turretGun.transform.position, attackRadius, Enemy);
         if (enemiesInRange.Length == 0)
+        {
             stopTurn = false;
+            // Make sure fire effect is stopped when no enemies are in range
+            if (isFire && fireEffect.GetComponent<ParticleSystem>().isPlaying)
+            {
+                fireEffect.GetComponent<ParticleSystem>().Stop();
+            }
+            return; // Exit early if no enemies
+        }
+        
         foreach (Collider enemy in enemiesInRange)
         {
             //print("enemy in radius");
             //print("forward: " + turretGun.transform.forward);
-            Vector3 directionToEnemy = (enemy.transform.position - turretGun.transform.position).normalized;//turretGun.transform.InverseTransformPoint(enemy.transform.position);
+            Vector3 directionToEnemy = (enemy.transform.position - turretGun.transform.position).normalized;
             directionToEnemy.y = 0;
 
             //print("direction: " + directionToEnemy);
@@ -272,23 +300,30 @@ public class turretCombat : MonoBehaviour
             if (angleToEnemy < 0)
                 angleToEnemy += 360;
             //angleToEnemy = normalizeAngle(angleToEnemy);
-            print("angle to enemy: " + angleToEnemy);
+            //print("angle to enemy: " + angleToEnemy);
             if (isEnemyInRange(angleToEnemy))
             {
-                Vector3 temp = new Vector3(enemy.transform.position.x, 0.5f, enemy.transform.position.z);
-                bulletSpawnLeft.LookAt(temp);
-                bulletSpawnRight.LookAt(temp);
-                print("enemy in angle");
+                // Maintain the y-rotation of the bullet spawns but aim at the enemy's position
+                Vector3 enemyPos = enemy.transform.position;
+                Vector3 targetPos = new Vector3(enemyPos.x, turretGun.transform.position.y, enemyPos.z);
+                
+                // Aim the turret gun at the enemy
+                turretGun.transform.LookAt(targetPos, Vector3.up);
+                
+                // Align bullet spawns with the turret's forward direction
+                Quaternion spawnRotation = turretGun.transform.rotation;
+                bulletSpawnLeft.rotation = spawnRotation;
+                bulletSpawnRight.rotation = spawnRotation;
+                
+                //print("enemy in angle");
                 stopTurn = true;
-                turretGun.transform.LookAt(turretGun.transform.position + directionToEnemy, Vector3.up);
+                
                 if(!shooting)
                     StartCoroutine(shoot());
+                
+                // We found a valid enemy, so we can break out of the loop
+                break;
             }
-            else
-            {
-                fireEffect.GetComponent<ParticleSystem>().Stop();
-            }
-            
         }
     }
 
@@ -317,12 +352,26 @@ public class turretCombat : MonoBehaviour
 
     private void Awake()
     {
-
+        // Initialize rotation limits
         leftRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + leftRotation.y, 0);
         rightRotation = new Vector3(0, normalizeAngle(gameObject.transform.rotation.eulerAngles.y) + rightRotation.y, 0);
-        fireEffect.GetComponent<ParticleSystem>().Stop();
-        fireEffect.SetActive(false);
+        
+        // Make sure fire effect is stopped and disabled initially
+        if (fireEffect != null)
+        {
+            fireEffect.GetComponent<ParticleSystem>().Stop();
+            fireEffect.SetActive(false);
+        }
+        
+        // Initialize bullet spawns to match turret gun's forward direction
+        if (bulletSpawnLeft != null && bulletSpawnRight != null && turretGun != null)
+        {
+            // Align bullet spawns with the turret's forward direction
+            bulletSpawnLeft.rotation = turretGun.transform.rotation;
+            bulletSpawnRight.rotation = turretGun.transform.rotation;
+        }
 
+        // Initialize muzzle effects
         for(int i = 0; i < 3; i++)
         {
             leftEffects[i] = Instantiate(muzzleEffect, bulletSpawnLeft);
@@ -332,9 +381,13 @@ public class turretCombat : MonoBehaviour
             rightEffects[i].GetComponent<ParticleSystem>().Stop();
             rightEffects[i].gameObject.transform.localPosition = Vector3.zero;
         }
-        //print("Forward andgle:" + normalizeAngle(gameObject.transform.rotation.eulerAngles.y));
-        //print("Left andgle:" + leftRotation.y);
-        //print("Right andgle:" + rightRotation.y);
+        
+        // Reset fire state
+        isFire = false;
+        
+        //print("Forward angle:" + normalizeAngle(gameObject.transform.rotation.eulerAngles.y));
+        //print("Left angle:" + leftRotation.y);
+        //print("Right angle:" + rightRotation.y);
     }
 
     // Start is called before the first frame update
@@ -355,12 +408,23 @@ public class turretCombat : MonoBehaviour
             takeDamage(50);
         }
 
-        if (enemiesInRange.Length == 0)
-            fireEffect.GetComponent<ParticleSystem>().Stop();
-
-        if (!isFire && fireEffect.GetComponent<ParticleSystem>().isPlaying)
+        // Handle fire effect state
+        if (enemiesInRange == null || enemiesInRange.Length == 0)
         {
-            fireEffect.GetComponent<ParticleSystem>().Stop();
+            // No enemies in range, stop fire effect
+            if (fireEffect != null && fireEffect.GetComponent<ParticleSystem>().isPlaying)
+            {
+                fireEffect.GetComponent<ParticleSystem>().Stop();
+            }
+        }
+
+        // Always ensure fire effect is off when isFire is false
+        if (!isFire && fireEffect != null)
+        {
+            if (fireEffect.GetComponent<ParticleSystem>().isPlaying)
+            {
+                fireEffect.GetComponent<ParticleSystem>().Stop();
+            }
             fireEffect.SetActive(false);
         }
     }
@@ -408,11 +472,21 @@ public class turretCombat : MonoBehaviour
     {
         print("activateFire() in TurCom");
         isFire = choice;
+        
         if(isFire)
         {
             print("fire is true");
             fireEffect.SetActive(true);
-            //fireEffect.GetComponent<ParticleSystem>().Play();
+            // Don't play the effect yet - it will play when enemies are in range
+        }
+        else
+        {
+            // Make sure to stop and disable the fire effect when deactivated
+            if (fireEffect != null)
+            {
+                fireEffect.GetComponent<ParticleSystem>().Stop();
+                fireEffect.SetActive(false);
+            }
         }
     }
 

@@ -4996,6 +4996,12 @@ MonoBehaviour:
   collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
+  statusImmunity_Ice: 0
+  statusImmunity_Fire: 0
+  statusImmunity_Earth: 0
+  statusImmunity_Electric: 0
+  statusImmunity_Water: 0
+  statusImmunity_Wind: 0
 --- !u!54 &7312136641156335363
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5205,7 +5211,6 @@ MonoBehaviour:
   patrolState:
     patrolPoints: []
   enableStateDebugLogs: 0
-  isFrozen: 0
 --- !u!114 &6996728658863666810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5566,7 +5571,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

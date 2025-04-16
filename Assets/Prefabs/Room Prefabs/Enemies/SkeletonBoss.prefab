@@ -36,7 +36,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1170225073601891340}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.98687255, z: -0, w: -0.16150095}
+  m_LocalRotation: {x: 0, y: 0.98687273, z: -0, w: -0.16150036}
   m_LocalPosition: {x: -1667.3263, y: -956.13226, z: 104.92532}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
@@ -64,11 +64,20 @@ MonoBehaviour:
   enemyReference: {fileID: 11400000, guid: 22bbc4fea7fd07444a21f525ea11ba42, type: 2}
   movementReference: {fileID: 0}
   healthRef: {fileID: 0}
+  initialPos: {x: 0, y: 0, z: 0}
   dmgOverTimeActivated: 0
+  isMiniboss: 0
   onDamaged: 0
   source: 0
+  collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
+  statusImmunity_Ice: 0
+  statusImmunity_Fire: 0
+  statusImmunity_Earth: 0
+  statusImmunity_Electric: 0
+  statusImmunity_Water: 0
+  statusImmunity_Wind: 0
 --- !u!54 &8725184898119035038
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -250,6 +259,7 @@ MonoBehaviour:
     m_Bits: 64
   sword: {fileID: 1032646244814764622}
   attackDamage: 40
+  tempEnemy: 0
 --- !u!114 &8586221809364865895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,12 +274,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultMovementSpeed: 5
   engagementRange: 2
+  inaccuracyPointTolerance: 1
   currentSpeed: 0
+  movementPaused: 0
+  stayInIdle: 1
   agent: {fileID: 1940762902124448328}
   enemyLOS: {fileID: 0}
   enemyFrame: {fileID: 0}
+  useDefaultConcreteStates: 1
+  concreteStates:
+    _serializedList: []
+  patrolState:
+    patrolPoints: []
   enableStateDebugLogs: 0
-  isFrozen: 0
 --- !u!114 &880266326416912405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  canTarget: 1
   player: {fileID: 0}
   detectionRange: 14
   visionAngle: 360
@@ -409,7 +427,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
