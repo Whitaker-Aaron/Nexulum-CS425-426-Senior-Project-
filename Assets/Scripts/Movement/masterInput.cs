@@ -1057,6 +1057,23 @@ public class masterInput : MonoBehaviour
     {
         repairObj = null;
     }
+    
+    // Methods to control line renderer during room transitions
+    public void DisableLineRenderer()
+    {
+        if (laserLine != null)
+        {
+            laserLine.enabled = false;
+        }
+    }
+    
+    public void EnableLineRenderer()
+    {
+        if (laserLine != null && (currentClass == WeaponBase.weaponClassTypes.Gunner || currentClass == WeaponBase.weaponClassTypes.Engineer))
+        {
+            laserLine.enabled = true;
+        }
+    }
 
     IEnumerator repairWait()
     {

@@ -100,6 +100,7 @@ public class RoomTransition : MonoBehaviour
                     //cameraBehavior.PauseLookAt();
                     GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(targetInfo);
                     character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+                    character.GetMasterInput().GetComponent<masterInput>().DisableLineRenderer();
                     character.transitioningRoom = true;
                     StartCoroutine(MovePlayerForward(other, exitDirection));
                     StartCoroutine(Transition(other));
@@ -111,6 +112,7 @@ public class RoomTransition : MonoBehaviour
                     //cameraBehavior.PauseLookAt();
                     character.transitioningRoom = true;
                     character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+                    character.GetMasterInput().GetComponent<masterInput>().DisableLineRenderer();
                     StartCoroutine(MovePlayerForward(other, enterDirection));
                     StartCoroutine(Transition(other));
                     
@@ -178,6 +180,7 @@ public class RoomTransition : MonoBehaviour
         var character = other.GetComponent<CharacterBase>();
         yield return new WaitForSeconds(0.3f);
         character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        character.GetMasterInput().GetComponent<masterInput>().EnableLineRenderer();
         character.transitionedRoom = false;
         character.transitioningRoom = false;
         cameraBehavior.UnpauseFollow();
