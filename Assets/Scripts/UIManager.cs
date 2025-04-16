@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject CheckpointText;
+    [SerializeField] GameObject bossText;
     [SerializeField] GameObject levelUpText;
     [SerializeField] GameObject attackUpText;
     [SerializeField] GameObject expText;
@@ -41,6 +42,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject dashSmear;
     [SerializeField] GameObject criticalText;
     [SerializeField] GameObject criticalTextBorder;
+    [SerializeField] GameObject warningScreen;
     [SerializeField] GameObject florentineUI;
     
 
@@ -79,6 +81,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Slider ExperienceBar;
     GameObject currentCheckpointText;
+    GameObject currentBossText;
     GameObject curViewItem;
     Queue<GameObject> currentSmears = new Queue<GameObject>();
     Queue<GameObject> currentDamageNums = new Queue<GameObject>();
@@ -848,6 +851,15 @@ public class UIManager : MonoBehaviour
         {
             yield return currentCriticalBorderOpacity = StartCoroutine(IncreaseTextOpacity(criticalTextBorder, 1.0f));
             yield return currentCriticalBorderOpacity = StartCoroutine(ReduceTextOpacity(criticalTextBorder, 1.0f));
+        }
+    }
+
+    public IEnumerator AnimateWarningScreen()
+    {
+        while (true)
+        {
+            yield return currentCriticalBorderOpacity = StartCoroutine(IncreaseTextOpacity(warningScreen, 1.0f));
+            yield return currentCriticalBorderOpacity = StartCoroutine(ReduceTextOpacity(warningScreen, 1.0f));
         }
     }
 
@@ -1673,6 +1685,34 @@ public class UIManager : MonoBehaviour
         //yield return new WaitForSeconds(2.8f);
         yield return StartCoroutine(AnimateTypewriterCheckpoint(currentCheckpointText.GetComponent<TMP_Text>(), "Checkpoint Reached", "|", 0.125f));
         Destroy(currentCheckpointText);
+        yield break;
+    }
+
+    public IEnumerator AnimateBossName(string bossName)
+    {
+        Debug.Log("Animating Boss Name");
+        currentBossText = Instantiate(bossText);
+        currentBossText.transform.SetParent(mainCanvas.transform, false);
+        currentBossText.transform.localScale = new Vector3(6.0f, 6.0f, 6.0f);
+        var rate = new Vector3(20f, 20f, 20f);
+        while (currentBossText.transform.localScale.x != 1.0f)
+        {
+            Debug.Log(currentBossText.transform.localScale);
+            if ((currentBossText.transform.localScale.x - (rate.x * Time.deltaTime)) <= 1.0f)
+            {
+                currentBossText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                yield return null;
+            }
+            else
+            {
+                currentBossText.transform.localScale -= (rate * Time.deltaTime);
+                yield return null;
+            }
+
+        }
+        //yield return new WaitForSeconds(2.8f);
+        yield return StartCoroutine(AnimateTypewriterCheckpoint(currentBossText.GetComponent<TMP_Text>(), bossName, "|", 0.125f));
+        Destroy(currentBossText);
         yield break;
     }
 

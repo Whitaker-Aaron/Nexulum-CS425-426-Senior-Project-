@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class golemBoss : MonoBehaviour
+public class golemBoss : MonoBehaviour, enemyInt
 {
     public Transform player;
     public Animator animator;
@@ -15,7 +15,7 @@ public class golemBoss : MonoBehaviour
     public float maxAngle = 4f;
 
     private NavMeshAgent agent;
-    public bool isAttacking = false;
+    //public bool isAttacking = false;
     private bool isRecovering = false;
     private bool isTurning = false;
 
@@ -71,6 +71,34 @@ public class golemBoss : MonoBehaviour
     public float slash1Time = 1f, slash2Time = 1f, slashSlamTime = 1f, slashSlam2Time = 1f, slashSlam3Time = 1f;
     public float slamRadius = 2.5f, slamTime1, slamTime2;
 
+    //Enemy Interface 
+    private bool _isAttacking;
+    public bool isAttacking
+    {
+        get { return _isAttacking; }
+        set
+        {
+            if (_isAttacking != value)  // Only set if the value is different
+            {
+                _isAttacking = value;
+                // Do the other necessary actions
+            }
+        }
+    }
+
+    private bool _isActive;
+    public bool isActive
+    {
+        get { return _isActive; }
+        set
+        {
+            if (_isActive != value)  // Only set if the value is different
+            {
+                _isActive = value;
+                // Do the other necessary actions
+            }
+        }
+    }
 
     //-----------------Main Functions------------------------------
 
@@ -78,22 +106,22 @@ public class golemBoss : MonoBehaviour
 
     void Start()
     {
+        isActive = false;
         agent = GetComponent<NavMeshAgent>();
         slash1.GetComponent<ParticleSystem>().Stop();
         animator.GetComponent<Animator>();
         health = MAXHEALTH;
         animator.SetBool("death", false);
-        
+
         // Initialize spawn enemies timer with a random offset
         spawnEnemiesTimer = Random.Range(0f, spawnEnemiesCooldown * 0.5f);
-        
         // Get UI Manager reference
         uiManager = GameObject.Find("UIManager")?.GetComponent<UIManager>();
     }
 
     void Update()
     {
-        if (bossDying)
+        if (bossDying || !isActive)
             return;
 
         if (player == null)
@@ -179,6 +207,16 @@ public class golemBoss : MonoBehaviour
         yield return new WaitForSeconds(hitPlayerCooldown);
         hitPlayer = false;
         yield break;
+    }
+
+    public enemyInt getType()
+    {
+        return this;
+    }
+
+    public void onDeath()
+    {
+
     }
 
 
