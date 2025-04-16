@@ -86,6 +86,22 @@ public class revolverProj : projectile
                 }
 
             }
+            if(hit.collider.gameObject.tag == "Boss")
+            {
+                hitEnemy = true;
+                int updatedDamage = damage;
+                if (Vector3.Distance(playerBase.gameObject.transform.position, hitPoint) > masterInput.instance.shootingRange)// && playerBase.equippedWeapon.weaponClassType == WeaponBase.weaponClassTypes.Engineer)
+                {
+                    updatedDamage = damage / masterInput.instance.engrDmgMod;
+
+                }
+                if (hit.collider.gameObject.GetComponent<golemBoss>() != null)
+                {
+                    hit.collider.gameObject.GetComponent<golemBoss>().takeDamage(damage);
+                    uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
+                }
+
+            }
             if (hit.collider.gameObject.tag == "Enemy")
             {
                 GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");

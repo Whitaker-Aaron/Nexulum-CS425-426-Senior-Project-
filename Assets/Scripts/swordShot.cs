@@ -17,6 +17,9 @@ public class swordShot : projectile
     bool explode = false;
     public float explodeRadius = 2f;
     //UIManager uiManager;
+    
+    // Track the boss that was directly hit to avoid hitting it again in the explosion
+    private GameObject directlyHitBoss = null;
 
     private void Awake()
     {
@@ -54,6 +57,7 @@ public class swordShot : projectile
     private void OnDisable()
     {
         explode = false;
+        directlyHitBoss = null;
     }
 
     // Update is called once per frame
@@ -69,46 +73,90 @@ public class swordShot : projectile
 
     private void OnCollisionEnter(Collision other)
     {
+        // Reset the directly hit boss tracking variable
+        directlyHitBoss = null;
+        
+        // Make sure uiManager is initialized
+        if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        
         //print("Colliding with: " + other.name);
         if (other.gameObject.tag == "Enemy")
         {
-            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("SwordShotExplosion");
-            other.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
-            uiManager.DisplayDamageNum(other.gameObject.transform, damage);
-            //other.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            //other.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            // Try to play sound effect with null check
+            AudioManager audioManager = GameObject.Find("AudioManager")?.GetComponent<AudioManager>();
+            if (audioManager != null) audioManager.PlaySFX("SwordShotExplosion");
+            
+            // Apply damage to the enemy
+            EnemyFrame enemyFrame = other.gameObject.GetComponent<EnemyFrame>();
+            if (enemyFrame != null)
+            {
+                enemyFrame.takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+                if (uiManager != null) uiManager.DisplayDamageNum(other.gameObject.transform, damage);
+            }
+            
             if (isIce)
                 iceExplode();
             else if (explode)
             {
-                Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, explodeRadius);
-
-                foreach (Collider c in enemies)
-                {
-                    if(c.gameObject.tag == "bossPart")
-                    {
-                        //print("slow down the enemy");
-                        c.gameObject.GetComponent<bossPart>().takeDamage(damage);
-                        uiManager.DisplayDamageNum(c.gameObject.transform, damage);
-                    }
-                    if (c.gameObject.tag == "Enemy")
-                    {
-                        //print("slow down the enemy");
-                        c.gameObject.GetComponent<EnemyFrame>().takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
-                        uiManager.DisplayDamageNum(c.gameObject.transform, damage);
-                    }
-                }
-                //EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position, Quaternion.identity, false, false);
-                playEffect(gameObject.transform.position);
-                //resetProjectile();
+                explodeEffect();
             }
             else
             {
                 playEffect(gameObject.transform.position);
-                //EffectsManager.instance.getFromPool("swordShotHit", gameObject.transform.position, Quaternion.identity, false, false);
-                //resetProjectile();
             }
-
+        }
+        else if (other.gameObject.tag == "bossPart")
+        {
+            // Try to play sound effect with null check
+            AudioManager audioManager = GameObject.Find("AudioManager")?.GetComponent<AudioManager>();
+            if (audioManager != null) audioManager.PlaySFX("SwordShotExplosion");
+            
+            // Apply damage to the boss part
+            bossPart bPart = other.gameObject.GetComponent<bossPart>();
+            if (bPart != null)
+            {
+                bPart.takeDamage(damage);
+                if (uiManager != null) uiManager.DisplayDamageNum(other.gameObject.transform, damage);
+            }
+            
+            if (isIce)
+                iceExplode();
+            else if (explode)
+            {
+                explodeEffect();
+            }
+            else
+            {
+                playEffect(gameObject.transform.position);
+            }
+        }
+        else if (other.gameObject.tag == "Boss")
+        {
+            // Store the directly hit boss to avoid hitting it again in the explosion
+            directlyHitBoss = other.gameObject;
+            
+            // Try to play sound effect with null check
+            AudioManager audioManager = GameObject.Find("AudioManager")?.GetComponent<AudioManager>();
+            if (audioManager != null) audioManager.PlaySFX("SwordShotExplosion");
+            
+            // Apply damage to the boss
+            EnemyFrame enemyFrame = other.gameObject.GetComponent<EnemyFrame>();
+            if (enemyFrame != null)
+            {
+                enemyFrame.takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+                if (uiManager != null) uiManager.DisplayDamageNum(other.gameObject.transform, damage);
+            }
+            
+            if (isIce)
+                iceExplode();
+            else if (explode)
+            {
+                explodeEffect();
+            }
+            else
+            {
+                playEffect(gameObject.transform.position);
+            }
         }
         else if (isIce)
         {
@@ -116,32 +164,58 @@ public class swordShot : projectile
         }
         else if (explode)
         {
-            Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, explodeRadius);
-
-            foreach (Collider c in enemies)
-            {
-                if(c.gameObject.tag == "bossPart")
-                    {
-                        //print("slow down the enemy");
-                        c.gameObject.GetComponent<bossPart>().takeDamage(damage);
-                        uiManager.DisplayDamageNum(c.gameObject.transform, damage);
-                    }
-                if (c.gameObject.tag == "Enemy")
-                {
-                    //print("slow down the enemy");
-                    c.gameObject.GetComponent<EnemyFrame>().takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
-                    uiManager.DisplayDamageNum(c.gameObject.transform, damage);
-                }
-            }
-            EffectsManager.instance.getFromPool("swordShotExplodeHit", gameObject.transform.position, Quaternion.identity, false, false);
-            //resetProjectile();
+            explodeEffect();
         }
         else
         {
             playEffect(gameObject.transform.position);
-            //EffectsManager.instance.getFromPool("swordShot", gameObject.transform.position, Quaternion.identity, false, false);
-            //resetProjectile();
         }
+    }
+    
+    // Helper method to handle explosion effects and damage
+    private void explodeEffect()
+    {
+        Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, explodeRadius);
+
+        foreach (Collider c in enemies)
+        {
+            if (c != null && c.gameObject != null)
+            {
+                // Skip the boss that was directly hit
+                if (directlyHitBoss != null && c.gameObject == directlyHitBoss)
+                    continue;
+                    
+                if (c.gameObject.tag == "bossPart")
+                {
+                    bossPart bPart = c.gameObject.GetComponent<bossPart>();
+                    if (bPart != null)
+                    {
+                        bPart.takeDamage(damage);
+                        if (uiManager != null) uiManager.DisplayDamageNum(c.gameObject.transform, damage);
+                    }
+                }
+                else if (c.gameObject.tag == "Enemy")
+                {
+                    EnemyFrame enemyFrame = c.gameObject.GetComponent<EnemyFrame>();
+                    if (enemyFrame != null)
+                    {
+                        enemyFrame.takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                        if (uiManager != null) uiManager.DisplayDamageNum(c.gameObject.transform, damage);
+                    }
+                }
+                else if (c.gameObject.tag == "Boss")
+                {
+                    EnemyFrame enemyFrame = c.gameObject.GetComponent<EnemyFrame>();
+                    if (enemyFrame != null)
+                    {
+                        enemyFrame.takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                        if (uiManager != null) uiManager.DisplayDamageNum(c.gameObject.transform, damage);
+                    }
+                }
+            }
+        }
+        
+        playEffect(gameObject.transform.position);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -151,24 +225,66 @@ public class swordShot : projectile
 
     void iceExplode()
     {
+        // Make sure uiManager is initialized
+        if (uiManager == null) uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        
         Collider[] enemies = Physics.OverlapSphere(gameObject.transform.position, iceRadius);
 
         foreach(Collider c in enemies)
         {
-            if(c.gameObject.tag == "bossPart")
+            if(c != null && c.gameObject != null)
             {
-                //print("slow down the enemy");
-                c.gameObject.GetComponent<bossPart>().takeDamage(iceDamage);
-                uiManager.DisplayDamageNum(c.gameObject.transform, iceDamage);
-            }
-            if (c.gameObject.tag == "Enemy")
-            {
-                //print("slow down the enemy");
-                c.gameObject.GetComponent<EnemyFrame>().takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
-                uiManager.DisplayDamageNum(c.gameObject.transform, damage);
+                // Skip the boss that was directly hit
+                if (directlyHitBoss != null && c.gameObject == directlyHitBoss)
+                    continue;
+                    
+                if(c.gameObject.tag == "bossPart")
+                {
+                    //print("slow down the enemy");
+                    bossPart bPart = c.gameObject.GetComponent<bossPart>();
+                    if(bPart != null)
+                    {
+                        bPart.takeDamage(iceDamage);
+                        if (uiManager != null) uiManager.DisplayDamageNum(c.gameObject.transform, iceDamage);
+                    }
+                }
+                else if (c.gameObject.tag == "Boss")
+                {
+                    //print("slow down the boss");
+                    golemBoss boss = c.gameObject.GetComponent<golemBoss>();
+                    if(boss != null)
+                    {
+                        boss.takeDamage(iceDamage);
+                        if (uiManager != null) uiManager.DisplayDamageNum(c.gameObject.transform, iceDamage);
+                    }
+                    else
+                    {
+                        // Try with EnemyFrame if golemBoss component is not found
+                        EnemyFrame enemyFrame = c.gameObject.GetComponent<EnemyFrame>();
+                        if(enemyFrame != null)
+                        {
+                            enemyFrame.takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                            if (uiManager != null) uiManager.DisplayDamageNum(c.gameObject.transform, iceDamage);
+                        }
+                    }
+                }
+                else if (c.gameObject.tag == "Enemy")
+                {
+                    //print("slow down the enemy");
+                    EnemyFrame enemyFrame = c.gameObject.GetComponent<EnemyFrame>();
+                    if(enemyFrame != null)
+                    {
+                        enemyFrame.takeDamage(iceDamage, gameObject.transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                        if (uiManager != null) uiManager.DisplayDamageNum(c.gameObject.transform, damage);
+                    }
+                }
             }
         }
-        EffectsManager.instance.getFromPool("swordShotIce", gameObject.transform.position, Quaternion.identity, false, false);
+        
+        if(EffectsManager.instance != null)
+        {
+            EffectsManager.instance.getFromPool("swordShotIce", gameObject.transform.position, Quaternion.identity, false, false);
+        }
         resetProjectile();
     }
 
