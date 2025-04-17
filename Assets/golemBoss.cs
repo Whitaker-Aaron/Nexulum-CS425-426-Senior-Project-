@@ -8,12 +8,15 @@ public class golemBoss : MonoBehaviour, enemyInt
 {
     public Transform player;
     public Animator animator;
+    private CameraFollow camera;
     public float attackCooldown = 2f;
     public float attackRange = 5f;
     public int maxAttacks = 3;
     public float turnSpeed = 15f; // Adjusted turn speed for smoother turning
     public float detectionRadius = 7f; // Detection range
     public float maxAngle = 4f;
+    public bool unlocksDoor = false;
+    [SerializeField] Door doorToUnlock;
 
     private NavMeshAgent agent;
     //public bool isAttacking = false;
@@ -49,6 +52,7 @@ public class golemBoss : MonoBehaviour, enemyInt
 
     public float jumpSpeed, jumpLength, jumpCooldown, longJumpSpeed, longJumpLength, longJumpCooldown;
     public bool canJump = true, canLongJump = true;
+    bool cameraAdjusted = false;
 
 
     //Damage
@@ -117,6 +121,7 @@ public class golemBoss : MonoBehaviour, enemyInt
         slash1.GetComponent<ParticleSystem>().Stop();
         animator.GetComponent<Animator>();
         health = MAXHEALTH;
+        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>();
         animator.SetBool("death", false);
 
         // Initialize spawn enemies timer with a random offset
@@ -142,6 +147,12 @@ public class golemBoss : MonoBehaviour, enemyInt
     {
         if (bossDying || !isActive)
             return;
+
+        if (!cameraAdjusted)
+        {
+            adjustCameraOffset(new Vector3(0.0f, 13f, -4f));
+            cameraAdjusted = true;
+        }
 
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
@@ -254,7 +265,24 @@ public class golemBoss : MonoBehaviour, enemyInt
     public void onDeath()
     {
         DeactivateHealthBar();
-        uiManager.DisplayThankYouScreen();
+        camera.StartPan(this.transform.position, true, true, 0.05f);
+        adjustCameraOffset(new Vector3(0.0f, -13f, 4f));
+        StartCoroutine(unlockDoor());
+    }
+
+    public IEnumerator unlockDoor()
+    {
+        yield return new WaitForSeconds(5f);
+        if (unlocksDoor && doorToUnlock != null)
+        {
+            camera.StartPan(doorToUnlock.transform.position, true, true, 0.05f);
+            doorToUnlock.ToggleDoor();
+        }
+    }
+
+    public void adjustCameraOffset(Vector3 adjustment)
+    {
+        camera.offset += adjustment;
     }
 
 

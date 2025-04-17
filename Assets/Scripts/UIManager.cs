@@ -879,7 +879,12 @@ public class UIManager : MonoBehaviour
 
     public void DisplayThankYouScreen()
     {
+        var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        var inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
         var thankYouPage = Instantiate(thankYouScreen);
+        thankYouPage.transform.SetParent(GameObject.Find("Canvas").gameObject.transform, false);
+        menuManager.menusPaused = true;
+        inputManager.pausePlayerInput();
         StartCoroutine(animateThankYouScreen(thankYouPage.transform.Find("DemoScreen").gameObject));
     }
 
