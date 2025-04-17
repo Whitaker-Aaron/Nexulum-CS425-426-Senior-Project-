@@ -213,7 +213,7 @@ public class RoomInformation : MonoBehaviour
         {
             if (allEnemies[i] != null)
             {
-                allEnemies[i].GetComponent<EnemyFrame>().DeactivateHealthBar();
+                if(allEnemies[i].GetComponent<EnemyFrame>() != null) allEnemies[i].GetComponent<EnemyFrame>().DeactivateHealthBar();
             }
             else
             {
@@ -228,7 +228,7 @@ public class RoomInformation : MonoBehaviour
         {
             if (allEnemies[i] != null)
             {
-                allEnemies[i].GetComponent<EnemyFrame>().ActivateHealthBar();
+                if(allEnemies[i].GetComponent<EnemyFrame>() != null) allEnemies[i].GetComponent<EnemyFrame>().ActivateHealthBar();
             }
             else
             {

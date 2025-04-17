@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class golemBoss : MonoBehaviour, enemyInt
 {
@@ -68,6 +69,11 @@ public class golemBoss : MonoBehaviour, enemyInt
     [SerializeField] GameObject slash1, slash2, slashSlam, slashSlam1, slashSlam2, jumpSlam;
     [SerializeField] GameObject lungeEffect, backAttackEffect, dashEffect, medJumpEffect;
     [SerializeField] GameObject enemyPrefab; // Enemy to spawn
+    public GameObject healthRef;
+    [SerializeField] GameObject enemyHealth;
+    Slider enemyHealthBar;
+    Slider delayedEnemyHealthBar;
+    GameObject enemyUIRef;
     public float slash1Time = 1f, slash2Time = 1f, slashSlamTime = 1f, slashSlam2Time = 1f, slashSlam3Time = 1f;
     public float slamRadius = 2.5f, slamTime1, slamTime2;
 
@@ -117,6 +123,19 @@ public class golemBoss : MonoBehaviour, enemyInt
         spawnEnemiesTimer = Random.Range(0f, spawnEnemiesCooldown * 0.5f);
         // Get UI Manager reference
         uiManager = GameObject.Find("UIManager")?.GetComponent<UIManager>();
+        enemyUIRef = GameObject.Find("DynamicEnemyUI");
+
+        healthRef = Instantiate(enemyHealth);
+        healthRef.transform.SetParent(enemyUIRef.transform, false);
+
+        enemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().health;
+        delayedEnemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().delayedHealth;
+
+        enemyHealthBar.maxValue = MAXHEALTH;
+        delayedEnemyHealthBar.maxValue = MAXHEALTH;
+
+        enemyHealthBar.value = health;
+        delayedEnemyHealthBar.value = health;
     }
 
     void Update()
@@ -202,6 +221,24 @@ public class golemBoss : MonoBehaviour, enemyInt
         
     }
 
+    public void DeactivateHealthBar()
+    {
+        if (healthRef != null)
+        {
+            healthRef.gameObject.SetActive(false);
+        }
+
+    }
+
+    public void ActivateHealthBar()
+    {
+        if (healthRef != null)
+        {
+            healthRef.gameObject.SetActive(true);
+        }
+
+    }
+
     IEnumerator hitPlayerWait()
     {
         yield return new WaitForSeconds(hitPlayerCooldown);
@@ -216,7 +253,7 @@ public class golemBoss : MonoBehaviour, enemyInt
 
     public void onDeath()
     {
-
+        uiManager.DisplayThankYouScreen();
     }
 
 
@@ -226,7 +263,8 @@ public class golemBoss : MonoBehaviour, enemyInt
         if (health - damage > 0)
         {
             health -= damage;
-            
+            StartCoroutine(updateHealthBarsNegative());
+
             // Check if health has dropped below half and the half health event hasn't triggered yet
             if (!isHalfHealth && health <= MAXHEALTH / 2)
             {
@@ -248,6 +286,7 @@ public class golemBoss : MonoBehaviour, enemyInt
         animator.SetBool("death", true);
         animator.Play("death");
         animator.SetBool("death", false);
+        onDeath();
         yield break;
     }
     
@@ -874,7 +913,14 @@ public class golemBoss : MonoBehaviour, enemyInt
         canSpawnEnemies = true;
         yield break;
     }
-    
+
+    void LateUpdate()
+    {
+        
+            healthRef.transform.position = new Vector3(this.transform.position.x - 4.5f,
+            this.transform.position.y + 6f, this.transform.position.z);
+    }
+
     IEnumerator DashAttack(float moveSpeed, float duration)
     {
         if (isAttacking || !canDash || isRecovering)
@@ -937,7 +983,63 @@ public class golemBoss : MonoBehaviour, enemyInt
         canDash = true;
         yield break;
     }
-    
+
+    public IEnumerator updateHealthBarsNegative()
+    {
+        //StopCoroutine(animateHealth());
+        yield return animateHealth();
+        yield return new WaitForSeconds(0.2f);
+        //StopCoroutine(animateDelayedHealth());
+        yield return animateDelayedHealth();
+    }
+
+    public IEnumerator animateHealth()
+    {
+        Debug.Log("Inside animate health");
+        float reduceVal = 250f;
+        while (enemyHealthBar.value != health)
+        {
+            if (Mathf.Abs(enemyHealthBar.value - health) <= 5)
+            {
+                enemyHealthBar.value = health;
+            }
+            else if (health < enemyHealthBar.value)
+            {
+                enemyHealthBar.value -= reduceVal * Time.deltaTime;
+            }
+            else
+            {
+                enemyHealthBar.value += reduceVal * Time.deltaTime;
+            }
+
+            yield return null;
+        }
+        yield break;
+    }
+
+    public IEnumerator animateDelayedHealth()
+    {
+        float reduceVal = 250f;
+        while (delayedEnemyHealthBar.value != health)
+        {
+            if (Mathf.Abs(delayedEnemyHealthBar.value - health) <= 5)
+            {
+                delayedEnemyHealthBar.value = health;
+            }
+            else if (health < delayedEnemyHealthBar.value)
+            {
+                delayedEnemyHealthBar.value -= reduceVal * Time.deltaTime;
+            }
+            else
+            {
+                delayedEnemyHealthBar.value += reduceVal * Time.deltaTime;
+            }
+
+            yield return null;
+        }
+        yield break;
+    }
+
     IEnumerator MedJumpAttack(float moveSpeed, float duration)
     {
         if (isAttacking || !canMedJump || isRecovering)

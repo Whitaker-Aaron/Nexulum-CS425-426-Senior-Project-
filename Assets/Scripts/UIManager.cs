@@ -30,6 +30,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject bottomHUD;
     [SerializeField] GameObject topRedBorder;
     [SerializeField] GameObject bottomRedBorder;
+    [SerializeField] GameObject thankYouScreen;
 
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
@@ -133,6 +134,28 @@ public class UIManager : MonoBehaviour
     public void startTutorialAnimate(GameObject page)
     {
         StartCoroutine(animateTutorialPage(page));
+    }
+
+    public IEnumerator animateThankYouScreen(GameObject thankYouPage)
+    {
+  
+        Vector3 desiredPos = new Vector3(-400, thankYouPage.transform.localPosition.y, thankYouPage.transform.localPosition.z);
+        bool animFinished = false;
+        while (!animFinished)
+        {
+            if (thankYouPage == null) yield break;
+            if (thankYouPage != null) thankYouPage.transform.localPosition = Vector3.Lerp(thankYouPage.transform.localPosition, desiredPos, (10f * Time.unscaledDeltaTime));
+            /*if(page.transform.localPosition.x == -400.0f)
+            {
+                page.transform.localPosition = desiredPos;
+                animFinished = true;
+            }*/
+            //Debug.Log(page.transform.position);
+            //Debug.Log(page.transform.localPosition);
+            yield return null;
+        }
+        yield break;
+
     }
 
     public IEnumerator animateTutorialPage(GameObject page)
@@ -852,6 +875,12 @@ public class UIManager : MonoBehaviour
             yield return currentCriticalBorderOpacity = StartCoroutine(IncreaseTextOpacity(criticalTextBorder, 1.0f));
             yield return currentCriticalBorderOpacity = StartCoroutine(ReduceTextOpacity(criticalTextBorder, 1.0f));
         }
+    }
+
+    public void DisplayThankYouScreen()
+    {
+        var thankYouPage = Instantiate(thankYouScreen);
+        StartCoroutine(animateThankYouScreen(thankYouPage.transform.Find("DemoScreen").gameObject));
     }
 
     public IEnumerator AnimateWarningScreen()
