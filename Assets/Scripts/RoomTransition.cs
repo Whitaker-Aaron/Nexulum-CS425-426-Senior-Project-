@@ -41,7 +41,7 @@ public class RoomTransition : MonoBehaviour
             //Debug.Log(enemies[i]);
             if (enemies[i] != null)
             {
-                enemies[i].GetComponent<EnemyFrame>().resetPosition();
+                if(enemies[i].GetComponent<EnemyFrame>() != null) enemies[i].GetComponent<EnemyFrame>().resetPosition();
                 if(enemies[i].GetComponent<EnemyStateManager>() != null) enemies[i].GetComponent<EnemyStateManager>().ResetEnemyState();
             }           
         }
@@ -54,7 +54,7 @@ public class RoomTransition : MonoBehaviour
         {
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null)
+                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>() != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null)
                 {
                     enemies[i].GetComponent<EnemyFrame>().healthRef.SetActive(false);
                 }
@@ -69,7 +69,7 @@ public class RoomTransition : MonoBehaviour
         {
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null )
+                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>() != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null )
                 {
                     enemies[i].GetComponent<EnemyFrame>().healthRef.SetActive(true);
                 }

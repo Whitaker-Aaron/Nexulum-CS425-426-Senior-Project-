@@ -253,6 +253,7 @@ public class golemBoss : MonoBehaviour, enemyInt
 
     public void onDeath()
     {
+        DeactivateHealthBar();
         uiManager.DisplayThankYouScreen();
     }
 
