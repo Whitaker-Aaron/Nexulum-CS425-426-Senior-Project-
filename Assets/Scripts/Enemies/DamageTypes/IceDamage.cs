@@ -15,6 +15,7 @@ public class IceDamage : IType
     float maxStacks;
     public bool isFrozen = false;
     private bool resetNext = false;
+    ParticleSystem iceParticleSystemRef;
 
     public IceDamage(EnemyStateManager movementRef, int maxStacks)
     {

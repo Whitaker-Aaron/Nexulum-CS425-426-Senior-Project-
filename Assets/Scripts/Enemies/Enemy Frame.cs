@@ -55,6 +55,7 @@ public class EnemyFrame : MonoBehaviour
     public bool statusImmunity_Electric = false;
     public bool statusImmunity_Water = false;
     public bool statusImmunity_Wind = false;
+    public ParticleSystem iceEffectParticleSystem;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
