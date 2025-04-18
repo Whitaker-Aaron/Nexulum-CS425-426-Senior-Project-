@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject topRedBorder;
     [SerializeField] GameObject bottomRedBorder;
     [SerializeField] GameObject thankYouScreen;
+    [SerializeField] GameObject warningObject;
 
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
@@ -66,8 +67,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject classAbility2;
     [SerializeField] GameObject classAbility3;
 
+    [SerializeField] GameObject tempGradients;
     [SerializeField] GameObject viewItemGradient;
 
+    
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
     Coroutine currentTransitionTypewriter;
@@ -136,6 +139,31 @@ public class UIManager : MonoBehaviour
         StartCoroutine(animateTutorialPage(page));
     }
 
+    public void StartWarningIcon()
+    {
+        StartCoroutine(animateWarningIcon());
+    }
+
+    public IEnumerator animateWarningIcon()
+    {
+        
+        warningObject.SetActive(true);
+        int counter = 0;
+        while (counter < 3)
+        {
+            StartCoroutine(IncreaseImageOpacity(warningObject.transform.Find("GuildLogo").gameObject, 1.5f));
+            StartCoroutine(IncreaseTextOpacity(warningObject.transform.Find("Text1").gameObject, 1.5f));
+            yield return StartCoroutine(IncreaseTextOpacity(warningObject.transform.Find("Text2").gameObject, 1.5f));
+            StartCoroutine(DecreaseImageOpacity(warningObject.transform.Find("GuildLogo").gameObject, 1.5f));
+            StartCoroutine(ReduceTextOpacity(warningObject.transform.Find("Text1").gameObject, 1.5f));
+            yield return StartCoroutine(ReduceTextOpacity(warningObject.transform.Find("Text2").gameObject, 1.5f));
+            counter++;
+            yield return null;
+        }
+        warningObject.SetActive(false);
+        yield break;
+    }
+
     public IEnumerator animateThankYouScreen(GameObject thankYouPage)
     {
   
@@ -199,6 +227,7 @@ public class UIManager : MonoBehaviour
 
     public void EnableHUD()
     {
+        tempGradients.SetActive(false);
         topHUD.SetActive(true);
         bottomHUD.SetActive(true);
         dialogue_box.SetActive(true);
@@ -209,8 +238,9 @@ public class UIManager : MonoBehaviour
         dialogue_box.SetActive(true);
     }
 
-    public void DisableHUD()
+    public void DisableHUD(bool keepGradients=false)
     {
+        if(keepGradients) tempGradients.SetActive(true);
         GameObject.Find("TopHUD").SetActive(false);
         GameObject.Find("BottomHUD").SetActive(false);
         GameObject.Find("DialogueBox").SetActive(false);
@@ -885,6 +915,7 @@ public class UIManager : MonoBehaviour
         thankYouPage.transform.SetParent(GameObject.Find("Canvas").gameObject.transform, false);
         menuManager.menusPaused = true;
         inputManager.pausePlayerInput();
+        Time.timeScale = 0.0f;
         StartCoroutine(animateThankYouScreen(thankYouPage.transform.Find("DemoScreen").gameObject));
     }
 
