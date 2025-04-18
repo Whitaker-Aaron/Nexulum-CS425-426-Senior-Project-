@@ -4959,7 +4959,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7686125088459755243}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.98687255, z: -0, w: -0.16150095}
+  m_LocalRotation: {x: 0, y: 0.98687273, z: -0, w: -0.16150036}
   m_LocalPosition: {x: -1670.54, y: -956.16644, z: 74.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4997,6 +4997,12 @@ MonoBehaviour:
   collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
+  statusImmunity_Ice: 0
+  statusImmunity_Fire: 0
+  statusImmunity_Earth: 0
+  statusImmunity_Electric: 0
+  statusImmunity_Water: 0
+  statusImmunity_Wind: 0
 --- !u!54 &7312136641156335363
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5206,7 +5212,6 @@ MonoBehaviour:
   patrolState:
     patrolPoints: []
   enableStateDebugLogs: 0
-  isFrozen: 0
 --- !u!114 &6996728658863666810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5354,14 +5359,14 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.42319274, y: 1.076723, z: 0.24656847}
-  m_Center: {x: 0.005282956, y: -0.058238972, z: 0.024950134}
+  m_Size: {x: 0.1, y: 0.86, z: 0.07}
+  m_Center: {x: 0.005282956, y: -0.058238972, z: 0.01}
 --- !u!4 &611810386620562966 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5866538fb9b56144cb465087f393e464, type: 3}

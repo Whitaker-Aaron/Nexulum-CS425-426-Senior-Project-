@@ -41,7 +41,7 @@ public class RoomTransition : MonoBehaviour
             //Debug.Log(enemies[i]);
             if (enemies[i] != null)
             {
-                enemies[i].GetComponent<EnemyFrame>().resetPosition();
+                if(enemies[i].GetComponent<EnemyFrame>() != null) enemies[i].GetComponent<EnemyFrame>().resetPosition();
                 if(enemies[i].GetComponent<EnemyStateManager>() != null) enemies[i].GetComponent<EnemyStateManager>().ResetEnemyState();
             }           
         }
@@ -54,7 +54,7 @@ public class RoomTransition : MonoBehaviour
         {
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null)
+                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>() != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null)
                 {
                     enemies[i].GetComponent<EnemyFrame>().healthRef.SetActive(false);
                 }
@@ -69,7 +69,7 @@ public class RoomTransition : MonoBehaviour
         {
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null )
+                if (enemies[i] != null && enemies[i].GetComponent<EnemyFrame>() != null && enemies[i].GetComponent<EnemyFrame>().healthRef != null )
                 {
                     enemies[i].GetComponent<EnemyFrame>().healthRef.SetActive(true);
                 }
@@ -100,6 +100,7 @@ public class RoomTransition : MonoBehaviour
                     //cameraBehavior.PauseLookAt();
                     GameObject.Find("RoomManager").GetComponent<RoomManager>().SetRoom(targetInfo);
                     character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+                    character.GetMasterInput().GetComponent<masterInput>().DisableLineRenderer();
                     character.transitioningRoom = true;
                     StartCoroutine(MovePlayerForward(other, exitDirection));
                     StartCoroutine(Transition(other));
@@ -111,6 +112,7 @@ public class RoomTransition : MonoBehaviour
                     //cameraBehavior.PauseLookAt();
                     character.transitioningRoom = true;
                     character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+                    character.GetMasterInput().GetComponent<masterInput>().DisableLineRenderer();
                     StartCoroutine(MovePlayerForward(other, enterDirection));
                     StartCoroutine(Transition(other));
                     
@@ -178,6 +180,7 @@ public class RoomTransition : MonoBehaviour
         var character = other.GetComponent<CharacterBase>();
         yield return new WaitForSeconds(0.3f);
         character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        character.GetMasterInput().GetComponent<masterInput>().EnableLineRenderer();
         character.transitionedRoom = false;
         character.transitioningRoom = false;
         cameraBehavior.UnpauseFollow();
@@ -187,6 +190,10 @@ public class RoomTransition : MonoBehaviour
             Debug.Log("Need to animate checkpoint");
             StartCoroutine(uiManager.AnimateCheckpointReached());
             GameObject.Find("AudioManager").GetComponent<AudioManager>().ChangeTrack("CheckpointRoom");
+        }
+        else if (currentInfo.bossRoom)
+        {
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().StopLoop();
         }
         else
         {

@@ -2,20 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
-public class golemBoss : MonoBehaviour
+public class golemBoss : MonoBehaviour, enemyInt
 {
     public Transform player;
     public Animator animator;
+    private CameraFollow camera;
     public float attackCooldown = 2f;
     public float attackRange = 5f;
     public int maxAttacks = 3;
     public float turnSpeed = 15f; // Adjusted turn speed for smoother turning
     public float detectionRadius = 7f; // Detection range
     public float maxAngle = 4f;
+    public bool unlocksDoor = false;
+    [SerializeField] Door doorToUnlock;
 
     private NavMeshAgent agent;
-    public bool isAttacking = false;
+    //public bool isAttacking = false;
     private bool isRecovering = false;
     private bool isTurning = false;
 
@@ -32,9 +36,14 @@ public class golemBoss : MonoBehaviour
 
     //Health
     public int MAXHEALTH;
-    private int health;
+    [SerializeField] private int health;
     bool bossDying = false;
     private bool isHalfHealth = false; // Flag to track if half health event has triggered
+    
+    // Damage over time tracking
+    public bool dmgOverTimeActivated = false;
+    private bool takingDmgOT = false;
+    private UIManager uiManager;
 
     //attack effects
     [SerializeField]
@@ -43,6 +52,7 @@ public class golemBoss : MonoBehaviour
 
     public float jumpSpeed, jumpLength, jumpCooldown, longJumpSpeed, longJumpLength, longJumpCooldown;
     public bool canJump = true, canLongJump = true;
+    bool cameraAdjusted = false;
 
 
     //Damage
@@ -63,9 +73,42 @@ public class golemBoss : MonoBehaviour
     [SerializeField] GameObject slash1, slash2, slashSlam, slashSlam1, slashSlam2, jumpSlam;
     [SerializeField] GameObject lungeEffect, backAttackEffect, dashEffect, medJumpEffect;
     [SerializeField] GameObject enemyPrefab; // Enemy to spawn
+    public GameObject healthRef;
+    [SerializeField] GameObject enemyHealth;
+    Slider enemyHealthBar;
+    Slider delayedEnemyHealthBar;
+    GameObject enemyUIRef;
     public float slash1Time = 1f, slash2Time = 1f, slashSlamTime = 1f, slashSlam2Time = 1f, slashSlam3Time = 1f;
     public float slamRadius = 2.5f, slamTime1, slamTime2;
 
+    //Enemy Interface 
+    private bool _isAttacking;
+    public bool isAttacking
+    {
+        get { return _isAttacking; }
+        set
+        {
+            if (_isAttacking != value)  // Only set if the value is different
+            {
+                _isAttacking = value;
+                // Do the other necessary actions
+            }
+        }
+    }
+
+    private bool _isActive;
+    public bool isActive
+    {
+        get { return _isActive; }
+        set
+        {
+            if (_isActive != value)  // Only set if the value is different
+            {
+                _isActive = value;
+                // Do the other necessary actions
+            }
+        }
+    }
 
     //-----------------Main Functions------------------------------
 
@@ -73,20 +116,43 @@ public class golemBoss : MonoBehaviour
 
     void Start()
     {
+        isActive = false;
         agent = GetComponent<NavMeshAgent>();
         slash1.GetComponent<ParticleSystem>().Stop();
         animator.GetComponent<Animator>();
         health = MAXHEALTH;
+        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraFollow>();
         animator.SetBool("death", false);
-        
+
         // Initialize spawn enemies timer with a random offset
         spawnEnemiesTimer = Random.Range(0f, spawnEnemiesCooldown * 0.5f);
+        // Get UI Manager reference
+        uiManager = GameObject.Find("UIManager")?.GetComponent<UIManager>();
+        enemyUIRef = GameObject.Find("DynamicEnemyUI");
+
+        healthRef = Instantiate(enemyHealth);
+        healthRef.transform.SetParent(enemyUIRef.transform, false);
+
+        enemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().health;
+        delayedEnemyHealthBar = healthRef.GetComponent<EnemyHealthPrefab>().delayedHealth;
+
+        enemyHealthBar.maxValue = MAXHEALTH;
+        delayedEnemyHealthBar.maxValue = MAXHEALTH;
+
+        enemyHealthBar.value = health;
+        delayedEnemyHealthBar.value = health;
     }
 
     void Update()
     {
-        if (bossDying)
+        if (bossDying || !isActive)
             return;
+
+        if (!cameraAdjusted)
+        {
+            adjustCameraOffset(new Vector3(0.0f, 13f, -4f));
+            cameraAdjusted = true;
+        }
 
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
@@ -166,11 +232,61 @@ public class golemBoss : MonoBehaviour
         
     }
 
+    public void DeactivateHealthBar()
+    {
+        if (healthRef != null)
+        {
+            healthRef.gameObject.SetActive(false);
+        }
+
+    }
+
+    public void ActivateHealthBar()
+    {
+        if (healthRef != null)
+        {
+            healthRef.gameObject.SetActive(true);
+        }
+
+    }
+
     IEnumerator hitPlayerWait()
     {
         yield return new WaitForSeconds(hitPlayerCooldown);
         hitPlayer = false;
         yield break;
+    }
+
+    public enemyInt getType()
+    {
+        return this;
+    }
+
+    public void onDeath()
+    {
+        var audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        audioManager.ChangeTrack(GameObject.Find("SceneInformation").GetComponent<SceneInformation>().beginningTrack);
+        audioManager.PlaySFX("BattleComplete");
+        DeactivateHealthBar();
+        camera.StartPan(this.transform.position, true, true, 0.05f);
+        adjustCameraOffset(new Vector3(0.0f, -13f, 4f));
+        
+        StartCoroutine(unlockDoor());
+    }
+
+    public IEnumerator unlockDoor()
+    {
+        yield return new WaitForSeconds(5f);
+        if (unlocksDoor && doorToUnlock != null)
+        {
+            camera.StartPan(doorToUnlock.transform.position, true, true, 0.05f);
+            doorToUnlock.ToggleDoor();
+        }
+    }
+
+    public void adjustCameraOffset(Vector3 adjustment)
+    {
+        camera.offset += adjustment;
     }
 
 
@@ -180,7 +296,8 @@ public class golemBoss : MonoBehaviour
         if (health - damage > 0)
         {
             health -= damage;
-            
+            StartCoroutine(updateHealthBarsNegative());
+
             // Check if health has dropped below half and the half health event hasn't triggered yet
             if (!isHalfHealth && health <= MAXHEALTH / 2)
             {
@@ -202,6 +319,53 @@ public class golemBoss : MonoBehaviour
         animator.SetBool("death", true);
         animator.Play("death");
         animator.SetBool("death", false);
+        onDeath();
+        yield break;
+    }
+    
+    // Damage over time method for fire rune effects
+    public IEnumerator dmgOverTime(int dmg, float statusTime, float dmgRate, EnemyFrame.DamageType dmgType)
+    {
+        // If already taking damage over time, don't start another instance
+        if (takingDmgOT)
+            yield break;
+            
+        takingDmgOT = true;
+        dmgOverTimeActivated = true;
+        
+        float endTime = Time.time + statusTime;
+        
+        Debug.Log("Boss starting damage over time at: " + Time.time + " Until: " + endTime);
+        
+        // Continue applying damage over time until the statusTime expires
+        while (Time.time < endTime && !bossDying)
+        {
+            // Apply damage once per dmgTime interval
+            if (this == null)
+            {
+                yield break;
+            }
+            
+            // Apply damage to the boss
+            takeDamage(dmg);
+            
+            // Display damage number if UI manager is available
+            if (uiManager != null)
+            {
+                uiManager.DisplayDamageNum(gameObject.transform, dmg);
+            }
+            
+            Debug.Log("Boss damage taken: " + dmg + " at time: " + Time.time);
+            
+            // Wait for the next damage tick
+            yield return new WaitForSeconds(dmgRate);
+        }
+        
+        // Once the effect duration ends, reset flags and exit the coroutine
+        Debug.Log("Boss finished dmgOverTime at: " + Time.time);
+        dmgOverTimeActivated = false;
+        takingDmgOT = false;
+        
         yield break;
     }
     
@@ -782,7 +946,14 @@ public class golemBoss : MonoBehaviour
         canSpawnEnemies = true;
         yield break;
     }
-    
+
+    void LateUpdate()
+    {
+        
+            healthRef.transform.position = new Vector3(this.transform.position.x - 4.5f,
+            this.transform.position.y + 6f, this.transform.position.z);
+    }
+
     IEnumerator DashAttack(float moveSpeed, float duration)
     {
         if (isAttacking || !canDash || isRecovering)
@@ -845,7 +1016,63 @@ public class golemBoss : MonoBehaviour
         canDash = true;
         yield break;
     }
-    
+
+    public IEnumerator updateHealthBarsNegative()
+    {
+        //StopCoroutine(animateHealth());
+        yield return animateHealth();
+        yield return new WaitForSeconds(0.2f);
+        //StopCoroutine(animateDelayedHealth());
+        yield return animateDelayedHealth();
+    }
+
+    public IEnumerator animateHealth()
+    {
+        Debug.Log("Inside animate health");
+        float reduceVal = 250f;
+        while (enemyHealthBar.value != health)
+        {
+            if (Mathf.Abs(enemyHealthBar.value - health) <= 5)
+            {
+                enemyHealthBar.value = health;
+            }
+            else if (health < enemyHealthBar.value)
+            {
+                enemyHealthBar.value -= reduceVal * Time.deltaTime;
+            }
+            else
+            {
+                enemyHealthBar.value += reduceVal * Time.deltaTime;
+            }
+
+            yield return null;
+        }
+        yield break;
+    }
+
+    public IEnumerator animateDelayedHealth()
+    {
+        float reduceVal = 250f;
+        while (delayedEnemyHealthBar.value != health)
+        {
+            if (Mathf.Abs(delayedEnemyHealthBar.value - health) <= 5)
+            {
+                delayedEnemyHealthBar.value = health;
+            }
+            else if (health < delayedEnemyHealthBar.value)
+            {
+                delayedEnemyHealthBar.value -= reduceVal * Time.deltaTime;
+            }
+            else
+            {
+                delayedEnemyHealthBar.value += reduceVal * Time.deltaTime;
+            }
+
+            yield return null;
+        }
+        yield break;
+    }
+
     IEnumerator MedJumpAttack(float moveSpeed, float duration)
     {
         if (isAttacking || !canMedJump || isRecovering)

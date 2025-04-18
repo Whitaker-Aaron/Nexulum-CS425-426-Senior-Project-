@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿/*-----------------------------------------------------
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿/*-----------------------------------------------------
  * classAbilities Script
  * Author: Spencer Garcia
  * Start Date: 9/26/2024
@@ -699,14 +699,72 @@ public class classAbilties : MonoBehaviour
         checkHit = true;
         RaycastHit hit;
 
-        if (Physics.Raycast(masterInput.instance.bulletSpawn.transform.position, masterInput.instance.bulletSpawn.transform.forward, out hit, maxLaserDistance, enemy))
+        if (masterInput.instance != null && masterInput.instance.bulletSpawn != null && 
+            Physics.Raycast(masterInput.instance.bulletSpawn.transform.position, masterInput.instance.bulletSpawn.transform.forward, out hit, maxLaserDistance, enemy))
         {
-            print("Hitting enemy");
-            hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
-            if (iceBool)
+            if(hit.collider != null && hit.collider.gameObject != null && hit.collider.gameObject.tag == "Enemy")
             {
-                hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserIceDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                print("Hitting enemy");
+                EnemyFrame enemyFrame = hit.collider.gameObject.GetComponent<EnemyFrame>();
+                if (enemyFrame != null)
+                {
+                    enemyFrame.takeDamage(laserDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+                    UIManager.instance.DisplayDamageNum(hit.collider.gameObject.transform, laserDamage);
+                    if (iceBool)
+                    {
+                        enemyFrame.takeDamage(laserIceDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+                        UIManager.instance.DisplayDamageNum(hit.collider.gameObject.transform, laserIceDamage);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Object with tag 'Enemy' doesn't have EnemyFrame component");
+                }
             }
+            if(hit.collider != null && hit.collider.gameObject != null && hit.collider.gameObject.tag == "bossPart")
+            {
+                print("Hitting enemy");
+                bossPart bPart = hit.collider.gameObject.GetComponent<bossPart>();
+                if (bPart != null)
+                {
+                    bPart.takeDamage(laserDamage);
+                    UIManager.instance.DisplayDamageNum(hit.collider.gameObject.transform, laserDamage);
+                    if (iceBool)
+                    {
+                        bPart.takeDamage(laserIceDamage);
+                        UIManager.instance.DisplayDamageNum(hit.collider.gameObject.transform, laserIceDamage);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Object with tag 'bossPart' doesn't have bossPart component");
+                }
+            }
+            else if(hit.collider != null && hit.collider.gameObject != null && hit.collider.gameObject.tag == "Boss")
+            {
+                print("Hitting enemy");
+                golemBoss boss = hit.collider.gameObject.GetComponent<golemBoss>();
+                if (boss != null)
+                {
+                    boss.takeDamage(laserDamage);
+                    UIManager.instance.DisplayDamageNum(hit.collider.gameObject.transform, laserDamage);
+                    if (iceBool)
+                    {
+                        boss.takeDamage(laserIceDamage);
+                        UIManager.instance.DisplayDamageNum(hit.collider.gameObject.transform, laserIceDamage);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Object with tag 'Boss' doesn't have golemBoss component");
+                }
+            }
+            //print("Hitting enemy");
+            //hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
+            //if (iceBool)
+            //{
+            //    hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(laserIceDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Ice);
+            //}
         }
         yield return new WaitForSeconds(laserHitRate);
         checkHit = false;
@@ -1574,14 +1632,44 @@ public class classAbilties : MonoBehaviour
 
             foreach (Collider c in collidersE)
             {
-                if (c.gameObject.tag == "Enemy" && fireBool)
+                if (c != null && c.gameObject != null)
                 {
-                    if (!c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated)
+                    // Check for Enemy tag
+                    if (c.gameObject.tag == "Enemy" && fireBool)
                     {
-                        c.gameObject.GetComponent<EnemyFrame>().dmgOverTimeActivated = true;
-                        StartCoroutine(c.gameObject.GetComponent<EnemyFrame>().dmgOverTime(krFireDmg, krFireTime, krFireRate, EnemyFrame.DamageType.Fire));
+                        EnemyFrame enemyFrame = c.gameObject.GetComponent<EnemyFrame>();
+                        if (enemyFrame != null && !enemyFrame.dmgOverTimeActivated)
+                        {
+                            enemyFrame.dmgOverTimeActivated = true;
+                            StartCoroutine(enemyFrame.dmgOverTime(krFireDmg, krFireTime, krFireRate, EnemyFrame.DamageType.Fire));
+                        }
                     }
-
+                    // Check for Boss tag
+                    else if (c.gameObject.tag == "Boss" && fireBool)
+                    {
+                        // Use golemBoss component for Boss tag
+                        golemBoss boss = c.gameObject.GetComponent<golemBoss>();
+                        if (boss != null && !boss.dmgOverTimeActivated)
+                        {
+                            boss.dmgOverTimeActivated = true;
+                            StartCoroutine(boss.dmgOverTime(krFireDmg, krFireTime, krFireRate, EnemyFrame.DamageType.Fire));
+                        }
+                    }
+                    // Check for bossPart tag
+                    else if (c.gameObject.tag == "bossPart" && fireBool)
+                    {
+                        // Use bossPart component for bossPart tag
+                        bossPart bPart = c.gameObject.GetComponent<bossPart>();
+                        if (bPart != null && bPart.parent != null)
+                        {
+                            golemBoss parentBoss = bPart.parent.GetComponent<golemBoss>();
+                            if (parentBoss != null && !parentBoss.dmgOverTimeActivated)
+                            {
+                                parentBoss.dmgOverTimeActivated = true;
+                                StartCoroutine(parentBoss.dmgOverTime(krFireDmg, krFireTime, krFireRate, EnemyFrame.DamageType.Fire));
+                            }
+                        }
+                    }
                 }
             }
 
@@ -1610,9 +1698,34 @@ public class classAbilties : MonoBehaviour
 
             foreach(Collider c in enemiesInClone)
             {
+                if(c == null) continue;
+                
                 print("Setting new target in class for an enemy");
                 c.gameObject.transform.LookAt(currentClone.transform.position);
-                c.gameObject.GetComponent<EnemyLOS>().ChangeTarget(c.gameObject);
+                
+                // Check if it's a boss
+                if(c.gameObject.CompareTag("Boss"))
+                {
+                    print("Setting new target for Boss");
+                    // Make the boss look at the clone
+                    c.gameObject.transform.LookAt(currentClone.transform.position);
+                    
+                    // Try to get EnemyLOS component if it exists on the boss
+                    EnemyLOS enemyLOS = c.gameObject.GetComponent<EnemyLOS>();
+                    if(enemyLOS != null)
+                    {
+                        enemyLOS.ChangeTarget(c.gameObject);
+                    }
+                }
+                else
+                {
+                    // Handle regular enemies
+                    EnemyLOS enemyLOS = c.gameObject.GetComponent<EnemyLOS>();
+                    if(enemyLOS != null)
+                    {
+                        enemyLOS.ChangeTarget(c.gameObject);
+                    }
+                }
             }
         }
         if(!cloning && enemiesInClone.Length > 0)
@@ -1622,7 +1735,29 @@ public class classAbilties : MonoBehaviour
             {
                 if(c == null) continue;
 
-                c.gameObject.GetComponent<EnemyLOS>().ChangeTarget(player.gameObject);
+                // Check if it's a boss
+                if(c.gameObject.CompareTag("Boss"))
+                {
+                    print("Resetting Boss target to player");
+                    // Make the boss look at the player
+                    c.gameObject.transform.LookAt(player.transform.position);
+                    
+                    // Try to get EnemyLOS component if it exists on the boss
+                    EnemyLOS enemyLOS = c.gameObject.GetComponent<EnemyLOS>();
+                    if(enemyLOS != null)
+                    {
+                        enemyLOS.ChangeTarget(player.gameObject);
+                    }
+                }
+                else
+                {
+                    // Reset regular enemies targeting to player
+                    EnemyLOS enemyLOS = c.gameObject.GetComponent<EnemyLOS>();
+                    if(enemyLOS != null)
+                    {
+                        enemyLOS.ChangeTarget(player.gameObject);
+                    }
+                }
             }
             enemiesInClone = new Collider[0];
         }

@@ -87,6 +87,14 @@ public class LifetimeManager : MonoBehaviour
         yield return new WaitForSeconds(3);
         audioManager.ChangeTrack("CheckpointRoom");
         inputManager.resumePlayerInput();
+        var floor = GameObject.Find("FloorInformation").GetComponent<FloorInformation>();
+        if(floor != null)
+        {
+            while (!floor.doneDeactivatingRooms)
+            {
+                yield return null;
+            }
+        }
         characterRef.teleporting = false;
         yield break;
 

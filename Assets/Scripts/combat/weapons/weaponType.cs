@@ -58,7 +58,10 @@ public abstract class weaponType : MonoBehaviour
     {
         playerInput = masterInput.instance.gameObject.GetComponent<PlayerInput>();
         bulletSpawn = masterInput.instance.bulletSpawn;
-        Reload();
+        //Reload();
+        currentHeat = 0;
+        isReloading = false;
+        canShoot = true;
     }
 
     // Update is called once per frame

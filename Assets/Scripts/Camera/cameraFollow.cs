@@ -58,13 +58,14 @@ public class CameraFollow : MonoBehaviour
         followMode = mode;
     }
 
-    public void StartPan(Vector3 positionToPanTo, bool lockY, bool lockLook, float rate)
+    public void StartPan(Vector3 positionToPanTo, bool lockY, bool lockLook, float rate, float delay=0.0f)
     {
         panLookAtLocked = lockLook;
         panYAxisLocked = lockY;
         target.GetComponent<CharacterBase>().GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         target.GetComponent<CharacterBase>().inEvent = true;
-        StartCoroutine(PanToPosition(positionToPanTo, rate));
+        if(delay != 0.0f) StartCoroutine(PanToPosition(positionToPanTo, rate, delay));
+        else StartCoroutine(PanToPosition(positionToPanTo, rate));
     }
 
     public IEnumerator StartMultiPan(Vector3 positionToPanTo, bool lockY, bool lockLook, float rate)

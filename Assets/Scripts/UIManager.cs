@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject CheckpointText;
+    [SerializeField] GameObject bossText;
     [SerializeField] GameObject levelUpText;
     [SerializeField] GameObject attackUpText;
     [SerializeField] GameObject expText;
@@ -29,6 +30,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject bottomHUD;
     [SerializeField] GameObject topRedBorder;
     [SerializeField] GameObject bottomRedBorder;
+    [SerializeField] GameObject thankYouScreen;
+    [SerializeField] GameObject warningObject;
 
     [SerializeField] GameObject ability1;
     [SerializeField] GameObject ability2;
@@ -41,6 +44,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject dashSmear;
     [SerializeField] GameObject criticalText;
     [SerializeField] GameObject criticalTextBorder;
+    [SerializeField] GameObject warningScreen;
     [SerializeField] GameObject florentineUI;
     
 
@@ -63,8 +67,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject classAbility2;
     [SerializeField] GameObject classAbility3;
 
+    [SerializeField] GameObject tempGradients;
     [SerializeField] GameObject viewItemGradient;
 
+    
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
     Coroutine currentTransitionTypewriter;
@@ -79,6 +85,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Slider ExperienceBar;
     GameObject currentCheckpointText;
+    GameObject currentBossText;
     GameObject curViewItem;
     Queue<GameObject> currentSmears = new Queue<GameObject>();
     Queue<GameObject> currentDamageNums = new Queue<GameObject>();
@@ -132,6 +139,55 @@ public class UIManager : MonoBehaviour
         StartCoroutine(animateTutorialPage(page));
     }
 
+    public void StartWarningIcon()
+    {
+        StartCoroutine(animateWarningIcon());
+    }
+
+    public IEnumerator animateWarningIcon()
+    {
+        
+        warningObject.SetActive(true);
+        int counter = 0;
+        while (counter < 3)
+        {
+            
+            StartCoroutine(IncreaseImageOpacity(warningObject.transform.Find("GuildLogo").gameObject, 2f, true));
+            StartCoroutine(IncreaseTextOpacity(warningObject.transform.Find("Text1").gameObject, 2f, true));
+            yield return StartCoroutine(IncreaseTextOpacity(warningObject.transform.Find("Text2").gameObject, 2f, true));
+            audioManager.PlaySFX("Alarm");
+            StartCoroutine(DecreaseImageOpacity(warningObject.transform.Find("GuildLogo").gameObject, 2f));
+            StartCoroutine(ReduceTextOpacity(warningObject.transform.Find("Text1").gameObject, 2f));
+            yield return StartCoroutine(ReduceTextOpacity(warningObject.transform.Find("Text2").gameObject, 2f));
+            counter++;
+            yield return null;
+        }
+        warningObject.SetActive(false);
+        yield break;
+    }
+
+    public IEnumerator animateThankYouScreen(GameObject thankYouPage)
+    {
+  
+        Vector3 desiredPos = new Vector3(-400, thankYouPage.transform.localPosition.y, thankYouPage.transform.localPosition.z);
+        bool animFinished = false;
+        while (!animFinished)
+        {
+            if (thankYouPage == null) yield break;
+            if (thankYouPage != null) thankYouPage.transform.localPosition = Vector3.Lerp(thankYouPage.transform.localPosition, desiredPos, (10f * Time.unscaledDeltaTime));
+            /*if(page.transform.localPosition.x == -400.0f)
+            {
+                page.transform.localPosition = desiredPos;
+                animFinished = true;
+            }*/
+            //Debug.Log(page.transform.position);
+            //Debug.Log(page.transform.localPosition);
+            yield return null;
+        }
+        yield break;
+
+    }
+
     public IEnumerator animateTutorialPage(GameObject page)
     {
         Vector3 desiredPos = new Vector3(-400, page.transform.localPosition.y, page.transform.localPosition.z);
@@ -173,6 +229,7 @@ public class UIManager : MonoBehaviour
 
     public void EnableHUD()
     {
+        tempGradients.SetActive(false);
         topHUD.SetActive(true);
         bottomHUD.SetActive(true);
         dialogue_box.SetActive(true);
@@ -183,8 +240,9 @@ public class UIManager : MonoBehaviour
         dialogue_box.SetActive(true);
     }
 
-    public void DisableHUD()
+    public void DisableHUD(bool keepGradients=false)
     {
+        if(keepGradients) tempGradients.SetActive(true);
         GameObject.Find("TopHUD").SetActive(false);
         GameObject.Find("BottomHUD").SetActive(false);
         GameObject.Find("DialogueBox").SetActive(false);
@@ -848,6 +906,27 @@ public class UIManager : MonoBehaviour
         {
             yield return currentCriticalBorderOpacity = StartCoroutine(IncreaseTextOpacity(criticalTextBorder, 1.0f));
             yield return currentCriticalBorderOpacity = StartCoroutine(ReduceTextOpacity(criticalTextBorder, 1.0f));
+        }
+    }
+
+    public void DisplayThankYouScreen()
+    {
+        var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+        var inputManager = GameObject.Find("InputandAnimationManager").GetComponent<masterInput>();
+        var thankYouPage = Instantiate(thankYouScreen);
+        thankYouPage.transform.SetParent(GameObject.Find("Canvas").gameObject.transform, false);
+        menuManager.menusPaused = true;
+        inputManager.pausePlayerInput();
+        Time.timeScale = 0.0f;
+        StartCoroutine(animateThankYouScreen(thankYouPage.transform.Find("DemoScreen").gameObject));
+    }
+
+    public IEnumerator AnimateWarningScreen()
+    {
+        while (true)
+        {
+            yield return currentCriticalBorderOpacity = StartCoroutine(IncreaseTextOpacity(warningScreen, 1.0f));
+            yield return currentCriticalBorderOpacity = StartCoroutine(ReduceTextOpacity(warningScreen, 1.0f));
         }
     }
 
@@ -1676,6 +1755,34 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
+    public IEnumerator AnimateBossName(string bossName)
+    {
+        Debug.Log("Animating Boss Name");
+        currentBossText = Instantiate(bossText);
+        currentBossText.transform.SetParent(mainCanvas.transform, false);
+        currentBossText.transform.localScale = new Vector3(6.0f, 6.0f, 6.0f);
+        var rate = new Vector3(20f, 20f, 20f);
+        while (currentBossText.transform.localScale.x != 1.0f)
+        {
+            Debug.Log(currentBossText.transform.localScale);
+            if ((currentBossText.transform.localScale.x - (rate.x * Time.deltaTime)) <= 1.0f)
+            {
+                currentBossText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                yield return null;
+            }
+            else
+            {
+                currentBossText.transform.localScale -= (rate * Time.deltaTime);
+                yield return null;
+            }
+
+        }
+        //yield return new WaitForSeconds(2.8f);
+        yield return StartCoroutine(AnimateTypewriterCheckpoint(currentBossText.GetComponent<TMP_Text>(), bossName, "|", 0.125f));
+        Destroy(currentBossText);
+        yield break;
+    }
+
     public IEnumerator DecreaseImageOpacity(GameObject image, float rate)
     {
         var reference = image.GetComponent<Image>();
@@ -1724,9 +1831,15 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator IncreaseTextOpacity(GameObject text, float rate)
+    private IEnumerator IncreaseTextOpacity(GameObject text, float rate, bool setToZero= false)
     {
         var reference = text.GetComponent<TMP_Text>();
+        if (setToZero)
+        {
+            Color imgColor = reference.color;
+            imgColor.a = 0;
+            reference.color = imgColor;
+        }
         while (reference.color.a <= 1.0 && reference != null)
         {
             Color imgColor = reference.color;

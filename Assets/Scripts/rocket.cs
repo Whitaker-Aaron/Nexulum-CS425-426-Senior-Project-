@@ -14,6 +14,8 @@ public class rocket : MonoBehaviour
 
     public bool fireB = false;
 
+    public LayerMask enemyMask;
+
 
     // Start is called before the first frame update
     void Start()
@@ -45,15 +47,24 @@ public class rocket : MonoBehaviour
         }
         
         
-        Collider[] hitEnemies = Physics.OverlapSphere(gameObject.transform.position, explosionRadius);
+        Collider[] hitEnemies = Physics.OverlapSphere(gameObject.transform.position, explosionRadius, enemyMask);
+        bool hitBoss = false;
         foreach (Collider collider in hitEnemies)
         {
+            if(collider.gameObject.tag == "Boss" && !hitBoss)
+            {
+                //print("slow down the enemy");
+                collider.gameObject.GetComponent<golemBoss>().takeDamage(damage);
+                uiManager.DisplayDamageNum(collider.gameObject.transform, damage);
+                hitBoss = true;
+            }
             if(collider.gameObject.tag == "Enemy")
             {
                 collider.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Explosion);
                 uiManager.DisplayDamageNum(collider.gameObject.transform, damage, 60f, 1f);
             }
         }
+        hitBoss = false;
         //Destroy(currentExplosion, 2f);
         Destroy(gameObject);
     }
@@ -65,6 +76,10 @@ public class rocket : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if(collision.gameObject.tag == "Boss")
+        {
+            explode();
+        }
         if (collision.gameObject.tag == "Enemy")
         {
             collision.gameObject.GetComponent<EnemyFrame>().takeDamage(directHitDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
