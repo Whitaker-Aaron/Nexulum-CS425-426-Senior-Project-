@@ -57,6 +57,7 @@ public class EnemyTrigger : MonoBehaviour
         uiManager.DisableHUD(true);
         camera.StartPan(enemies[0].transform.position, true, true, 0.05f, 7f);
         yield return new WaitForSeconds(3f);
+        GameObject.Find("AudioManager").GetComponent<AudioManager>().ChangeTrack("Boss1");
         StartCoroutine(uiManager.AnimateBossName("Gollurk"));
         EnableEnemies();
         yield return new WaitForSeconds(5f);

@@ -18,6 +18,7 @@ public class RoomInformation : MonoBehaviour
     public bool firstVisit = true;
     public bool floorEntrance = false;
     public bool requiredEnemyRoom = false;
+    public bool bossRoom = false;
     public RoomPersistenceData roomData;
 
     GameObject character; 

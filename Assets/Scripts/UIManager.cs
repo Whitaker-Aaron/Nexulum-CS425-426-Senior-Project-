@@ -151,12 +151,14 @@ public class UIManager : MonoBehaviour
         int counter = 0;
         while (counter < 3)
         {
-            StartCoroutine(IncreaseImageOpacity(warningObject.transform.Find("GuildLogo").gameObject, 1.5f));
-            StartCoroutine(IncreaseTextOpacity(warningObject.transform.Find("Text1").gameObject, 1.5f));
-            yield return StartCoroutine(IncreaseTextOpacity(warningObject.transform.Find("Text2").gameObject, 1.5f));
-            StartCoroutine(DecreaseImageOpacity(warningObject.transform.Find("GuildLogo").gameObject, 1.5f));
-            StartCoroutine(ReduceTextOpacity(warningObject.transform.Find("Text1").gameObject, 1.5f));
-            yield return StartCoroutine(ReduceTextOpacity(warningObject.transform.Find("Text2").gameObject, 1.5f));
+            
+            StartCoroutine(IncreaseImageOpacity(warningObject.transform.Find("GuildLogo").gameObject, 2f, true));
+            StartCoroutine(IncreaseTextOpacity(warningObject.transform.Find("Text1").gameObject, 2f, true));
+            yield return StartCoroutine(IncreaseTextOpacity(warningObject.transform.Find("Text2").gameObject, 2f, true));
+            audioManager.PlaySFX("Alarm");
+            StartCoroutine(DecreaseImageOpacity(warningObject.transform.Find("GuildLogo").gameObject, 2f));
+            StartCoroutine(ReduceTextOpacity(warningObject.transform.Find("Text1").gameObject, 2f));
+            yield return StartCoroutine(ReduceTextOpacity(warningObject.transform.Find("Text2").gameObject, 2f));
             counter++;
             yield return null;
         }
@@ -1829,9 +1831,15 @@ public class UIManager : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator IncreaseTextOpacity(GameObject text, float rate)
+    private IEnumerator IncreaseTextOpacity(GameObject text, float rate, bool setToZero= false)
     {
         var reference = text.GetComponent<TMP_Text>();
+        if (setToZero)
+        {
+            Color imgColor = reference.color;
+            imgColor.a = 0;
+            reference.color = imgColor;
+        }
         while (reference.color.a <= 1.0 && reference != null)
         {
             Color imgColor = reference.color;

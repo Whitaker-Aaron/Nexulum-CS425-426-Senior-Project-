@@ -264,9 +264,13 @@ public class golemBoss : MonoBehaviour, enemyInt
 
     public void onDeath()
     {
+        var audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        audioManager.ChangeTrack(GameObject.Find("SceneInformation").GetComponent<SceneInformation>().beginningTrack);
+        audioManager.PlaySFX("BattleComplete");
         DeactivateHealthBar();
         camera.StartPan(this.transform.position, true, true, 0.05f);
         adjustCameraOffset(new Vector3(0.0f, -13f, 4f));
+        
         StartCoroutine(unlockDoor());
     }
 

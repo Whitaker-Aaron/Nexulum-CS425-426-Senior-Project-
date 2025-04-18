@@ -87,8 +87,20 @@ public class AudioManager : MonoBehaviour
 
     public void StopLoop()
     {
-        if (loopSources[currentLoop] != null)
+        /*if (loopSources[currentLoop] != null)
         {
+            loopSources[currentLoop].StopLoop();
+        }*/
+        StartCoroutine(FadeStopLoop());
+    }
+
+    public IEnumerator FadeStopLoop()
+    {
+        if (currentLoop != null && currentLoop != "")
+        {
+            var startLoop = ReduceVolOnLoop(0.050f);
+            StartCoroutine(startLoop);
+            yield return new WaitForSeconds(2f);
             loopSources[currentLoop].StopLoop();
         }
     }

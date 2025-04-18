@@ -191,6 +191,10 @@ public class RoomTransition : MonoBehaviour
             StartCoroutine(uiManager.AnimateCheckpointReached());
             GameObject.Find("AudioManager").GetComponent<AudioManager>().ChangeTrack("CheckpointRoom");
         }
+        else if (currentInfo.bossRoom)
+        {
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().StopLoop();
+        }
         else
         {
             GameObject.Find("AudioManager").GetComponent<AudioManager>().ChangeTrack(
