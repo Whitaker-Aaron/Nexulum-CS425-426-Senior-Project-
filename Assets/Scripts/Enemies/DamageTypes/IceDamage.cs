@@ -16,12 +16,15 @@ public class IceDamage : IType
     public bool isFrozen = false;
     private bool resetNext = false;
     ParticleSystem iceParticleSystemRef;
+    EnemyFrame enemyFrameRef;
 
-    public IceDamage(EnemyStateManager movementRef, int maxStacks)
+    public IceDamage(EnemyStateManager movementRef, int maxStacks, ParticleSystem particleSystem, EnemyFrame frameRef)
     {
         if(movementRef != null) this.movementRef = movementRef;
         if(maxStacks != null) this.maxStacks = maxStacks;
         if(movementRef != null) this.originalSpeed = movementRef.defaultMovementSpeed;
+        if(particleSystem != null) this.iceParticleSystemRef = particleSystem;
+        if(frameRef != null) this.enemyFrameRef = frameRef;
     }
 
     public float GetCurrentStacks()
@@ -51,6 +54,7 @@ public class IceDamage : IType
 
     public void execute()
     {
+
         if (isFrozen)
         {
             resetNext = true;

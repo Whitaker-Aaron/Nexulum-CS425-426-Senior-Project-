@@ -113,10 +113,10 @@ public class EnemyFrame : MonoBehaviour
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         if (enemyReference != null) enemyType = gameObject.GetComponent<enemyInt>().getType();
         
-            
-
+        
+        // if (iceEffectParticleSystem != null) Instantiate(iceEffectParticleSystem, this.transform, true);
         // Status effects - Aisling
-        iceEffect = new IceDamage(movementReference, iceStackMax);
+        iceEffect = new IceDamage(movementReference, iceStackMax, iceEffectParticleSystem, this);
         InvokeRepeating("TickIceEffect", 0.0f, effectTickInterval); // Decreases current ice stacks by 1 every effectTickInterval seconds until 0
     }
 
@@ -194,6 +194,7 @@ public class EnemyFrame : MonoBehaviour
             case DamageType.Ice: // Ice dmg - Aisling
                 if (!statusImmunity_Ice)
                 {
+                    if (iceEffectParticleSystem != null) InstantiateParticleSystem(iceEffectParticleSystem);
                     iceEffect.AddStacks(1);
                     Debug.Log("Current stacks: " + iceEffect.GetCurrentStacks());
                     iceEffect.execute();
@@ -434,6 +435,10 @@ public class EnemyFrame : MonoBehaviour
             iceEffect.execute();
             Debug.Log("Current stacks: " + iceEffect.GetCurrentStacks());
         }
+        else
+        {
+            if (iceEffectParticleSystem != null) Destroy(iceEffectParticleSystem);
+        }
     }
 
     public float GetStacksOfDType(DamageType type)
@@ -447,6 +452,14 @@ public class EnemyFrame : MonoBehaviour
                 Debug.Log("Requested stacks of status effect (DType) does not exist.");
                 return -1;
                 break;
+        }
+    }
+
+    private void InstantiateParticleSystem(ParticleSystem system)
+    {
+        if (!GameObject.Find(system.name))
+        {
+            Instantiate(iceEffectParticleSystem, this.transform, true);
         }
     }
 
