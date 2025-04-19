@@ -58,10 +58,11 @@ public class TutorialCameraPanTrigger : MonoBehaviourID, EventTrigger
     {
         
         //yield return new WaitForSeconds(0.25f);
-        character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
-        character.inEvent = true;
+        
         for(int i =0; i < objectToPanTo.Count; i++)
         {
+            character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+            character.inEvent = true;
             camera.panYAxisLocked = panYAxisLocked;
             camera.panLookAtLocked = panLookAtLocked;
             yield return StartCoroutine(camera.PanToPosition(objectToPanTo[i].transform.position + offset, panSpeed, panDelay));

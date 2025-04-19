@@ -284,7 +284,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         yield return new WaitForSeconds(0.25f);
         isTouchingGround = false;
-        if (masterInput.gameObject.activeSelf && !isTouchingGround && activatingFall && floatingPlatformCounter < 1)
+        if (masterInput.gameObject.activeSelf && !transitioningRoom && !isTouchingGround && activatingFall && floatingPlatformCounter < 1)
         {
             masterInput.ActivateFallAnimation();
             audioManager.PauseFootsteps("TestWalk");

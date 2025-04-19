@@ -419,8 +419,13 @@ public class EnemyFrame : MonoBehaviour
 
         }
         character.AddExperienceToClass(enemyReference.droppedExperience);
-        Destroy(healthRef);
+        removeHealth();
         Destroy(this.gameObject);
+    }
+
+    public void removeHealth()
+    {
+        Destroy(healthRef);
     }
 
     
