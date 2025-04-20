@@ -21,7 +21,13 @@ public class EnemyDoorTrigger : MonoBehaviour
         {
             enemies[i].GetComponent<enemyInt>().isActive = false;
         }
+        
         //prevEnemyCount = 0;
+    }
+
+    private void OnEnable()
+    {
+        CheckTriggers();
     }
 
     // Update is called once per frame
@@ -59,6 +65,21 @@ public class EnemyDoorTrigger : MonoBehaviour
         }
     }
 
+    public void CheckTriggers()
+    {
+        bool activeTriggerFound = false;
+        Debug.Log("Room Trigger Count: " + roomTriggerObjects.Count);
+        for (int i = 0; i < roomTriggerObjects.Count; i++)
+        {
+            if (roomTriggerObjects[i] == null)
+            {
+                Debug.Log("Room trigger found");
+                activeTriggerFound = true;
+            }
+        }
+        if(activeTriggerFound) DeactivateEnemies();
+    }
+
     public IEnumerator OpenDoors()
     {
         var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
@@ -80,10 +101,28 @@ public class EnemyDoorTrigger : MonoBehaviour
                 }
                 yield return null;
             }
+
             character.invul = false;
+            DeactivateEnemies();
             DeleteRoomTriggers();
         }
         yield break;
+    }
+
+    public void DeactivateEnemies()
+    {
+        var enemies = transform.GetComponent<RoomInformation>().GetEnemies();
+        encounterComplete = true;
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (enemies[i] != null)
+            {
+                if (enemies[i].GetComponent<EnemyFrame>() != null) enemies[i].GetComponent<EnemyFrame>().removeHealth();
+                Destroy(enemies[i]);
+                enemies.RemoveAt(i);
+                i--;
+            }
+        }
     }
 
     public void DeleteRoomTriggers()

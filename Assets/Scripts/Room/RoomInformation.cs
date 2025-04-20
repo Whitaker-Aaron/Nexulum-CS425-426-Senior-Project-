@@ -18,6 +18,7 @@ public class RoomInformation : MonoBehaviour
     public bool firstVisit = true;
     public bool floorEntrance = false;
     public bool requiredEnemyRoom = false;
+    public bool bossRoom = false;
     public RoomPersistenceData roomData;
 
     GameObject character; 
@@ -213,7 +214,7 @@ public class RoomInformation : MonoBehaviour
         {
             if (allEnemies[i] != null)
             {
-                allEnemies[i].GetComponent<EnemyFrame>().DeactivateHealthBar();
+                if(allEnemies[i].GetComponent<EnemyFrame>() != null) allEnemies[i].GetComponent<EnemyFrame>().DeactivateHealthBar();
             }
             else
             {
@@ -228,7 +229,7 @@ public class RoomInformation : MonoBehaviour
         {
             if (allEnemies[i] != null)
             {
-                allEnemies[i].GetComponent<EnemyFrame>().ActivateHealthBar();
+                if(allEnemies[i].GetComponent<EnemyFrame>() != null) allEnemies[i].GetComponent<EnemyFrame>().ActivateHealthBar();
             }
             else
             {

@@ -48,6 +48,11 @@ public class TutorialPage : MonoBehaviour
         StartCoroutine(InputDelay());
         LoadPage();
         //EventSystem.
+        if(GameObject.Find("ExitGameButton") != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(GameObject.Find("ExitGameButton"));
+        }
         
     }
 
@@ -168,6 +173,13 @@ public class TutorialPage : MonoBehaviour
         if(curPage -1 >= 0) curPage--;
         LoadPage();
         audioManager.PlaySFX("UIConfirm");
+        
+    }
+
+    public void OnExitGame()
+    {
+        audioManager.PlaySFX("UIConfirm");
+        Application.Quit();
         
     }
 

@@ -7,6 +7,7 @@ public class FloorInformation : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] GameObject[] RoomList;
     CharacterBase characterRef;
+    public bool doneDeactivatingRooms = false;
 
     // Update is called once per frame
     void Update()
@@ -82,6 +83,7 @@ public class FloorInformation : MonoBehaviour
                 RoomList[i].SetActive(false);
             }
         }
+        doneDeactivatingRooms = true;
     }
 
 

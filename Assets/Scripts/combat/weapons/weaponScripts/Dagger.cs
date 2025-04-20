@@ -75,13 +75,13 @@ public class Dagger : swordCombat
                 
                 if (isHeavy)
                 {
-                    uiManager.DisplayDamageNum(collider.gameObject.transform, heavyDamage);
+                    uiManager.DisplayDamageNum(collider.gameObject.transform, heavyDamage, 75f);
                     collider.GetComponent<bossPart>().takeDamage(heavyDamage);
                     EffectsManager.instance.getFromPool("swordHeavyHit", new Vector3(collider.transform.position.x - gameObject.transform.position.x * 1.2f, .75f, collider.transform.position.z - gameObject.transform.position.x * 1.2f), Quaternion.identity, false, true);
                 }
                 else
                 {
-                    uiManager.DisplayDamageNum(collider.gameObject.transform, damage);
+                    uiManager.DisplayDamageNum(collider.gameObject.transform, damage, 75f);
                     collider.GetComponent<bossPart>().takeDamage(damage);
                     EffectsManager.instance.getFromPool("swordHit", new Vector3(collider.transform.position.x - gameObject.transform.position.x * 1.2f, .75f, collider.transform.position.z - gameObject.transform.position.x * 1.2f), Quaternion.identity, false, true);
                 }
