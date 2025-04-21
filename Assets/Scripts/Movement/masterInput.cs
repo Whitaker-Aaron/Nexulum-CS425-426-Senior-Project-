@@ -1691,12 +1691,12 @@ public class masterInput : MonoBehaviour
         {
             if (placing || shootingLaser || shootingRocket || throwingGrenade || shootingSwords)
             {
-                print("abiity in use cant use spell cast");
+                print("spellcast: abiity in use cant use spell cast");
                 return;
             }
             if (character.equippedRunes[0] != null && playerInput.actions["AbilityOne"].triggered && !abilityInUse && character.equippedRunes[0].runeType == Rune.RuneType.Spell)
             {
-                print("Using spellCast One");
+                print("spellcast: Using spellCast One");
                 abilityInUse = true;
                 gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[0], 1);
                 uiManager.ActivateCooldownOnAbility(1, true);
@@ -1710,7 +1710,7 @@ public class masterInput : MonoBehaviour
             }
             else if (character.equippedRunes[1] != null && playerInput.actions["AbilityTwo"].triggered && !abilityInUse && character.equippedRunes[1].runeType == Rune.RuneType.Spell)
             {
-                print("Using spellCast Two");
+                print("spellcast: Using spellCast Two");
                 abilityInUse = true;
                 gameObject.GetComponent<spellCastManager>().activateSpellCast(character.equippedRunes[1], 2);
                 uiManager.ActivateCooldownOnAbility(2, true);
@@ -1724,7 +1724,7 @@ public class masterInput : MonoBehaviour
             }
             else if (character.equippedRunes[2] != null && playerInput.actions["AbilityThree"].triggered && !abilityInUse && character.equippedRunes[2].runeType == Rune.RuneType.Spell)
             {
-                print("Using spellCast Three");
+                print("spellcast: Using spellCast Three");
                 abilityInUse = true;
                 if (currentClass == WeaponBase.weaponClassTypes.Knight)
                 {
