@@ -81,6 +81,8 @@ public class golemBoss : MonoBehaviour, enemyInt
     GameObject enemyUIRef;
     public float slash1Time = 1f, slash2Time = 1f, slashSlamTime = 1f, slashSlam2Time = 1f, slashSlam3Time = 1f;
     public float slamRadius = 2.5f, slamTime1, slamTime2;
+    public Vector3 slamOffset = Vector3.zero;
+    public Vector3 medJumpOffset = Vector3.zero;
 
     //Enemy Interface 
     private bool _isAttacking;
@@ -142,6 +144,19 @@ public class golemBoss : MonoBehaviour, enemyInt
 
         enemyHealthBar.value = health;
         delayedEnemyHealthBar.value = health;
+        
+        // Ensure attack radii have reasonable default values if not set in inspector
+        if (medJumpRadius <= 0)
+            medJumpRadius = 7.0f; // Increased default medium jump attack radius to ensure it hits the player
+            
+        // Ensure playerLayer is set correctly
+        if (playerLayer.value == 0)
+        {
+            Debug.LogWarning("playerLayer not set in inspector, defaulting to layer 'Player'");
+            playerLayer = LayerMask.GetMask("Player");
+        }
+        
+        Debug.Log("Boss initialized with playerLayer: " + LayerMask.LayerToName(Mathf.RoundToInt(Mathf.Log(playerLayer.value, 2))));
     }
 
     void Update()
@@ -422,6 +437,8 @@ public class golemBoss : MonoBehaviour, enemyInt
     
     public IEnumerator HalfHealth()
     {
+        if(isAttacking)
+            yield break;
         // Stop current actions
         isAttacking = true;
         isRecovering = true;
@@ -434,8 +451,9 @@ public class golemBoss : MonoBehaviour, enemyInt
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
             animator.Play("halfHealth"); // Make sure this animation exists
         
+        
         // Wait for animation to play
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         animator.SetBool("halfHealth", false);
         
         // Enhance boss abilities in second phase
@@ -534,8 +552,7 @@ public class golemBoss : MonoBehaviour, enemyInt
         yield break;
     }
 
-    public Vector3 slamOffset;
-    public Vector3 medJumpOffset; // New offset vector for medium jump attack
+    // Offset vectors are already defined at the top of the class
 
     IEnumerator slamArea()
     {
@@ -722,10 +739,10 @@ public class golemBoss : MonoBehaviour, enemyInt
         
         // Track the player for the first half of the jump
         bool trackingPlayer = true;
-        float trackingDuration = duration * .85f; // Track for half the duration
+        float trackingDuration = duration * .6f; // Track for half the duration
         
         // Define when to trigger the attack effect (percentage of the jump duration)
-        float attackTriggerTime = 0.75f; // Trigger at 75% through the jump (slightly later for long jump)
+        float attackTriggerTime = 0.9f; // Trigger at 75% through the jump (slightly later for long jump)
         bool attackTriggered = false;
 
         while (elapsedTime < duration)
@@ -825,10 +842,10 @@ public class golemBoss : MonoBehaviour, enemyInt
         
         // Track the player for the first half of the jump
         bool trackingPlayer = true;
-        float trackingDuration = duration * 0.75f; // Track for half the duration
+        float trackingDuration = duration * 0.5f; // Track for half the duration
         
         // Define when to trigger the attack effect (percentage of the jump duration)
-        float attackTriggerTime = 0.7f; // Trigger at 70% through the jump
+        float attackTriggerTime = 0.6f; // Trigger at 70% through the jump
         bool attackTriggered = false;
 
         while (elapsedTime < duration)
@@ -1439,20 +1456,55 @@ public class golemBoss : MonoBehaviour, enemyInt
         float elapsedTime = 0f;
         Vector3 startPosition = transform.position;
         
-        // Initial direction to player
-        Vector3 initialDirectionToPlayer = (player.position - transform.position).normalized;
-        initialDirectionToPlayer.y = 0;
-        initialDirectionToPlayer.Normalize();
+        // Get direction and distance to player
+        Vector3 directionToPlayer = Vector3.zero;
+        float distanceToPlayer = 0f;
+        Vector3 targetPosition;
+        
+        if (player != null)
+        {
+            // Calculate direction to player
+            directionToPlayer = (player.position - transform.position).normalized;
+            directionToPlayer.y = 0;
+            directionToPlayer.Normalize();
+            
+            // Calculate distance to player
+            distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            
+            // Set target position to be closer to player
+            // If player is far, jump directly toward them
+            if (distanceToPlayer > medJumpRadius)
+            {
+                Debug.Log("MedJumpAttack: Player is far (" + distanceToPlayer + "), jumping directly toward them");
+                targetPosition = player.position - directionToPlayer * (medJumpRadius * 0.5f); // Land closer to player
+                targetPosition.y = startPosition.y; // Maintain same height
+            }
+            else
+            {
+                // If player is already in range, just jump forward
+                Debug.Log("MedJumpAttack: Player already in range, jumping forward");
+                targetPosition = startPosition + directionToPlayer * (moveSpeed * duration);
+            }
+        }
+        else
+        {
+            // Fallback if player reference is null
+            Debug.LogWarning("MedJumpAttack: Player reference is null, jumping forward");
+            targetPosition = startPosition + transform.forward * (moveSpeed * duration);
+            directionToPlayer = transform.forward;
+        }
         
         // Track the player for the first half of the jump
-        float trackingDuration = duration * 0.8f; // Track for half the duration
+        float trackingDuration = duration * 0.5f; // Track for half the duration
         
         // Add vertical movement for jump
-        float jumpHeight = 2f; // Adjust as needed
+        float jumpHeight = 3f; // Increased jump height
         
         // Define when to trigger the attack effect (percentage of the jump duration)
-        float attackTriggerTime = 0.6f; // Trigger at 60% through the jump
+        float attackTriggerTime = 0.7f; // Trigger earlier in the jump
         bool attackTriggered = false;
+        
+        Debug.Log("MedJumpAttack: Jump from " + startPosition + " to " + targetPosition + ", distance: " + Vector3.Distance(startPosition, targetPosition));
         
         while (elapsedTime < duration)
         {
@@ -1468,14 +1520,19 @@ public class golemBoss : MonoBehaviour, enemyInt
                 currentDirectionToPlayer.Normalize();
                 
                 // Smoothly rotate towards player
-                transform.forward = Vector3.Lerp(transform.forward, currentDirectionToPlayer, Time.deltaTime * turnSpeed * 0.5f);
+                transform.forward = Vector3.Lerp(transform.forward, currentDirectionToPlayer, Time.deltaTime * turnSpeed);
+                
+                // Update target position based on current player position
+                if (normalizedTime < 0.3f) // Only update target in early part of jump
+                {
+                    Vector3 newTarget = player.position - currentDirectionToPlayer * (medJumpRadius * 0.3f);
+                    newTarget.y = startPosition.y;
+                    targetPosition = Vector3.Lerp(targetPosition, newTarget, Time.deltaTime * 2f);
+                }
             }
             
             // Calculate vertical offset for jump arc
             float verticalOffset = Mathf.Sin(normalizedTime * Mathf.PI) * jumpHeight;
-            
-            // Calculate target position based on current forward direction
-            Vector3 targetPosition = startPosition + transform.forward * (moveSpeed * duration);
             
             // Interpolate position with jump arc
             Vector3 newPosition = Vector3.Lerp(startPosition, targetPosition, normalizedTime);
@@ -1492,18 +1549,49 @@ public class golemBoss : MonoBehaviour, enemyInt
                 if (medJumpEffect != null)
                     medJumpEffect.GetComponent<ParticleSystem>().Play();
                 
-                // Check for player hit with Physics.OverlapSphere at this specific moment
-                Collider[] hitPlayers = Physics.OverlapSphere(
-                    gameObject.transform.position + transform.rotation * (medJumpOffset + Vector3.up + Vector3.forward), 
-                    medJumpRadius, 
-                    playerLayer);
+                // Enhanced debugging for player detection
+                Debug.Log("MedJumpAttack: Attack triggered at position " + transform.position);
+                Debug.Log("MedJumpAttack: Using radius " + medJumpRadius + " and player layer " + LayerMask.LayerToName(Mathf.RoundToInt(Mathf.Log(playerLayer.value, 2))));
                 
-                foreach (Collider p in hitPlayers)
+                // Draw a debug sphere to visualize the attack area
+                Debug.DrawRay(transform.position, Vector3.up * 5f, Color.red, 3f);
+                
+                // Try a direct approach - if we have a player reference, apply damage
+                if (player != null)
                 {
-                    if (p.CompareTag("Player"))
+                    // Calculate current distance to player (reusing the variable from earlier)
+                    distanceToPlayer = Vector3.Distance(transform.position, player.position);
+                    Debug.Log("MedJumpAttack: Current distance to player: " + distanceToPlayer + ", Attack radius: " + medJumpRadius);
+                    
+                    // Always apply damage regardless of distance at this point
+                    // This ensures the attack always hits when triggered
+                    Debug.Log("MedJumpAttack: Applying " + medJumpDamage + " damage directly to player");
+                    player.GetComponent<CharacterBase>().takeDamage(medJumpDamage, gameObject.transform.forward);
+                    UIManager.instance.DisplayDamageNum(player.transform, medJumpDamage);
+                }
+                else
+                {
+                    Debug.LogWarning("MedJumpAttack: Player reference is null!");
+                    
+                    // Fallback to OverlapSphere if player reference is null
+                    Collider[] hitPlayers = Physics.OverlapSphere(
+                        transform.position, 
+                        medJumpRadius * 2f, // Use a larger radius for the fallback
+                        playerLayer);
+                    
+                    Debug.Log("MedJumpAttack: Fallback check found " + hitPlayers.Length + " potential targets");
+                    
+                    // Log all colliders found for debugging
+                    foreach (Collider col in hitPlayers)
                     {
-                        p.GetComponent<CharacterBase>().takeDamage(medJumpDamage, gameObject.transform.forward);
-                        UIManager.instance.DisplayDamageNum(p.transform, medJumpDamage);
+                        Debug.Log("MedJumpAttack: Found collider: " + col.name + " with tag: " + col.tag);
+                        
+                        if (col.CompareTag("Player"))
+                        {
+                            Debug.Log("MedJumpAttack: Hit player in fallback! Applying " + medJumpDamage + " damage to " + col.name);
+                            col.GetComponent<CharacterBase>().takeDamage(medJumpDamage, gameObject.transform.forward);
+                            UIManager.instance.DisplayDamageNum(col.transform, medJumpDamage);
+                        }
                     }
                 }
                 
