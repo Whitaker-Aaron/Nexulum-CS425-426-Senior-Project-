@@ -332,7 +332,14 @@ public class masterInput : MonoBehaviour
         //if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
             //return;
 
-        if (inputPaused) return;
+        // Reset shooting state when input is paused to prevent continuous firing
+        if (inputPaused) {
+            // Reset shooting state when input is paused
+            if (shooting) {
+                shooting = false;
+            }
+            return;
+        }
 
         if (playerInput.actions["SwitchAbilities"].triggered)
         {
@@ -356,6 +363,10 @@ public class masterInput : MonoBehaviour
         {
             if(!character.transitioningRoom) animationControl.updatePlayerAnimation(Vector3.zero);
             audioManager.PauseFootsteps("TestWalk");
+            // Ensure shooting is stopped when input is paused
+            if (shooting) {
+                shooting = false;
+            }
             return;
 
         }
@@ -1449,6 +1460,14 @@ public class masterInput : MonoBehaviour
 
     private void runLogic()
     {
+        // If input is paused, ensure shooting is stopped
+        if (inputPaused) {
+            if (shooting) {
+                shooting = false;
+            }
+            return;
+        }
+        
         if (bulletSpawn != null)
             renderLine();
         //KNIGHT LOGIC
@@ -1504,12 +1523,11 @@ public class masterInput : MonoBehaviour
 
 
             // Check mouse input for shooting
-            if (playerInput.actions["attack"].WasPressedThisFrame())
+            if (playerInput.actions["attack"].WasPressedThisFrame() && !inputPaused)
             {
-                
                 shooting = true;
             }
-            else if (playerInput.actions["attack"].WasReleasedThisFrame())
+            else if (playerInput.actions["attack"].WasReleasedThisFrame() || inputPaused)
             {
                 shooting = false;
             }
@@ -1517,10 +1535,10 @@ public class masterInput : MonoBehaviour
             float triggerValue = playerInput.actions["attack"].ReadValue<float>();
             //Debug.Log("Trigger Value: " + triggerValue);
 
-            if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion"))) 
+            if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion")) && !inputPaused) 
             {
                 shooting = true;
-                print("shhoting true");
+                print("shooting true");
             }
 
             if (shooting && !isReloading)
@@ -1566,12 +1584,12 @@ public class masterInput : MonoBehaviour
 
 
 
-            if (playerInput.actions["Attack"].WasPressedThisFrame() && !isAttacking)
+            if (playerInput.actions["Attack"].WasPressedThisFrame() && !isAttacking && !inputPaused)
             {
                 shooting = true;
                 //StartCoroutine(lowerHeat());
             }
-            else if (playerInput.actions["Attack"].WasReleasedThisFrame())
+            else if (playerInput.actions["Attack"].WasReleasedThisFrame() || inputPaused)
             {
                 shooting = false;
                 //StartCoroutine(buildHeat());
@@ -1580,7 +1598,7 @@ public class masterInput : MonoBehaviour
             float triggerValue = playerInput.actions["Attack"].ReadValue<float>();
             //Debug.Log("Trigger Value: " + triggerValue); 
 
-            if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion")))
+            if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion")) && !inputPaused)
             {
                 shooting = true;
             }
