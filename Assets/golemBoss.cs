@@ -72,7 +72,8 @@ public class golemBoss : MonoBehaviour, enemyInt
     //effects
     [SerializeField] GameObject slash1, slash2, slashSlam, slashSlam1, slashSlam2, jumpSlam;
     [SerializeField] GameObject lungeEffect, backAttackEffect, dashEffect, medJumpEffect;
-    [SerializeField] GameObject enemyPrefab; // Enemy to spawn
+    [SerializeField] GameObject[] enemyPrefabs; // Array of enemy prefabs to spawn randomly
+[SerializeField] Transform[] spawnPoints; // Optional predefined spawn points
     public GameObject healthRef;
     [SerializeField] GameObject enemyHealth;
     Slider enemyHealthBar;
@@ -309,6 +310,18 @@ public class golemBoss : MonoBehaviour, enemyInt
             StartCoroutine(bossDeath());
     }
 
+    // List to track spawned enemies
+    private List<GameObject> spawnedEnemies = new List<GameObject>();
+    
+    // Method to add enemy to tracking list
+    public void TrackSpawnedEnemy(GameObject enemy)
+    {
+        if (enemy != null && !spawnedEnemies.Contains(enemy))
+        {
+            spawnedEnemies.Add(enemy);
+        }
+    }
+    
     public IEnumerator bossDeath()
     {
         if (bossDying)
@@ -316,11 +329,49 @@ public class golemBoss : MonoBehaviour, enemyInt
 
         bossDying = true;
 
+        // Kill all spawned enemies
+        StartCoroutine(KillAllSpawnedEnemies());
+        
         animator.SetBool("death", true);
         animator.Play("death");
         animator.SetBool("death", false);
         onDeath();
         yield break;
+    }
+    
+    // Method to kill all spawned enemies when boss dies
+    private IEnumerator KillAllSpawnedEnemies()
+    {
+        Debug.Log("Killing all " + spawnedEnemies.Count + " spawned enemies");
+        
+        // Create a copy of the list to avoid modification issues during iteration
+        List<GameObject> enemiesToKill = new List<GameObject>(spawnedEnemies);
+        
+        foreach (GameObject enemy in enemiesToKill)
+        {
+            if (enemy != null)
+            {
+                // Get the EnemyFrame component and trigger normal death
+                EnemyFrame enemyFrame = enemy.GetComponent<EnemyFrame>();
+                if (enemyFrame != null)
+                {
+                    // Use the takeDamage method with a large amount of damage to ensure death
+                    enemyFrame.takeDamage(99999, Vector3.zero, EnemyFrame.DamageSource.Enemy, EnemyFrame.DamageType.Sword);
+                    Debug.Log("Killed spawned enemy: " + enemy.name);
+                    
+                    // Small delay between kills for visual effect
+                    yield return new WaitForSeconds(0.1f);
+                }
+                else
+                {
+                    // Fallback if no EnemyFrame component
+                    Destroy(enemy);
+                }
+            }
+        }
+        
+        // Clear the list
+        spawnedEnemies.Clear();
     }
     
     // Damage over time method for fire rune effects
@@ -408,22 +459,67 @@ public class golemBoss : MonoBehaviour, enemyInt
         dashDamage = (int)(dashDamage * 1.3f);
         medJumpDamage = (int)(medJumpDamage * 1.3f);
         
-        // Optional: Spawn enemies as part of the phase transition
-        if (enemyPrefab != null)
+        // Spawn enemies as part of the phase transition
+        if (enemyPrefabs != null && enemyPrefabs.Length > 0)
         {
-            int enemyCount = 4; // Spawn more enemies at half health
+            // Always spawn maximum number of enemies at half health
+            int enemyCount = maxEnemyCount;
+            Debug.Log("Half health event: Spawning " + enemyCount + " enemies");
+            
             for (int i = 0; i < enemyCount; i++)
             {
-                float angle = i * (360f / enemyCount);
-                float radians = angle * Mathf.Deg2Rad;
-                Vector3 spawnOffset = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians)) * 4f;
-                Vector3 spawnPosition = transform.position + spawnOffset;
+                // Select a random enemy prefab from the array
+                int randomEnemyIndex = Random.Range(0, enemyPrefabs.Length);
+                GameObject selectedEnemyPrefab = enemyPrefabs[randomEnemyIndex];
                 
-                GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-                if (enemy != null)
+                if (selectedEnemyPrefab != null)
                 {
-                    enemy.transform.LookAt(transform.position);
+                    Vector3 spawnPosition;
+                    
+                    // Use predefined spawn points if available, otherwise spawn around the boss
+                    if (spawnPoints != null && spawnPoints.Length > 0)
+                    {
+                        int randomSpawnPointIndex = Random.Range(0, spawnPoints.Length);
+                        Transform spawnPoint = spawnPoints[randomSpawnPointIndex];
+                        spawnPosition = spawnPoint.position;
+                        Debug.Log("Half health: Spawning enemy at predefined point: " + randomSpawnPointIndex);
+                    }
+                    else
+                    {
+                        // Spawn in a circle around the boss for the half health event
+                        float angle = i * (360f / enemyCount);
+                        float radians = angle * Mathf.Deg2Rad;
+                        Vector3 spawnOffset = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians)) * 4f;
+                        spawnPosition = transform.position + spawnOffset;
+                        
+                        // Ensure position is on NavMesh
+                        NavMeshHit hit;
+                        if (NavMesh.SamplePosition(spawnPosition, out hit, 2f, NavMesh.AllAreas))
+                        {
+                            spawnPosition = hit.position;
+                        }
+                    }
+                    
+                    // Instantiate the enemy
+                    GameObject enemy = Instantiate(selectedEnemyPrefab, spawnPosition, Quaternion.identity);
+                    
+                    if (enemy != null)
+                    {
+                        // Make enemies face the player if available, otherwise face the boss
+                        if (player != null)
+                            enemy.transform.LookAt(player.position);
+                        else
+                            enemy.transform.LookAt(transform.position);
+                            
+                        Debug.Log("Half health: Spawned enemy type: " + selectedEnemyPrefab.name);
+                        
+                        // Track this enemy so we can kill it when the boss dies
+                        TrackSpawnedEnemy(enemy);
+                    }
                 }
+                
+                // Small delay between spawns
+                yield return new WaitForSeconds(0.1f);
             }
         }
         
@@ -893,9 +989,17 @@ public class golemBoss : MonoBehaviour, enemyInt
         yield break;
     }
 
+    // Configuration for spawn positions
+    public float minDistanceFromPlayer = 3f;  // Minimum distance from player
+    public float maxDistanceFromPlayer = 8f;  // Maximum distance from player
+    public int minEnemyCount = 2;            // Minimum number of enemies to spawn
+    public int maxEnemyCount = 5;            // Maximum number of enemies to spawn
+    public float spawnRadius = 1.5f;         // Radius to check if spawn position is clear
+    public LayerMask obstacleLayer;          // Layer mask for obstacles to avoid spawning inside
+
     IEnumerator SpawnEnemies()
     {
-        if (isAttacking || isRecovering || !canSpawnEnemies)
+        if (isAttacking || isRecovering || !canSpawnEnemies || player == null)
             yield break;
             
         canSpawnEnemies = false;
@@ -909,25 +1013,55 @@ public class golemBoss : MonoBehaviour, enemyInt
             animator.Play("spawnEnemies"); // Make sure this animation exists
         animator.SetBool("spawnEnemies", false);
         
-        // Spawn 2-4 enemies around the boss
-        int enemyCount = Random.Range(2, 5);
+        // Check if we have any enemy prefabs to spawn
+        if (enemyPrefabs == null || enemyPrefabs.Length == 0)
+        {
+            Debug.LogWarning("No enemy prefabs assigned to spawn!");
+            yield break;
+        }
+        
+        // Determine how many enemies to spawn (random between min and max)
+        int enemyCount = Random.Range(minEnemyCount, maxEnemyCount + 1);
+        Debug.Log("Spawning " + enemyCount + " enemies");
+        
+        // Spawn each enemy
         for (int i = 0; i < enemyCount; i++)
         {
-            if (enemyPrefab != null)
+            // Select a random enemy prefab from the array
+            int randomEnemyIndex = Random.Range(0, enemyPrefabs.Length);
+            GameObject selectedEnemyPrefab = enemyPrefabs[randomEnemyIndex];
+            
+            if (selectedEnemyPrefab != null)
             {
-                // Calculate spawn position in a circle around the boss
-                float angle = i * (360f / enemyCount);
-                float radians = angle * Mathf.Deg2Rad;
-                Vector3 spawnOffset = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians)) * 3f; // 3 units away
-                Vector3 spawnPosition = transform.position + spawnOffset;
+                Vector3 spawnPosition;
+                
+                // Determine spawn position based on available options
+                if (spawnPoints != null && spawnPoints.Length > 0)
+                {
+                    // Option 1: Use predefined spawn points if available
+                    int randomSpawnPointIndex = Random.Range(0, spawnPoints.Length);
+                    Transform spawnPoint = spawnPoints[randomSpawnPointIndex];
+                    spawnPosition = spawnPoint.position;
+                    Debug.Log("Spawning enemy at predefined point: " + randomSpawnPointIndex);
+                }
+                else
+                {
+                    // Option 2: Spawn near player but not too close or far
+                    spawnPosition = GetSpawnPositionNearPlayer();
+                    Debug.Log("Spawning enemy near player at: " + spawnPosition);
+                }
                 
                 // Instantiate the enemy
-                GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+                GameObject enemy = Instantiate(selectedEnemyPrefab, spawnPosition, Quaternion.identity);
                 
-                // Optional: Make the enemy face the boss
+                // Make the enemy face the player
                 if (enemy != null)
                 {
-                    enemy.transform.LookAt(transform.position);
+                    enemy.transform.LookAt(player.position);
+                    Debug.Log("Spawned enemy type: " + selectedEnemyPrefab.name);
+                    
+                    // Track this enemy so we can kill it when the boss dies
+                    TrackSpawnedEnemy(enemy);
                 }
             }
             
@@ -945,6 +1079,39 @@ public class golemBoss : MonoBehaviour, enemyInt
         agent.isStopped = false;
         canSpawnEnemies = true;
         yield break;
+    }
+    
+    // Helper method to find a valid spawn position near the player
+    private Vector3 GetSpawnPositionNearPlayer()
+    {
+        // Try to find a valid position up to 10 times
+        for (int attempt = 0; attempt < 10; attempt++)
+        {
+            // Generate a random direction around the player
+            float randomAngle = Random.Range(0f, 360f);
+            float randomDistance = Random.Range(minDistanceFromPlayer, maxDistanceFromPlayer);
+            
+            // Calculate position in a circle around the player
+            float radians = randomAngle * Mathf.Deg2Rad;
+            Vector3 offset = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians)) * randomDistance;
+            Vector3 potentialPosition = player.position + offset;
+            
+            // Ensure the position is on the NavMesh
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(potentialPosition, out hit, 2f, NavMesh.AllAreas))
+            {
+                // Check if the position is clear of obstacles
+                if (!Physics.CheckSphere(hit.position, spawnRadius, obstacleLayer))
+                {
+                    return hit.position;
+                }
+            }
+        }
+        
+        // If all attempts fail, fall back to a position around the boss
+        float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+        Vector3 fallbackOffset = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle)) * 3f;
+        return transform.position + fallbackOffset;
     }
 
     void LateUpdate()
