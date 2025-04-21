@@ -924,7 +924,7 @@ public class masterInput : MonoBehaviour
                 ray = new Ray(pistolBulletSpawn.position, pistolBulletSpawn.forward);
             RaycastHit hit;
 
-            int layerMask = LayerMask.GetMask("Default", "Enemy", "ground");
+            int layerMask = LayerMask.GetMask("Default", "Enemy", "ground", "Outline");
 
             if (Physics.Raycast(ray, out hit, 25f, layerMask))
             {
@@ -951,7 +951,7 @@ public class masterInput : MonoBehaviour
                 //if(laserLine.enabled)
                 laserLine.startColor = laserStartColor;
                 if (currentClass == WeaponBase.weaponClassTypes.Gunner)
-                    laserLine.SetPosition(1, bulletSpawn.position + bulletSpawn.forward * 25f);
+                    laserLine.SetPosition(1, bulletSpawn.position + bulletSpawn.forward * 35f);
                 else
                     laserLine.SetPosition(1, bulletSpawn.position + pistolBulletSpawn.forward * 25f);
             }

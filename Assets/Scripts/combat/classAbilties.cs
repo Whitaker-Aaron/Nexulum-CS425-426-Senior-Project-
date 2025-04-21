@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿/*-----------------------------------------------------
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿/*-----------------------------------------------------
  * classAbilities Script
  * Author: Spencer Garcia
  * Start Date: 9/26/2024
@@ -96,6 +96,24 @@ public class classAbilties : MonoBehaviour
 
     //skill tree 
     bool SSExplode = false;
+    
+    // Upgrade variables for storing values
+    // Rocket upgrades
+    public float rocketBlastRadiusUpgrade = 0f;
+    public int rocketDamageUpgrade = 0;
+    
+    // Grenade upgrades
+    public float grenadeBlastRadiusUpgrade = 0f;
+    public int grenadeDamageUpgrade = 0;
+    
+    // Turret upgrades
+    public int turretDamageUpgrade = 0;
+    
+    // Tesla upgrades
+    public int teslaDamageUpgrade = 0;
+    
+    // Clone upgrades
+    public int cloneDamageUpgrade = 0;
 
 
     //Engineer
@@ -1299,33 +1317,7 @@ public class classAbilties : MonoBehaviour
     }
 
 
-    public void removeTower(int count)
-    {
-        /*
-        if (count < 0 || count >= placedTowers.Count)
-        {
-            Debug.LogWarning("Invalid tower index: " + count);
-            return;
-        }
 
-        GameObject temp = placedTowers[count];
-
-        if (temp != null)
-        {
-            Destroy(temp);
-        }
-
-        placedTowers.RemoveAt(count); // ✅ Removes the item from the list
-        turretNumCount--;
-        totalTowerCount--;
-
-        // Reassign keys for remaining turrets
-        for (int i = count; i < placedTowers.Count; i++)
-        {
-            placedTowers[i].GetComponent<turretCombat>().assignKey(i);
-        }
-        */
-    }
 
 
     void activateTesla()
@@ -1919,39 +1911,457 @@ public class classAbilties : MonoBehaviour
 
 
     //-------------------skill tree-------------------------
+    
+    // Method to apply upgrades to a newly created turret
+    public void applyTurretUpgrades(GameObject turret)
+    {
+        if (turret != null && turret.GetComponent<turretCombat>() != null)
+        {
+            turretCombat turretScript = turret.GetComponent<turretCombat>();
+            
+            // Apply stored damage upgrade
+            if (turretDamageUpgrade > 0)
+            {
+                turretScript.increaseDamage(turretDamageUpgrade);
+            }
+            
+            // Apply any other upgrades as needed
+            // This would be where you'd apply other upgrades that might be tracked
+        }
+    }
+    
+    // Method to apply upgrades to a newly created tesla tower
+    public void applyTeslaUpgrades(GameObject tesla)
+    {
+        if (tesla != null && tesla.GetComponent<teslaTower>() != null)
+        {
+            teslaTower teslaScript = tesla.GetComponent<teslaTower>();
+            
+            // Apply stored damage upgrade
+            if (teslaDamageUpgrade > 0)
+            {
+                teslaScript.increaseDamage(teslaDamageUpgrade);
+            }
+            
+            // Apply any other upgrades as needed
+            // This would be where you'd apply other upgrades that might be tracked
+        }
+    }
+    
+    // Method to remove a tower from the appropriate list when it's destroyed
+    public void removeTower(int key)
+    {
+        Debug.Log("Removing tower with key: " + key);
+        
+        // Check if it's a turret
+        for (int i = 0; i < placedTurrets.Count; i++)
+        {
+            if (placedTurrets[i] != null && 
+                placedTurrets[i].GetComponent<turretCombat>() != null && 
+                placedTurrets[i].GetComponent<turretCombat>().getKey() == key)
+            {
+                Debug.Log("Removing turret from list");
+                placedTurrets.RemoveAt(i);
+                turretNumCount--;
+                totalTowerCount--;
+                return;
+            }
+        }
+        
+        // Check if it's a tesla tower
+        for (int i = 0; i < placedTeslas.Count; i++)
+        {
+            if (placedTeslas[i] != null && 
+                placedTeslas[i].GetComponent<teslaTower>() != null && 
+                placedTeslas[i].GetComponent<teslaTower>().getKey() == key)
+            {
+                Debug.Log("Removing tesla tower from list");
+                placedTeslas.RemoveAt(i);
+                teslaNumCount--;
+                totalTowerCount--;
+                return;
+            }
+        }
+    }
 
-
-    //knight
+    //Knight Abilities Upgrades
+    //Ability 1: Bubble Shield
     public void modifyBubbleRad(float amount)
     {
         Debug.Log("Modified bubble radius by: " + amount);
         bubbleRadius += amount;
     }
 
+    public void modifyBubbleDuration(float amount)
+    {
+        Debug.Log("Modified bubble duration by: " + amount);
+        bubbleTime += amount;
+    }
+
+    public void reduceBubbleCooldown(float amount)
+    {
+        Debug.Log("Reduced bubble cooldown by: " + amount);
+        ka1Time -= amount;
+        // Ensure cooldown doesn't go below minimum value
+        if (ka1Time < 1f)
+            ka1Time = 1f;
+    }
+
+    //Ability 2: Combat Aura
     public void modifyCombatAuraRad(float amount)
     {
-        Debug.Log("Modified CombatAura radius by: " + amount);
+        Debug.Log("Modified Combat Aura radius by: " + amount);
         comatAuraRadius += amount;
+    }
+
+    public void modifyAuraDuration(float amount)
+    {
+        Debug.Log("Modified Combat Aura duration by: " + amount);
+        auraTime += amount;
+    }
+
+    public void increaseAuraAttackBuff(int amount)
+    {
+        Debug.Log("Increased Combat Aura attack buff by: " + amount);
+        auraAttackBuff += amount;
+    }
+
+    public void reduceAuraCooldown(float amount)
+    {
+        Debug.Log("Reduced Combat Aura cooldown by: " + amount);
+        ka2Time -= amount;
+        if (ka2Time < 1f)
+            ka2Time = 1f;
+    }
+
+    //Ability 3: Sword Shot
+    public void increaseSwordShotDamage(int amount)
+    {
+        Debug.Log("Increased Sword Shot damage by: " + amount);
+        swordShotDamage += amount;
+    }
+
+    public void increaseSwordShotSpeed(float amount)
+    {
+        Debug.Log("Increased Sword Shot speed by: " + amount);
+        swordSpeed += amount;
+    }
+
+    public void modifySwordShotDuration(float amount)
+    {
+        Debug.Log("Modified Sword Shot duration by: " + amount);
+        swordTime += amount;
+    }
+
+    public void reduceSwordShotCooldown(float amount)
+    {
+        Debug.Log("Reduced Sword Shot cooldown by: " + amount);
+        ka3Time -= amount;
+        if (ka3Time < 1f)
+            ka3Time = 1f;
     }
 
     public void triggerSSExpolode()
     {
+        Debug.Log("Activated Sword Shot explosion effect");
         SSExplode = true;
     }
 
-
-    //Gunner
-
-    public void modifyGrenadeRad(float amount)
-    {
-        //Debug.Log("Modified grenade explosion radius by: " + amount);
-        grenadePrefab.GetComponent<grenade>().increaseBlastRadius(amount);
-    }
-
+    //Gunner Abilities Upgrades
+    //Ability 1: Rocket
     public void modifyRocketRad(float amount)
     {
-        //Debug.Log("Modified grenade explosion radius by: " + amount);
-        rocketPrefab.GetComponent<rocket>().increaseBlastRadius(amount);
+        Debug.Log("Modified rocket explosion radius by: " + amount);
+        rocketBlastRadiusUpgrade += amount;
+        // When the rocket script is implemented, you can pass this value to it
+    }
+
+    public void increaseRocketDamage(int amount)
+    {
+        Debug.Log("Increased rocket damage by: " + amount);
+        rocketDamageUpgrade += amount;
+        // When the rocket script is implemented, you can pass this value to it
+    }
+
+    public void increaseRocketSpeed(float amount)
+    {
+        Debug.Log("Increased rocket speed by: " + amount);
+        rocketSpeed += amount;
+    }
+
+    public void reduceRocketCooldown(float amount)
+    {
+        Debug.Log("Reduced rocket cooldown by: " + amount);
+        ga1Time -= amount;
+        if (ga1Time < 1f)
+            ga1Time = 1f;
+    }
+
+    //Ability 2: Grenade
+    public void modifyGrenadeRad(float amount)
+    {
+        Debug.Log("Modified grenade explosion radius by: " + amount);
+        grenadeBlastRadiusUpgrade += amount;
+        // When the grenade script is implemented, you can pass this value to it
+    }
+
+    public void increaseGrenadeDamage(int amount)
+    {
+        Debug.Log("Increased grenade damage by: " + amount);
+        grenadeDamageUpgrade += amount;
+        // When the grenade script is implemented, you can pass this value to it
+    }
+
+    public void increaseGrenadeSpeed(float amount)
+    {
+        Debug.Log("Increased grenade throw speed by: " + amount);
+        grenadeSpeed += amount;
+    }
+
+    public void reduceGrenadeCooldown(float amount)
+    {
+        Debug.Log("Reduced grenade cooldown by: " + amount);
+        ga2Time -= amount;
+        if (ga2Time < 1f)
+            ga2Time = 1f;
+    }
+
+    //Ability 3: Laser
+    public void increaseLaserDamage(int amount)
+    {
+        Debug.Log("Increased laser damage by: " + amount);
+        laserDamage += amount;
+    }
+
+    public void increaseLaserIceDamage(int amount)
+    {
+        Debug.Log("Increased ice laser damage by: " + amount);
+        laserIceDamage += amount;
+    }
+
+    public void increaseLaserDistance(float amount)
+    {
+        Debug.Log("Increased laser distance by: " + amount);
+        maxLaserDistance += amount;
+    }
+
+    public void reduceLaserCooldown(float amount)
+    {
+        Debug.Log("Reduced laser cooldown by: " + amount);
+        ga3Time -= amount;
+        if (ga3Time < 1f)
+            ga3Time = 1f;
+    }
+
+    public void increaseLaserHitRate(float amount)
+    {
+        Debug.Log("Increased laser hit rate by: " + amount);
+        laserHitRate -= amount; // Lower value means faster hit rate
+        if (laserHitRate < 0.1f)
+            laserHitRate = 0.1f;
+    }
+
+    //Engineer Abilities Upgrades
+    //Ability 1: Turret Tower
+    public void increaseTurretMaxQuantity(int amount)
+    {
+        Debug.Log("Increased max turret quantity by: " + amount);
+        turretMaxQuantity += amount;
+    }
+
+    public void increaseTurretDamage(int amount)
+    {
+        Debug.Log("Increased turret damage by: " + amount);
+        turretDamageUpgrade += amount;
+        
+        // Apply upgrade to all existing turrets
+        foreach (GameObject turret in placedTurrets)
+        {
+            if (turret != null && turret.GetComponent<turretCombat>() != null)
+            {
+                turret.GetComponent<turretCombat>().increaseDamage(amount);
+            }
+        }
+    }
+
+    public void increaseTurretRange(float amount)
+    {
+        Debug.Log("Increased turret range by: " + amount);
+        turretPlacementRadius += amount;
+        
+        // Apply upgrade to all existing turrets
+        foreach (GameObject turret in placedTurrets)
+        {
+            if (turret != null && turret.GetComponent<turretCombat>() != null)
+            {
+                turret.GetComponent<turretCombat>().increaseRange(amount);
+            }
+        }
+    }
+    
+    public void increaseTurretFireRate(float amount)
+    {
+        Debug.Log("Increased turret fire rate by: " + amount);
+        
+        // Apply upgrade to all existing turrets
+        foreach (GameObject turret in placedTurrets)
+        {
+            if (turret != null && turret.GetComponent<turretCombat>() != null)
+            {
+                turret.GetComponent<turretCombat>().increaseFireRate(amount);
+            }
+        }
+    }
+    
+    public void increaseTurretHealth(int amount)
+    {
+        Debug.Log("Increased turret health by: " + amount);
+        
+        // Apply upgrade to all existing turrets
+        foreach (GameObject turret in placedTurrets)
+        {
+            if (turret != null && turret.GetComponent<turretCombat>() != null)
+            {
+                turret.GetComponent<turretCombat>().increaseHealth(amount);
+            }
+        }
+    }
+
+    public void reduceTurretCooldown(float amount)
+    {
+        Debug.Log("Reduced turret cooldown by: " + amount);
+        ea1Time -= amount;
+        if (ea1Time < 1f)
+            ea1Time = 1f;
+    }
+
+    //Ability 2: Tesla Tower
+    public void increaseTeslaMaxQuantity(int amount)
+    {
+        Debug.Log("Increased max tesla tower quantity by: " + amount);
+        teslaMaxQuantity += amount;
+    }
+
+    public void increaseTeslaRange(float amount)
+    {
+        Debug.Log("Increased tesla tower range by: " + amount);
+        teslaPlacementRadius += amount;
+        
+        // Apply upgrade to all existing tesla towers
+        foreach (GameObject tesla in placedTeslas)
+        {
+            if (tesla != null && tesla.GetComponent<teslaTower>() != null)
+            {
+                tesla.GetComponent<teslaTower>().increaseRange(amount);
+            }
+        }
+    }
+
+    public void increaseTeslaDamage(int amount)
+    {
+        Debug.Log("Increased tesla tower damage by: " + amount);
+        teslaDamageUpgrade += amount;
+        
+        // Apply upgrade to all existing tesla towers
+        foreach (GameObject tesla in placedTeslas)
+        {
+            if (tesla != null && tesla.GetComponent<teslaTower>() != null)
+            {
+                tesla.GetComponent<teslaTower>().increaseDamage(amount);
+            }
+        }
+    }
+    
+    public void increaseTeslaIceDamage(int amount)
+    {
+        Debug.Log("Increased tesla tower ice damage by: " + amount);
+        
+        // Apply upgrade to all existing tesla towers
+        foreach (GameObject tesla in placedTeslas)
+        {
+            if (tesla != null && tesla.GetComponent<teslaTower>() != null)
+            {
+                tesla.GetComponent<teslaTower>().increaseIceDamage(amount);
+            }
+        }
+    }
+    
+    public void increaseTeslaHitRate(float amount)
+    {
+        Debug.Log("Increased tesla tower hit rate by: " + amount);
+        
+        // Apply upgrade to all existing tesla towers
+        foreach (GameObject tesla in placedTeslas)
+        {
+            if (tesla != null && tesla.GetComponent<teslaTower>() != null)
+            {
+                tesla.GetComponent<teslaTower>().increaseHitRate(amount);
+            }
+        }
+    }
+    
+    public void increaseTeslaStunTime(float amount)
+    {
+        Debug.Log("Increased tesla tower stun time by: " + amount);
+        
+        // Apply upgrade to all existing tesla towers
+        foreach (GameObject tesla in placedTeslas)
+        {
+            if (tesla != null && tesla.GetComponent<teslaTower>() != null)
+            {
+                tesla.GetComponent<teslaTower>().increaseStunTime(amount);
+            }
+        }
+    }
+    
+    public void increaseTeslaShockTime(float amount)
+    {
+        Debug.Log("Increased tesla tower shock time by: " + amount);
+        
+        // Apply upgrade to all existing tesla towers
+        foreach (GameObject tesla in placedTeslas)
+        {
+            if (tesla != null && tesla.GetComponent<teslaTower>() != null)
+            {
+                tesla.GetComponent<teslaTower>().increaseShockTime(amount);
+            }
+        }
+    }
+
+    public void reduceTeslaCooldown(float amount)
+    {
+        Debug.Log("Reduced tesla tower cooldown by: " + amount);
+        ea2Time -= amount;
+        if (ea2Time < 1f)
+            ea2Time = 1f;
+    }
+
+    //Ability 3: Clone
+    public void increaseCloneDuration(float amount)
+    {
+        Debug.Log("Increased clone duration by: " + amount);
+        cloneTime += amount;
+    }
+
+    public void increaseCloneRadius(float amount)
+    {
+        Debug.Log("Increased clone radius by: " + amount);
+        cloneRadius += amount;
+    }
+
+    public void increaseCloneDamage(int amount)
+    {
+        Debug.Log("Increased clone damage by: " + amount);
+        cloneDamageUpgrade += amount;
+        // When the clone script is implemented, you can pass this value to it
+    }
+
+    public void reduceCloneCooldown(float amount)
+    {
+        Debug.Log("Reduced clone cooldown by: " + amount);
+        ea3Time -= amount;
+        if (ea3Time < 1f)
+            ea3Time = 1f;
     }
 
 
