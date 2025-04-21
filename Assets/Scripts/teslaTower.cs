@@ -241,7 +241,62 @@ public class teslaTower : MonoBehaviour
     {
         return key;
     }
-
+    
+    // Upgrade methods for skill tree
+    public void increaseDamage(int amount)
+    {
+        Debug.Log("Tesla tower damage increased by: " + amount);
+        damage += amount;
+        
+        // If ice mode is enabled, also increase ice damage
+        if (enableIce)
+        {
+            iceDamage += amount / 2; // Increase ice damage by half the amount
+        }
+    }
+    
+    public void increaseIceDamage(int amount)
+    {
+        Debug.Log("Tesla tower ice damage increased by: " + amount);
+        iceDamage += amount;
+    }
+    
+    public void increaseRange(float amount)
+    {
+        Debug.Log("Tesla tower range increased by: " + amount);
+        iceRadius += amount;
+    }
+    
+    public void increaseHitRate(float amount)
+    {
+        Debug.Log("Tesla tower hit rate increased by: " + amount);
+        // Lower value means faster hits
+        iceHitRate -= amount;
+        if (iceHitRate < 0.1f)
+            iceHitRate = 0.1f; // Minimum hit rate
+    }
+    
+    public void increaseStunTime(float amount)
+    {
+        Debug.Log("Tesla tower stun time increased by: " + amount);
+        stunTime += amount;
+    }
+    
+    public void increaseShockTime(float amount)
+    {
+        Debug.Log("Tesla tower shock time increased by: " + amount);
+        shockTime += amount;
+    }
+    
+    public void applyUpgrades()
+    {
+        // Apply any stored upgrades from classAbilities
+        if (classAbilties.instance != null)
+        {
+            increaseDamage(classAbilties.instance.teslaDamageUpgrade);
+            // Could also apply other upgrades here if they're stored in classAbilities
+        }
+    }
 
 
     private void OnDrawGizmos()

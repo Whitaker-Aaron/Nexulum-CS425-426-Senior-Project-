@@ -4995,6 +4995,12 @@ MonoBehaviour:
   collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
+  statusImmunity_Ice: 0
+  statusImmunity_Fire: 0
+  statusImmunity_Earth: 0
+  statusImmunity_Electric: 0
+  statusImmunity_Water: 0
+  statusImmunity_Wind: 0
 --- !u!54 &7312136641156335363
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5074,7 +5080,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7686125088459755243}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06766f528e3d77848bcb9dc8b961c29a, type: 3}
   m_Name: 
@@ -5184,7 +5190,6 @@ MonoBehaviour:
   patrolState:
     patrolPoints: []
   enableStateDebugLogs: 0
-  isFrozen: 0
 --- !u!114 &6996728658863666810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5233,6 +5238,7 @@ MonoBehaviour:
   skeletonPrefab2: {fileID: 7686125088459755243, guid: 3ff28ed85e6fbb44ab8960ab9ddea9ad, type: 3}
   smokeEffectPrefab: {fileID: 7423685975106972484, guid: 21d8cc18b4c0be74d892d737de4f9f2c, type: 3}
   canAttack: 1
+  useFirstSpawnDelay: 1
 --- !u!1001 &5813794388418926717
 PrefabInstance:
   m_ObjectHideFlags: 0

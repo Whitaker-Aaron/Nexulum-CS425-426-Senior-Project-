@@ -489,6 +489,74 @@ public class turretCombat : MonoBehaviour
             }
         }
     }
+    
+    // Upgrade methods for skill tree
+    public void increaseDamage(int amount)
+    {
+        Debug.Log("Turret damage increased by: " + amount);
+        // For regular turret shots
+        if (bulletPrefab != null && bulletPrefab.GetComponent<turretProj>() != null)
+        {
+            // If the projectile has a direct damage property, we would set it here
+            // Since we don't have direct access to the damage property, we'll need to
+            // store this value and apply it when the projectile is created
+            classAbilties.instance.turretDamageUpgrade = amount;
+        }
+        
+        // For fire turret
+        if (isFire)
+        {
+            fireDmg += amount;
+            turretFireDmg += amount / 2; // Increase DoT damage by half the amount
+        }
+    }
+    
+    public void increaseRange(float amount)
+    {
+        Debug.Log("Turret range increased by: " + amount);
+        attackRadius += amount;
+        
+        // If it's a fire turret, also increase flame distance
+        if (isFire)
+        {
+            flameDistance += amount * 0.5f; // Increase flame distance by half the range increase
+        }
+    }
+    
+    public void increaseFireRate(float amount)
+    {
+        Debug.Log("Turret fire rate increased by: " + amount);
+        // Lower value means faster firing
+        fireRate -= amount;
+        if (fireRate < 0.1f)
+            fireRate = 0.1f; // Minimum fire rate
+            
+        // If it's a fire turret, also increase damage rate
+        if (isFire)
+        {
+            fireDmgRate -= amount * 0.5f; // Decrease time between damage ticks
+            if (fireDmgRate < 0.1f)
+                fireDmgRate = 0.1f; // Minimum damage rate
+        }
+    }
+    
+    public void increaseHealth(int amount)
+    {
+        Debug.Log("Turret health increased by: " + amount);
+        health += amount;
+        if (health > maxHealth * 2) // Cap at double the max health
+            health = maxHealth * 2;
+    }
+    
+    public void applyUpgrades()
+    {
+        // Apply any stored upgrades from classAbilities
+        if (classAbilties.instance != null)
+        {
+            increaseDamage(classAbilties.instance.turretDamageUpgrade);
+            // Could also apply other upgrades here if they're stored in classAbilities
+        }
+    }
 
     private void OnDrawGizmosSelected()
     {
