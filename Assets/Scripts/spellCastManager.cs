@@ -202,7 +202,7 @@ public class spellCastManager : MonoBehaviour
 
     public void activateSpellCast(Rune rune, int abilityIndex)
     {
-        print("activating spellCast in SCManager");
+        print("spellcast: activating spellCast in SCManager");
         print("spellCast: Rune Name is: " + rune.runeName);
         print("spellCast: canCast is " + rune.canCast);
         if (!rune.canCast) return;
@@ -242,6 +242,7 @@ public class spellCastManager : MonoBehaviour
     public void deactivateSpellCast()
     {
         gameObject.GetComponent<masterInput>().placing = false;
+        gameObject.GetComponent<masterInput>().abilityInUse = false;
         casting = false;
         currentRune = null;
         currentEffect = null;
@@ -261,7 +262,7 @@ public class spellCastManager : MonoBehaviour
 
     void activateWaterSplash()
     {
-        print("Activating water shield");
+        print("Activating water splash");
         gameObject.GetComponent <masterInput>().placing = true;
         casting = true;
         // Create rotation with -90 degrees on X axis to fix the orientation
