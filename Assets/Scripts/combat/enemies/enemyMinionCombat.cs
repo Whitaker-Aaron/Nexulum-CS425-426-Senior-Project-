@@ -6,6 +6,8 @@ using UnityEngine.UIElements;
 public class enemyMinionCombat : MonoBehaviour, enemyInt
 {
     bool canAttack = true;
+
+    bool checkingAttack = false;
     public Transform attackPoint;
     public float attackRange = .5f;
     //public bool isAttacking => isAttacking;
@@ -70,6 +72,8 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
 
     void attackPlayer()
     {
+        if(checkingAttack) return;
+
         Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
 
         foreach(Collider player in playerInRange)
@@ -88,17 +92,21 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
     IEnumerator disableAttack(float time)
     {
         Debug.Log("Animation time: " + time);
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(time);
         Debug.Log("isAttacking disabled");
         isAttacking = false;
+        checkingAttack = false;
         sword.activateAttack(false, attackDamage, this.gameObject);
     }
 
     IEnumerator wait(float time, EnemyAnimation anim)
     {
+        if(checkingAttack) yield break;
+
+        checkingAttack = true;
         yield return StartCoroutine(disableAttack(time));
         //anim.Stop();
-        yield return new WaitForSeconds(5.0f);
+        //yield return new WaitForSeconds(5.0f);
         Debug.Log("Able to attack again");
         canAttack = true;
         yield break;
