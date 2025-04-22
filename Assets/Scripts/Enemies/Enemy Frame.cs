@@ -55,7 +55,6 @@ public class EnemyFrame : MonoBehaviour
     public bool statusImmunity_Electric = false;
     public bool statusImmunity_Water = false;
     public bool statusImmunity_Wind = false;
-    public ParticleSystem iceEffectParticleSystem;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
@@ -194,7 +193,6 @@ public class EnemyFrame : MonoBehaviour
             case DamageType.Ice: // Ice dmg - Aisling
                 if (!statusImmunity_Ice)
                 {
-                    if (iceEffectParticleSystem != null) InstantiateParticleSystem(iceEffectParticleSystem);
                     iceEffect.AddStacks(1);
                     Debug.Log("Current stacks: " + iceEffect.GetCurrentStacks());
                     iceEffect.execute();
@@ -457,14 +455,6 @@ public class EnemyFrame : MonoBehaviour
                 Debug.Log("Requested stacks of status effect (DType) does not exist.");
                 return -1;
                 break;
-        }
-    }
-
-    private void InstantiateParticleSystem(ParticleSystem system)
-    {
-        if (!GameObject.Find(system.name))
-        {
-            Instantiate(iceEffectParticleSystem, this.transform, true);
         }
     }
 
