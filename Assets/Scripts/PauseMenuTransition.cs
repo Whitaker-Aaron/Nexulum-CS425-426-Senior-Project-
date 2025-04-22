@@ -19,6 +19,7 @@ public class PauseMenuTransition : MonoBehaviour
     [SerializeField] GameObject GunnerSkillMenu;
     [SerializeField] GameObject EngineerSkillMenu;
     [SerializeField] GameObject MapMenu;
+    [SerializeField] GameObject knightSkillPanelButton;
 
     [SerializeField] GameObject CheckpointUIRef;
 
@@ -182,6 +183,8 @@ public class PauseMenuTransition : MonoBehaviour
     {
         audioManager.PlaySFX("UIConfirm");
         SkillMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(knightSkillPanelButton);
         KnightSkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(false);
         GunnerSkillMenu.SetActive(false);
@@ -231,6 +234,8 @@ public class PauseMenuTransition : MonoBehaviour
         audioManager.PlaySFX("UIConfirm");
         PauseMenu.SetActive(false);
         SkillMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(knightSkillPanelButton);
     }
 
     public void OpenKnightSkills()
