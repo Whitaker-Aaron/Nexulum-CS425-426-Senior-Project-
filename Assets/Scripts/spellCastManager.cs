@@ -205,7 +205,9 @@ public class spellCastManager : MonoBehaviour
         print("spellcast: activating spellCast in SCManager");
         print("spellCast: Rune Name is: " + rune.runeName);
         print("spellCast: canCast is " + rune.canCast);
-        if (!rune.canCast) return;
+        
+        // Check if the rune can be cast and we're not already casting
+        if (!rune.canCast || casting) return;
 
         switch (rune.runeName)
         {
@@ -422,9 +424,14 @@ public class spellCastManager : MonoBehaviour
         // Update existing functionality
         if (casting && currentEffect != null && currentRune != null)
         {
+            
+            // Check for attack input to place the spell
             if (playerInput.actions["attack"].triggered)
             {
                 print("spellCast: attack triggered");
+                // Immediately set casting to false to prevent multiple casts
+                casting = false;
+                
                 GameObject tempEffect = null;
                 switch (currentRune.runeName)
                 {
