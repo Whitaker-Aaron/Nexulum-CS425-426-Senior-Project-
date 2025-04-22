@@ -1,29 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class KnightSkillMenu : MonoBehaviour
 {
     SkillTreeManager skillTreeManager;
+    classAbilties abilities;
+    [SerializeField] GameObject backButton;
+
     // Start is called before the first frame update
     private void Awake()
     {
-        skillTreeManager = GameObject.Find("SkillTreeManager").GetComponent<SkillTreeManager>();
+        abilities = GameObject.Find("InputandAnimationManager").GetComponent<classAbilties>();
     }
 
-    public void OnIncreaseBubbleRadius()
+    private void OnEnable()
     {
-        skillTreeManager.unlockSkill("IncBubRad");
-        EffectsManager.instance.replacePoolEffects("bubbleShield", 1);
-        EffectsManager.instance.replacePoolEffects("earthShield", 1);
-        print("Bubble rad has been changed");
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(backButton);
     }
 
-    public void onIncreaseCombatAuraRad()
+    public void bubbleRad1()
     {
-        skillTreeManager.unlockSkill("IncComAuraRad");
-        EffectsManager.instance.replacePoolEffects("caPool", 1);
-        EffectsManager.instance.replacePoolEffects("faPool", 1);
-        print("combat aura rad has been changed");
+        abilities.modifyBubbleRad(5f);
     }
 }
