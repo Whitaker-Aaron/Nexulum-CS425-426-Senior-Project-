@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
+using AYellowpaper.SerializedCollections;
 
 
 public class EnemyFrame : MonoBehaviour
@@ -55,6 +56,11 @@ public class EnemyFrame : MonoBehaviour
     public bool statusImmunity_Electric = false;
     public bool statusImmunity_Water = false;
     public bool statusImmunity_Wind = false;
+    private GameObject tempEffectObj;
+    public GameObject iceStackEffect;
+    [HideInInspector] public GameObject iceStackEffectRef;
+    public GameObject iceFrozenEffect;
+    [HideInInspector] public GameObject iceFrozenEffectRef;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
@@ -113,10 +119,13 @@ public class EnemyFrame : MonoBehaviour
         if (enemyReference != null) enemyType = gameObject.GetComponent<enemyInt>().getType();
         
         
-        // if (iceEffectParticleSystem != null) Instantiate(iceEffectParticleSystem, this.transform, true);
         // Status effects - Aisling
-        iceEffect = new IceDamage(movementReference, iceStackMax, iceEffectParticleSystem, this);
+        iceEffect = new IceDamage(movementReference, iceStackMax, this);
         InvokeRepeating("TickIceEffect", 0.0f, effectTickInterval); // Decreases current ice stacks by 1 every effectTickInterval seconds until 0
+
+        // Visual aura for statuses (ice)
+        iceStackEffectRef = InstantiateEffectHere(iceStackEffect, false);
+        iceFrozenEffectRef = InstantiateEffectHere(iceFrozenEffect, false);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -438,10 +447,6 @@ public class EnemyFrame : MonoBehaviour
             iceEffect.execute();
             Debug.Log("Current stacks: " + iceEffect.GetCurrentStacks());
         }
-        else
-        {
-            if (iceEffectParticleSystem != null) Destroy(iceEffectParticleSystem);
-        }
     }
 
     public float GetStacksOfDType(DamageType type)
@@ -456,6 +461,22 @@ public class EnemyFrame : MonoBehaviour
                 return -1;
                 break;
         }
+    }
+
+    // Instantiates set visual effect for statuses, returns gameobject to be used to ref the effect
+    private GameObject InstantiateEffectHere(GameObject effect, bool enabled)
+    {
+        if (effect != null)
+        {
+            tempEffectObj = Instantiate(effect, this.transform, true);
+        }
+        else
+        {
+            Debug.LogWarning("Visual status effect " + effect.name + " is null");
+        }
+
+        tempEffectObj.SetActive(enabled);
+        return tempEffectObj;
     }
 
     public Enemy GetEnemy()
