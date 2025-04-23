@@ -262,6 +262,7 @@ public abstract class projectile : MonoBehaviour
     {
         if(position != null || position != Vector3.zero)// && poolName != "enemyMagePoolOne")
         {
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
             EffectsManager.instance.getFromPool(bulletHitEffect, position, Quaternion.identity, false, false);
             resetProjectile();
             
