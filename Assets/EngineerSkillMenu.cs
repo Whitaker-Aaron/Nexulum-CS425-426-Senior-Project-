@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class KnightSkillMenu : MonoBehaviour
+public class EngineerSkillMenu : MonoBehaviour
 {
     SkillTreeManager skillTreeManager;
     classAbilties abilities;
@@ -21,15 +21,6 @@ public class KnightSkillMenu : MonoBehaviour
         setLvlSp();
     }
 
-    public void setLvlSp()
-    {
-        var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
-        var curSp = character.knightObject.numSkillPoints;
-        var curLvl = character.knightObject.currentLvl;
-        classLvl.text = curLvl.ToString();
-        classSp.text = curSp.ToString();
-    }
-
     public void updatePanels()
     {
         foreach (var panel in panels)
@@ -38,28 +29,25 @@ public class KnightSkillMenu : MonoBehaviour
         }
     }
 
+    public void setLvlSp()
+    {
+        var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        var curSp = character.engineerObject.numSkillPoints;
+        var curLvl = character.engineerObject.currentLvl;
+        classLvl.text = curLvl.ToString();
+        classSp.text = curSp.ToString();
+    }
+
     private void OnEnable()
     {
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(backButton);
     }
 
-    public void bubbleRad1()
+    public void increaseTurrDamage1()
     {
-        abilities.modifyBubbleRad(0.5f);
+        abilities.increaseTurretDamage(5);
     }
-
-    public void combatRad1()
-    {
-        abilities.modifyCombatAuraRad(1f);
-    }
-
-    public void bubbleTimeIncrease1()
-    {
-        abilities.modifyBubbleDuration(0.5f);
-    }
-
-
 
     public void resetSelection()
     {

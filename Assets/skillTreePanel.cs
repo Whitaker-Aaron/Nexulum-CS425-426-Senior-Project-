@@ -6,6 +6,7 @@ using TMPro;
 using UnityEditor.U2D.Sprites;
 using static UnityEditor.Progress;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class skillTreePanel : MonoBehaviour
 {
@@ -13,10 +14,12 @@ public class skillTreePanel : MonoBehaviour
     [SerializeField] TMP_Text spAmount;
     [SerializeField] GameObject disabledPanel;
     [SerializeField] GameObject unlockButton;
+    [SerializeField] Text unlockText;
 
     public WeaponBase.weaponClassTypes classType;
     public int reqSp = 0;
     public int reqLvl = 0;
+    public bool unlocked = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +34,7 @@ public class skillTreePanel : MonoBehaviour
 
     public void setColors()
     {
+        if (unlocked) return;
         var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         if (classType == null) return;
         float curSp = 0;
@@ -56,16 +60,18 @@ public class skillTreePanel : MonoBehaviour
         }
         if(curSp < reqSp || curLvl < reqLvl)
         {
-            if (curSp < reqSp) spAmount.color = red;
-            else spAmount.color = white;
+            if (!unlocked)
+            {
+                if (curSp < reqSp) spAmount.color = red;
+                else spAmount.color = white;
 
-            if (curLvl < reqLvl) classLvlText.color = red;
-            else classLvlText.color = white;
+                if (curLvl < reqLvl) classLvlText.color = red;
+                else classLvlText.color = white;
+            }
+            
 
             disabledPanel.SetActive(true);
             unlockButton.GetComponent<Button>().interactable = false;
-
-
 
         }
         else
@@ -75,6 +81,33 @@ public class skillTreePanel : MonoBehaviour
             spAmount.color = white;
             classLvlText.color = white;
         }
+
+    }
+
+    public void onAbilityUnlock()
+    {
+        var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        disabledPanel.SetActive(true);
+        unlockButton.GetComponent<Button>().interactable = false;
+        unlockText.text = "Unlocked";
+        unlocked = true;
+        switch (classType)
+        {
+            case WeaponBase.weaponClassTypes.Knight:
+                character.knightObject.numSkillPoints -= reqSp;
+                GameObject.Find("KnightSkillsMenu").GetComponent<KnightSkillMenu>().resetSelection();
+                break;
+            case WeaponBase.weaponClassTypes.Gunner:
+                character.gunnerObject.numSkillPoints -= reqSp;
+                GameObject.Find("GunnerSkillsMenu").GetComponent<GunnerSkillsMenu>().resetSelection();
+                break;
+            case WeaponBase.weaponClassTypes.Engineer:
+                character.engineerObject.numSkillPoints -= reqSp;
+                GameObject.Find("EngineerSkillsMenu").GetComponent<EngineerSkillMenu>().resetSelection();
+                break;
+        }
+        
+
 
     }
 }
