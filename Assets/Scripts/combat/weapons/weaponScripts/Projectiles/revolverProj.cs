@@ -70,6 +70,12 @@ public class revolverProj : projectile
 
         if ((distanceToHit <= step || distanceToHit <= bufferDistance || hitEnemy) && hitPoint != null)
         {
+            if(hit.collider == null)
+            {
+                playEffect(hitPoint);
+                // We've reached the hit point, stop the projectile
+                stop = true;
+            }
             if (hit.collider.gameObject.tag == "bossPart")
             {
                 hitEnemy = true;
