@@ -91,7 +91,7 @@ public class enemyAnimController : MonoBehaviour, EnemyAnimation
 
     public void takeHit()
     {
-        if (getAnimationInfo().IsName("takeHit") && getAnimationInfo().normalizedTime < takeHitTime)
+        if (getAnimationInfo().IsName("takeHit") ||  getAnimationInfo().IsName("walking blend tree") && getAnimationInfo().normalizedTime < takeHitTime)
             return;
         animator.SetBool("takeHit", true);
         animator.Play("takeHit");

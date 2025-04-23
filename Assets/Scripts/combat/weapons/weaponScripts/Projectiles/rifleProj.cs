@@ -121,7 +121,7 @@ public class rifleProj : projectile
                 }
 
                 hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(updatedDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
-                GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
+                //GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
                 uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
 
             }

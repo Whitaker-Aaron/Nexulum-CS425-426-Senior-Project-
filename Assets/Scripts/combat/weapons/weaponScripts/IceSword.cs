@@ -33,6 +33,10 @@ public class IceSword : swordCombat
         print("activating sword attack " + Time.time);
         Collider[] colliders = Physics.OverlapSphere(attackPoint.position, radius, layer);
         GetDamage();
+        
+        // Flag to track if we've already hit a boss part in this attack
+        bool bossHit = false;
+        
         foreach (Collider collider in colliders)
         {
             if (collider.gameObject.tag == "Enemy")
@@ -63,10 +67,10 @@ public class IceSword : swordCombat
                 //knockBackDir *= 1.5f;
                 //collider.GetComponent<EnemyFrame>().takeDamage(damage, GameObject.FindGameObjectWithTag("Player").transform.forward, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Sword);
             }
-            else if (collider.gameObject.tag == "bossPart")// && !bossHit)
+            else if (collider.gameObject.tag == "bossPart" && !bossHit)
             {
                 // Only process the first boss part hit
-                //bossHit = true;
+                bossHit = true;
                 
                 if (audioManager == null)
                 {

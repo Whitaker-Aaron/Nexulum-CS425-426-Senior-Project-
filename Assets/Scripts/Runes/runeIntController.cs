@@ -146,6 +146,11 @@ public class runeIntController : MonoBehaviour, RuneInt
         {
             character.changeDefenseStat(-getIntVal("defenseRuneBuff"));
         }
+        if (rune.runeName == "Regen")
+        {
+            Debug.Log("Removing Regen");
+            StopCoroutines(ApplyRegen());
+        }
     }
 
     public void removeDefenseRunes(Rune rune)
