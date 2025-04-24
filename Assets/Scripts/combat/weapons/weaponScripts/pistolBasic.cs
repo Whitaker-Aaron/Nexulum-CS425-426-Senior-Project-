@@ -12,6 +12,13 @@ public class pistolBasic : weaponType
     {
         bulletSpawn = masterInput.instance.pistolBulletSpawn;
         playerInput = masterInput.instance.gameObject.GetComponent<PlayerInput>();
+        isReloading = false;
+        canShoot = true;
+    }
+
+    void Awake()
+    {
+        isReloading = false;
         canShoot = true;
     }
 

@@ -14,6 +14,12 @@ public class rifleBasic : weaponType
         isReloading = false;
     }
 
+    void Awake()
+    {
+        isReloading = false;
+        canShoot = true;
+    }
+
     // Update is called once per frame
     void Update()
     {
