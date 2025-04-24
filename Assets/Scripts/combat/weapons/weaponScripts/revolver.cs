@@ -13,6 +13,12 @@ public class revolver : weaponType
         canShoot = true;
     }
 
+    void Awake()
+    {
+        isReloading = false;
+        canShoot = true;
+    }
+
     // Update is called once per frame
     void Update()
     {

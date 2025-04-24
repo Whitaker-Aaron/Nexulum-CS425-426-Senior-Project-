@@ -70,6 +70,22 @@ public abstract class weaponType : MonoBehaviour
         
     }
 
-   
+    void Awake()
+    {
+        isReloading = false;
+        canShoot = true; 
+    }
+
+    public void setCanShoot(bool choice)
+    {
+        Debug.Log("setCanShoot: " + choice);
+        canShoot = choice;
+    }
+
+    public void setIsReloading(bool choice)
+    {
+        Debug.Log("setIsReloading: " + choice);
+        isReloading = choice;
+    }
 
 }
