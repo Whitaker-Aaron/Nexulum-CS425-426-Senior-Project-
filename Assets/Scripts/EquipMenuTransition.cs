@@ -506,6 +506,7 @@ public class EquipMenuTransition : MonoBehaviour
         runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionClassUI.SetActive(false);
         runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionEffect.SetActive(true);
         runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionDamage.SetActive(false);
+        if (runeToAdd.runeTexture != null) runeToSwapIn.GetComponent<EquipOptionPrefab>().image.GetComponent<RawImage>().texture = runeToAdd.runeTexture;
         runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionName.GetComponent<TMP_Text>().text = runeToAdd.runeName;
         runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionDescription.GetComponent<TMP_Text>().text = runeToAdd.runeDescription;
         runeToSwapIn.GetComponent<EquipOptionPrefab>().equipOptionEffect.transform.Find("EffectDescription").GetComponent<TMP_Text>().text = "+ " + runeToAdd.runeEffect;

@@ -582,7 +582,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
     {
         runeInt.Remove();
         equippedRunes[position] = runeToEquip;
-        equippedRunes[position].canCast = true;
+        if(equippedRunes[position]!=null) equippedRunes[position].canCast = true;
         runeInt.Apply();
         uiManager.PopulateSpellRunes();
     }
