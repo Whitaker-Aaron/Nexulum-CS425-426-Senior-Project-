@@ -49,6 +49,16 @@ public class KnightSkillMenu : MonoBehaviour
         abilities.modifyBubbleRad(0.5f);
     }
 
+    public void increaseSwordShotSpeed1()
+    {
+        abilities.increaseSwordShotSpeed(1f);
+    }
+
+    public void increaseSwordShotDamage1()
+    {
+        abilities.increaseSwordShotDamage(5);
+    }
+
     public void combatRad1()
     {
         abilities.modifyCombatAuraRad(1f);

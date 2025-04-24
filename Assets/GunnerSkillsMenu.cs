@@ -54,6 +54,11 @@ public class GunnerSkillsMenu : MonoBehaviour
         abilities.increaseGrenadeDamage(5);
     }
 
+    public void laserDamage1()
+    {
+        abilities.increaseLaserDamage(5);
+    }
+
     public void resetSelection()
     {
         EventSystem.current.SetSelectedGameObject(null);

@@ -49,6 +49,16 @@ public class EngineerSkillMenu : MonoBehaviour
         abilities.increaseTurretDamage(5);
     }
 
+    public void increaseTeslaDamage1()
+    {
+        abilities.increaseTeslaDamage(5);
+    }
+
+    public void increaseCloneDuration1()
+    {
+        abilities.increaseCloneDuration(1f);
+    }
+
     public void resetSelection()
     {
         EventSystem.current.SetSelectedGameObject(null);
