@@ -77,11 +77,12 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
     void attackPlayer()
     {
         if(checkingAttack) return;
-        StartCoroutine(attackWait());
+        
         Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
 
         foreach(Collider player in playerInRange)
         {
+            StartCoroutine(attackWait());
             //attack player commands
             Debug.Log("Starting attack");
             canAttack = false;

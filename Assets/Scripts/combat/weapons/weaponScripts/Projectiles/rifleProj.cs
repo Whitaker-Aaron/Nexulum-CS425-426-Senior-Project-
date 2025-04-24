@@ -82,6 +82,7 @@ public class rifleProj : projectile
                 }
                 if (hit.collider.gameObject.GetComponent<bossPart>() != null)
                 {
+                    GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
                     hit.collider.gameObject.GetComponent<bossPart>().takeDamage(damage);
                     uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
                 }
@@ -98,6 +99,7 @@ public class rifleProj : projectile
                 }
                 if (hit.collider.gameObject.GetComponent<golemBoss>() != null)
                 {
+                    GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
                     hit.collider.gameObject.GetComponent<golemBoss>().takeDamage(damage);
                     uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
                 }
@@ -121,8 +123,9 @@ public class rifleProj : projectile
                 }
 
                 hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(updatedDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
-                //GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
+                GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
                 uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
+
 
             }
 
