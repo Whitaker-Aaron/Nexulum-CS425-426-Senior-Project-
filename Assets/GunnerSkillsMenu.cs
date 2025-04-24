@@ -59,6 +59,16 @@ public class GunnerSkillsMenu : MonoBehaviour
         abilities.increaseLaserDamage(5);
     }
 
+    public void rocketSpeed1()
+    {
+        abilities.increaseRocketSpeed(1f);
+    }
+
+    public void rocketCooldown1()
+    {
+        abilities.reduceRocketCooldown(1f);
+    }
+
     public void resetSelection()
     {
         EventSystem.current.SetSelectedGameObject(null);

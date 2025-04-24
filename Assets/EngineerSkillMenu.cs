@@ -49,6 +49,16 @@ public class EngineerSkillMenu : MonoBehaviour
         abilities.increaseTurretDamage(5);
     }
 
+    public void increaseTurretRange1()
+    {
+        abilities.increaseTurretRange(5);
+    }
+
+    public void increaseTurretFireRate1()
+    {
+        abilities.increaseTurretFireRate(1);
+    }
+
     public void increaseTeslaDamage1()
     {
         abilities.increaseTeslaDamage(5);
