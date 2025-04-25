@@ -1,29 +1,81 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using TMPro;
 
 public class KnightSkillMenu : MonoBehaviour
 {
     SkillTreeManager skillTreeManager;
+    classAbilties abilities;
+    [SerializeField] GameObject backButton;
+    [SerializeField] TMP_Text classLvl;
+    [SerializeField] TMP_Text classSp;
+    [SerializeField] List<skillTreePanel> panels;
+
+
     // Start is called before the first frame update
     private void Awake()
     {
-        skillTreeManager = GameObject.Find("SkillTreeManager").GetComponent<SkillTreeManager>();
+        abilities = GameObject.Find("InputandAnimationManager").GetComponent<classAbilties>();
+        setLvlSp();
     }
 
-    public void OnIncreaseBubbleRadius()
+    public void setLvlSp()
     {
-        skillTreeManager.unlockSkill("IncBubRad");
-        EffectsManager.instance.replacePoolEffects("bubbleShield", 1);
-        EffectsManager.instance.replacePoolEffects("earthShield", 1);
-        print("Bubble rad has been changed");
+        var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        var curSp = character.knightObject.numSkillPoints;
+        var curLvl = character.knightObject.currentLvl;
+        classLvl.text = curLvl.ToString();
+        classSp.text = curSp.ToString();
     }
 
-    public void onIncreaseCombatAuraRad()
+    public void updatePanels()
     {
-        skillTreeManager.unlockSkill("IncComAuraRad");
-        EffectsManager.instance.replacePoolEffects("caPool", 1);
-        EffectsManager.instance.replacePoolEffects("faPool", 1);
-        print("combat aura rad has been changed");
+        foreach (var panel in panels)
+        {
+            panel.setColors();
+        }
+    }
+
+    private void OnEnable()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(backButton);
+    }
+
+    public void bubbleRad1()
+    {
+        abilities.modifyBubbleRad(0.5f);
+    }
+
+    public void increaseSwordShotSpeed1()
+    {
+        abilities.increaseSwordShotSpeed(1f);
+    }
+
+    public void increaseSwordShotDamage1()
+    {
+        abilities.increaseSwordShotDamage(5);
+    }
+
+    public void combatRad1()
+    {
+        abilities.modifyCombatAuraRad(1f);
+    }
+
+    public void bubbleTimeIncrease1()
+    {
+        abilities.modifyBubbleDuration(0.5f);
+    }
+
+
+
+    public void resetSelection()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(backButton);
+        updatePanels();
+        setLvlSp();
     }
 }

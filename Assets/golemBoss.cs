@@ -39,6 +39,8 @@ public class golemBoss : MonoBehaviour, enemyInt
     [SerializeField] private int health;
     bool bossDying = false;
     private bool isHalfHealth = false; // Flag to track if half health event has triggered
+    private bool isHalfHealthInProgress = false; // Flag to track if half health event is currently in progress
+    private bool forceHalfHealthEvent = false; // Flag to force half health event to complete
     
     // Damage over time tracking
     public bool dmgOverTimeActivated = false;
@@ -163,6 +165,19 @@ public class golemBoss : MonoBehaviour, enemyInt
     {
         if (bossDying || !isActive)
             return;
+            
+        // Check if half health event is in progress and stop all other processing
+        if (isHalfHealthInProgress)
+            return;
+            
+        // If we need to force the half health event (e.g., during a jump), stop everything and trigger it
+        if (forceHalfHealthEvent && !isHalfHealthInProgress)
+        {
+            Debug.Log("Force triggering half health event from Update!");
+            StopAllCoroutines();
+            StartCoroutine(HalfHealthImplementation());
+            return;
+        }
 
         if (!cameraAdjusted)
         {
@@ -318,6 +333,7 @@ public class golemBoss : MonoBehaviour, enemyInt
             if (!isHalfHealth && health <= MAXHEALTH / 2)
             {
                 isHalfHealth = true;
+                // Force the half health event to happen regardless of current state
                 StartCoroutine(HalfHealth());
             }
         }
@@ -437,20 +453,69 @@ public class golemBoss : MonoBehaviour, enemyInt
     
     public IEnumerator HalfHealth()
     {
-        if(isAttacking)
+        // If already in progress, don't start again
+        if (isHalfHealthInProgress)
             yield break;
-        // Stop current actions
+            
+        // Set flag to indicate half health event is in progress
+        isHalfHealthInProgress = true;
+        forceHalfHealthEvent = true;
+        
+        Debug.Log("Boss has reached half health! Stopping all attacks and entering rage mode!");
+        
+        // Force stop all attacks and movement
+        StopAllCoroutines(); // Stop all running coroutines including attacks
+        
+        // Only keep this coroutine running
+        StartCoroutine(HalfHealthImplementation());
+        
+        // We don't need to yield anything here since we're starting a new coroutine
+        yield break;
+    }
+    
+    private IEnumerator HalfHealthImplementation()
+    {
+        Debug.Log("Starting HalfHealthImplementation");
+        
+        // Stop current actions and reset state
+        isAttacking = false;
+        isRecovering = false;
+        agent.isStopped = true;
+        
+        // Reset all attack flags to prevent any attacks from continuing
+        canJump = false;
+        canLongJump = false;
+        canLunge = false;
+        canBackAttack = false;
+        canDash = false;
+        canMedJump = false;
+        canSpawnEnemies = false;
+        
+        // Wait a frame to ensure all other coroutines are stopped
+        yield return null;
+        
+        // Set attacking and recovering flags to prevent new attacks
         isAttacking = true;
         isRecovering = true;
-        agent.isStopped = true;
+        
+        // We don't need to reset position since animations handle the vertical movement
+        // Just make sure we're on the NavMesh for movement after the event
+        NavMeshHit navHit;
+        if (!NavMesh.SamplePosition(transform.position, out navHit, 5f, NavMesh.AllAreas))
+        {
+            Debug.LogWarning("HalfHealth: Boss position not on NavMesh, attempting to find valid position");
+            // Only adjust position if absolutely necessary
+            if (NavMesh.SamplePosition(transform.position, out navHit, 10f, NavMesh.AllAreas))
+            {
+                transform.position = new Vector3(navHit.position.x, transform.position.y, navHit.position.z);
+            }
+        }
         
         Debug.Log("Boss has reached half health! Entering rage mode!");
         
         // Play a special animation or effect
         animator.SetBool("halfHealth", true);
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
-            animator.Play("halfHealth"); // Make sure this animation exists
-        
+        animator.Play("halfHealth"); // Make sure this animation exists
         
         // Wait for animation to play
         yield return new WaitForSeconds(.5f);
@@ -544,11 +609,23 @@ public class golemBoss : MonoBehaviour, enemyInt
         // Optional: Visual indication of rage mode
         // You could change the boss's color, add particle effects, etc.
         
-        // Resume normal behavior
+        // Reset flags to allow normal behavior to resume
+        isHalfHealthInProgress = false;
+        forceHalfHealthEvent = false;
         isAttacking = false;
         isRecovering = false;
         agent.isStopped = false;
         
+        // Reset all attack cooldowns to ensure they're available
+        canJump = true;
+        canLongJump = true;
+        canLunge = true;
+        canBackAttack = true;
+        canDash = true;
+        canMedJump = true;
+        canSpawnEnemies = true;
+        
+        Debug.Log("Half health event completed, boss entering rage mode!");
         yield break;
     }
 
@@ -822,6 +899,13 @@ public class golemBoss : MonoBehaviour, enemyInt
             yield break;
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
             yield break;
+        // Check if half health event is in progress
+        if (isHalfHealthInProgress || forceHalfHealthEvent)
+        {
+            Debug.Log("Jump attack prevented by half health event!");
+            canJump = true;
+            yield break;
+        }
 
         canJump = false;
         isAttacking = true;
@@ -829,6 +913,9 @@ public class golemBoss : MonoBehaviour, enemyInt
         // We'll handle the timing directly in this method instead of using slamArea()
         // StartCoroutine(slamArea());
         Debug.Log("golem: Starting Jump Attack");
+        
+        // Store initial position in case we need to return
+        Vector3 initialPosition = transform.position;
 
         animator.SetFloat("Forward", 0);
         animator.SetBool("jump", true);
@@ -845,8 +932,18 @@ public class golemBoss : MonoBehaviour, enemyInt
         float trackingDuration = duration * 0.5f; // Track for half the duration
         
         // Define when to trigger the attack effect (percentage of the jump duration)
-        float attackTriggerTime = 0.6f; // Trigger at 70% through the jump
+        float attackTriggerTime = 0.6f; // Trigger at 60% through the jump
         bool attackTriggered = false;
+        
+        // Check if half health event is triggered before starting the jump
+        if (forceHalfHealthEvent)
+        {
+            // Abort the jump and let the half health event take over
+            Debug.Log("Jump attack prevented by half health event!");
+            isAttacking = false;
+            canJump = true;
+            yield break;
+        }
 
         while (elapsedTime < duration)
         {
@@ -1439,6 +1536,13 @@ public class golemBoss : MonoBehaviour, enemyInt
             yield break;
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
             yield break;
+        // Check if half health event is in progress
+        if (isHalfHealthInProgress || forceHalfHealthEvent)
+        {
+            Debug.Log("Medium Jump attack prevented by half health event!");
+            canMedJump = true;
+            yield break;
+        }
             
         // We'll handle the attack timing directly in this method instead of using medJumpSlice
         canMedJump = false;
@@ -1508,6 +1612,16 @@ public class golemBoss : MonoBehaviour, enemyInt
         
         while (elapsedTime < duration)
         {
+            // Check if half health event is triggered during the jump
+            if (isHalfHealthInProgress || forceHalfHealthEvent)
+            {
+                // Abort the jump and let the half health event take over
+                Debug.Log("Medium Jump attack interrupted by half health event!");
+                isAttacking = false;
+                canMedJump = true;
+                yield break;
+            }
+            
             float normalizedTime = elapsedTime / duration;
             
             // Update direction to track player during first half of jump

@@ -110,7 +110,14 @@ public class runeIntController : MonoBehaviour, RuneInt
         if (rune.runeName == "Regen")
         {
             Debug.Log("Applying Regen");
-            StartCoroutine(ApplyRegen());
+            // Stop any existing regen coroutine first
+            if (regenCoroutine != null)
+            {
+                StopCoroutine(regenCoroutine);
+                regenCoroutine = null;
+            }
+            // Start and store the new coroutine
+            regenCoroutine = StartCoroutine(ApplyRegen());
         }
     }
     public void applyDefenseRunes(Rune rune)
@@ -140,11 +147,24 @@ public class runeIntController : MonoBehaviour, RuneInt
     }
 
 
+    // Store reference to the regen coroutine
+    private Coroutine regenCoroutine;
+
     public void removeBuffRunes(Rune rune)
     {
         if (rune.runeName == "Defense")
         {
             character.changeDefenseStat(-getIntVal("defenseRuneBuff"));
+        }
+        if (rune.runeName == "Regen")
+        {
+            Debug.Log("Removing Regen");
+            // Stop the stored coroutine reference
+            if (regenCoroutine != null)
+            {
+                StopCoroutine(regenCoroutine);
+                regenCoroutine = null;
+            }
         }
     }
 
@@ -178,7 +198,13 @@ public class runeIntController : MonoBehaviour, RuneInt
     {
         if (rune.runeName == "Regen")
         {
-            StopCoroutine(ApplyRegen());
+            Debug.Log("Removing Regen from Health Runes");
+            // Stop the stored coroutine reference
+            if (regenCoroutine != null)
+            {
+                StopCoroutine(regenCoroutine);
+                regenCoroutine = null;
+            }
         }
     }
 
@@ -224,11 +250,38 @@ public class runeIntController : MonoBehaviour, RuneInt
 
     IEnumerator ApplyRegen()
     {
+        Debug.Log("Starting regen coroutine");
+        
+        // Safety check to prevent multiple instances
+        if (regenCoroutine != null)
+        {
+            Debug.LogWarning("ApplyRegen coroutine already running!");
+            yield break;
+        }
+        
+        // Check character reference first
+        if (character == null)
+        {
+            Debug.LogError("Character reference is null in ApplyRegen");
+            yield break;
+        }
+        
         while (true)
         {
-            character.restoreHealth(5);
+            try
+            {
+                character.restoreHealth(5);
+                Debug.Log("Applied regen: +5 health");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("Error in ApplyRegen coroutine: " + e.Message);
+                break;
+            }
+            
             yield return new WaitForSeconds(5f);
         }
         
+        Debug.Log("ApplyRegen coroutine ended");
     }
 }

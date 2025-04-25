@@ -54,10 +54,10 @@ public class SaveData
         weaponClasses[2].currentWeapon = weaponInventory[2];
 
         runeInventory = new string[100];
-        runeInventory[0] = "Fire";
-        runeInventory[1] = "Ice";
-        runeInventory[2] = "Earth";
-        runeInventory[4] = "Regen";
+        //runeInventory[0] = "Fire";
+        //runeInventory[1] = "Ice";
+        //runeInventory[2] = "Earth";
+        //runeInventory[4] = "Regen";
         //runeInventory[5] = "LightningCast";
         //runeInventory[6] = "WaterCast";
         //runeInventory[7] = "WindCast";

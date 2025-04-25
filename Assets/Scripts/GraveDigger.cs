@@ -46,6 +46,9 @@ public class GraveDigger : MonoBehaviour, enemyInt
     Coroutine curSpawnRoutine;
     private void Awake()
     {
+        // Set active state immediately
+        //isActive = true;
+        
         // Automatically find the Player if not set in Inspector
         if (player == null)
         {
@@ -72,9 +75,11 @@ public class GraveDigger : MonoBehaviour, enemyInt
 
     void Start()
     {
-        
-
-        
+        // Ensure the spawning routine is started in Start as well as OnEnable
+        if (curSpawnRoutine == null)
+        {
+            curSpawnRoutine = StartCoroutine(SpawnSkeletonsRoutine());
+        }
     }
 
     void Update()
@@ -92,18 +97,43 @@ public class GraveDigger : MonoBehaviour, enemyInt
 
     public void OnDisable()
     {
-        StopCoroutine(curSpawnRoutine);
-        curSpawnRoutine = null;
+        if (curSpawnRoutine != null)
+        {
+            StopCoroutine(curSpawnRoutine);
+            curSpawnRoutine = null;
+        }
+    }
+    
+    // Public method to force activation from outside
+    public void ForceActivate()
+    {
+        isActive = true;
+        if (curSpawnRoutine == null)
+        {
+            curSpawnRoutine = StartCoroutine(SpawnSkeletonsRoutine());
+        }
     }
 
     IEnumerator SpawnSkeletonsRoutine()
     {
         // First spawn after initial delay
-        while (!isActive)
+        float waitTime = 0f;
+        float maxWaitTime = 10f; // Maximum time to wait for activation before proceeding anyway
+        
+        while (!isActive && waitTime < maxWaitTime)
         {
             Debug.Log("Grave digger not active");
+            waitTime += Time.deltaTime;
             yield return null;
         }
+        
+        // If we've waited too long, force activation to prevent being stuck
+        if (!isActive && waitTime >= maxWaitTime)
+        {
+            Debug.Log("Grave digger activation timeout - forcing active state");
+            isActive = true;
+        }
+        
         if(useFirstSpawnDelay) yield return new WaitForSeconds(firstSpawnDelay);
         SpawnSkeletons();
 
@@ -118,7 +148,17 @@ public class GraveDigger : MonoBehaviour, enemyInt
 
     void SpawnSkeletons()
     {
-        if (skeletonPrefab1 != null && skeletonPrefab2 != null && curSkeletonCounter < 4)
+        // Check if prefabs are assigned
+        if (skeletonPrefab1 == null || skeletonPrefab2 == null)
+        {
+            Debug.LogError("Skeleton prefabs are not assigned!");
+            return;
+        }
+        
+        // Allow spawning if counter is less than limit OR if this is called from onDeath (emergency spawn)
+        bool forceSpawn = curSkeletonCounter == 0 && !isSpawning; // Emergency spawn condition
+        
+        if (curSkeletonCounter < 4 || forceSpawn)
         {
             Vector3 spawnPosition1 = new Vector3(transform.position.x + 5f, transform.position.y + 1f, transform.position.z);
             Vector3 spawnPosition2 = new Vector3(transform.position.x - 5f, transform.position.y + 1f, transform.position.z);
@@ -131,7 +171,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
             }
             else
             {
-                Debug.LogError("Smoke effect prefab is not assigned!");
+                Debug.LogWarning("Smoke effect prefab is not assigned!");
             }
 
             // Spawn skeletons
@@ -143,19 +183,29 @@ public class GraveDigger : MonoBehaviour, enemyInt
             if (skeleton2.GetComponent<enemyMinionCombat>() != null) skeleton2.GetComponent<enemyMinionCombat>().tempEnemy = true;
 
             // Warp skeletons to ensure proper positioning
-            skeleton1.GetComponent<NavMeshAgent>().Warp(skeleton1.transform.position);
-            skeleton2.GetComponent<NavMeshAgent>().Warp(skeleton2.transform.position);
+            if (skeleton1.GetComponent<NavMeshAgent>() != null)
+                skeleton1.GetComponent<NavMeshAgent>().Warp(skeleton1.transform.position);
+            if (skeleton2.GetComponent<NavMeshAgent>() != null)
+                skeleton2.GetComponent<NavMeshAgent>().Warp(skeleton2.transform.position);
+                
             curSkeletonCounter += 2;
+            Debug.Log("GraveDigger spawned skeletons. Total count: " + curSkeletonCounter);
         }
         else
         {
-            Debug.LogError("Skeleton prefabs are not assigned!");
+            Debug.Log("Skeleton counter limit reached: " + curSkeletonCounter);
         }
     }
 
     public void onDeath()
     {
         isSpawning = false;
+        // Ensure we've spawned at least one set of skeletons before dying
+        if (curSkeletonCounter == 0)
+        {
+            Debug.Log("GraveDigger dying without spawning - forcing one spawn");
+            SpawnSkeletons();
+        }
     }
 
     public enemyInt getType()

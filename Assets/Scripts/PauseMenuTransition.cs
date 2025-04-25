@@ -19,6 +19,7 @@ public class PauseMenuTransition : MonoBehaviour
     [SerializeField] GameObject GunnerSkillMenu;
     [SerializeField] GameObject EngineerSkillMenu;
     [SerializeField] GameObject MapMenu;
+    [SerializeField] GameObject knightSkillPanelButton;
 
     [SerializeField] GameObject CheckpointUIRef;
 
@@ -39,7 +40,11 @@ public class PauseMenuTransition : MonoBehaviour
     GameObject mapContent = null;
     ScrollRect mapScrollRect = null;
 
+    GameObject skillTreeContent = null;
+    ScrollRect skillTreeScrollRect = null;
+
     Vector2 initialMapPos;
+    Vector2 initialSkillsPos;
     string curRoom;
     string curEventSystem;
     
@@ -144,6 +149,11 @@ public class PauseMenuTransition : MonoBehaviour
                 var mapContentPanel = mapContent.GetComponent<RectTransform>();
                 mapContentPanel.anchoredPosition = initialMapPos;
             }
+            if (initialSkillsPos != Vector2.zero)
+            {
+                var skillsContentPanel = skillTreeContent.GetComponent<RectTransform>();
+                skillsContentPanel.anchoredPosition = initialSkillsPos;
+            }
         }
         if(EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "CheckpointRoom(Clone)"
             && checkpointContent != null && checkpointScrollRect != null && mapContent != null && mapScrollRect != null)
@@ -170,6 +180,19 @@ public class PauseMenuTransition : MonoBehaviour
             
 
         }
+        else if(EventSystem.current.currentSelectedGameObject.transform.parent.name == "SkillTreePanel" && skillTreeContent != null && skillTreeScrollRect != null)
+        {
+            Debug.Log("Event system in skill tree panel.");
+            var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
+            RectTransform selectedItemRect = selectedItem.GetComponent<RectTransform>();
+
+            var contentPanel = skillTreeContent.GetComponent<RectTransform>();
+            Vector2 newPos = (Vector2)skillTreeScrollRect.transform.InverseTransformPoint(contentPanel.position)
+            - (Vector2)skillTreeScrollRect.transform.InverseTransformPoint(selectedItemRect.position);
+            float newPosY = (float)newPos.y;
+            //if(newPosY-100f <= 0)
+            contentPanel.anchoredPosition = new Vector2(newPos.x+2400f, contentPanel.anchoredPosition.y);
+        }
     }
 
     public void SaveGame()
@@ -182,6 +205,8 @@ public class PauseMenuTransition : MonoBehaviour
     {
         audioManager.PlaySFX("UIConfirm");
         SkillMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(knightSkillPanelButton);
         KnightSkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(false);
         GunnerSkillMenu.SetActive(false);
@@ -231,6 +256,8 @@ public class PauseMenuTransition : MonoBehaviour
         audioManager.PlaySFX("UIConfirm");
         PauseMenu.SetActive(false);
         SkillMenu.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(knightSkillPanelButton);
     }
 
     public void OpenKnightSkills()
@@ -238,6 +265,10 @@ public class PauseMenuTransition : MonoBehaviour
         audioManager.PlaySFX("UIConfirm");
         SkillMenu.SetActive(false);
         KnightSkillMenu.SetActive(true);
+        skillTreeContent = GameObject.Find("KnightContent");
+        skillTreeScrollRect = GameObject.Find("KnightView").GetComponent<ScrollRect>();
+        var skillsContentPanel = skillTreeContent.GetComponent<RectTransform>();
+        initialSkillsPos = skillsContentPanel.anchoredPosition;
     }
 
     public void OpenGunnerSkills()
@@ -245,6 +276,10 @@ public class PauseMenuTransition : MonoBehaviour
         audioManager.PlaySFX("UIConfirm");
         SkillMenu.SetActive(false);
         GunnerSkillMenu.SetActive(true);
+        skillTreeContent = GameObject.Find("GunnerContent");
+        skillTreeScrollRect = GameObject.Find("GunnerView").GetComponent<ScrollRect>();
+        var skillsContentPanel = skillTreeContent.GetComponent<RectTransform>();
+        initialSkillsPos = skillsContentPanel.anchoredPosition;
     }
 
     public void OpenEngineerSkills()
@@ -252,6 +287,10 @@ public class PauseMenuTransition : MonoBehaviour
         audioManager.PlaySFX("UIConfirm");
         SkillMenu.SetActive(false);
         EngineerSkillMenu.SetActive(true);
+        skillTreeContent = GameObject.Find("EngineerContent");
+        skillTreeScrollRect = GameObject.Find("EngineerView").GetComponent<ScrollRect>();
+        var skillsContentPanel = skillTreeContent.GetComponent<RectTransform>();
+        initialSkillsPos = skillsContentPanel.anchoredPosition;
     }
 
     public void OpenMapMenu()

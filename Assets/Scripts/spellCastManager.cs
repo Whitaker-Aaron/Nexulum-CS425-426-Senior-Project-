@@ -205,21 +205,23 @@ public class spellCastManager : MonoBehaviour
         print("spellcast: activating spellCast in SCManager");
         print("spellCast: Rune Name is: " + rune.runeName);
         print("spellCast: canCast is " + rune.canCast);
-        if (!rune.canCast) return;
+        
+        // Check if the rune can be cast and we're not already casting
+        if (!rune.canCast || casting) return;
 
         switch (rune.runeName)
         {
-            case "LightningCast":
+            case "Lightning":
                 currentRune = rune;
                 activateLightning();
                 break;
 
-            case "WaterCast":
+            case "Water":
                 currentRune = rune;
                 activateWaterSplash();
                 break;
                 
-            case "WindCast":
+            case "Wind":
                 currentRune = rune;
                 activateWind();
                 break;
@@ -350,13 +352,13 @@ public class spellCastManager : MonoBehaviour
             Gizmos.color = Color.yellow;
             switch (currentRune.runeName)
             {
-                case "LightningCast":
+                case "Lightning":
                     Gizmos.DrawWireSphere(currentEffect.transform.position + Vector3.up, lightningRad);
                     break;
-                case "WaterCast":
+                case "Water":
                     Gizmos.DrawWireSphere(currentEffect.transform.position + Vector3.up, waterRad);
                     break;
-                case "WindCast":
+                case "Wind":
                     // For wind, draw a more complex gizmo to indicate the vortex effect
                     Gizmos.DrawWireSphere(currentEffect.transform.position, windRad);
                     
@@ -422,13 +424,18 @@ public class spellCastManager : MonoBehaviour
         // Update existing functionality
         if (casting && currentEffect != null && currentRune != null)
         {
+            
+            // Check for attack input to place the spell
             if (playerInput.actions["attack"].triggered)
             {
                 print("spellCast: attack triggered");
+                // Immediately set casting to false to prevent multiple casts
+                casting = false;
+                
                 GameObject tempEffect = null;
                 switch (currentRune.runeName)
                 {
-                    case "LightningCast":
+                    case "Lightning":
                         print("spellCast: lightning triggered");
                         tempEffect = Instantiate(lightingStrike, currentEffect.transform.position, Quaternion.identity);
                         damageSphere(tempEffect.transform.position + Vector3.up, lightningRad, lightningDamage, EnemyFrame.DamageType.Electric);
@@ -439,7 +446,7 @@ public class spellCastManager : MonoBehaviour
                         deactivateSpellCast();
                         break;
 
-                    case "WaterCast":
+                    case "Water":
                         // Create rotation with -90 degrees on X axis to fix the orientation
                         //Quaternion waterRotation = Quaternion.Euler(-90f, 0f, 0f);
                         tempEffect = Instantiate(waterSplash, currentEffect.transform.position, Quaternion.identity);
@@ -451,7 +458,7 @@ public class spellCastManager : MonoBehaviour
                         deactivateSpellCast();
                         break;
                         
-                    case "WindCast":
+                    case "Wind":
                         tempEffect = Instantiate(windBlast, currentEffect.transform.position, Quaternion.identity);
                         tempEffect.GetComponent<ParticleSystem>().Play();
                         currentEffect.gameObject.GetComponent<ParticleSystem>().Stop();

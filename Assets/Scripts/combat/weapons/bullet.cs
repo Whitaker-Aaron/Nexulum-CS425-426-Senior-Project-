@@ -49,6 +49,7 @@ public class bullet : MonoBehaviour
 
             //collision.gameObject.GetComponent<BossBehavior>().takeDamage(damage);
             //collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
             Destroy(gameObject);
             return;
         }

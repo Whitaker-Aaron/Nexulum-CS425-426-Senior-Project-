@@ -70,6 +70,12 @@ public class revolverProj : projectile
 
         if ((distanceToHit <= step || distanceToHit <= bufferDistance || hitEnemy) && hitPoint != null)
         {
+            if(hit.collider == null)
+            {
+                playEffect(hitPoint);
+                // We've reached the hit point, stop the projectile
+                stop = true;
+            }
             if (hit.collider.gameObject.tag == "bossPart")
             {
                 hitEnemy = true;
@@ -83,6 +89,7 @@ public class revolverProj : projectile
                 {
                     hit.collider.gameObject.GetComponent<bossPart>().takeDamage(damage);
                     uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
+                    GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
                 }
 
             }
@@ -99,6 +106,7 @@ public class revolverProj : projectile
                 {
                     hit.collider.gameObject.GetComponent<golemBoss>().takeDamage(damage);
                     uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
+                    GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
                 }
 
             }
@@ -122,6 +130,7 @@ public class revolverProj : projectile
 
                 hit.collider.gameObject.GetComponent<EnemyFrame>().takeDamage(updatedDamage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
                 uiManager.DisplayDamageNum(hit.collider.gameObject.transform, updatedDamage);
+                GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
 
             }
             playEffect(hitPoint);

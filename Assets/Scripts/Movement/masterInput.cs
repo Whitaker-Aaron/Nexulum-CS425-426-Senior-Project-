@@ -72,7 +72,7 @@ public class masterInput : MonoBehaviour
 
 
     //Knight Combat Variables
-    bool isAttacking = false;
+    [SerializeField] bool isAttacking = false;
     public bool bubble = false;
     float cooldown = 1f;
     public bool inputPaused = false;
@@ -131,7 +131,7 @@ public class masterInput : MonoBehaviour
     bool isReloading = false;
     public float reloadTime = 2f;
     public float fireRateTime = .1f;
-    bool canShoot = true;
+    [SerializeField] bool canShoot = true;
     int bulletCount;
     public int magSize = 25;
     public float damageDropOffDistance = 5f;
@@ -195,7 +195,7 @@ public class masterInput : MonoBehaviour
 
     //repair
     public bool canRepair = false;
-    bool repairing = false;
+    [SerializeField] bool repairing = false;
     public float repairRate = 1f;
     GameObject repairObj;
     public int repairVal = 25;
@@ -291,6 +291,8 @@ public class masterInput : MonoBehaviour
             laserLine.enabled = true;
         }
         equippedWeapon = character.equippedWeapon.weaponMesh.GetComponent<weaponType>();
+        if(equippedWeapon != null) equippedWeapon.setCanShoot(true);
+        if (equippedWeapon != null) equippedWeapon.setIsReloading(false);
         if(equippedWeapon != null)
             updateDistance(equippedWeapon.rangeModifier);
     }
@@ -332,7 +334,14 @@ public class masterInput : MonoBehaviour
         //if ((isAttacking && currentClass == WeaponBase.weaponClassTypes.Knight))
             //return;
 
-        if (inputPaused) return;
+        // Reset shooting state when input is paused to prevent continuous firing
+        if (inputPaused) {
+            // Reset shooting state when input is paused
+            if (shooting) {
+                shooting = false;
+            }
+            return;
+        }
 
         if (playerInput.actions["SwitchAbilities"].triggered)
         {
@@ -356,6 +365,10 @@ public class masterInput : MonoBehaviour
         {
             if(!character.transitioningRoom) animationControl.updatePlayerAnimation(Vector3.zero);
             audioManager.PauseFootsteps("TestWalk");
+            // Ensure shooting is stopped when input is paused
+            if (shooting) {
+                shooting = false;
+            }
             return;
 
         }
@@ -1449,8 +1462,19 @@ public class masterInput : MonoBehaviour
 
     private void runLogic()
     {
+        
+        // If input is paused, ensure shooting is stopped
+        if (inputPaused) {
+            if (shooting) {
+                shooting = false;
+            }
+            return;
+        }
+        
         if (bulletSpawn != null)
             renderLine();
+
+        
         //KNIGHT LOGIC
         if (currentClass == WeaponBase.weaponClassTypes.Knight)
         {
@@ -1502,25 +1526,25 @@ public class masterInput : MonoBehaviour
                 //StartCoroutine(animationControl.gunnerReload(equippedWeapon.reloadTime));
             //}
 
-
+            
             // Check mouse input for shooting
-            if (playerInput.actions["attack"].WasPressedThisFrame())
+            if (playerInput.actions["attack"].WasPressedThisFrame() && !inputPaused)
             {
-                
+                print("shooting true");
                 shooting = true;
             }
-            else if (playerInput.actions["attack"].WasReleasedThisFrame())
+            else if (playerInput.actions["attack"].WasReleasedThisFrame() || inputPaused)
             {
                 shooting = false;
             }
 
             float triggerValue = playerInput.actions["attack"].ReadValue<float>();
-            //Debug.Log("Trigger Value: " + triggerValue);
+            Debug.Log("Trigger Value: " + triggerValue);
 
-            if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion"))) 
+            if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion")) && !inputPaused) 
             {
                 shooting = true;
-                print("shhoting true");
+                print("shooting true");
             }
 
             if (shooting && !isReloading)
@@ -1565,13 +1589,14 @@ public class masterInput : MonoBehaviour
 
 
 
-
-            if (playerInput.actions["Attack"].WasPressedThisFrame() && !isAttacking)
+            
+            if (playerInput.actions["Attack"].WasPressedThisFrame() && !isAttacking && !inputPaused)
             {
+                
                 shooting = true;
                 //StartCoroutine(lowerHeat());
             }
-            else if (playerInput.actions["Attack"].WasReleasedThisFrame())
+            else if (playerInput.actions["Attack"].WasReleasedThisFrame() || inputPaused)
             {
                 shooting = false;
                 //StartCoroutine(buildHeat());
@@ -1580,15 +1605,28 @@ public class masterInput : MonoBehaviour
             float triggerValue = playerInput.actions["Attack"].ReadValue<float>();
             //Debug.Log("Trigger Value: " + triggerValue); 
 
-            if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion")))
+            if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion")) && !inputPaused)
             {
                 shooting = true;
             }
 
+            if(shooting && character.equippedWeapon.weaponType != null && !character.equippedWeapon.weaponType.isReloading && !character.equippedWeapon.weaponType.canShoot)
+            {
+                //character.equippedWeapon.weaponType.setCanShoot(true);
+            }
+            if (shooting && character.equippedWeapon.weaponType != null && character.equippedWeapon.weaponType.isReloading == false && character.equippedWeapon.weaponType.currentHeat >= character.equippedWeapon.weaponType.overHeatMax)
+            {
+                shooting = false;
+                StartCoroutine(equippedWeapon.Reload());
+                StartCoroutine(animationControl.engineerReload(equippedWeapon.reloadTime));
+                return;
+            }
             if (shooting && !equippedWeapon.isReloading && isAttacking == false && !repairing && equippedWeapon.canShoot)
             {
+                //Debug.Log("Running logic in MI");
                 if (isAttacking)
                     return;
+                
                 if (character.equippedWeapon.weaponType.currentHeat >= character.equippedWeapon.weaponType.overHeatMax)
                 {
                     shooting = false;
@@ -1596,7 +1634,7 @@ public class masterInput : MonoBehaviour
                     StartCoroutine(animationControl.engineerReload(equippedWeapon.reloadTime));
                     return;
                 }
-
+                
                 //StartCoroutine(pistolShoot());
                 StartCoroutine(character.equippedWeapon.weaponType.Shoot());
             }

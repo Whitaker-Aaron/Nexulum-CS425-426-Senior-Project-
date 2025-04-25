@@ -233,16 +233,17 @@ public abstract class projectile : MonoBehaviour
             else
                 collision.gameObject.GetComponent<CharacterBase>().takeDamage(damage, knockBackDir);
         }
-        if (collision.gameObject.tag == "Enemy" && poolName == "enemyMagePoolOne")
-        {
-            collision.gameObject.GetComponent<EnemyFrame>().takeDamage(damage, Vector3.zero, EnemyFrame.DamageSource.Player, EnemyFrame.DamageType.Projectile);
-        }
+        
 
         playEffect(gameObject.transform.position);
         stop = true;
         resetProjectile();
         returnToPool();
         */
+        if (collision.gameObject.tag == "Enemy")
+        {
+            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
+        }
     }
 
     protected void resetProjectile()
@@ -262,6 +263,7 @@ public abstract class projectile : MonoBehaviour
     {
         if(position != null || position != Vector3.zero)// && poolName != "enemyMagePoolOne")
         {
+            
             EffectsManager.instance.getFromPool(bulletHitEffect, position, Quaternion.identity, false, false);
             resetProjectile();
             

@@ -88,7 +88,8 @@ public class RoomTransition : MonoBehaviour
             if (!character.transitioningRoom)
             {
                 character.ResetGroundCounter();
-                if(currentInfo.requiredEnemyRoom) GameObject.Find("UIManager").GetComponent<UIManager>().DeactivateEnemiesRemainingUI();
+                masterInput.instance.DisableFallAnimation();
+                if (currentInfo.requiredEnemyRoom) GameObject.Find("UIManager").GetComponent<UIManager>().DeactivateEnemiesRemainingUI();
                 if (targetRoom != null)
                 {
                     targetRoom.SetActive(true);

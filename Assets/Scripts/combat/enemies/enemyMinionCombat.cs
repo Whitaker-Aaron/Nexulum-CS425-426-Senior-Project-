@@ -18,6 +18,9 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
     //EnemyLOS los;
     //EnemyStateManager stateManager;
     public int attackDamage = 20;
+    public float attackCooldown = 2f;
+
+    bool attackCooldownBool = false;
     [SerializeField] public bool tempEnemy = false;
 
     private bool _isAttacking;
@@ -52,6 +55,7 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
     {
         isAttacking = false;
         canAttack = true;
+        attackCooldownBool = false;
     }
 
     private void OnDisable()
@@ -73,11 +77,12 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
     void attackPlayer()
     {
         if(checkingAttack) return;
-
+        
         Collider[] playerInRange = Physics.OverlapSphere(attackPoint.position, attackRange, Player);
 
         foreach(Collider player in playerInRange)
         {
+            StartCoroutine(attackWait());
             //attack player commands
             Debug.Log("Starting attack");
             canAttack = false;
@@ -87,6 +92,15 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
             enemy.pauseMovement(anim.getAnimationTime());
             StartCoroutine(wait(anim.getAnimationTime(), anim));
         }
+    }
+
+    IEnumerator attackWait()
+    {
+        if (attackCooldownBool) yield break;
+        attackCooldownBool = true;
+        yield return new WaitForSeconds(attackCooldown);
+        attackCooldownBool = false;
+        //canAttack = true;
     }
 
     IEnumerator disableAttack(float time)
@@ -124,7 +138,7 @@ public class enemyMinionCombat : MonoBehaviour, enemyInt
     // Update is called once per frame
     void Update()
     {
-        if (canAttack && isActive) {
+        if (canAttack && isActive && !attackCooldownBool) {
             attackPlayer();
         }
         else
