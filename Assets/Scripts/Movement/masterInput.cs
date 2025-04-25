@@ -291,8 +291,8 @@ public class masterInput : MonoBehaviour
             laserLine.enabled = true;
         }
         equippedWeapon = character.equippedWeapon.weaponMesh.GetComponent<weaponType>();
-        equippedWeapon.setCanShoot(true);
-        equippedWeapon.setIsReloading(false);
+        if(equippedWeapon != null) equippedWeapon.setCanShoot(true);
+        if (equippedWeapon != null) equippedWeapon.setIsReloading(false);
         if(equippedWeapon != null)
             updateDistance(equippedWeapon.rangeModifier);
     }

@@ -47,7 +47,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
     private void Awake()
     {
         // Set active state immediately
-        isActive = true;
+        //isActive = true;
         
         // Automatically find the Player if not set in Inspector
         if (player == null)

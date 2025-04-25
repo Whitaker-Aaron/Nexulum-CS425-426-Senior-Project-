@@ -62,6 +62,8 @@ public class TitleScreen : MonoBehaviour
 
     public IEnumerator animateTitleScreen()
     {
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(LifetimeManager.DeanimateTransitionScreen());
         StartCoroutine(animateLogoScale());
         yield return StartCoroutine(uiManager.IncreaseImageOpacity(logo, 1f, true));
         yield return null;
