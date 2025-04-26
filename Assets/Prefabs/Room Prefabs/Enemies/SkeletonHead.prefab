@@ -96,10 +96,20 @@ MonoBehaviour:
   healthRef: {fileID: 0}
   initialPos: {x: 0, y: 0, z: 0}
   dmgOverTimeActivated: 1
+  isMiniboss: 0
   onDamaged: 0
   source: 0
+  collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
+  statusImmunity_Ice: 0
+  statusImmunity_Fire: 0
+  statusImmunity_Earth: 0
+  statusImmunity_Electric: 0
+  statusImmunity_Water: 0
+  statusImmunity_Wind: 0
+  iceStackEffect: {fileID: 8371746734226873922, guid: c049a2674ddfa8444970e1aeb295c5d8, type: 3}
+  iceStackEffectRef: {fileID: 0}
 --- !u!54 &7312136641156335363
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -255,13 +265,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultMovementSpeed: 2
   engagementRange: 1
+  inaccuracyPointTolerance: 1
   currentSpeed: 0
   movementPaused: 0
+  stayInIdle: 1
   agent: {fileID: 4928959221387099164}
   enemyLOS: {fileID: 0}
   enemyFrame: {fileID: 0}
+  useDefaultConcreteStates: 1
+  concreteStates:
+    _serializedList: []
+  patrolState:
+    patrolPoints: []
   enableStateDebugLogs: 0
-  isFrozen: 0
 --- !u!114 &6996728658863666810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTargetSpotted: 0
+  canTarget: 1
   player: {fileID: 0}
   detectionRange: 40
   visionAngle: 90
@@ -299,14 +316,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   attackPoint: {fileID: 6782279903350017760}
-  visionDistance: 40
   Player:
     serializedVersion: 2
     m_Bits: 64
-  attackRange: 0.5
+  attackDamage: 20
+  visionDistance: 40
   floatSpeed: 2
   floatHeight: 0.5
-  attackDamage: 20
+  attackRange: 0.5
+  attackCooldownTime: 2
+  canAttack: 1
 --- !u!1001 &6047482625680741885
 PrefabInstance:
   m_ObjectHideFlags: 0
