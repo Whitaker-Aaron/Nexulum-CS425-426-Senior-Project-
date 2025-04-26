@@ -57,7 +57,7 @@ public class IceDamage : IType
         {
             resetNext = true;
             // enemyFrameRef.iceFrozenEffectRef.SetActive(true);
-            enemyFrameRef.iceStackEffectRef.SetActive(false);
+            enemyFrameRef.iceStackEffectRef.SetActive(true);
         }
         else if (currentStacks > 0) // Enemy under status effect (not frozen yet)
         {

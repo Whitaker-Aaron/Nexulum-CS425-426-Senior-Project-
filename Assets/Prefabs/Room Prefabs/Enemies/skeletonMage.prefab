@@ -137,6 +137,14 @@ MonoBehaviour:
   collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
+  statusImmunity_Ice: 0
+  statusImmunity_Fire: 0
+  statusImmunity_Earth: 0
+  statusImmunity_Electric: 0
+  statusImmunity_Water: 0
+  statusImmunity_Wind: 0
+  iceStackEffect: {fileID: 8371746734226873922, guid: c049a2674ddfa8444970e1aeb295c5d8, type: 3}
+  iceStackEffectRef: {fileID: 0}
 --- !u!136 &7574376165993279644
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -206,7 +214,6 @@ MonoBehaviour:
   patrolState:
     patrolPoints: []
   enableStateDebugLogs: 0
-  isFrozen: 0
 --- !u!195 &1338135627320106673
 NavMeshAgent:
   m_ObjectHideFlags: 0

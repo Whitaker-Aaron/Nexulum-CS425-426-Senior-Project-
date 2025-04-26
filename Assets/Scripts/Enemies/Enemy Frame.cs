@@ -22,6 +22,7 @@ public class EnemyFrame : MonoBehaviour
     [SerializeField] Enemy enemyReference;
 
     [SerializeField] EnemyStateManager movementReference;
+    [SerializeField] EnemyLOS enemyLOSref;
 
     GameObject enemyUIRef;
     public GameObject healthRef;
@@ -59,8 +60,8 @@ public class EnemyFrame : MonoBehaviour
     private GameObject tempEffectObj;
     public GameObject iceStackEffect;
     [HideInInspector] public GameObject iceStackEffectRef;
-    public GameObject iceFrozenEffect;
-    [HideInInspector] public GameObject iceFrozenEffectRef;
+    // public GameObject iceFrozenEffect;
+    // [HideInInspector] public GameObject iceFrozenEffectRef;
 
     //Enemy animation for taking hits
     EnemyAnimation anim;
@@ -93,6 +94,7 @@ public class EnemyFrame : MonoBehaviour
         Debug.Log(sliders.Length);
 
         movementReference = GetComponent<EnemyStateManager>();
+        enemyLOSref = GetComponent<EnemyLOS>();
         
         anim = GetComponent<EnemyAnimation>();
         enemyUIRef = GameObject.Find("DynamicEnemyUI");
@@ -125,7 +127,7 @@ public class EnemyFrame : MonoBehaviour
 
         // Visual aura for statuses (ice)
         iceStackEffectRef = InstantiateEffectHere(iceStackEffect, false);
-        iceFrozenEffectRef = InstantiateEffectHere(iceFrozenEffect, false);
+        // iceFrozenEffectRef = InstantiateEffectHere(iceFrozenEffect, false);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -468,7 +470,10 @@ public class EnemyFrame : MonoBehaviour
     {
         if (effect != null)
         {
-            tempEffectObj = Instantiate(effect, this.transform, true);
+            Vector3 pos = this.transform.position;
+            pos.y += this.transform.localScale.y;
+            Quaternion rot = Quaternion.Euler(new Vector3(90, 90, 0));
+            tempEffectObj = Instantiate(effect, pos, rot, this.transform);
         }
         else
         {

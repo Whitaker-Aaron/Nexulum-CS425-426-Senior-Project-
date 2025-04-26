@@ -7,6 +7,8 @@ public class BehaviorTest : MonoBehaviour
     EnemyStateManager enemyStateMananger;
     EnemyFrame enemyFrame;
     public bool toggle = false;
+    public Color color;
+    Renderer renderer;
 
     void Awake()
     {
@@ -19,6 +21,17 @@ public class BehaviorTest : MonoBehaviour
         enemyStateMananger = gameObject.GetComponent<EnemyStateManager>();
         enemyFrame = gameObject.GetComponent<EnemyFrame>();
         // enemyStateMananger.PauseMovementFor(5f);
+
+        renderer = gameObject.AddComponent(typeof(Renderer)) as Renderer;
+
+        if (renderer != null)
+        {
+            renderer.material.color = color;
+        }
+        else
+        {
+            Debug.LogWarning("Renderer component null");
+        }
     }
 
     // Update is called once per frame
