@@ -167,6 +167,7 @@ public class OverworldMaterial : MonoBehaviour
             }
             if (!other.gameObject.GetComponent<CharacterBase>().progressionChecks.getHasPickedUpMaterial())
             {
+                if (other.gameObject.GetComponent<CharacterBase>().isDying) return;
                 other.gameObject.GetComponent<CharacterBase>().progressionChecks.setHasPickedUpMaterial(true);
                 var tutorialManager = GameObject.Find("TutorialManager").GetComponent<TutorialManager>();
                 tutorialManager.LoadPage(tutorialManager.returnTutorial("MaterialsAndCrafting"));

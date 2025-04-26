@@ -18,6 +18,7 @@ public class TitleScreen : MonoBehaviour
     AudioManager audioManager;
     CharacterBase character;
     MenuManager menuManager;
+    bool loadingGame = false;
     string curEventSystem;
 
     // Start is called before the first frame update
@@ -82,15 +83,19 @@ public class TitleScreen : MonoBehaviour
 
     public void OnLoad() 
     {
+        if (loadingGame) return;
         audioManager.PlaySFX("UIConfirm");
         SaveManager.LoadGame();
         LifetimeManager.StartGame();
+        loadingGame = true;
     }
 
     public void OnNew()
     {
+        if (loadingGame) return;
         audioManager.PlaySFX("UIConfirm");
         SaveManager.NewGame();
         StartCoroutine(LifetimeManager.StartNewGame());
+        loadingGame = true;
     }
 }

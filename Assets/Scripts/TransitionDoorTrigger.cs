@@ -40,7 +40,7 @@ public class TransitionDoorTrigger : MonoBehaviour
                 {
                     Debug.Log("Inside transition door trigger");
                     door.isLocked = false;
-                    door.ToggleDoor();
+                    door.ToggleDoor(true);
                 }
 
             }

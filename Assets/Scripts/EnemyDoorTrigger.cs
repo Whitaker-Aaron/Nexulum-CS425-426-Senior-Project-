@@ -143,7 +143,7 @@ public class EnemyDoorTrigger : MonoBehaviour
         //if(character.)
         character.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         yield return new WaitForSeconds(0.25f);
-        door.ToggleDoor();
+        door.ToggleDoor(true);
         yield return StartCoroutine(GameObject.FindGameObjectWithTag("MainCamera").
             GetComponent<CameraFollow>().StartMultiPan(pos, true, true, 0.05f));
     }

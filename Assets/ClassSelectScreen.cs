@@ -17,6 +17,7 @@ public class ClassSelectScreen : MonoBehaviour
     LifetimeManager lifetimeManager;
     AudioManager audioManager;
     string curEventSystem;
+    bool loadingGame = false;
     void Start()
     {
 
@@ -72,31 +73,37 @@ public class ClassSelectScreen : MonoBehaviour
 
     public void changeClassKnight()
     {
+        if (loadingGame) return;
         Debug.Log("Changing class to Knight");
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Knight);
         audioManager.PlaySFX("UIConfirm");
         StartCoroutine(StartGame());
+        loadingGame = true;
 
 
     }
 
     public void changeClassEngineer()
     {
+        if (loadingGame) return;
         Debug.Log("Changing class to Knight");
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Engineer);
         audioManager.PlaySFX("UIConfirm");
         StartCoroutine(StartGame());
+        loadingGame = true;
 
     }
 
     public void changeClassGunner()
     {
+        if (loadingGame) return;
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Gunner);
         audioManager.PlaySFX("UIConfirm");
         StartCoroutine(StartGame());
+        loadingGame = true;
     }
 
     public IEnumerator StartGame()

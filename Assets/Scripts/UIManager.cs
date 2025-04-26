@@ -136,6 +136,7 @@ public class UIManager : MonoBehaviour
 
     public void startTutorialAnimate(GameObject page)
     {
+        if (character.isDying) return;
         StartCoroutine(animateTutorialPage(page));
     }
 
@@ -459,6 +460,7 @@ public class UIManager : MonoBehaviour
 
     public void DisplayDamageNum(Transform enemyTransform, float damage, float textSize = 40f, float rate = 2f)
     {
+        if (character.isDying) return;
         var mainText = damageNumPrefab.GetComponent<TMP_Text>();
         mainText.text = damage.ToString();
         mainText.fontSize = textSize;
