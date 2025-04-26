@@ -94,7 +94,7 @@ public class TitleScreen : MonoBehaviour
 
     public void OnLoad() 
     {
-        if (loadingGame) return;
+        //if (loadingGame) return;
         audioManager.PlaySFX("UIConfirm");
         SaveManager.LoadGame();
         LifetimeManager.StartGame();
@@ -103,7 +103,7 @@ public class TitleScreen : MonoBehaviour
 
     public void OnNew()
     {
-        if (loadingGame) return;
+        //if (loadingGame) return;
         audioManager.PlaySFX("UIConfirm");
         SaveManager.NewGame();
         StartCoroutine(LifetimeManager.StartNewGame());

@@ -26,6 +26,7 @@ public class TutorialPage : MonoBehaviour
     [SerializeField] GameObject pageCount;
     bool usingController = false;
     bool canProgress;
+    public bool destroyOnExit = true;
     public int curPage = 0;
 
     masterInput inputManager;
@@ -38,12 +39,13 @@ public class TutorialPage : MonoBehaviour
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
-    public void Start()
+    public void OnEnable()
     {
         Debug.Log("Gamepad active?: " + inputManager.getGamepadActive());
         if (inputManager.getGamepadActive()) usingController = true;
         audioManager.PauseFootsteps("TestWalk");
         audioManager.PlaySFX("TutorialStart");
+        curPage = 0;
         canProgress = false;
         StartCoroutine(InputDelay());
         LoadPage();
@@ -59,6 +61,16 @@ public class TutorialPage : MonoBehaviour
     private void Update()
     {
         //Debug.Log(canProgress);
+    }
+
+    public void ResetTutorial()
+    {
+        audioManager.PauseFootsteps("TestWalk");
+        audioManager.PlaySFX("TutorialStart");
+        canProgress = false;
+        StartCoroutine(InputDelay());
+        curPage = 0;
+        LoadPage();
     }
 
     public void LoadPage()
@@ -191,7 +203,8 @@ public class TutorialPage : MonoBehaviour
         menuManager.menusPaused = false;
         audioManager.PlaySFX("UIConfirm");
         Destroy(trigger);
-        Destroy(this.gameObject);
+        if (destroyOnExit) Destroy(this.gameObject);
+        else this.gameObject.SetActive(false);
         Time.timeScale = 1.0f;
     }
 

@@ -85,6 +85,16 @@ public class AudioManager : MonoBehaviour
         sfxSources[sfx].PlaySFX();
     }
 
+    public void PauseSFX(string sfx)
+    {
+        sfxSources[sfx].ResumeSFX();
+    }
+
+    public void ResumeSFX(string sfx)
+    {
+        sfxSources[sfx].PauseSFX();
+    }
+
     public void StopSFX(string sfx)
     {
         sfxSources[sfx].StopSFX();

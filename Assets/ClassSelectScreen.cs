@@ -27,6 +27,7 @@ public class ClassSelectScreen : MonoBehaviour
         var player = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         player.inEvent = true;
         player.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
+        loadingGame = false;
         StartCoroutine(StartAnimations());
         
     }
@@ -73,41 +74,64 @@ public class ClassSelectScreen : MonoBehaviour
 
     public void changeClassKnight()
     {
-        if (loadingGame) return;
+        if (loadingGame)
+        {
+
+        }
+        else
+        {
+            
+        }
         Debug.Log("Changing class to Knight");
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Knight);
         audioManager.PlaySFX("UIConfirm");
         StartCoroutine(StartGame());
-        loadingGame = true;
+
 
 
     }
 
     public void changeClassEngineer()
     {
-        if (loadingGame) return;
+        if (loadingGame)
+        {
+
+        }
+        else
+        {
+            
+        }
         Debug.Log("Changing class to Knight");
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Engineer);
         audioManager.PlaySFX("UIConfirm");
         StartCoroutine(StartGame());
-        loadingGame = true;
+
 
     }
 
     public void changeClassGunner()
     {
-        if (loadingGame) return;
+        if (loadingGame)
+        {
+
+        }
+        else
+        {
+            
+        }
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Gunner);
         audioManager.PlaySFX("UIConfirm");
         StartCoroutine(StartGame());
-        loadingGame = true;
+
+
     }
 
     public IEnumerator StartGame()
     {
+        loadingGame = true;
         //lifetimeManager.GoToScene(1, true, "BaseCamp");
         var player = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         yield return StartCoroutine(lifetimeManager.AnimateTransitionScreen());

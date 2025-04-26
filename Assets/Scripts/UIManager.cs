@@ -70,6 +70,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject tempGradients;
     [SerializeField] GameObject viewItemGradient;
 
+    [SerializeField] GameObject tutorialObject;
+
     
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
@@ -99,6 +101,7 @@ public class UIManager : MonoBehaviour
     bool abilityUIActive = true;
 
     Vector3 initialEnemyRemainingUIPos;
+    Vector3 initialTutorialPagePos;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -108,6 +111,7 @@ public class UIManager : MonoBehaviour
         knightHUD.SetActive(false);
         gunnerHUD.SetActive(false);
         engineerHUD.SetActive(false);
+        initialTutorialPagePos = tutorialObject.transform.Find("Tutorial").gameObject.transform.localPosition;
         ogExpTextXPos = expText.transform.localPosition.x;
 
         initialEnemyRemainingUIPos = enemiesRemainingUI.transform.position;
@@ -132,6 +136,18 @@ public class UIManager : MonoBehaviour
     public void OnDeath()
     {
         DeactivateEnemiesRemainingUI();
+    }
+
+    public void LoadTutorial(TutorialObject tutorialToLoad, GameObject trigger)
+    {
+        var tutorial = tutorialObject.GetComponent<TutorialPage>();
+        tutorial.tutorial = tutorialToLoad;
+        tutorial.trigger = trigger;
+        tutorial.destroyOnExit = false;
+        tutorialObject.SetActive(true);
+        var page = tutorialObject.transform.Find("Tutorial").gameObject;
+        page.transform.localPosition = initialTutorialPagePos;
+        startTutorialAnimate(page);
     }
 
     public void startTutorialAnimate(GameObject page)
