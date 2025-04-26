@@ -36,7 +36,7 @@ public class MaterialMenuTransition : MonoBehaviour
 
     public void CloseMaterialsMenu()
     {
-        audioManager.PlaySFX("Pause");
+        audioManager.PlaySFX("UIBack");
         GameObject.Find("MenuManager").GetComponent<MenuManager>().CloseMenu();
     }
 

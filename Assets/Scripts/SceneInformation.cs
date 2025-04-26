@@ -26,7 +26,8 @@ public class SceneInformation : MonoBehaviour
         //audioManager.StopLoop();
         if(beginningTrack != "" && beginningTrack != null && !characterRef.teleporting)
         {
-            audioManager.ChangeTrack(beginningTrack);
+            if (sceneName == "TitleScreen") StartCoroutine(waitThenPlayTrack());
+            else audioManager.ChangeTrack(beginningTrack);
         }
         if (!characterRef.teleporting && roomManager.currentRoom != null && roomManager.currentRoom.floorEntrance)
         {
@@ -35,6 +36,12 @@ public class SceneInformation : MonoBehaviour
 
         
         
+    }
+
+    public IEnumerator waitThenPlayTrack()
+    {
+        yield return new WaitForSeconds(0.5f);
+        audioManager.ChangeTrack(beginningTrack);
     }
 
     private void Awake()

@@ -24,6 +24,17 @@ public class TitleScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(waitThenStart());
+    }
+
+    public IEnumerator waitThenStart()
+    {
+        yield return new WaitForSeconds(0.5f);
+        StartLogic();
+    }
+
+    public void StartLogic()
+    {
         newPanel.SetActive(false);
         loadPanel.SetActive(false);
         SaveManager = GameObject.Find("SaveManager").GetComponent<SaveManager>();

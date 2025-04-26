@@ -9,9 +9,11 @@ public class MaterialDepositObject : MonoBehaviour
     private int materialDepositCount = 0;
     public int currentMaterialCount;
     public CraftMaterial attachedMaterial;
+    AudioManager audioManager;
     void Awake()
     {
         DepositNumber.text = materialDepositCount.ToString();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
@@ -25,9 +27,13 @@ public class MaterialDepositObject : MonoBehaviour
         
         if (!((materialDepositCount + 1) > currentMaterialCount))
         {
-            
+            audioManager.PlaySFX("UIConfirm");
             materialDepositCount += 1;
             UpdateDepositCount();
+        }
+        else
+        {
+            audioManager.PlaySFX("UIBack");
         }
     }
 
@@ -35,13 +41,19 @@ public class MaterialDepositObject : MonoBehaviour
     {
         if (!(materialDepositCount - 1 < 0))
         {
+            audioManager.PlaySFX("UIConfirm");
             materialDepositCount -= 1;
             UpdateDepositCount();
+        }
+        else
+        {
+            audioManager.PlaySFX("UIBack");
         }
     }
 
     public void OnAll()
     {
+        audioManager.PlaySFX("UIConfirm");
         materialDepositCount = currentMaterialCount;
         UpdateDepositCount();
     }
@@ -53,6 +65,7 @@ public class MaterialDepositObject : MonoBehaviour
 
     public void DepositToTotalInventory()
     {
+        audioManager.PlaySFX("UIConfirm");
         if (materialDepositCount <= 0) return;
         var scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
         scrollManager.AddToTotalMaterialsInventory(attachedMaterial, materialDepositCount);
@@ -62,6 +75,7 @@ public class MaterialDepositObject : MonoBehaviour
 
     public void WithdrawFromTotalInventory()
     {
+        audioManager.PlaySFX("UIConfirm");
         if (materialDepositCount <= 0) return;
         var scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
         scrollManager.AddToMaterialsInventory(attachedMaterial, materialDepositCount);

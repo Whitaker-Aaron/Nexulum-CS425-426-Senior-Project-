@@ -20,6 +20,9 @@ public class BaseShopMenu : MonoBehaviour
     ScrollRect storeScrollRect;
     public GameObject storeScrollContent;
 
+    AudioManager audioManager;
+    GameObject curEventSystem;
+
     List<GameObject> curShopListings = new List<GameObject>();
     public void Start()
     {
@@ -29,6 +32,7 @@ public class BaseShopMenu : MonoBehaviour
         availableWeapons.SetActive(false);
         shopTitle.SetActive(true);
         storeScrollContent = GameObject.Find("StoreScrollContent");
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         storeScrollRect = scroll.GetComponent<ScrollRect>();
 
         backButton.SetActive(true);
@@ -43,6 +47,13 @@ public class BaseShopMenu : MonoBehaviour
 
     public void Update()
     {
+        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject;
+        else if (EventSystem.current.currentSelectedGameObject != curEventSystem)
+        {
+            curEventSystem = EventSystem.current.currentSelectedGameObject;
+            audioManager.PlaySFX("UIChange");
+        }
+
         if (EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent.name == "StoreItem")
         {
             var selectedItem = EventSystem.current.currentSelectedGameObject.transform.parent.transform.parent;
@@ -123,6 +134,7 @@ public class BaseShopMenu : MonoBehaviour
 
     public void onItemsButton()
     {
+        audioManager.PlaySFX("UIConfirm");
         scroll.SetActive(true);
         menuManager.populateBaseShopOptions(StoreItem.StoreItemType.Item);
         availableWeapons.SetActive(false);
@@ -139,6 +151,7 @@ public class BaseShopMenu : MonoBehaviour
 
     public void onWeaponsButton()
     {
+        audioManager.PlaySFX("UIConfirm");
         scroll.SetActive(true);
         menuManager.populateBaseShopOptions(StoreItem.StoreItemType.Weapon);
         availableItems.SetActive(false);
@@ -170,11 +183,12 @@ public class BaseShopMenu : MonoBehaviour
 
     public void onBackButton()
     {
-        menuManager.openTerminalMenu();
+        menuManager.openTerminalMenu(true);
     }
 
     public void onBackButton2()
     {
+        audioManager.PlaySFX("UIBack");
         returnToMainSelection();
         resetSelection();
     }

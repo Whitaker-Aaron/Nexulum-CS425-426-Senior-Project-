@@ -15,4 +15,9 @@ public class SFX : ScriptableObject
         source.loop = false;
         source.PlayOneShot(source.clip);
     }
+
+    public void StopSFX()
+    {
+        source.Stop();
+    }
 }

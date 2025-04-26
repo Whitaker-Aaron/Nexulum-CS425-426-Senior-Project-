@@ -27,6 +27,7 @@ public class StoreItem : MonoBehaviour
     bool hasPurchased = false;
     public StoreItemType storeType;
     MenuManager menuManager;
+    AudioManager audioManager;
 
     List<GameObject> currentMaterialObjects = new List<GameObject>();
     public static ResetDelegateTemplate.ResetDelegate reset;
@@ -45,6 +46,7 @@ public class StoreItem : MonoBehaviour
             description.SetActive(false);
             populateMaterialsList();
         }
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
@@ -79,6 +81,7 @@ public class StoreItem : MonoBehaviour
 
     public void onView()
     {
+        audioManager.PlaySFX("UIConfirm");
         reset = ResetSelection;
         switch (storeType)
         {
@@ -115,6 +118,7 @@ public class StoreItem : MonoBehaviour
 
     public void onPurchase()
     {
+        audioManager.PlaySFX("UIConfirm");
         switch (storeType)
         {
             case StoreItemType.Recipe:

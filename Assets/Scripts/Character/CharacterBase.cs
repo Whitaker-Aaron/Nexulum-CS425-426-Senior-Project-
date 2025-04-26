@@ -672,6 +672,7 @@ public class CharacterBase : MonoBehaviour, SaveSystemInterface
 
     public void restoreHealth(int amount)
     {
+        audioManager.PlaySFX("Heal");
         if (playerHealth + amount >= maxHealth) {
             playerHealth = maxHealth;
         }
