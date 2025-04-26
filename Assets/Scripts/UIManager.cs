@@ -207,6 +207,7 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator animateTutorialPage(GameObject page)
     {
+        yield return new WaitForSecondsRealtime(0.25f);
         Vector3 desiredPos = new Vector3(-400, page.transform.localPosition.y, page.transform.localPosition.z);
         Debug.Log(page);
         Debug.Log(page.transform.position);

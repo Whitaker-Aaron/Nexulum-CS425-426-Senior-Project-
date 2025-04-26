@@ -33,6 +33,12 @@ public class TitleScreen : MonoBehaviour
         StartLogic();
     }
 
+    public void disableButtons()
+    {
+        newGameButton.interactable = false;
+        loadGameButton.interactable = false;
+    }
+
     public void StartLogic()
     {
         newPanel.SetActive(false);
@@ -94,7 +100,7 @@ public class TitleScreen : MonoBehaviour
 
     public void OnLoad() 
     {
-        //if (loadingGame) return;
+        disableButtons();
         audioManager.PlaySFX("UIConfirm");
         SaveManager.LoadGame();
         LifetimeManager.StartGame();
@@ -103,7 +109,7 @@ public class TitleScreen : MonoBehaviour
 
     public void OnNew()
     {
-        //if (loadingGame) return;
+        disableButtons();
         audioManager.PlaySFX("UIConfirm");
         SaveManager.NewGame();
         StartCoroutine(LifetimeManager.StartNewGame());

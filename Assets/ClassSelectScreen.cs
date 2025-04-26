@@ -21,13 +21,14 @@ public class ClassSelectScreen : MonoBehaviour
     void Start()
     {
 
-        EventSystem.current.SetSelectedGameObject(knightButton.gameObject);
+        
         lifetimeManager = GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>();
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         var player = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         player.inEvent = true;
         player.GetMasterInput().GetComponent<masterInput>().pausePlayerInput();
         loadingGame = false;
+        disableButtons();
         StartCoroutine(StartAnimations());
         
     }
@@ -36,8 +37,17 @@ public class ClassSelectScreen : MonoBehaviour
 
     public IEnumerator StartAnimations()
     {
-        StartCoroutine(lifetimeManager.DeanimateTransitionScreen());
+        StartCoroutine(awaitTransition());
         StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().AnimateTypewriterCheckpoint(chooseClassText, chooseClassText.text, "|", 0.10f, false));
+        yield break;
+    }
+
+    public IEnumerator awaitTransition()
+    {
+        yield return StartCoroutine(lifetimeManager.DeanimateTransitionScreen());
+        enableButtons();
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(knightButton.gameObject);
         yield break;
     }
 
@@ -72,16 +82,22 @@ public class ClassSelectScreen : MonoBehaviour
         }
     }
 
+    public void disableButtons()
+    {
+        knightButton.interactable = false;
+        gunnerButton.interactable = false;
+        engineerButton.interactable = false;
+    }
+    public void enableButtons()
+    {
+        knightButton.interactable = true;
+        gunnerButton.interactable = true;
+        engineerButton.interactable = true;
+    }
+
     public void changeClassKnight()
     {
-        if (loadingGame)
-        {
-
-        }
-        else
-        {
-            
-        }
+        disableButtons();
         Debug.Log("Changing class to Knight");
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Knight);
@@ -94,14 +110,7 @@ public class ClassSelectScreen : MonoBehaviour
 
     public void changeClassEngineer()
     {
-        if (loadingGame)
-        {
-
-        }
-        else
-        {
-            
-        }
+        disableButtons();
         Debug.Log("Changing class to Knight");
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Engineer);
@@ -113,14 +122,7 @@ public class ClassSelectScreen : MonoBehaviour
 
     public void changeClassGunner()
     {
-        if (loadingGame)
-        {
-
-        }
-        else
-        {
-            
-        }
+        disableButtons();
         var characterRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
         characterRef.UpdateClass(WeaponBase.weaponClassTypes.Gunner);
         audioManager.PlaySFX("UIConfirm");
