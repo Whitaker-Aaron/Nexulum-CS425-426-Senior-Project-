@@ -24,6 +24,7 @@ public class EnemyTrigger : MonoBehaviour
     {
         if (!enemiesUnlocked && !isBoss) UnlockEnemies();
         else if (!enemiesUnlocked && isBoss) StartCoroutine(bossPan());
+        
     }
 
     public void UnlockEnemies()
@@ -37,6 +38,7 @@ public class EnemyTrigger : MonoBehaviour
                 if(enemies[i].GetComponent<enemyInt>() != null) enemies[i].GetComponent<enemyInt>().isActive = true;
             }
         }
+        Destroy(this.gameObject);
     }
 
     public void EnableEnemies()

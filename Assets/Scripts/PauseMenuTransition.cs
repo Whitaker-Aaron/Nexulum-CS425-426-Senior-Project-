@@ -28,6 +28,7 @@ public class PauseMenuTransition : MonoBehaviour
     [SerializeField] WeaponClass engineerRef;
 
     [SerializeField] GameObject MapButton;
+    [SerializeField] bool lockSave = false;
     CharacterBase characterRef;
     List<GameObject> checkpointList = new List<GameObject>(); 
     LifetimeManager lifetimeManager;
@@ -124,6 +125,11 @@ public class PauseMenuTransition : MonoBehaviour
             //ReturnToBaseButton.GetComponent<Button>().interactable = false;
             ReturnToBaseButton.SetActive(false);
             ReturnToBaseButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
+        }
+        if (lockSave)
+        {
+            SaveButton.SetActive(false);
+            SaveButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
         }
     }
 
