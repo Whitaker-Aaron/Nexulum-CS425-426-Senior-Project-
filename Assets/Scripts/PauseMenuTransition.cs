@@ -47,7 +47,7 @@ public class PauseMenuTransition : MonoBehaviour
     Vector2 initialMapPos;
     Vector2 initialSkillsPos;
     string curRoom;
-    string curEventSystem;
+    GameObject curEventSystem;
     
     Vector3 curRoomCoordinates;
 
@@ -136,10 +136,10 @@ public class PauseMenuTransition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject.name;
-        else if (EventSystem.current.currentSelectedGameObject.name != curEventSystem)
+        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject;
+        else if (EventSystem.current.currentSelectedGameObject != curEventSystem)
         {
-            curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+            curEventSystem = EventSystem.current.currentSelectedGameObject;
             audioManager.PlaySFX("UIChange");
         }
 

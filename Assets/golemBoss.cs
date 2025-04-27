@@ -86,6 +86,9 @@ public class golemBoss : MonoBehaviour, enemyInt
     public Vector3 slamOffset = Vector3.zero;
     public Vector3 medJumpOffset = Vector3.zero;
 
+    //Dialogue
+    [SerializeField] DialogueObject dialogueObject;
+
     //Enemy Interface 
     private bool _isAttacking;
     public bool isAttacking
@@ -465,7 +468,7 @@ public class golemBoss : MonoBehaviour, enemyInt
         
         // Force stop all attacks and movement
         StopAllCoroutines(); // Stop all running coroutines including attacks
-        
+        if (dialogueObject != null) StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(dialogueObject));
         // Only keep this coroutine running
         StartCoroutine(HalfHealthImplementation());
         

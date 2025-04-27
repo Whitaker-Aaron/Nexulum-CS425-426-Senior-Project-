@@ -27,5 +27,6 @@ public class CheckpointUI : MonoBehaviour
     {
         GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().teleportSpawnObject = spawnObject;
         GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().StartTeleport();
+        GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("Pause");
     }
 }
