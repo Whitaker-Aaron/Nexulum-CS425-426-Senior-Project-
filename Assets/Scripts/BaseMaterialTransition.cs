@@ -12,23 +12,31 @@ public class BaseMaterialTransition : MonoBehaviour
     [SerializeField] TMP_Text baseMaterialInventoryAmount;
     MenuManager menuManager;
     MaterialScrollManager scrollManager;
+    AudioManager audioManager;
+    GameObject curEventSystem;
     void Start()
     {
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(backButton);
         menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         scrollManager = GameObject.Find("ScrollManager").GetComponent<MaterialScrollManager>();
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject;
+        else if (EventSystem.current.currentSelectedGameObject != curEventSystem)
+        {
+            curEventSystem = EventSystem.current.currentSelectedGameObject;
+            audioManager.PlaySFX("UIChange");
+        }
     }
 
     public void ReturnToTerminal()
     {
-        GameObject.Find("MenuManager").GetComponent<MenuManager>().openTerminalMenu();
+        GameObject.Find("MenuManager").GetComponent<MenuManager>().openTerminalMenu(true);
     }
 
     public void ResetSelection()

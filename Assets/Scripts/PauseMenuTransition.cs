@@ -28,6 +28,7 @@ public class PauseMenuTransition : MonoBehaviour
     [SerializeField] WeaponClass engineerRef;
 
     [SerializeField] GameObject MapButton;
+    [SerializeField] bool lockSave = false;
     CharacterBase characterRef;
     List<GameObject> checkpointList = new List<GameObject>(); 
     LifetimeManager lifetimeManager;
@@ -46,7 +47,7 @@ public class PauseMenuTransition : MonoBehaviour
     Vector2 initialMapPos;
     Vector2 initialSkillsPos;
     string curRoom;
-    string curEventSystem;
+    GameObject curEventSystem;
     
     Vector3 curRoomCoordinates;
 
@@ -125,15 +126,20 @@ public class PauseMenuTransition : MonoBehaviour
             ReturnToBaseButton.SetActive(false);
             ReturnToBaseButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
         }
+        if (lockSave)
+        {
+            SaveButton.SetActive(false);
+            SaveButton.transform.parent.Find("DisabledPanel").gameObject.SetActive(true);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject.name;
-        else if (EventSystem.current.currentSelectedGameObject.name != curEventSystem)
+        if (curEventSystem == null) curEventSystem = EventSystem.current.currentSelectedGameObject;
+        else if (EventSystem.current.currentSelectedGameObject != curEventSystem)
         {
-            curEventSystem = EventSystem.current.currentSelectedGameObject.name;
+            curEventSystem = EventSystem.current.currentSelectedGameObject;
             audioManager.PlaySFX("UIChange");
         }
 

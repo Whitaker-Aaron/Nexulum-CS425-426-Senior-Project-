@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class PlayerItemPrefab : MonoBehaviour
 {
     public PlayerItem item;
+    AudioManager audioManager;
 
     [SerializeField] public GameObject playerItemName;
     [SerializeField] public GameObject playerOptionDescription;
@@ -20,10 +21,12 @@ public class PlayerItemPrefab : MonoBehaviour
         playerItemName.GetComponent<TMP_Text>().text = item.itemName;
         playerOptionDescription.GetComponent<TMP_Text>().text = item.itemDescription;
         itemAmount.GetComponent<TMP_Text>().text = "x" + (item.itemAmount).ToString();
-        if(!item.canUseFromMenu)
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        if (!item.canUseFromMenu)
         {
             itemUseButton.GetComponent<Button>().interactable = false;
             disabledPanel.SetActive(true);
+
         }
 
     }
@@ -36,6 +39,7 @@ public class PlayerItemPrefab : MonoBehaviour
 
     public void Use()
     {
+        audioManager.PlaySFX("UIConfirm");
         GameObject.Find("ItemManager").GetComponent<ItemManager>().ExecuteItemLogic(item);
 
     }

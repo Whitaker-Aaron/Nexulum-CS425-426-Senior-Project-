@@ -84,7 +84,7 @@ public class RoomDoorTrigger : MonoBehaviourID, EventTrigger
                     {
                         door.isLocked = true;
                         yield return StartCoroutine(PanToDoor(door.transform.position));
-                        door.ToggleDoor();
+                        door.ToggleDoor(true);
                         var enemies = roomInfo.GetEnemies();
                         if (roomInfo.requiredEnemyRoom) GameObject.Find("UIManager").GetComponent<UIManager>().ActivateEnemiesRemainingUI(enemies.Count);
                         GameObject.Find("AudioManager").GetComponent<AudioManager>().ChangeTrack("Battle1");

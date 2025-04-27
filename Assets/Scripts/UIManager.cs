@@ -70,6 +70,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject tempGradients;
     [SerializeField] GameObject viewItemGradient;
 
+    [SerializeField] GameObject tutorialObject;
+
     
     Coroutine currentCriticalOpacity;
     Coroutine currentCriticalBorderOpacity;
@@ -99,6 +101,7 @@ public class UIManager : MonoBehaviour
     bool abilityUIActive = true;
 
     Vector3 initialEnemyRemainingUIPos;
+    Vector3 initialTutorialPagePos;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -108,6 +111,7 @@ public class UIManager : MonoBehaviour
         knightHUD.SetActive(false);
         gunnerHUD.SetActive(false);
         engineerHUD.SetActive(false);
+        initialTutorialPagePos = tutorialObject.transform.Find("Tutorial").gameObject.transform.localPosition;
         ogExpTextXPos = expText.transform.localPosition.x;
 
         initialEnemyRemainingUIPos = enemiesRemainingUI.transform.position;
@@ -134,8 +138,21 @@ public class UIManager : MonoBehaviour
         DeactivateEnemiesRemainingUI();
     }
 
+    public void LoadTutorial(TutorialObject tutorialToLoad, GameObject trigger)
+    {
+        var tutorial = tutorialObject.GetComponent<TutorialPage>();
+        tutorial.tutorial = tutorialToLoad;
+        tutorial.trigger = trigger;
+        tutorial.destroyOnExit = false;
+        tutorialObject.SetActive(true);
+        var page = tutorialObject.transform.Find("Tutorial").gameObject;
+        page.transform.localPosition = initialTutorialPagePos;
+        startTutorialAnimate(page);
+    }
+
     public void startTutorialAnimate(GameObject page)
     {
+        if (character.isDying) return;
         StartCoroutine(animateTutorialPage(page));
     }
 
@@ -190,6 +207,7 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator animateTutorialPage(GameObject page)
     {
+        yield return new WaitForSecondsRealtime(0.25f);
         Vector3 desiredPos = new Vector3(-400, page.transform.localPosition.y, page.transform.localPosition.z);
         Debug.Log(page);
         Debug.Log(page.transform.position);
@@ -459,6 +477,7 @@ public class UIManager : MonoBehaviour
 
     public void DisplayDamageNum(Transform enemyTransform, float damage, float textSize = 40f, float rate = 2f)
     {
+        if (character.isDying) return;
         var mainText = damageNumPrefab.GetComponent<TMP_Text>();
         mainText.text = damage.ToString();
         mainText.fontSize = textSize;

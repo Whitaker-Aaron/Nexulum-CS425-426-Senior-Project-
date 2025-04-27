@@ -47,7 +47,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
     private void Awake()
     {
         // Set active state immediately
-        isActive = true;
+        //isActive = true;
         
         // Automatically find the Player if not set in Inspector
         if (player == null)
@@ -107,7 +107,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
     // Public method to force activation from outside
     public void ForceActivate()
     {
-        isActive = true;
+        //isActive = true;
         if (curSpawnRoutine == null)
         {
             curSpawnRoutine = StartCoroutine(SpawnSkeletonsRoutine());
@@ -123,7 +123,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
         while (!isActive && waitTime < maxWaitTime)
         {
             Debug.Log("Grave digger not active");
-            waitTime += Time.deltaTime;
+            //waitTime += Time.deltaTime;
             yield return null;
         }
         
@@ -131,7 +131,7 @@ public class GraveDigger : MonoBehaviour, enemyInt
         if (!isActive && waitTime >= maxWaitTime)
         {
             Debug.Log("Grave digger activation timeout - forcing active state");
-            isActive = true;
+            //isActive = true;
         }
         
         if(useFirstSpawnDelay) yield return new WaitForSeconds(firstSpawnDelay);

@@ -86,6 +86,10 @@ public class golemBoss : MonoBehaviour, enemyInt
     public Vector3 slamOffset = Vector3.zero;
     public Vector3 medJumpOffset = Vector3.zero;
 
+    //Dialogue
+    [SerializeField] DialogueObject halfway_dialogueObject;
+    [SerializeField] DialogueObject finish_dialogueObject;
+
     //Enemy Interface 
     private bool _isAttacking;
     public bool isAttacking
@@ -300,8 +304,8 @@ public class golemBoss : MonoBehaviour, enemyInt
         audioManager.PlaySFX("BattleComplete");
         DeactivateHealthBar();
         camera.StartPan(this.transform.position, true, true, 0.05f);
+        if (finish_dialogueObject != null) StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(finish_dialogueObject));
         adjustCameraOffset(new Vector3(0.0f, -13f, 4f));
-        
         StartCoroutine(unlockDoor());
     }
 
@@ -465,7 +469,7 @@ public class golemBoss : MonoBehaviour, enemyInt
         
         // Force stop all attacks and movement
         StopAllCoroutines(); // Stop all running coroutines including attacks
-        
+        if (halfway_dialogueObject != null) StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(halfway_dialogueObject));
         // Only keep this coroutine running
         StartCoroutine(HalfHealthImplementation());
         

@@ -8,6 +8,7 @@ public class EquipOptionPrefab : MonoBehaviour
     public WeaponBase weapon;
     public WeaponClass weaponClass;
     public Rune rune;
+    AudioManager audioManager;
 
     [SerializeField] public GameObject equipOptionName;
     [SerializeField] public GameObject image;
@@ -24,7 +25,7 @@ public class EquipOptionPrefab : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
@@ -35,7 +36,8 @@ public class EquipOptionPrefab : MonoBehaviour
 
     public void Equip()
     {
-        switch(type)
+        audioManager.PlaySFX("UIConfirm");
+        switch (type)
         {
             case EquipTypes.Weapon:
                 EquipWeapon();
@@ -55,6 +57,7 @@ public class EquipOptionPrefab : MonoBehaviour
 
     public void Unequip()
     {
+        audioManager.PlaySFX("UIBack");
         switch (type){
             case EquipTypes.Rune:
                 UnequipRune();

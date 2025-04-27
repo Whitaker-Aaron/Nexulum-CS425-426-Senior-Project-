@@ -1777,7 +1777,7 @@ public class classAbilties : MonoBehaviour
             if (playerInput.actions["Attack"].IsPressed() && !shotLaser)
             {
                 shotLaser = true;
-
+                audioManager.PlaySFX("GunnerLaser");
                 //if (currentLaserEffect != null)
                 currentLaserEffect.GetComponent<ParticleSystem>().Clear(true);
                 currentLaserEffect.GetComponent<ParticleSystem>().Play();
@@ -1785,6 +1785,7 @@ public class classAbilties : MonoBehaviour
             if (playerInput.actions["Attack"].WasReleasedThisFrame() && shotLaser)
             {
                 shotLaser = false;
+                audioManager.StopSFX("GunnerLaser");
                 //if (currentLaserEffect != null)
                 currentLaserEffect.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 currentLaserEffect.GetComponent<ParticleSystem>().Clear(true);
@@ -1794,6 +1795,7 @@ public class classAbilties : MonoBehaviour
         {
             shotLaser = false;
             shootingLaser = false;
+            audioManager.StopSFX("GunnerLaser");
             if (currentLaserEffect != null)
             {
                 currentLaserEffect.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);

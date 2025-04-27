@@ -18,10 +18,28 @@ public class TitleScreen : MonoBehaviour
     AudioManager audioManager;
     CharacterBase character;
     MenuManager menuManager;
+    bool loadingGame = false;
     string curEventSystem;
 
     // Start is called before the first frame update
     void Start()
+    {
+        StartCoroutine(waitThenStart());
+    }
+
+    public IEnumerator waitThenStart()
+    {
+        yield return new WaitForSeconds(0.5f);
+        StartLogic();
+    }
+
+    public void disableButtons()
+    {
+        newGameButton.interactable = false;
+        loadGameButton.interactable = false;
+    }
+
+    public void StartLogic()
     {
         newPanel.SetActive(false);
         loadPanel.SetActive(false);
@@ -62,6 +80,8 @@ public class TitleScreen : MonoBehaviour
 
     public IEnumerator animateTitleScreen()
     {
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(LifetimeManager.DeanimateTransitionScreen());
         StartCoroutine(animateLogoScale());
         yield return StartCoroutine(uiManager.IncreaseImageOpacity(logo, 1f, true));
         yield return null;
@@ -80,15 +100,19 @@ public class TitleScreen : MonoBehaviour
 
     public void OnLoad() 
     {
+        disableButtons();
         audioManager.PlaySFX("UIConfirm");
         SaveManager.LoadGame();
         LifetimeManager.StartGame();
+        loadingGame = true;
     }
 
     public void OnNew()
     {
+        disableButtons();
         audioManager.PlaySFX("UIConfirm");
         SaveManager.NewGame();
         StartCoroutine(LifetimeManager.StartNewGame());
+        loadingGame = true;
     }
 }

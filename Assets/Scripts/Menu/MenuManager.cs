@@ -218,10 +218,11 @@ public class MenuManager : MonoBehaviour, SaveSystemInterface
         return currentMenuObject;
     }
 
-    public void openTerminalMenu()
+    public void openTerminalMenu(bool returningFromOtherMenu=false)
     {
         audioManager.PauseFootsteps("TestWalk");
-        audioManager.PlaySFX("Pause");
+        if(!returningFromOtherMenu) audioManager.PlaySFX("Pause");
+        else audioManager.PlaySFX("UIBack");
         if (menuActive)
         {
             Destroy(currentMenuObject);  

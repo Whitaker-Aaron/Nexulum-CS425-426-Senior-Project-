@@ -4986,6 +4986,7 @@ MonoBehaviour:
   enemyHealth: {fileID: 2783722244392891025, guid: 8475f781d12ccfa41879ce064be431cf, type: 3}
   enemyReference: {fileID: 11400000, guid: 22bbc4fea7fd07444a21f525ea11ba42, type: 2}
   movementReference: {fileID: 0}
+  enemyLOSref: {fileID: 0}
   healthRef: {fileID: 0}
   initialPos: {x: 0, y: 0, z: 0}
   dmgOverTimeActivated: 0
@@ -4995,6 +4996,14 @@ MonoBehaviour:
   collidingWithPlayer: 0
   effectTickInterval: 5
   iceStackMax: 4
+  statusImmunity_Ice: 0
+  statusImmunity_Fire: 0
+  statusImmunity_Earth: 0
+  statusImmunity_Electric: 0
+  statusImmunity_Water: 0
+  statusImmunity_Wind: 0
+  iceStackEffect: {fileID: 8371746734226873922, guid: c049a2674ddfa8444970e1aeb295c5d8, type: 3}
+  iceStackEffectRef: {fileID: 0}
 --- !u!54 &7312136641156335363
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5176,6 +5185,7 @@ MonoBehaviour:
     m_Bits: 64
   sword: {fileID: 3105803359770851279}
   attackDamage: 25
+  attackCooldown: 6
   tempEnemy: 0
 --- !u!114 &6955319718670308413
 MonoBehaviour:
@@ -5204,7 +5214,6 @@ MonoBehaviour:
   patrolState:
     patrolPoints: []
   enableStateDebugLogs: 0
-  isFrozen: 0
 --- !u!114 &6996728658863666810
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -130,26 +130,26 @@ public class Door : MonoBehaviourID, i_Interactable
         }
     }
 
-    public void ToggleDoor()
+    public void ToggleDoor(bool playSFX = false)
     {
         if (isOpen)
         {
-            CloseDoor();
+            CloseDoor(playSFX);
         }
         else
         {
-            OpenDoor();
+            OpenDoor(playSFX);
         }
         UpdateDoorState();
     }
 
-    public void OpenDoor()
+    public void OpenDoor(bool playSFX=false)
     {
         if (forceOpen && doorType == DoorType.IronGate)
         {
             animator.SetBool("isOpen", true);
             Debug.Log("Forcing Iron Gate to Open");
-            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
+            if(playSFX) GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
             isOpen = true;
             isLocked = false;
             return;
@@ -159,7 +159,7 @@ public class Door : MonoBehaviourID, i_Interactable
         {
             animator.SetBool("isOpen", true);
             Debug.Log("Opening the Door");
-            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
+            if (playSFX) GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
             isOpen = true;
             isLocked = false;
         }
@@ -167,19 +167,19 @@ public class Door : MonoBehaviourID, i_Interactable
         {
             animator.SetBool("isOpen", true);
             Debug.Log("Opening the Door");
-            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
+            if (playSFX) GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
             isOpen = true;
             isLocked = false;
         }
     }
 
-    public void CloseDoor()
+    public void CloseDoor(bool playSFX = false)
     {
         if (doorType == DoorType.Gate || doorType == DoorType.Wood)
         {
             Debug.Log("CLOSING DOOR BOOL: " + animator.GetBool("isOpen"));
             animator.SetBool("isOpen", false);
-            GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
+            if (playSFX) GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("GateOpen");
             Debug.Log("Closing Door");
             isOpen = false;
         }

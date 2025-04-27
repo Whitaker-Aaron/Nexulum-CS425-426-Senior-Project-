@@ -72,8 +72,8 @@ public class TutorialCameraPanTrigger : MonoBehaviourID, EventTrigger
         if (dialogueObject != null) yield return StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(dialogueObject));
         hasTriggered = true;
         UpdateTriggerState();
-        character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
-        character.inEvent = false;
+        //character.GetMasterInput().GetComponent<masterInput>().resumePlayerInput();
+        //character.inEvent = false;
         Destroy(this.gameObject);
     }
 
@@ -90,9 +90,10 @@ public class TutorialCameraPanTrigger : MonoBehaviourID, EventTrigger
             curTutorial.transform.SetParent(canvas.transform, false);
             var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
             var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
-            uiManager.startTutorialAnimate(mainTutorial);
             inputManager.pausePlayerInput();
             Time.timeScale = 0.0f;
+            uiManager.startTutorialAnimate(mainTutorial);
+            
             
         }
     }

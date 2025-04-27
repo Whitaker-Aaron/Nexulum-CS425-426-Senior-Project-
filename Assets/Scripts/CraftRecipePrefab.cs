@@ -21,6 +21,7 @@ public class CraftRecipePrefab : MonoBehaviour
     [SerializeField] public GameObject craftButton;
     [SerializeField] GameObject disabledPanel;
     List<GameObject> currentMaterialObjects = new List<GameObject>();
+    AudioManager audioManager;
 
     
     public static ResetDelegateTemplate.ResetDelegate reset;
@@ -30,7 +31,7 @@ public class CraftRecipePrefab : MonoBehaviour
 
     void Start()
     {
-        
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     private void Awake()
@@ -56,6 +57,7 @@ public class CraftRecipePrefab : MonoBehaviour
 
     public void onView()
     {
+        audioManager.PlaySFX("UIConfirm");
         reset = ResetSelection;
         if (craftRecipe.type == CraftRecipe.CraftTypes.Weapon)
         {
@@ -125,6 +127,7 @@ public class CraftRecipePrefab : MonoBehaviour
     }
     public void AddToInventory()
     {
+        audioManager.PlaySFX("UIConfirm");
         int index = 0;
         bool hasEnoughMat = true;
         foreach (var item in craftRecipe.requiredMaterials)

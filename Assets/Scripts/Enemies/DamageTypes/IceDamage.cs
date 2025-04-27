@@ -15,12 +15,14 @@ public class IceDamage : IType
     float maxStacks;
     public bool isFrozen = false;
     private bool resetNext = false;
+    EnemyFrame enemyFrameRef;
 
-    public IceDamage(EnemyStateManager movementRef, int maxStacks)
+    public IceDamage(EnemyStateManager movementRef, int maxStacks, EnemyFrame enemyFrameRef)
     {
         if(movementRef != null) this.movementRef = movementRef;
         if(maxStacks != null) this.maxStacks = maxStacks;
         if(movementRef != null) this.originalSpeed = movementRef.defaultMovementSpeed;
+        if(enemyFrameRef != null) this.enemyFrameRef = enemyFrameRef;
     }
 
     public float GetCurrentStacks()
@@ -50,9 +52,22 @@ public class IceDamage : IType
 
     public void execute()
     {
-        if (isFrozen)
+        
+        if (isFrozen) // Enemy frozen
         {
             resetNext = true;
+            // enemyFrameRef.iceFrozenEffectRef.SetActive(true);
+            enemyFrameRef.iceStackEffectRef.SetActive(true);
+        }
+        else if (currentStacks > 0) // Enemy under status effect (not frozen yet)
+        {
+            // enemyFrameRef.iceFrozenEffectRef.SetActive(false);
+            enemyFrameRef.iceStackEffectRef.SetActive(true);
+        }
+        else // Enemy not under status effect (nor frozen)
+        {
+            // enemyFrameRef.iceFrozenEffectRef.SetActive(false);
+            enemyFrameRef.iceStackEffectRef.SetActive(false);
         }
 
         float percentage = (currentStacks / maxStacks);

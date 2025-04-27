@@ -8,6 +8,7 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
     [SerializeField] public string triggerGuid { get; set; }
     [SerializeField] public string guid;
     [SerializeField] GameObject tutorialRef;
+    [SerializeField] bool useCanvasTutorial=false;
     [SerializeField] public bool isClassDependent = false;
     public bool hasTriggered { get; set; }
     public bool requiresDungeonVisitFirst = false;
@@ -31,9 +32,137 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
 
     }
 
+    public void loadTutorial()
+    {
+        GameObject curTutorial;
+        //if (dialogueObject != null) StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(dialogueObject));
+
+        if (tutorialRef != null && !isClassDependent)
+        {
+            var tutorial = tutorialRef.GetComponent<TutorialPage>();
+            tutorial.tutorial = tutorialObject;
+            tutorial.trigger = this.gameObject;
+            curTutorial = Instantiate(tutorialRef);
+            curTutorial.transform.SetParent(canvas.transform, false);
+            var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+            var audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+            var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
+            uiManager.startTutorialAnimate(mainTutorial);
+            var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+            menuManager.menusPaused = true;
+            audioManager.PauseFootsteps("TestWalk");
+            inputManager.pausePlayerInput();
+            Time.timeScale = 0.0f;
+        }
+        else if (classTutorialObjects != null && isClassDependent)
+        {
+            var curClass = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().weaponClass.classType;
+            TutorialObject tutorialToLoad = null;
+            switch (curClass)
+            {
+                case WeaponBase.weaponClassTypes.Knight:
+                    tutorialToLoad = classTutorialObjects[0];
+                    break;
+                case WeaponBase.weaponClassTypes.Gunner:
+                    tutorialToLoad = classTutorialObjects[1];
+                    break;
+                case WeaponBase.weaponClassTypes.Engineer:
+                    tutorialToLoad = classTutorialObjects[2];
+                    break;
+
+
+            }
+            if (tutorialToLoad != null)
+            {
+                var tutorial = tutorialRef.GetComponent<TutorialPage>();
+                tutorial.tutorial = tutorialToLoad;
+                tutorial.trigger = this.gameObject;
+                curTutorial = Instantiate(tutorialRef);
+                curTutorial.transform.SetParent(canvas.transform, false);
+                var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+                var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
+                uiManager.startTutorialAnimate(mainTutorial);
+                inputManager.pausePlayerInput();
+                var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+                menuManager.menusPaused = true;
+                Time.timeScale = 0.0f;
+            }
+
+        }
+        hasTriggered = true;
+        UpdateTriggerState();
+        Destroy(this.gameObject);
+    }
+
+
+    public void loadTutorialWithoutInstantiation()
+    {
+        GameObject curTutorial;
+        //if (dialogueObject != null) StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(dialogueObject));
+        var audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        if (tutorialRef != null && !isClassDependent)
+        {
+            /*var tutorial = tutorialRef.GetComponent<TutorialPage>();
+            tutorial.tutorial = tutorialObject;
+            tutorial.trigger = this.gameObject;
+            curTutorial = Instantiate(tutorialRef);
+            curTutorial.transform.SetParent(canvas.transform, false);*/
+            var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+            
+            //var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
+            //uiManager.startTutorialAnimate(mainTutorial);
+            uiManager.LoadTutorial(tutorialObject, this.gameObject);
+            var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+            menuManager.menusPaused = true;
+            audioManager.PauseFootsteps("TestWalk");
+            inputManager.pausePlayerInput();
+            Time.timeScale = 0.0f;
+        }
+        else if (classTutorialObjects != null && isClassDependent)
+        {
+            var curClass = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().weaponClass.classType;
+            TutorialObject tutorialToLoad = null;
+            switch (curClass)
+            {
+                case WeaponBase.weaponClassTypes.Knight:
+                    tutorialToLoad = classTutorialObjects[0];
+                    break;
+                case WeaponBase.weaponClassTypes.Gunner:
+                    tutorialToLoad = classTutorialObjects[1];
+                    break;
+                case WeaponBase.weaponClassTypes.Engineer:
+                    tutorialToLoad = classTutorialObjects[2];
+                    break;
+
+
+            }
+            if (tutorialToLoad != null)
+            {
+                /*var tutorial = tutorialRef.GetComponent<TutorialPage>();
+                tutorial.tutorial = tutorialToLoad;
+                tutorial.trigger = this.gameObject;
+                curTutorial = Instantiate(tutorialRef);
+                curTutorial.transform.SetParent(canvas.transform, false);*/
+                var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+                //var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
+                //uiManager.startTutorialAnimate(mainTutorial);
+                uiManager.LoadTutorial(tutorialToLoad, this.gameObject);
+                inputManager.pausePlayerInput();
+                var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
+                menuManager.menusPaused = true;
+                audioManager.PauseFootsteps("TestWalk");
+                Time.timeScale = 0.0f;
+            }
+
+        }
+        hasTriggered = true;
+        UpdateTriggerState();
+        Destroy(this.gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        
+
         if (other.tag == "Player")
         {
             if (requiresDungeonVisitFirst)
@@ -43,64 +172,7 @@ public class TutorialEventTrigger : MonoBehaviourID, EventTrigger
                 Debug.Log(character.progressionChecks.getHasVisitedDungeon());
                 if (!character.progressionChecks.getHasVisitedDungeon()) return;
             }
-            GameObject curTutorial;
-            //if (dialogueObject != null) StartCoroutine(GameObject.Find("UIManager").GetComponent<UIManager>().LoadDialogueBox(dialogueObject));
-            
-            if (tutorialRef != null && !isClassDependent)
-            {
-                var tutorial = tutorialRef.GetComponent<TutorialPage>();
-                tutorial.tutorial = tutorialObject;
-                tutorial.trigger = this.gameObject;
-                curTutorial = Instantiate(tutorialRef);
-                curTutorial.transform.SetParent(canvas.transform, false);
-                var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-                var audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
-                var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
-                uiManager.startTutorialAnimate(mainTutorial);
-                var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
-                menuManager.menusPaused = true;
-                audioManager.PauseFootsteps("TestWalk");
-                inputManager.pausePlayerInput();
-                Time.timeScale = 0.0f;
-            }
-            else if(classTutorialObjects != null && isClassDependent)
-            {
-                var curClass = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>().weaponClass.classType;
-                TutorialObject tutorialToLoad = null;
-                switch (curClass)
-                {
-                    case WeaponBase.weaponClassTypes.Knight:
-                        tutorialToLoad = classTutorialObjects[0];
-                        break;
-                    case WeaponBase.weaponClassTypes.Gunner:
-                        tutorialToLoad = classTutorialObjects[1];
-                        break;
-                    case WeaponBase.weaponClassTypes.Engineer:
-                        tutorialToLoad = classTutorialObjects[2];
-                        break;
-
-
-                }
-                if (tutorialToLoad != null)
-                {
-                    var tutorial = tutorialRef.GetComponent<TutorialPage>();
-                    tutorial.tutorial = tutorialToLoad;
-                    tutorial.trigger = this.gameObject;
-                    curTutorial = Instantiate(tutorialRef);
-                    curTutorial.transform.SetParent(canvas.transform, false);
-                    var uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
-                    var mainTutorial = curTutorial.transform.Find("Tutorial").gameObject;
-                    uiManager.startTutorialAnimate(mainTutorial);
-                    inputManager.pausePlayerInput();
-                    var menuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
-                    menuManager.menusPaused = true;
-                    Time.timeScale = 0.0f;
-                }
-                
-            }
-            hasTriggered = true;
-            UpdateTriggerState();
-            Destroy(this.gameObject);
+            loadTutorialWithoutInstantiation();
         }
     }
 
