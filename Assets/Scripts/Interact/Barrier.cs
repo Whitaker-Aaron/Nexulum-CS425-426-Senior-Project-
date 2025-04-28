@@ -149,7 +149,7 @@ public class Barrier : MonoBehaviourID, i_Interactable
 
     public void ToggleDoor()
     {
-        doorToUnlock.ToggleDoor();
+        doorToUnlock.ToggleDoor(true);
         /*if (doorToUnlock.isOpen)
         {
             CloseDoor();

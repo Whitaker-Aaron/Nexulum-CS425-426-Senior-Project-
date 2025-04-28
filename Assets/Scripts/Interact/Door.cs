@@ -83,7 +83,7 @@ public class Door : MonoBehaviourID, i_Interactable
 
         if (!isLocked && !isOpen)
         {
-            ToggleDoor();
+            ToggleDoor(true);
         }
         else if(isLocked && doorType == DoorType.Wood)
         {
@@ -121,7 +121,7 @@ public class Door : MonoBehaviourID, i_Interactable
             if (item.itemName == "Small Key")
             {
                 isLocked = false;
-                ToggleDoor();
+                ToggleDoor(true);
                 itemManager.RemoveFromInventory(item, 1);
                 if (lockedUI != null) lockedUI.SetActive(false);
                 if(doorUI != null) doorUI.SetActive(false);
