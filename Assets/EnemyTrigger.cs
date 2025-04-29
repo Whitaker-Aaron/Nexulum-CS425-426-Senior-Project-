@@ -6,6 +6,7 @@ public class EnemyTrigger : MonoBehaviour
 {
     bool enemiesUnlocked = false;
     public bool isBoss = false;
+    public bool triggered = false;
     CameraFollow camera;
     [SerializeField] List<GameObject> enemies = new List<GameObject>();
     // Start is called before the first frame update
@@ -22,8 +23,10 @@ public class EnemyTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        
         if (!enemiesUnlocked && !isBoss) UnlockEnemies();
-        else if (!enemiesUnlocked && isBoss) StartCoroutine(bossPan());
+        else if (!enemiesUnlocked && !triggered && isBoss) StartCoroutine(bossPan());
+        triggered = true;
         
     }
 
