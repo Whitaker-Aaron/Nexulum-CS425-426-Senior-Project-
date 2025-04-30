@@ -67,6 +67,7 @@ public class EnemyHead : MonoBehaviour, enemyInt
         playerRef = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
 
         startPos = transform.position;
+        startPos.y = transform.position.y - 0.8f;
         lastYPosition = startPos.y; // Initialize lastYPosition
         StartCoroutine(StartFloatingAfterDelay(0.5f)); // Delay floating for a smoother start
     }
@@ -111,11 +112,12 @@ public class EnemyHead : MonoBehaviour, enemyInt
 
     void CheckIfPlayerIsLooking()
     {
-        RaycastHit hit;
         Vector3 origin = masterInput.instance.bulletSpawn.position;
         Vector3 direction = masterInput.instance.bulletSpawn.forward;
 
-        if (Physics.Raycast(origin, direction, out hit, visionDistance))
+        RaycastHit[] hits = Physics.RaycastAll(origin, direction);
+
+        foreach (RaycastHit hit in hits)
         {
             if (hit.collider.gameObject == gameObject)
             {
@@ -128,7 +130,7 @@ public class EnemyHead : MonoBehaviour, enemyInt
         // Only reset movement if the player is no longer looking
         canMove = true;
     }
-
+       
     void ApplyFloatingEffect()
     {
         if (timeOffset == 0) return; // Prevent floating before the delay is over
