@@ -1539,7 +1539,7 @@ public class masterInput : MonoBehaviour
             }
 
             float triggerValue = playerInput.actions["attack"].ReadValue<float>();
-            Debug.Log("Trigger Value: " + triggerValue);
+            //Debug.Log("Trigger Value: " + triggerValue);
 
             if (triggerValue > 0.5f && !isAttacking && (animationControl.getAnimationInfo().IsName("Locomotion")) && !inputPaused) 
             {

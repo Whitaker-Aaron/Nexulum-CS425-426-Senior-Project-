@@ -90,7 +90,7 @@ public class RoomTransition : MonoBehaviour
                 character.ResetGroundCounter();
                 masterInput.instance.DisableFallAnimation();
                 if (currentInfo.requiredEnemyRoom) GameObject.Find("UIManager").GetComponent<UIManager>().DeactivateEnemiesRemainingUI();
-                if (targetRoom != null)
+                if (targetRoom != null && targetRoom != character.targetRoom)
                 {
                     targetRoom.SetActive(true);
                     character.targetRoom = targetInfo;
@@ -155,8 +155,10 @@ public class RoomTransition : MonoBehaviour
 
     public IEnumerator ClosePreviousRoom()
     {
-        yield return new WaitForSeconds(2);
-        if (targetRoom != null)
+        var character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterBase>();
+        var roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
+        yield return new WaitForSeconds(5);
+        if (targetRoom != null && targetRoom != character.targetRoom && roomManager.currentRoom.roomName != targetInfo.roomName)
         {
             targetRoom.SetActive(false);
         }
@@ -214,6 +216,7 @@ public class RoomTransition : MonoBehaviour
             StartCoroutine(GameObject.Find("LifetimeManager").GetComponent<LifetimeManager>().AnimateRoomTransition());
             
             yield return new WaitForSeconds(0.22f);
+            Debug.Log("TARGET LOAD: " + targetLoad.transform.parent.transform.parent.transform.parent.transform.parent.name);
             character.transform.position = targetLoad.transform.position;
         }
         else

@@ -85,7 +85,7 @@ public class enemyArcher : MonoBehaviour, enemyInt, archerInterface
         checkDistance();
 
         enemyState = enemyStateManager.GetCurrentState();
-        print("Enemy state is: " + enemyState.GetName());
+        //print("Enemy state is: " + enemyState.GetName());
         bool aggressiveState = enemyState.GetName() == "Chase" || enemyState.GetName() == "Search";
         if(inRange && playerObj != null)// && enemyState.GetName() == "Chase")// && enemyState != null && (enemyState.GetName() == "Chase" || enemyState.GetName() == "Search"))
         {
