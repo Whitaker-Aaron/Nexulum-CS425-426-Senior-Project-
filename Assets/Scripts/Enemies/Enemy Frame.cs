@@ -41,6 +41,7 @@ public class EnemyFrame : MonoBehaviour
     public bool isMiniboss = false;
     bool takingDmgOT = false;
     bool dying = false;
+    bool healthBarDeathAnimating = false;
 
     // Damage and Damage Types - Aisling
     public bool onDamaged = false; // True on hit, used for state machine logic to aggro enemies
@@ -376,6 +377,7 @@ public class EnemyFrame : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         //StopCoroutine(animateDelayedHealth());
         yield return animateDelayedHealth();
+        if(dying) healthBarDeathAnimating = false;
     }
 
     public IEnumerator updateHealthBarsPositive()
@@ -387,11 +389,22 @@ public class EnemyFrame : MonoBehaviour
         yield return animateHealth();
     }
    
+    public IEnumerator waitThenForceKill()
+    {
+        yield return new WaitForSeconds(1.5f);
+        healthBarDeathAnimating = false;
+    }
 
     //death function and roll loot - Spencer
     private IEnumerator death()
     {
-        yield return (StartCoroutine(updateHealthBarsNegative()));
+        healthBarDeathAnimating = true;
+        StartCoroutine(updateHealthBarsNegative());
+        while (healthBarDeathAnimating)
+        {
+            yield return null;
+        }
+        
         if (transform.GetComponentInChildren<ParticleSystem>() != null)
         {
 
@@ -432,6 +445,7 @@ public class EnemyFrame : MonoBehaviour
         character.AddExperienceToClass(enemyReference.droppedExperience);
         removeHealth();
         Destroy(this.gameObject);
+        yield break;
     }
 
     public void removeHealth()
