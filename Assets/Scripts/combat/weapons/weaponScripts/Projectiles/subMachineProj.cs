@@ -70,9 +70,19 @@ public class subMachineProj : projectile
 
         if ((distanceToHit <= step || distanceToHit <= bufferDistance || hitEnemy) && hitPoint != null)
         {
-            if (hit.collider.gameObject == null || hit.collider.gameObject.tag == null)
+            if(hit.collider == null)
+            {
+                playEffect(hitPoint);
+                // We've reached the hit point, stop the projectile
+                stop = true;
                 return;
-
+            }
+            if(hit.collider.tag == "Untagged")
+            {
+                playEffect(hitPoint);
+                // We've reached the hit point, stop the projectile
+                stop = true;
+            }
             if (hit.collider.gameObject.tag == "bossPart")
             {
                 hitEnemy = true;
@@ -90,7 +100,7 @@ public class subMachineProj : projectile
                 }
 
             }
-            if(hit.collider.gameObject.tag == "Boss")
+            else if(hit.collider.gameObject.tag == "Boss")
             {
                 hitEnemy = true;
                 int updatedDamage = damage;
@@ -107,7 +117,7 @@ public class subMachineProj : projectile
                 }
 
             }
-            if (hit.collider.gameObject.tag == "Enemy")
+            else if (hit.collider.gameObject.tag == "Enemy")
             {
                 GameObject.Find("AudioManager").GetComponent<AudioManager>().PlaySFX("BulletImpact");
                 hitEnemy = true;
