@@ -342,7 +342,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""6473078c-e351-4354-a3a5-43a3cf86a7f0"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -806,7 +806,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2f839b9c-e013-4cd5-b811-06fdf226fe50"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
